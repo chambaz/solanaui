@@ -6,7 +6,7 @@ import { IconBrandGithub } from "@tabler/icons-react";
 
 import { Button } from "@/components/ui/button";
 
-export default function Home() {
+export default function HomePage() {
   return (
     <div className="w-full">
       <div className="flex w-full flex-col items-center gap-8 py-8 text-center">

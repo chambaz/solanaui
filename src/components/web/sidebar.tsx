@@ -1,0 +1,87 @@
+import Link from "next/link";
+
+const navItems = [
+  {
+    section: "Getting started",
+    children: [
+      {
+        label: "Introduction",
+        href: "/docs",
+      },
+      {
+        label: "Installation",
+        href: "/docs",
+      },
+      {
+        label: "Themes",
+        href: "/docs",
+      },
+    ],
+  },
+  {
+    section: "Components",
+    children: [
+      {
+        label: "Connect Wallet Dialog",
+        href: "/docs/components/connect-wallet-dialog",
+      },
+      { label: "Avatar", href: "/docs/components/avatar" },
+      { label: "User Dropdown", href: "/docs/components/user-dropdown" },
+      {
+        label: "NFT Card",
+        href: "/docs/components/nft-card",
+      },
+      {
+        label: "Token Card",
+        href: "/docs/components/token-card",
+      },
+      {
+        label: "Token List",
+        href: "/docs/components/token-table",
+      },
+      { label: "Token Combobox", href: "/docs/components/token-combobox" },
+      { label: "Token Input", href: "/docs/components/token-input" },
+      {
+        label: "Txn Toast",
+        href: "/docs/components/txn-toast",
+      },
+    ],
+  },
+  {
+    section: "Hooks",
+    children: [
+      { label: "useAssets", href: "/docs/hooks/use-assets" },
+      { label: "useWallet", href: "/docs/hooks/use-wallet" },
+    ],
+  },
+];
+
+const Sidebar = () => {
+  return (
+    <aside className="h-full min-w-52 overflow-auto pr-4">
+      <nav>
+        <ul className="space-y-4">
+          {navItems.map((item, index) => (
+            <li key={index} className="text-sm font-medium text-primary">
+              {item.section}
+              <ul className="mb-6 mt-2 space-y-2">
+                {item.children.map((child, index) => (
+                  <li key={index}>
+                    <Link
+                      href={child.href}
+                      className="block py-1 text-xs text-muted-foreground transition-colors hover:text-primary"
+                    >
+                      {child.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </aside>
+  );
+};
+
+export { Sidebar };

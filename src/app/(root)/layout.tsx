@@ -33,7 +33,7 @@ export default function RootLayout({
     <html lang="en" className={cn(inter.variable, roboto_mono.variable)}>
       <body>
         <Header />
-        <main className="container mx-auto flex min-h-[calc(100vh-144px)] gap-8 py-8">
+        <main className="container mx-auto flex min-h-[calc(100vh-144px)] gap-8 p-8">
           {children}
         </main>
         <Footer />

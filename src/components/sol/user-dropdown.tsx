@@ -1,18 +1,13 @@
 "use client";
 
 import React from "react";
-
-import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
-import {
-  mplTokenMetadata,
-  fetchDigitalAssetWithAssociatedToken,
-  DigitalAssetWithToken,
-} from "@metaplex-foundation/mpl-token-metadata";
-import { publicKey } from "@metaplex-foundation/umi";
+import Image from "next/image";
+import { IconCopy } from "@tabler/icons-react";
 import { PublicKey } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
 
-import { formatNumber } from "@/lib/utils";
+import { formatNumber, shortAddress } from "@/lib/utils";
+import { useAssets } from "@/hooks/use-assets";
 
 import { Avatar } from "@/components/sol/avatar";
 
@@ -28,37 +23,9 @@ type UserDropdownProps = {
   tokens?: PublicKey[];
 };
 
-const umi = createUmi(process.env.NEXT_PUBLIC_RPC_URL as string).use(
-  mplTokenMetadata(),
-);
-
 const UserDropdown = ({ address, tokens }: UserDropdownProps) => {
   const { disconnect } = useWallet();
-  const [assets, setAssets] = React.useState<DigitalAssetWithToken[]>([]);
-  const [isLoading, setIsLoading] = React.useState(false);
-
-  React.useEffect(() => {
-    const fetchAssets = async (tokens: PublicKey[]) => {
-      const fetchedAssets: DigitalAssetWithToken[] = [];
-
-      for (const token of tokens) {
-        const assetRes = await fetchDigitalAssetWithAssociatedToken(
-          umi,
-          publicKey(token),
-          publicKey(address),
-        );
-        fetchedAssets.push(assetRes);
-      }
-
-      return fetchedAssets;
-    };
-
-    if (!tokens || !tokens.length) return;
-    setIsLoading(true);
-    fetchAssets(tokens)
-      .then(setAssets)
-      .finally(() => setIsLoading(false));
-  }, [address, tokens]);
+  const { assets, isLoading } = useAssets(address, tokens);
 
   return (
     <Popover>
@@ -66,18 +33,36 @@ const UserDropdown = ({ address, tokens }: UserDropdownProps) => {
         <Avatar address={address} />
       </PopoverTrigger>
       <PopoverContent>
-        <div className="space-y-2">
+        <div className="space-y-4 text-sm">
+          <dl className="grid grid-cols-2 gap-1">
+            <dt>Address</dt>
+            <dd className="flex items-center justify-end gap-1">
+              {shortAddress(address)}
+              <IconCopy size={14} />
+            </dd>
+          </dl>
           {isLoading ? (
-            <p>Loading...</p>
+            <p>Loading tokens...</p>
           ) : (
             <ul className="space-y-1">
               {assets.map((asset) => (
                 <li
                   key={asset.mint.publicKey.toString()}
-                  className="flex justify-between"
+                  className="flex items-center gap-2"
                 >
+                  {asset.imageUrl ? (
+                    <Image
+                      src={asset.imageUrl}
+                      alt={asset.metadata.symbol}
+                      width={32}
+                      height={32}
+                      className="h-8 w-8 rounded-full border border-border"
+                    />
+                  ) : (
+                    <div className="h-8 w-8 rounded-full border border-border" />
+                  )}
                   <span>{asset.metadata.symbol}</span>
-                  <span>
+                  <span className="ml-auto">
                     {formatNumber(
                       Number(asset.token.amount) / 10 ** asset.mint.decimals,
                     )}
@@ -86,7 +71,12 @@ const UserDropdown = ({ address, tokens }: UserDropdownProps) => {
               ))}
             </ul>
           )}
-          <Button variant="outline" className="w-full" onClick={disconnect}>
+          <Button
+            variant="outline"
+            size="sm"
+            className="w-full"
+            onClick={disconnect}
+          >
             Logout
           </Button>
         </div>

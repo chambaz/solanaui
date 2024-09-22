@@ -3,6 +3,7 @@ import { Inter, Roboto_Mono } from "next/font/google";
 
 import { cn } from "@/lib/utils";
 
+import { Providers } from "@/components/web/providers";
 import { Header } from "@/components/web/header";
 import { Footer } from "@/components/web/footer";
 import { Sidebar } from "@/components/web/sidebar";
@@ -33,14 +34,16 @@ export default function DocsLayout({
   return (
     <html lang="en" className={cn(inter.variable, roboto_mono.variable)}>
       <body>
-        <Header />
-        <div className="container flex min-h-screen gap-8 p-8">
-          <Sidebar />
-          <main className="w-full text-sm text-muted-foreground">
-            {children}
-          </main>
-        </div>
-        <Footer />
+        <Providers>
+          <Header />
+          <div className="container flex min-h-screen gap-8 p-8">
+            <Sidebar />
+            <main className="w-full text-sm text-muted-foreground">
+              {children}
+            </main>
+          </div>
+          <Footer />
+        </Providers>
       </body>
     </html>
   );

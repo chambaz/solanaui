@@ -8,19 +8,13 @@ import { minidenticon } from "minidenticons";
 import { cn } from "@/lib/utils";
 
 type AvatarProps = {
-  publicKey: PublicKey | string;
+  address: PublicKey;
   size?: number;
   className?: string;
 };
 
-const Avatar = ({ publicKey, size = 56, className }: AvatarProps) => {
-  const pubkeyStr = React.useMemo(() => {
-    if (!publicKey || typeof publicKey === "string") {
-      return publicKey;
-    }
-
-    return publicKey.toBase58();
-  }, [publicKey]);
+const Avatar = ({ address, size = 56, className }: AvatarProps) => {
+  const pubkeyStr = address.toBase58();
 
   const identicon = React.useMemo(() => {
     if (!pubkeyStr) return "";

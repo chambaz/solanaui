@@ -2,7 +2,9 @@
 
 import React from "react";
 
-import { useWallet, Wallet } from "@solana/wallet-adapter-react";
+import { Wallet } from "@solana/wallet-adapter-react";
+
+import { useWallet } from "@/hooks/use-wallet";
 
 import {
   Dialog,
@@ -41,6 +43,7 @@ const ConnectWalletDialogContent = React.forwardRef<
               select(wallet.adapter.name);
               setSelectedWallet(wallet);
             }}
+            disabled={connecting}
           >
             {wallet.adapter.name}
           </Button>
@@ -56,9 +59,15 @@ const ConnectWalletDialogTitle = DialogTitle;
 const ConnectWalletDialogDescription = DialogDescription;
 
 const ConnectWalletDialog = ({ children }: { children: React.ReactNode }) => {
-  const { connected } = useWallet();
-  if (connected) return null;
-  return <Dialog>{children}</Dialog>;
+  const { connected, disconnect } = useWallet();
+  const { isOpen, setIsOpen } = useWallet();
+
+  if (connected) return <Button onClick={disconnect}>Logout</Button>;
+  return (
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      {children}
+    </Dialog>
+  );
 };
 
 export {

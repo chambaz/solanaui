@@ -4,6 +4,17 @@ import Link from "next/link";
 
 import { IconBrandGithub, IconBrandX } from "@tabler/icons-react";
 
+import {
+  ConnectWalletDialog,
+  ConnectWalletDialogTrigger,
+  ConnectWalletDialogHeader,
+  ConnectWalletDialogTitle,
+  ConnectWalletDialogDescription,
+  ConnectWalletDialogContent,
+} from "@/components/sol/connect-wallet-dialog";
+
+import { Button } from "@/components/ui/button";
+
 const navItems = [
   {
     label: "get started",
@@ -39,6 +50,21 @@ const Header = () => {
               </li>
             ))}
           </ul>
+          <ConnectWalletDialog>
+            <ConnectWalletDialogTrigger asChild>
+              <Button>Connect Wallet</Button>
+            </ConnectWalletDialogTrigger>
+            <ConnectWalletDialogContent>
+              <ConnectWalletDialogHeader>
+                <ConnectWalletDialogTitle>
+                  Connect Wallet custom title
+                </ConnectWalletDialogTitle>
+                <ConnectWalletDialogDescription>
+                  Connect your wallet to continue
+                </ConnectWalletDialogDescription>
+              </ConnectWalletDialogHeader>
+            </ConnectWalletDialogContent>
+          </ConnectWalletDialog>
           <ul className="flex items-center gap-4">
             <li>
               <Link href="">

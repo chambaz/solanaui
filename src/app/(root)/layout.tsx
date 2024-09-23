@@ -3,6 +3,7 @@ import { Inter, Roboto_Mono } from "next/font/google";
 
 import { cn } from "@/lib/utils";
 
+import { Providers } from "@/components/web/providers";
 import { Header } from "@/components/web/header";
 import { Footer } from "@/components/web/footer";
 
@@ -32,11 +33,13 @@ export default function RootLayout({
   return (
     <html lang="en" className={cn(inter.variable, roboto_mono.variable)}>
       <body>
-        <Header />
-        <main className="container mx-auto flex min-h-[calc(100vh-144px)] gap-8 p-8">
-          {children}
-        </main>
-        <Footer />
+        <Providers>
+          <Header />
+          <main className="container mx-auto flex min-h-[calc(100vh-144px)] gap-8 p-8">
+            {children}
+          </main>
+          <Footer />
+        </Providers>
       </body>
     </html>
   );

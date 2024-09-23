@@ -17,25 +17,13 @@ export default function AvatarPage() {
       code: `import { Avatar } from "@/components/sol/avatar"
 
 export function AvatarDemo() {
-  return <Avatar
-    publicKey={
-      new PublicKey('D1bj9NDgFVRxUiKkNyxW9BtYJ1kesQknnqm6xAnk1h8q')
-    }
-  />
-}`,
-    },
-    {
-      label: "Default",
-      value: "default1",
-      preview: <Avatar address={publicKey || PublicKey.default} />,
-      code: `import { Avatar } from "@/components/sol/avatar"
-
-export function AvatarDemo() {
-  return <Avatar
-    publicKey={
-      new PublicKey('D1bj9NDgFVRxUiKkNyxW9BtYJ1kesQknnqm6xAnk1h8q')
-    }
-  />
+  return (
+    <Avatar
+      publicKey={
+        new PublicKey('D1bj9NDgFVRxUiKkNyxW9BtYJ1kesQknnqm6xAnk1h8q')
+      }
+    />
+  )
 }`,
     },
   ];

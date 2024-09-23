@@ -69,7 +69,7 @@ const DocsTabs = ({
           <TabsTrigger value="preview">Preview</TabsTrigger>
           <TabsTrigger value="code">Code</TabsTrigger>
         </TabsList>
-        x
+
         <TabsContent value="preview">
           <div className="relative rounded-lg border border-border bg-background">
             <div className="px-6 py-4">

@@ -1,4 +1,9 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+import { cn } from "@/lib/utils";
 
 const navItems = [
   {
@@ -57,6 +62,7 @@ const navItems = [
 ];
 
 const Sidebar = () => {
+  const pathname = usePathname();
   return (
     <aside className="h-full min-w-52 overflow-auto pr-4">
       <nav>
@@ -69,7 +75,10 @@ const Sidebar = () => {
                   <li key={index}>
                     <Link
                       href={child.href}
-                      className="block py-1 text-xs text-muted-foreground transition-colors hover:text-primary"
+                      className={cn(
+                        "block py-1 text-xs text-muted-foreground transition-colors hover:text-primary",
+                        child.href === pathname && "text-primary",
+                      )}
                     >
                       {child.label}
                     </Link>

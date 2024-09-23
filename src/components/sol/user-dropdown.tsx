@@ -6,7 +6,7 @@ import { IconCopy } from "@tabler/icons-react";
 import { PublicKey } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
 
-import { formatNumber, shortAddress } from "@/lib/utils";
+import { formatUsd, shortAddress } from "@/lib/utils";
 import { useAssets } from "@/hooks/use-assets";
 
 import { Avatar } from "@/components/sol/avatar";
@@ -43,7 +43,7 @@ const UserDropdown = ({ address, tokens }: UserDropdownProps) => {
           </dl>
           {isLoading ? (
             <p>Loading tokens...</p>
-          ) : (
+          ) : assets.length > 0 ? (
             <ul className="space-y-1">
               {assets.map((asset) => (
                 <li
@@ -62,14 +62,14 @@ const UserDropdown = ({ address, tokens }: UserDropdownProps) => {
                     <div className="h-8 w-8 rounded-full border border-border" />
                   )}
                   <span>{asset.metadata.symbol}</span>
-                  <span className="ml-auto">
-                    {formatNumber(
-                      Number(asset.token.amount) / 10 ** asset.mint.decimals,
-                    )}
-                  </span>
+                  {asset.price !== undefined && (
+                    <span className="ml-auto">{formatUsd(asset.price)}</span>
+                  )}
                 </li>
               ))}
             </ul>
+          ) : (
+            <p>No tokens found</p>
           )}
           <Button
             variant="outline"

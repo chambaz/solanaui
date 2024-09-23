@@ -4,11 +4,28 @@ import { PublicKey } from "@solana/web3.js";
 
 export const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
-export const formatNumber = (num: number, decimals = 2) => {
+export const formatNumber = (
+  num: number,
+  options: Intl.NumberFormatOptions = {},
+): string => {
+  if (!num) return "0";
+
+  const absNum = Math.abs(num);
+  let decimals = 2;
+
+  if (absNum < 1) {
+    decimals = Math.max(2, Math.min(20, Math.ceil(-Math.log10(absNum)) + 2));
+  }
+
   return new Intl.NumberFormat("en-US", {
-    minimumFractionDigits: decimals,
+    minimumFractionDigits: 2,
     maximumFractionDigits: decimals,
+    ...options,
   }).format(num);
+};
+
+export const formatUsd = (num: number): string => {
+  return formatNumber(num, { style: "currency", currency: "USD" });
 };
 
 export const shortAddress = (address: PublicKey | string) => {

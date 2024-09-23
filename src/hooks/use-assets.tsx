@@ -8,8 +8,9 @@ import {
 } from "@metaplex-foundation/mpl-token-metadata";
 import { publicKey } from "@metaplex-foundation/umi";
 
-type DigitalAssetWithImage = DigitalAssetWithToken & {
+type ExtendedDigitalAsset = DigitalAssetWithToken & {
   imageUrl?: string;
+  price?: number;
 };
 
 const umi = createUmi(process.env.NEXT_PUBLIC_RPC_URL as string).use(
@@ -17,20 +18,22 @@ const umi = createUmi(process.env.NEXT_PUBLIC_RPC_URL as string).use(
 );
 
 export function useAssets(address: PublicKey, tokens?: PublicKey[]) {
-  const [assets, setAssets] = useState<DigitalAssetWithImage[]>([]);
+  const [assets, setAssets] = useState<ExtendedDigitalAsset[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchAssets = async (tokens: PublicKey[]) => {
-      const fetchedAssets: DigitalAssetWithImage[] = [];
+      const fetchedAssets: ExtendedDigitalAsset[] = [];
 
       for (const token of tokens) {
+        // fetch asset data
         const assetRes = await fetchDigitalAssetWithAssociatedToken(
           umi,
           publicKey(token),
           publicKey(address),
         );
 
+        // fetch metadata and image
         let imageUrl: string | undefined;
         try {
           imageUrl = assetRes.metadata.uri
@@ -42,9 +45,16 @@ export function useAssets(address: PublicKey, tokens?: PublicKey[]) {
           console.error("Error fetching token image:", error);
         }
 
+        // add price from birdeye
+        const priceRes = await fetch(
+          `/api/birdeye?address=${token.toBase58()}`,
+        );
+        const priceData = await priceRes.json();
+
         fetchedAssets.push({
           ...assetRes,
           imageUrl,
+          price: priceData?.data?.value || undefined,
         });
       }
 

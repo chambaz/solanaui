@@ -2,8 +2,10 @@
 
 import React from "react";
 import Image from "next/image";
-import { IconCopy, IconCheck } from "@tabler/icons-react";
 import { PublicKey } from "@solana/web3.js";
+import { useConnection } from "@solana/wallet-adapter-react";
+import { getPrimaryDomain } from "@bonfida/spl-name-service";
+import { IconCopy, IconCheck } from "@tabler/icons-react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
 import { formatUsd, shortAddress } from "@/lib/utils";
@@ -26,13 +28,31 @@ type UserDropdownProps = {
 
 const UserDropdown = ({ address, tokens }: UserDropdownProps) => {
   const { connected, disconnect } = useWallet();
+  const { connection } = useConnection();
   const { assets, isLoading } = useAssets(address, tokens);
   const [isOpen, setIsOpen] = React.useState(false);
   const [isCopied, setIsCopied] = React.useState(false);
+  const [domain, setDomain] = React.useState<string | null>(null);
 
   const totalBalance = React.useMemo(() => {
     return assets.reduce((acc, asset) => acc + (asset.price ?? 0), 0);
   }, [assets]);
+
+  React.useEffect(() => {
+    if (!connection) return;
+
+    async function fetchDomain() {
+      try {
+        const { reverse } = await getPrimaryDomain(connection, address);
+        setDomain(`${reverse}.sol`);
+      } catch (error) {
+        console.error("Error fetching SNS domain:", error);
+        setDomain(null);
+      }
+    }
+
+    fetchDomain();
+  }, [address, connection]);
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
@@ -65,6 +85,12 @@ const UserDropdown = ({ address, tokens }: UserDropdownProps) => {
                 )}
               </CopyToClipboard>
             </dd>
+            {domain && (
+              <>
+                <dt>Domain</dt>
+                <dd className="flex justify-end">{domain}</dd>
+              </>
+            )}
             <dt>Balance</dt>
             <dd className="flex justify-end">{formatUsd(totalBalance)}</dd>
           </dl>

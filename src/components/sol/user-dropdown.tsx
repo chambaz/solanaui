@@ -2,12 +2,13 @@
 
 import React from "react";
 import Image from "next/image";
-import { IconCopy } from "@tabler/icons-react";
+import { IconCopy, IconCheck } from "@tabler/icons-react";
 import { PublicKey } from "@solana/web3.js";
-import { useWallet } from "@solana/wallet-adapter-react";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 
 import { formatUsd, shortAddress } from "@/lib/utils";
 import { useAssets } from "@/hooks/use-assets";
+import { useWallet } from "@/hooks/use-wallet";
 
 import { Avatar } from "@/components/sol/avatar";
 
@@ -24,11 +25,17 @@ type UserDropdownProps = {
 };
 
 const UserDropdown = ({ address, tokens }: UserDropdownProps) => {
-  const { disconnect } = useWallet();
+  const { connected, disconnect } = useWallet();
   const { assets, isLoading } = useAssets(address, tokens);
+  const [isOpen, setIsOpen] = React.useState(false);
+  const [isCopied, setIsCopied] = React.useState(false);
+
+  const totalBalance = React.useMemo(() => {
+    return assets.reduce((acc, asset) => acc + (asset.price ?? 0), 0);
+  }, [assets]);
 
   return (
-    <Popover>
+    <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger>
         <Avatar address={address} />
       </PopoverTrigger>
@@ -36,10 +43,30 @@ const UserDropdown = ({ address, tokens }: UserDropdownProps) => {
         <div className="space-y-4 text-sm">
           <dl className="grid grid-cols-2 gap-1">
             <dt>Address</dt>
-            <dd className="flex items-center justify-end gap-1">
-              {shortAddress(address)}
-              <IconCopy size={14} />
+            <dd className="flex justify-end">
+              <CopyToClipboard
+                text={address.toBase58()}
+                onCopy={() => {
+                  setIsCopied(true);
+                  setTimeout(() => {
+                    setIsCopied(false);
+                  }, 2000);
+                }}
+              >
+                {isCopied ? (
+                  <div className="flex items-center justify-end gap-1 self-end">
+                    Copied <IconCheck size={14} />
+                  </div>
+                ) : (
+                  <button className="flex items-center justify-end gap-1 self-end">
+                    {shortAddress(address)}
+                    <IconCopy size={14} />
+                  </button>
+                )}
+              </CopyToClipboard>
             </dd>
+            <dt>Balance</dt>
+            <dd className="flex justify-end">{formatUsd(totalBalance)}</dd>
           </dl>
           {isLoading ? (
             <p>Loading tokens...</p>
@@ -71,14 +98,20 @@ const UserDropdown = ({ address, tokens }: UserDropdownProps) => {
           ) : (
             <p>No tokens found</p>
           )}
-          <Button
-            variant="outline"
-            size="sm"
-            className="w-full"
-            onClick={disconnect}
-          >
-            Logout
-          </Button>
+
+          {connected && (
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full"
+              onClick={() => {
+                disconnect();
+                setIsOpen(false);
+              }}
+            >
+              Logout
+            </Button>
+          )}
         </div>
       </PopoverContent>
     </Popover>

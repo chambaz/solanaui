@@ -25,12 +25,14 @@ const ConnectWalletDialogContent = React.forwardRef<
   const [selectedWallet, setSelectedWallet] = React.useState<Wallet | null>(
     null,
   );
-  const { wallets, select, connect, connected, connecting } = useWallet();
+  const { wallets, select, connect, connected, connecting, setIsOpen } =
+    useWallet();
 
   React.useEffect(() => {
     if (!selectedWallet || connected || connecting) return;
     connect();
-  }, [selectedWallet, connect, connected, connecting]);
+    setIsOpen(false);
+  }, [selectedWallet, connect, connected, connecting, setIsOpen]);
 
   return (
     <DialogContent ref={ref} {...props}>
@@ -63,6 +65,7 @@ const ConnectWalletDialog = ({ children }: { children: React.ReactNode }) => {
   const { isOpen, setIsOpen } = useWallet();
 
   if (connected) return <Button onClick={disconnect}>Logout</Button>;
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       {children}

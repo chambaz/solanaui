@@ -1,7 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    remotePatterns: [{ hostname: "fotofolio.xyz" }],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "*.ipfs.nftstorage.link",
+      },
+    ],
   },
 };
 

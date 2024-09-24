@@ -36,11 +36,13 @@ export function useAssets(address: PublicKey, tokens?: PublicKey[]) {
         // fetch metadata and image
         let imageUrl: string | undefined;
         try {
-          imageUrl = assetRes.metadata.uri
-            ? await fetch(assetRes.metadata.uri)
-                .then((res) => res.json())
-                .then((data) => `https://fotofolio.xyz?url=${data.image}`)
-            : undefined;
+          const data = await fetch(assetRes.metadata.uri).then((res) =>
+            res.json(),
+          );
+
+          if (data.image) {
+            imageUrl = data.image;
+          }
         } catch (error) {
           console.error("Error fetching token image:", error);
         }

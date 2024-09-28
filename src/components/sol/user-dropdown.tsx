@@ -9,7 +9,7 @@ import { IconCopy, IconCheck } from "@tabler/icons-react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
 import { formatUsd, shortAddress } from "@/lib/utils";
-import { useAssets } from "@/hooks/use-assets";
+import { useAssets, ExtendedDigitalAsset } from "@/hooks/use-assets";
 import { useWallet } from "@/hooks/use-wallet";
 
 import { Avatar } from "@/components/sol/avatar";
@@ -29,7 +29,8 @@ type UserDropdownProps = {
 const UserDropdown = ({ address, tokens }: UserDropdownProps) => {
   const { connected, disconnect } = useWallet();
   const { connection } = useConnection();
-  const { assets, isLoading } = useAssets(address, tokens);
+  const { fetchAssets, isLoading } = useAssets();
+  const [assets, setAssets] = React.useState<ExtendedDigitalAsset[]>([]);
   const [isOpen, setIsOpen] = React.useState(false);
   const [isCopied, setIsCopied] = React.useState(false);
   const [domain, setDomain] = React.useState<string | null>(null);
@@ -53,6 +54,20 @@ const UserDropdown = ({ address, tokens }: UserDropdownProps) => {
 
     fetchDomain();
   }, [address, connection]);
+
+  React.useEffect(() => {
+    const loadAssets = async () => {
+      if (!tokens || tokens.length === 0) return;
+      try {
+        const fetchedAssets = await fetchAssets(tokens, address);
+        setAssets(fetchedAssets);
+      } catch (error) {
+        console.error("Error fetching assets:", error);
+      }
+    };
+
+    loadAssets();
+  }, [tokens, address, fetchAssets]);
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>

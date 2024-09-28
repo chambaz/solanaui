@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Image from "next/image";
+
 import { PublicKey } from "@solana/web3.js";
 
-import { cn } from "@/lib/utils";
+import { formatUsd } from "@/lib/utils";
 import { useWallet } from "@/hooks/use-wallet";
-import { useAssets, ExtendedDigitalAsset } from "@/hooks/use-assets";
+import { ExtendedDigitalAsset, useAssets } from "@/hooks/use-assets";
 import {
   Card,
   CardContent,
@@ -16,16 +17,16 @@ import {
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
-type NFTCardProps = {
+type TokenCardProps = {
   address: PublicKey;
 };
 
-const NFTCard = ({ address }: NFTCardProps) => {
-  const { publicKey } = useWallet();
+const TokenCard = ({ address }: TokenCardProps) => {
   const { fetchAssets, isLoading } = useAssets();
-  const [asset, setAsset] = useState<ExtendedDigitalAsset | null>(null);
+  const { publicKey } = useWallet();
+  const [asset, setAsset] = React.useState<ExtendedDigitalAsset | null>(null);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const fetchAsset = async () => {
       try {
         const assets = await fetchAssets([address], publicKey ?? undefined);
@@ -57,22 +58,24 @@ const NFTCard = ({ address }: NFTCardProps) => {
   return (
     <Card className="w-[350px]">
       <CardHeader>
-        <CardTitle>{asset.metadata.name}</CardTitle>
-        <CardDescription className={cn(!asset.collection && "sr-only")}>
-          {asset.collection || "No collection"}
-        </CardDescription>
+        <CardTitle className="flex items-center gap-2">
+          {asset.imageUrl && (
+            <Image
+              src={asset.imageUrl}
+              alt={asset.metadata.name}
+              width={46}
+              height={46}
+              className="rounded-full"
+            />
+          )}
+          {asset.metadata.name}
+        </CardTitle>
       </CardHeader>
       <CardContent>
-        <Image
-          src={asset.imageUrl as string}
-          alt={asset.metadata.name}
-          width={300}
-          height={300}
-          className="rounded-md"
-        />
+        {asset.price && <p className="text-4xl">{formatUsd(asset.price)}</p>}
       </CardContent>
     </Card>
   );
 };
 
-export { NFTCard };
+export { TokenCard };

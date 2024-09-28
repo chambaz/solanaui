@@ -16,6 +16,11 @@ const nextConfig = {
         hostname: "shdw-drive.genesysgo.net",
         pathname: "/**/*",
       },
+      {
+        protocol: "https",
+        hostname: "ipfs.io",
+        pathname: "/ipfs/*",
+      },
     ],
   },
 };

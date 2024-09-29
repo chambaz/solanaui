@@ -10,11 +10,14 @@ import {
 } from "@metaplex-foundation/mpl-token-metadata";
 import { publicKey, isSome } from "@metaplex-foundation/umi";
 
-export type ExtendedDigitalAsset = (DigitalAssetWithToken | DigitalAsset) & {
+export type ExtendedDigitalAsset = {
   imageUrl?: string;
   price?: number;
   collection?: string;
-};
+} & (
+  | (DigitalAsset & { hasToken: false })
+  | (DigitalAssetWithToken & { hasToken: true })
+);
 
 const umi = createUmi(process.env.NEXT_PUBLIC_RPC_URL as string).use(
   mplTokenMetadata(),
@@ -75,9 +78,9 @@ export function useAssets() {
             ...assetRes,
             imageUrl,
             price: priceData?.data?.value || undefined,
-            token: "token" in assetRes ? assetRes.token : undefined,
             collection,
-          });
+            hasToken: "token" in assetRes,
+          } as ExtendedDigitalAsset);
         }
       } finally {
         setIsLoading(false);

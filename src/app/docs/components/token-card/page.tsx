@@ -14,15 +14,17 @@ export default function TokenCardPage() {
       preview: (
         <TokenCard
           address={
-            new PublicKey("ED5nyyWEzpPPiWimP8vYm7sD7TD3LAt3Q3gRTWHzPJBY")
+            new PublicKey("EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm")
           }
         />
       ),
-      code: `import { NFTCard } from "@/components/sol/nft-card"
+      code: `import { TokenCard } from "@/components/sol/token-card"
 
-export function NFTCardDemo() {
+export function TokenCardDemo() {
   return (
     <TokenCard 
+      address={
+        new PublicKey("EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm")
       }
     />
   )

@@ -26,9 +26,37 @@ export const formatNumber = (
 };
 
 export const formatNumberShort = (num: number): string => {
+  if (num < 1000) return formatNumber(num);
   return millify(num, {
     precision: 2,
   });
+};
+
+export const formatNumberGrouped = (
+  value: number,
+  expThreshold: number = 0.0001,
+  expPrecision: number = 1,
+) => {
+  if (value === 0) return "0";
+
+  if (Math.abs(value) < expThreshold) {
+    return value.toExponential(expPrecision);
+  }
+
+  if (Number.isInteger(value)) {
+    return new Intl.NumberFormat("en-US", { useGrouping: true }).format(value);
+  }
+
+  const valueParts = value.toString().split(".");
+  const decimalPart = valueParts[1] ?? "";
+  const leadingZeros = decimalPart.match(/^0*/)?.[0].length ?? 0;
+  const minimumFractionDigits = leadingZeros > 0 ? leadingZeros + 1 : 2;
+
+  return new Intl.NumberFormat("en-US", {
+    useGrouping: true,
+    minimumFractionDigits: minimumFractionDigits,
+    maximumFractionDigits: Math.max(2, minimumFractionDigits),
+  }).format(value);
 };
 
 export const formatUsd = (num: number): string => {

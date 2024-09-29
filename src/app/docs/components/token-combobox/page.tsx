@@ -20,7 +20,7 @@ export default function TokenDropdownPage() {
             new PublicKey("EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm"),
             new PublicKey("MEW1gQWJ3nEXg2qgERiKu7FAFj79PHvQVREQUzScPP5"),
           ]}
-          owner={publicKey ?? undefined}
+          owner={publicKey}
         />
       ),
       code: `import { Avatar } from "@/components/sol/avatar"
@@ -32,7 +32,7 @@ export function UserDropdownDemo() {
         new PublicKey("CTJf74cTo3cw8acFP1YXF3QpsQUUBGBjh2k2e8xsZ6UL"),
         new PublicKey("WENWENvqqNya429ubCdR81ZmD69brwQaaBYY6p3LCpk"),
       ]}
-      owner={publicKey ?? undefined}
+      owner={publicKey}
     />
   )
 }`,

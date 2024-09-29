@@ -27,10 +27,11 @@ import {
 
 type TokenComboboxProps = {
   tokens: PublicKey[];
-  owner?: PublicKey;
+  owner?: PublicKey | null;
+  onSelect?: (token: ExtendedDigitalAsset) => void;
 };
 
-const TokenCombobox = ({ tokens, owner }: TokenComboboxProps) => {
+const TokenCombobox = ({ tokens, owner, onSelect }: TokenComboboxProps) => {
   const { fetchAssets, isLoading } = useAssets();
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
@@ -43,8 +44,7 @@ const TokenCombobox = ({ tokens, owner }: TokenComboboxProps) => {
 
   React.useEffect(() => {
     const init = async () => {
-      const fetchedAssets = await fetchAssets(tokens, owner);
-      console.log(fetchedAssets);
+      const fetchedAssets = await fetchAssets(tokens, owner ?? undefined);
       setAssets(fetchedAssets);
     };
     init();
@@ -93,6 +93,7 @@ const TokenCombobox = ({ tokens, owner }: TokenComboboxProps) => {
                   onSelect={(currentValue) => {
                     setValue(currentValue === value ? "" : currentValue);
                     setOpen(false);
+                    if (onSelect) onSelect(asset);
                   }}
                 >
                   <IconCheck

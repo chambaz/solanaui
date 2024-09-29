@@ -16,7 +16,11 @@ export type ExtendedDigitalAsset = {
   collection?: string;
 } & (
   | (DigitalAsset & { hasToken: false })
-  | (DigitalAssetWithToken & { hasToken: true })
+  | (DigitalAssetWithToken & {
+      hasToken: true;
+      tokenAmount: number;
+      tokenAmountUsd: number;
+    })
 );
 
 const umi = createUmi(process.env.NEXT_PUBLIC_RPC_URL as string).use(
@@ -74,13 +78,21 @@ export function useAssets() {
           );
           const priceData = await priceRes.json();
 
-          fetchedAssets.push({
+          const item = {
             ...assetRes,
             imageUrl,
             price: priceData?.data?.value || undefined,
             collection,
             hasToken: "token" in assetRes,
-          } as ExtendedDigitalAsset);
+          } as ExtendedDigitalAsset;
+
+          if (item.hasToken) {
+            item.tokenAmount =
+              Number(item.token.amount) / Math.pow(10, item.mint.decimals);
+            if (item.price) item.tokenAmountUsd = item.tokenAmount * item.price;
+          }
+
+          fetchedAssets.push(item);
         }
       } finally {
         setIsLoading(false);

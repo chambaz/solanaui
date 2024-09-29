@@ -1,6 +1,7 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { PublicKey } from "@solana/web3.js";
+import millify from "millify";
 
 export const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
@@ -22,6 +23,12 @@ export const formatNumber = (
     maximumFractionDigits: decimals,
     ...options,
   }).format(num);
+};
+
+export const formatNumberShort = (num: number): string => {
+  return millify(num, {
+    precision: 2,
+  });
 };
 
 export const formatUsd = (num: number): string => {

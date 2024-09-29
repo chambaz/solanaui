@@ -8,7 +8,7 @@ import { getPrimaryDomain } from "@bonfida/spl-name-service";
 import { IconCopy, IconCheck } from "@tabler/icons-react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
-import { formatUsd, shortAddress } from "@/lib/utils";
+import { formatNumber, formatUsd, shortAddress } from "@/lib/utils";
 import { useAssets, ExtendedDigitalAsset } from "@/hooks/use-assets";
 import { useWallet } from "@/hooks/use-wallet";
 
@@ -36,7 +36,10 @@ const UserDropdown = ({ address, tokens }: UserDropdownProps) => {
   const [domain, setDomain] = React.useState<string | null>(null);
 
   const totalBalance = React.useMemo(() => {
-    return assets.reduce((acc, asset) => acc + (asset.price ?? 0), 0);
+    return assets.reduce(
+      (acc, asset) => acc + (asset.hasToken ? asset.tokenAmountUsd : 0),
+      0,
+    );
   }, [assets]);
 
   React.useEffect(() => {
@@ -60,6 +63,7 @@ const UserDropdown = ({ address, tokens }: UserDropdownProps) => {
       if (!tokens || tokens.length === 0) return;
       try {
         const fetchedAssets = await fetchAssets(tokens, address);
+        console.log("fetchedAssets", fetchedAssets);
         setAssets(fetchedAssets);
       } catch (error) {
         console.error("Error fetching assets:", error);
@@ -130,8 +134,15 @@ const UserDropdown = ({ address, tokens }: UserDropdownProps) => {
                     <div className="h-8 w-8 rounded-full border border-border" />
                   )}
                   <span>{asset.metadata.symbol}</span>
-                  {asset.price !== undefined && (
-                    <span className="ml-auto">{formatUsd(asset.price)}</span>
+                  {asset.hasToken && asset.tokenAmount && (
+                    <span className="ml-auto flex flex-col text-right">
+                      {formatNumber(asset.tokenAmount)}
+                      {asset.price && (
+                        <span className="text-xs text-muted-foreground">
+                          {formatUsd(asset.tokenAmount * asset.price)}
+                        </span>
+                      )}
+                    </span>
                   )}
                 </li>
               ))}

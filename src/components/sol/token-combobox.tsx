@@ -7,7 +7,7 @@ import Image from "next/image";
 import { PublicKey } from "@solana/web3.js";
 import { IconSelector, IconCheck } from "@tabler/icons-react";
 
-import { cn, formatUsd } from "@/lib/utils";
+import { cn, formatUsd, formatNumber } from "@/lib/utils";
 import { useAssets, ExtendedDigitalAsset } from "@/hooks/use-assets";
 
 import { Button } from "@/components/ui/button";
@@ -114,8 +114,19 @@ const TokenCombobox = ({ tokens, owner }: TokenComboboxProps) => {
                     />
                   )}
                   {asset.metadata.symbol}
-                  {asset.price && (
-                    <span className="ml-2 text-muted-foreground">
+                  {asset.hasToken && asset.tokenAmount && (
+                    <span className="ml-auto flex flex-col text-right">
+                      {formatNumber(asset.tokenAmount)}
+                      {asset.price && (
+                        <span className="text-xs text-muted-foreground">
+                          {formatUsd(asset.tokenAmount * asset.price)}
+                        </span>
+                      )}
+                    </span>
+                  )}
+
+                  {!asset.hasToken && asset.price && (
+                    <span className="ml-auto flex flex-col text-right">
                       {formatUsd(asset.price)}
                     </span>
                   )}

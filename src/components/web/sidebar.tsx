@@ -40,10 +40,6 @@ const navItems = [
         label: "Token Card",
         href: "/docs/components/token-card",
       },
-      {
-        label: "Token List",
-        href: "/docs/components/token-table",
-      },
       { label: "Token Combobox", href: "/docs/components/token-combobox" },
       { label: "Token Input", href: "/docs/components/token-input" },
       {

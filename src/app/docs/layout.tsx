@@ -3,6 +3,8 @@ import { Inter, Roboto_Mono } from "next/font/google";
 
 import { cn } from "@/lib/utils";
 
+import { Toaster } from "@/components/sol/txn-toast";
+
 import { Providers } from "@/components/web/providers";
 import { Header } from "@/components/web/header";
 import { Footer } from "@/components/web/footer";
@@ -43,6 +45,7 @@ export default function DocsLayout({
             </main>
           </div>
           <Footer />
+          <Toaster />
         </Providers>
       </body>
     </html>

@@ -1,21 +1,21 @@
 "use client";
 
-import { useTxnToast } from "@/hooks/use-txn-toast";
+import { useToast } from "@/hooks/use-toast";
 import {
-  ToastProvider,
-  ToastViewport,
   Toast,
-  ToastTitle,
-  ToastDescription,
   ToastClose,
+  ToastDescription,
+  ToastProvider,
+  ToastTitle,
+  ToastViewport,
 } from "@/components/ui/toast";
 
-const TxnToaster = () => {
-  const { txnToasts } = useTxnToast();
+export function Toaster() {
+  const { toasts } = useToast();
 
   return (
     <ToastProvider>
-      {txnToasts.map(function ({ id, title, description, action, ...props }) {
+      {toasts.map(function ({ id, title, description, action, ...props }) {
         return (
           <Toast key={id} {...props}>
             <div className="grid gap-1">
@@ -32,6 +32,4 @@ const TxnToaster = () => {
       <ToastViewport />
     </ToastProvider>
   );
-};
-
-export { TxnToaster };
+}

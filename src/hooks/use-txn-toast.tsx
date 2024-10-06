@@ -3,14 +3,7 @@
 // Inspired by react-hot-toast library
 import * as React from "react";
 
-import type {
-  Connection,
-  Transaction,
-  VersionedTransaction,
-  TransactionSignature,
-} from "@solana/web3.js";
-
-import type { SendTransactionOptions } from "@solana/wallet-adapter-base";
+import type { RpcResponseAndContext, SignatureResult } from "@solana/web3.js";
 
 import type { ToastActionElement, ToastProps } from "@/components/ui/toast";
 
@@ -61,7 +54,7 @@ type Action =
     };
 
 interface State {
-  toasts: ToasterToast[];
+  txnToasts: ToasterToast[];
 }
 
 const toastTimeouts = new Map<string, ReturnType<typeof setTimeout>>();
@@ -87,13 +80,13 @@ export const reducer = (state: State, action: Action): State => {
     case "ADD_TOAST":
       return {
         ...state,
-        toasts: [action.toast, ...state.toasts].slice(0, TOAST_LIMIT),
+        txnToasts: [action.toast, ...state.txnToasts].slice(0, TOAST_LIMIT),
       };
 
     case "UPDATE_TOAST":
       return {
         ...state,
-        toasts: state.toasts.map((t) =>
+        txnToasts: state.txnToasts.map((t) =>
           t.id === action.toast.id ? { ...t, ...action.toast } : t,
         ),
       };
@@ -106,14 +99,14 @@ export const reducer = (state: State, action: Action): State => {
       if (toastId) {
         addToRemoveQueue(toastId);
       } else {
-        state.toasts.forEach((toast) => {
+        state.txnToasts.forEach((toast) => {
           addToRemoveQueue(toast.id);
         });
       }
 
       return {
         ...state,
-        toasts: state.toasts.map((t) =>
+        txnToasts: state.txnToasts.map((t) =>
           t.id === toastId || toastId === undefined
             ? {
                 ...t,
@@ -127,19 +120,19 @@ export const reducer = (state: State, action: Action): State => {
       if (action.toastId === undefined) {
         return {
           ...state,
-          toasts: [],
+          txnToasts: [],
         };
       }
       return {
         ...state,
-        toasts: state.toasts.filter((t) => t.id !== action.toastId),
+        txnToasts: state.txnToasts.filter((t) => t.id !== action.toastId),
       };
   }
 };
 
 const listeners: Array<(state: State) => void> = [];
 
-let memoryState: State = { toasts: [] };
+let memoryState: State = { txnToasts: [] };
 
 function dispatch(action: Action) {
   memoryState = reducer(memoryState, action);
@@ -149,25 +142,11 @@ function dispatch(action: Action) {
 }
 
 type Toast = Omit<ToasterToast, "id"> & {
-  transaction?: Transaction;
-  connection?: Connection;
-  blockhash?: string;
-  lastValidBlockHeight?: number;
-  sendTransaction?: (
-    transaction: Transaction | VersionedTransaction,
-    connection: Connection,
-    options?: SendTransactionOptions,
-  ) => Promise<TransactionSignature>;
+  signature?: string;
+  confirmation?: Promise<RpcResponseAndContext<SignatureResult>>;
 };
 
-function txnToast({
-  transaction,
-  connection,
-  blockhash,
-  lastValidBlockHeight,
-  sendTransaction,
-  ...props
-}: Toast) {
+function txnToast({ signature, confirmation, ...props }: Toast) {
   const id = genId();
 
   const update = (props: ToasterToast) =>
@@ -191,13 +170,7 @@ function txnToast({
     },
   });
 
-  if (
-    !transaction ||
-    !connection ||
-    !blockhash ||
-    !lastValidBlockHeight ||
-    !sendTransaction
-  ) {
+  if (!signature || !confirmation) {
     return {
       id: id,
       dismiss,
@@ -205,44 +178,50 @@ function txnToast({
     };
   }
 
-  const sendAndConfirmTxn = async () => {
-    try {
-      const signature = await sendTransaction(transaction, connection);
-      connection.confirmTransaction(
-        {
-          signature,
-          blockhash,
-          lastValidBlockHeight,
-        },
-        "confirmed",
-      );
+  confirmation
+    .then((conf) => {
+      if (conf.value.err) {
+        const error = conf.value.err;
+        let errorMessage = "The transaction failed.";
 
-      update({
-        id,
-        title: "Transaction Complete",
-        description: `The transaction has been confirmed.`,
-        action: (
-          <ToastAction
-            onClick={() =>
-              window.open(`https://solscan.io/tx/${signature}`, "_blank")
-            }
-            altText="View on Solscan"
-          >
-            View on Solscan
-          </ToastAction>
-        ),
-      });
-    } catch (error) {
+        if (typeof error === "object" && error !== null && "message" in error) {
+          errorMessage = `Transaction failed: ${error.message}`;
+        } else if (typeof error === "string") {
+          errorMessage = `Transaction failed: ${error}`;
+        }
+
+        update({
+          id,
+          variant: "destructive",
+          title: "Transaction Error",
+          description: errorMessage,
+        });
+      } else {
+        update({
+          id,
+          title: "Transaction Complete",
+          description: `The transaction has been confirmed.`,
+          action: (
+            <ToastAction
+              onClick={() =>
+                window.open(`https://solscan.io/tx/${signature}`, "_blank")
+              }
+              altText="View on Solscan"
+            >
+              View on Solscan
+            </ToastAction>
+          ),
+        });
+      }
+    })
+    .catch(() => {
       update({
         id,
         variant: "destructive",
         title: "Transaction Error",
         description: "The transaction has failed.",
       });
-    }
-  };
-
-  sendAndConfirmTxn();
+    });
 
   return {
     id: id,

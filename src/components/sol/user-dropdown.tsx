@@ -3,14 +3,13 @@
 import React from "react";
 import Image from "next/image";
 import { PublicKey } from "@solana/web3.js";
-import { useConnection } from "@solana/wallet-adapter-react";
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { getPrimaryDomain } from "@bonfida/spl-name-service";
 import { IconCopy, IconCheck } from "@tabler/icons-react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
 import { formatNumber, formatUsd, shortAddress } from "@/lib/utils";
 import { useAssets, ExtendedDigitalAsset } from "@/hooks/use-assets";
-import { useWallet } from "@/hooks/use-wallet";
 
 import { Avatar } from "@/components/sol/avatar";
 

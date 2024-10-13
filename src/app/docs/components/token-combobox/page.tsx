@@ -2,7 +2,7 @@
 
 import { PublicKey } from "@solana/web3.js";
 
-import { useWallet } from "@/hooks/use-wallet";
+import { useWallet } from "@solana/wallet-adapter-react";
 
 import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
 import { TokenCombobox } from "@/components/sol/token-combobox";

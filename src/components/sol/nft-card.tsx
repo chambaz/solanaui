@@ -3,9 +3,9 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { PublicKey } from "@solana/web3.js";
+import { useWallet } from "@solana/wallet-adapter-react";
 
 import { cn } from "@/lib/utils";
-import { useWallet } from "@/hooks/use-wallet";
 import { useAssets, ExtendedDigitalAsset } from "@/hooks/use-assets";
 import {
   Card,

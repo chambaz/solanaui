@@ -3,8 +3,7 @@
 import React from "react";
 
 import * as web3 from "@solana/web3.js";
-
-import { useWallet } from "@/hooks/use-wallet";
+import { useWallet } from "@solana/wallet-adapter-react";
 import { useToast } from "@/hooks/use-toast";
 import { useTxnToast } from "@/hooks/use-txn-toast";
 

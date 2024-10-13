@@ -46,13 +46,17 @@ const navItems = [
         label: "Txn Toast",
         href: "/docs/components/txn-toast",
       },
+      {
+        label: "Icons",
+        href: "/docs/components/icons",
+      },
     ],
   },
   {
     section: "Hooks",
     children: [
       { label: "useAssets", href: "/docs/hooks/use-assets" },
-      { label: "useWallet", href: "/docs/hooks/use-wallet" },
+      { label: "useTxnToast", href: "/docs/hooks/use-txn-toast" },
     ],
   },
 ];

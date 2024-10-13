@@ -17,6 +17,8 @@ export default function TokenDropdownPage() {
       preview: (
         <TokenCombobox
           tokens={[
+            new PublicKey("So11111111111111111111111111111111111111112"),
+            new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"),
             new PublicKey("EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm"),
             new PublicKey("MEW1gQWJ3nEXg2qgERiKu7FAFj79PHvQVREQUzScPP5"),
           ]}
@@ -29,8 +31,8 @@ export function UserDropdownDemo() {
   return (
     <UserDropdown
       tokens={[
-        new PublicKey("CTJf74cTo3cw8acFP1YXF3QpsQUUBGBjh2k2e8xsZ6UL"),
-        new PublicKey("WENWENvqqNya429ubCdR81ZmD69brwQaaBYY6p3LCpk"),
+        new PublicKey("So11111111111111111111111111111111111111112"),
+        new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"),
       ]}
       owner={publicKey}
     />

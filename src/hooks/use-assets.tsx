@@ -40,11 +40,10 @@ const pythPublicKey = getPythProgramKeyForCluster(PYTHNET_CLUSTER_NAME);
 export function useAssets() {
   const [isLoading, setIsLoading] = React.useState(false);
 
-  const pythClient = new PythHttpClient(connection, pythPublicKey);
-
   const fetchAssets = React.useCallback(
     async (addresses: PublicKey[], owner?: PublicKey) => {
       setIsLoading(true);
+      const pythClient = new PythHttpClient(connection, pythPublicKey);
       const pythData = await pythClient.getData();
       const fetchedAssets: ExtendedDigitalAsset[] = [];
 

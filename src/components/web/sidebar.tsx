@@ -47,6 +47,10 @@ const navItems = [
       { label: "Token Combobox", href: "/docs/components/token-combobox" },
       { label: "Token Input", href: "/docs/components/token-input" },
       {
+        label: "Txn List",
+        href: "/docs/components/txn-list",
+      },
+      {
         label: "Txn Toast",
         href: "/docs/components/txn-toast",
       },

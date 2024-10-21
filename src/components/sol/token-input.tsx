@@ -78,7 +78,7 @@ export const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
     );
 
     return (
-      <div className="relative w-full space-y-4 rounded-lg border border-border p-4">
+      <div className="relative w-full space-y-4">
         <div className="flex items-center justify-end gap-2">
           <Button
             variant="ghost"

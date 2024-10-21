@@ -35,6 +35,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cmdk": "1.0.0",
+    "date-fns": "^4.1.0",
     "lucide-react": "^0.441.0",
     "millify": "^6.1.0",
     "minidenticons": "^4.2.1",

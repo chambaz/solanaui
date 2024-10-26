@@ -13,6 +13,8 @@ import {
   SolflareWalletAdapter,
 } from "@solana/wallet-adapter-wallets";
 
+import { TxnSettingsProvider } from "@/components/sol/txn-settings";
+
 const Providers = ({ children }: { children: React.ReactNode }) => {
   const wallets = React.useMemo(
     () => [
@@ -25,7 +27,7 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
   return (
     <ConnectionProvider endpoint={process.env.NEXT_PUBLIC_RPC_URL as string}>
       <WalletProvider wallets={wallets} autoConnect>
-        {children}
+        <TxnSettingsProvider>{children}</TxnSettingsProvider>
       </WalletProvider>
     </ConnectionProvider>
   );

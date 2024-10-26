@@ -55,6 +55,10 @@ const navItems = [
         href: "/docs/components/txn-toast",
       },
       {
+        label: "Txn Settings",
+        href: "/docs/components/txn-settings",
+      },
+      {
         label: "Icons",
         href: "/docs/components/icons",
       },

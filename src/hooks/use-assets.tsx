@@ -52,11 +52,15 @@ export function useAssets() {
           let assetRes: DigitalAssetWithToken | DigitalAsset | null = null;
 
           if (owner) {
-            assetRes = await fetchDigitalAssetWithAssociatedToken(
-              umi,
-              publicKey(address),
-              publicKey(owner),
-            );
+            try {
+              assetRes = await fetchDigitalAssetWithAssociatedToken(
+                umi,
+                publicKey(address),
+                publicKey(owner),
+              );
+            } catch (error) {
+              assetRes = await fetchDigitalAsset(umi, publicKey(address));
+            }
           } else {
             assetRes = await fetchDigitalAsset(umi, publicKey(address));
           }
@@ -65,7 +69,6 @@ export function useAssets() {
           let imageUrl: string | undefined;
           let collection: string | undefined;
           try {
-            console.log(assetRes);
             const data = await fetch(assetRes.metadata.uri).then((res) =>
               res.json(),
             );
@@ -87,7 +90,7 @@ export function useAssets() {
 
           // fetch price from pyth
           const priceData = pythData.productPrice.get(
-            `Crypto.${assetRes.metadata.symbol.replace("$", "")}/USD`,
+            `Crypto.${assetRes.metadata.symbol.replace("$", "").toUpperCase()}/USD`,
           );
 
           const item = {

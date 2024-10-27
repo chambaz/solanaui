@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
 
 import { PublicKey } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -16,6 +15,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+
+import { TokenIcon } from "@/components/sol/token-icon";
 
 type TokenCardProps = {
   address: PublicKey;
@@ -59,15 +60,7 @@ const TokenCard = ({ address }: TokenCardProps) => {
     <Card className="w-[350px]">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          {asset.imageUrl && (
-            <Image
-              src={asset.imageUrl}
-              alt={asset.metadata.name}
-              width={46}
-              height={46}
-              className="rounded-full"
-            />
-          )}
+          <TokenIcon token={asset.metadata.symbol} size={46} />
           {asset.metadata.name}
         </CardTitle>
       </CardHeader>

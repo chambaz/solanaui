@@ -2,8 +2,6 @@
 
 import * as React from "react";
 
-import Image from "next/image";
-
 import { PublicKey } from "@solana/web3.js";
 import { IconSelector, IconCheck } from "@tabler/icons-react";
 
@@ -24,6 +22,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+
+import { TokenIcon } from "@/components/sol/token-icon";
 
 type TokenComboboxProps = {
   tokens: PublicKey[];
@@ -61,15 +61,7 @@ const TokenCombobox = ({ tokens, owner, onSelect }: TokenComboboxProps) => {
         >
           {selectedAsset ? (
             <>
-              {selectedAsset.imageUrl && (
-                <Image
-                  src={selectedAsset.imageUrl}
-                  alt={selectedAsset.metadata.symbol}
-                  width={20}
-                  height={20}
-                  className="mr-2 rounded-full"
-                />
-              )}
+              <TokenIcon token={selectedAsset.metadata.symbol} />
               {selectedAsset.metadata.symbol}
             </>
           ) : (
@@ -105,15 +97,7 @@ const TokenCombobox = ({ tokens, owner, onSelect }: TokenComboboxProps) => {
                     )}
                     size={16}
                   />
-                  {asset.imageUrl && (
-                    <Image
-                      src={asset.imageUrl}
-                      alt={asset.metadata.symbol}
-                      width={20}
-                      height={20}
-                      className="mr-2 rounded-full"
-                    />
-                  )}
+                  <TokenIcon token={asset.metadata.symbol} />
                   {asset.metadata.symbol}
                   {asset.hasToken && asset.tokenAmount && (
                     <span className="ml-auto flex flex-col text-right">

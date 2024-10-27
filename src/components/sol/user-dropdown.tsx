@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
+
 import { PublicKey } from "@solana/web3.js";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { getPrimaryDomain } from "@bonfida/spl-name-service";
@@ -12,7 +12,7 @@ import { formatNumber, formatUsd, shortAddress } from "@/lib/utils";
 import { useAssets, ExtendedDigitalAsset } from "@/hooks/use-assets";
 
 import { Avatar } from "@/components/sol/avatar";
-
+import { TokenIcon } from "@/components/sol/token-icon";
 import {
   Popover,
   PopoverContent,
@@ -62,7 +62,6 @@ const UserDropdown = ({ address, tokens }: UserDropdownProps) => {
       if (!tokens || tokens.length === 0) return;
       try {
         const fetchedAssets = await fetchAssets(tokens, address);
-        console.log("fetchedAssets", fetchedAssets);
         setAssets(fetchedAssets);
       } catch (error) {
         console.error("Error fetching assets:", error);
@@ -121,28 +120,27 @@ const UserDropdown = ({ address, tokens }: UserDropdownProps) => {
                   key={asset.mint.publicKey.toString()}
                   className="flex items-center gap-2"
                 >
-                  {asset.imageUrl ? (
-                    <Image
-                      src={asset.imageUrl}
-                      alt={asset.metadata.symbol}
-                      width={32}
-                      height={32}
-                      className="h-8 w-8 rounded-full border border-border"
-                    />
-                  ) : (
-                    <div className="h-8 w-8 rounded-full border border-border" />
-                  )}
+                  <TokenIcon token={asset.metadata.symbol} size={32} />
                   <span>{asset.metadata.symbol}</span>
-                  {asset.hasToken && asset.tokenAmount && (
-                    <span className="ml-auto flex flex-col text-right">
-                      {formatNumber(asset.tokenAmount)}
-                      {asset.price && (
+                  <span className="ml-auto flex flex-col text-right">
+                    {asset.hasToken && asset.tokenAmount > 0 ? (
+                      <>
+                        {formatNumber(asset.tokenAmount)}
+                        {asset.price && (
+                          <span className="text-xs text-muted-foreground">
+                            {formatUsd(asset.tokenAmount * asset.price)}
+                          </span>
+                        )}
+                      </>
+                    ) : (
+                      <>
+                        0
                         <span className="text-xs text-muted-foreground">
-                          {formatUsd(asset.tokenAmount * asset.price)}
+                          $0.00
                         </span>
-                      )}
-                    </span>
-                  )}
+                      </>
+                    )}
+                  </span>
                 </li>
               ))}
             </ul>

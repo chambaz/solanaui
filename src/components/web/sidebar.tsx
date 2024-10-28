@@ -15,11 +15,11 @@ const navItems = [
       },
       {
         label: "Installation",
-        href: "/docs",
+        href: "/docs/installation",
       },
       {
         label: "Themes",
-        href: "/docs",
+        href: "/docs/themes",
       },
     ],
   },
@@ -32,10 +32,7 @@ const navItems = [
       },
       { label: "Avatar", href: "/docs/components/avatar" },
       { label: "User Dropdown", href: "/docs/components/user-dropdown" },
-      {
-        label: "Token Icon",
-        href: "/docs/components/token-icon",
-      },
+
       {
         label: "NFT Card",
         href: "/docs/components/nft-card",
@@ -50,6 +47,10 @@ const navItems = [
       },
       { label: "Token Combobox", href: "/docs/components/token-combobox" },
       { label: "Token Input", href: "/docs/components/token-input" },
+      {
+        label: "Token Icon",
+        href: "/docs/components/token-icon",
+      },
       {
         label: "Txn List",
         href: "/docs/components/txn-list",

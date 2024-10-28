@@ -35,7 +35,11 @@ export default function DocsLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={cn(inter.variable, roboto_mono.variable)}>
+    <html
+      lang="en"
+      className={cn(inter.variable, roboto_mono.variable)}
+      suppressHydrationWarning
+    >
       <body>
         <Providers>
           <Header />

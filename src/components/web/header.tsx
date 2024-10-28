@@ -2,7 +2,13 @@
 
 import Link from "next/link";
 
-import { IconBrandGithub, IconBrandX } from "@tabler/icons-react";
+import { useTheme } from "next-themes";
+import {
+  IconBrandGithub,
+  IconBrandX,
+  IconSun,
+  IconMoon,
+} from "@tabler/icons-react";
 
 import {
   ConnectWalletDialog,
@@ -14,6 +20,7 @@ import {
 } from "@/components/sol/connect-wallet-dialog";
 
 import { Button } from "@/components/ui/button";
+import { Toggle } from "@/components/ui/toggle";
 
 const navItems = [
   {
@@ -31,6 +38,8 @@ const navItems = [
 ];
 
 const Header = () => {
+  const { theme, setTheme } = useTheme();
+
   return (
     <header className="flex h-16 items-center border-b border-border px-8">
       <div className="flex w-full items-center justify-between gap-6">
@@ -75,6 +84,17 @@ const Header = () => {
               <Link href="">
                 <IconBrandX size={18} />
               </Link>
+            </li>
+            <li>
+              <Toggle
+                onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+              >
+                {theme === "light" ? (
+                  <IconSun size={18} />
+                ) : (
+                  <IconMoon size={18} />
+                )}
+              </Toggle>
             </li>
           </ul>
         </nav>

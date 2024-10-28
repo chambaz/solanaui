@@ -38,7 +38,7 @@
     "clsx": "^2.1.1",
     "cmdk": "1.0.0",
     "date-fns": "^4.1.0",
-    "lucide-react": "^0.441.0",
+    "lucide-react": "^0.453.0",
     "millify": "^6.1.0",
     "minidenticons": "^4.2.1",
     "next": "14.2.11",
@@ -47,6 +47,7 @@
     "react-copy-to-clipboard": "^5.1.0",
     "react-dom": "^18",
     "react-syntax-highlighter": "^15.5.0",
+    "recharts": "^2.13.0",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7"
   },

@@ -62,6 +62,10 @@ const navItems = [
         label: "Txn Settings",
         href: "/docs/components/txn-settings",
       },
+      {
+        label: "Price Chart",
+        href: "/docs/components/price-chart",
+      },
     ],
   },
   {

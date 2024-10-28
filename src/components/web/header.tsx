@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 
+import { PublicKey } from "@solana/web3.js";
+import { useWallet } from "@solana/wallet-adapter-react";
 import { useTheme } from "next-themes";
 import {
   IconBrandGithub,
@@ -18,6 +20,7 @@ import {
   ConnectWalletDialogDescription,
   ConnectWalletDialogContent,
 } from "@/components/sol/connect-wallet-dialog";
+import { UserDropdown } from "@/components/sol/user-dropdown";
 
 import { Button } from "@/components/ui/button";
 import { Toggle } from "@/components/ui/toggle";
@@ -37,7 +40,13 @@ const navItems = [
   },
 ];
 
+const userTokens = [
+  new PublicKey("So11111111111111111111111111111111111111112"),
+  new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"),
+];
+
 const Header = () => {
+  const { connected, publicKey } = useWallet();
   const { theme, setTheme } = useTheme();
 
   return (
@@ -59,21 +68,25 @@ const Header = () => {
               </li>
             ))}
           </ul>
-          <ConnectWalletDialog>
-            <ConnectWalletDialogTrigger asChild>
-              <Button>Connect Wallet</Button>
-            </ConnectWalletDialogTrigger>
-            <ConnectWalletDialogContent>
-              <ConnectWalletDialogHeader>
-                <ConnectWalletDialogTitle>
-                  Connect Wallet custom title
-                </ConnectWalletDialogTitle>
-                <ConnectWalletDialogDescription>
-                  Connect your wallet to continue
-                </ConnectWalletDialogDescription>
-              </ConnectWalletDialogHeader>
-            </ConnectWalletDialogContent>
-          </ConnectWalletDialog>
+          {connected && publicKey ? (
+            <UserDropdown address={publicKey} tokens={userTokens} />
+          ) : (
+            <ConnectWalletDialog>
+              <ConnectWalletDialogTrigger asChild>
+                <Button>Connect Wallet</Button>
+              </ConnectWalletDialogTrigger>
+              <ConnectWalletDialogContent>
+                <ConnectWalletDialogHeader>
+                  <ConnectWalletDialogTitle>
+                    Connect Wallet custom title
+                  </ConnectWalletDialogTitle>
+                  <ConnectWalletDialogDescription>
+                    Connect your wallet to continue
+                  </ConnectWalletDialogDescription>
+                </ConnectWalletDialogHeader>
+              </ConnectWalletDialogContent>
+            </ConnectWalletDialog>
+          )}
           <ul className="flex items-center gap-4">
             <li>
               <Link href="">

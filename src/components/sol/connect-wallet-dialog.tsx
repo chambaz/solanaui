@@ -7,8 +7,6 @@ import Image from "next/image";
 import { Wallet } from "@solana/wallet-adapter-react";
 import { useWallet } from "@solana/wallet-adapter-react";
 
-import { shortAddress } from "@/lib/utils";
-
 import {
   Dialog,
   DialogContent,
@@ -64,9 +62,7 @@ const ConnectWalletDialog = ({ children }: { children: React.ReactNode }) => {
   const { connected, publicKey, disconnect } = useWallet();
 
   if (connected && publicKey)
-    return (
-      <Button onClick={disconnect}>Logout {shortAddress(publicKey)}</Button>
-    );
+    return <Button onClick={disconnect}>Logout</Button>;
 
   return <Dialog>{children}</Dialog>;
 };

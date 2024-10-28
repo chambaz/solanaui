@@ -22,10 +22,11 @@ import { Button } from "@/components/ui/button";
 
 type UserDropdownProps = {
   address: PublicKey;
+  size?: number;
   tokens?: PublicKey[];
 };
 
-const UserDropdown = ({ address, tokens }: UserDropdownProps) => {
+const UserDropdown = ({ address, size = 42, tokens }: UserDropdownProps) => {
   const { connected, disconnect } = useWallet();
   const { connection } = useConnection();
   const { fetchAssets, isLoading } = useAssets();
@@ -74,7 +75,7 @@ const UserDropdown = ({ address, tokens }: UserDropdownProps) => {
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger>
-        <Avatar address={address} />
+        <Avatar address={address} size={size} />
       </PopoverTrigger>
       <PopoverContent>
         <div className="space-y-4 text-sm">

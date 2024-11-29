@@ -4,20 +4,14 @@ import Link from "next/link";
 
 import { PublicKey } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { useTheme } from "next-themes";
-import {
-  IconBrandGithub,
-  IconBrandX,
-  IconSun,
-  IconMoon,
-  IconMenu,
-} from "@tabler/icons-react";
+
+import { IconBrandGithub, IconBrandX, IconMenu } from "@tabler/icons-react";
 
 import { ConnectWallet } from "@/components/web/connect-wallet";
+import { ThemeToggle } from "@/components/web/theme-toggle";
 
 import { UserDropdown } from "@/components/sol/user-dropdown";
 
-import { Toggle } from "@/components/ui/toggle";
 import { Button } from "@/components/ui/button";
 
 const navItems = [
@@ -42,7 +36,6 @@ const userTokens = [
 
 const Header = () => {
   const { connected, publicKey } = useWallet();
-  const { theme, setTheme } = useTheme();
 
   return (
     <header className="flex h-16 items-center border-b border-border px-4 md:px-8">
@@ -80,15 +73,7 @@ const Header = () => {
               </Link>
             </li>
             <li>
-              <Toggle
-                onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-              >
-                {theme === "light" ? (
-                  <IconSun size={18} />
-                ) : (
-                  <IconMoon size={18} />
-                )}
-              </Toggle>
+              <ThemeToggle />
             </li>
           </ul>
           <Button variant="ghost" size="icon" className="md:hidden">

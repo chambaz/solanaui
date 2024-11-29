@@ -64,6 +64,10 @@ const navItems = [
         href: "/docs/components/txn-settings",
       },
       {
+        label: "Sparkline",
+        href: "/docs/components/sparkline",
+      },
+      {
         label: "Price Chart",
         href: "/docs/components/price-chart",
       },

@@ -80,16 +80,17 @@ const ConnectWalletDialogContent = React.forwardRef<
 });
 ConnectWalletDialogContent.displayName = "ConnectWalletDialogContent";
 
-const ConnectWalletDialogHeader = React.forwardRef<
-  React.ElementRef<typeof DialogHeader>,
-  React.ComponentPropsWithoutRef<typeof DialogHeader>
->(({ children, className, ...props }) => {
+const ConnectWalletDialogHeader = ({
+  children,
+  className,
+  ...props
+}: React.ComponentPropsWithoutRef<typeof DialogHeader>) => {
   return (
     <DialogHeader className={cn(className, "sm:text-center")} {...props}>
       {children}
     </DialogHeader>
   );
-});
+};
 ConnectWalletDialogHeader.displayName = "ConnectWalletDialogHeader";
 
 const ConnectWalletDialogTitle = React.forwardRef<

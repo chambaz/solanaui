@@ -43,14 +43,13 @@ const UserDropdown = ({ address, size = 42, tokens }: UserDropdownProps) => {
   }, [assets]);
 
   React.useEffect(() => {
-    if (!connection) return;
+    if (!connection || !address) return;
 
     async function fetchDomain() {
       try {
         const { reverse } = await getPrimaryDomain(connection, address);
         setDomain(`${reverse}.sol`);
       } catch (error) {
-        console.error("Error fetching SNS domain:", error);
         setDomain(null);
       }
     }

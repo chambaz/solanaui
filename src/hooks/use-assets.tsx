@@ -69,12 +69,14 @@ export function useAssets() {
           let imageUrl: string | undefined;
           let collection: string | undefined;
           try {
-            const data = await fetch(assetRes.metadata.uri).then((res) =>
-              res.json(),
-            );
+            if (assetRes.metadata.uri) {
+              const data = await fetch(assetRes.metadata.uri).then((res) =>
+                res.json(),
+              );
 
-            if (data.image) {
-              imageUrl = data.image;
+              if (data.image) {
+                imageUrl = data.image;
+              }
             }
 
             if (isSome(assetRes.metadata.collection)) {

@@ -12,17 +12,10 @@ import {
   IconMoon,
 } from "@tabler/icons-react";
 
-import {
-  ConnectWalletDialog,
-  ConnectWalletDialogTrigger,
-  ConnectWalletDialogHeader,
-  ConnectWalletDialogTitle,
-  ConnectWalletDialogDescription,
-  ConnectWalletDialogContent,
-} from "@/components/sol/connect-wallet-dialog";
+import { ConnectWallet } from "@/components/web/connect-wallet";
+
 import { UserDropdown } from "@/components/sol/user-dropdown";
 
-import { Button } from "@/components/ui/button";
 import { Toggle } from "@/components/ui/toggle";
 
 const navItems = [
@@ -71,21 +64,7 @@ const Header = () => {
           {connected && publicKey ? (
             <UserDropdown address={publicKey} tokens={userTokens} />
           ) : (
-            <ConnectWalletDialog>
-              <ConnectWalletDialogTrigger asChild>
-                <Button>Connect Wallet</Button>
-              </ConnectWalletDialogTrigger>
-              <ConnectWalletDialogContent>
-                <ConnectWalletDialogHeader>
-                  <ConnectWalletDialogTitle>
-                    Connect Wallet custom title
-                  </ConnectWalletDialogTitle>
-                  <ConnectWalletDialogDescription>
-                    Connect your wallet to continue
-                  </ConnectWalletDialogDescription>
-                </ConnectWalletDialogHeader>
-              </ConnectWalletDialogContent>
-            </ConnectWalletDialog>
+            <ConnectWallet />
           )}
           <ul className="flex items-center gap-4">
             <li>

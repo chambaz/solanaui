@@ -10,6 +10,7 @@ import {
   IconBrandX,
   IconSun,
   IconMoon,
+  IconMenu,
 } from "@tabler/icons-react";
 
 import { ConnectWallet } from "@/components/web/connect-wallet";
@@ -17,6 +18,7 @@ import { ConnectWallet } from "@/components/web/connect-wallet";
 import { UserDropdown } from "@/components/sol/user-dropdown";
 
 import { Toggle } from "@/components/ui/toggle";
+import { Button } from "@/components/ui/button";
 
 const navItems = [
   {
@@ -43,13 +45,13 @@ const Header = () => {
   const { theme, setTheme } = useTheme();
 
   return (
-    <header className="flex h-16 items-center border-b border-border px-8">
+    <header className="flex h-16 items-center border-b border-border px-4 md:px-8">
       <div className="flex w-full items-center justify-between gap-6">
         <Link href="/" className="mr-auto">
           <h1 className="text-3xl font-semibold">SolanaUI</h1>
         </Link>
-        <nav className="flex items-center gap-10 font-mono">
-          <ul className="flex items-center gap-10">
+        <nav className="flex items-center gap-4 font-mono md:gap-10">
+          <ul className="hidden items-center gap-10 md:flex">
             {navItems.map((item) => (
               <li key={item.href}>
                 <Link
@@ -66,7 +68,7 @@ const Header = () => {
           ) : (
             <ConnectWallet />
           )}
-          <ul className="flex items-center gap-4">
+          <ul className="hidden items-center gap-4 md:flex">
             <li>
               <Link href="">
                 <IconBrandGithub size={18} />
@@ -89,6 +91,9 @@ const Header = () => {
               </Toggle>
             </li>
           </ul>
+          <Button variant="ghost" size="icon" className="md:hidden">
+            <IconMenu size={18} />
+          </Button>
         </nav>
       </div>
     </header>

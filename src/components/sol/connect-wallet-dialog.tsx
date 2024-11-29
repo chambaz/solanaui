@@ -7,7 +7,7 @@ import Image from "next/image";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { Wallet } from "@solana/wallet-adapter-react";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { IconX } from "@tabler/icons-react";
+import { IconX, IconLoader2 } from "@tabler/icons-react";
 
 import { cn } from "@/lib/utils";
 
@@ -28,7 +28,7 @@ const ConnectWalletDialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
 >(({ className, children, ...props }, ref) => {
-  const { wallets, select, connecting } = useWallet();
+  const { wallets, select, connecting, wallet } = useWallet();
 
   return (
     <DialogPortal>
@@ -36,32 +36,36 @@ const ConnectWalletDialogContent = React.forwardRef<
       <DialogPrimitive.Content
         ref={ref}
         className={cn(
-          "fixed left-[50%] top-[50%] z-50 grid w-full max-w-md translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background/75 px-8 py-10 shadow-lg outline-none duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg",
+          "fixed bottom-0 left-0 right-0 top-0 z-50 m-auto flex h-screen w-screen flex-col items-center justify-center gap-4 border bg-background/75 px-8 py-10 shadow-lg outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 sm:rounded-lg md:h-fit md:max-w-md",
           className,
         )}
         {...props}
       >
         {children}
-        <ul className="mt-6 flex flex-col justify-center gap-4 text-center">
-          {wallets.map((wallet: Wallet) => (
-            <li key={wallet.adapter.name}>
+        <ul className="mt-12 flex w-full flex-col justify-center gap-4 text-center md:mt-6">
+          {wallets.map((walletItem: Wallet) => (
+            <li key={walletItem.adapter.name}>
               <Button
                 variant="secondary"
                 size="lg"
-                className="h-10 w-3/5 justify-start gap-4 px-3"
+                className="h-10 w-4/5 justify-start gap-4 px-3 disabled:opacity-80 md:w-3/5"
                 onClick={() => {
-                  console.log(select, wallet.adapter.name);
-                  select(wallet.adapter.name);
+                  console.log(select, walletItem.adapter.name);
+                  select(walletItem.adapter.name);
                 }}
                 disabled={connecting}
               >
                 <Image
-                  src={wallet.adapter.icon}
-                  alt={wallet.adapter.name}
+                  src={walletItem.adapter.icon}
+                  alt={walletItem.adapter.name}
                   width={20}
                   height={20}
                 />
-                {wallet.adapter.name}
+                {walletItem.adapter.name}
+                {connecting &&
+                  wallet?.adapter.name === walletItem.adapter.name && (
+                    <IconLoader2 size={16} className="ml-auto animate-spin" />
+                  )}
               </Button>
             </li>
           ))}

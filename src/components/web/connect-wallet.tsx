@@ -17,7 +17,7 @@ const ConnectWallet = () => {
       <ConnectWalletDialogContent>
         <ConnectWalletDialogHeader>
           <ConnectWalletDialogTitle>
-            <span className="bg-gradient-to-r from-teal-200 to-violet-500 bg-clip-text text-4xl text-transparent">
+            <span className="text-4xl dark:bg-gradient-to-r dark:from-teal-200 dark:to-violet-500 dark:bg-clip-text dark:text-transparent">
               SolanaUI
             </span>
           </ConnectWalletDialogTitle>

@@ -3,7 +3,7 @@ import Link from "next/link";
 const Footer = () => {
   return (
     <footer className="w-full border-t border-border">
-      <div className="flex h-20 items-center justify-between gap-6 px-8 text-sm text-muted-foreground">
+      <div className="flex h-20 items-center justify-between gap-6 px-4 text-sm text-muted-foreground md:px-8">
         <p>solanaui &copy; {new Date().getFullYear()}</p>
         <p>
           Built by{" "}

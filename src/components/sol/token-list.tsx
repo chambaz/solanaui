@@ -1,8 +1,9 @@
 import React from "react";
 
-import Image from "next/image";
+import Link from "next/link";
 
 import { PublicKey } from "@solana/web3.js";
+import { IconExternalLink } from "@tabler/icons-react";
 
 import { shortAddress, formatUsd, formatNumberShort, cn } from "@/lib/utils";
 import { useAssets, ExtendedDigitalAsset } from "@/hooks/use-assets";
@@ -15,7 +16,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Avatar } from "@/components/sol/avatar";
+import { Skeleton } from "@/components/ui/skeleton";
+
+import { TokenIcon } from "@/components/sol/token-icon";
 
 type TokenListProps = {
   tokens: PublicKey[];
@@ -45,7 +48,7 @@ const TokenList = ({ tokens, address, onClick }: TokenListProps) => {
   return (
     <Table>
       <TableHeader>
-        <TableRow>
+        <TableRow className="hover:bg-transparent">
           <TableHead>Token</TableHead>
           <TableHead>Mint</TableHead>
           <TableHead>Price</TableHead>
@@ -55,34 +58,53 @@ const TokenList = ({ tokens, address, onClick }: TokenListProps) => {
       </TableHeader>
       <TableBody>
         {isLoading ? (
-          <TableRow>
-            <TableCell colSpan={4}>Loading...</TableCell>
-          </TableRow>
+          <>
+            {[...Array(tokens.length)].map((_, index) => (
+              <TableRow key={index} className="hover:bg-transparent">
+                {[...Array(address ? 5 : 4)].map((_, index) => (
+                  <TableCell key={index}>
+                    {index === 0 ? (
+                      <div className="flex items-center gap-3">
+                        <Skeleton className="h-[32px] w-[32px] shrink-0 rounded-full" />
+                        <Skeleton className="h-[22px] w-full" />
+                      </div>
+                    ) : (
+                      <Skeleton className="h-[22px] w-full" />
+                    )}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </>
         ) : (
           assets.map((asset) => (
             <TableRow
               key={asset.mint.publicKey.toString()}
-              className={cn(onClick && "cursor-pointer")}
+              className={cn(
+                "group odd:bg-muted/25 hover:bg-transparent hover:text-primary hover:odd:bg-muted/25",
+                onClick && "cursor-pointer",
+              )}
               onClick={() => onClick && onClick(asset)}
             >
               <TableCell>
-                <div className="flex items-center gap-2">
-                  {asset.imageUrl ? (
-                    <Image
-                      src={asset.imageUrl}
-                      alt={asset.metadata.symbol}
-                      width={32}
-                      height={32}
-                      className="rounded-full"
-                    />
-                  ) : (
-                    <Avatar address={new PublicKey(asset.mint.publicKey)} />
-                  )}
+                <div className="flex items-center gap-2 font-medium">
+                  <TokenIcon token={asset.metadata.symbol} size={32} />
                   {asset.metadata.symbol}
                 </div>
               </TableCell>
               <TableCell>
-                {shortAddress(asset.mint.publicKey.toString())}
+                <Link
+                  href={`https://solscan.io/token/${asset.mint.publicKey.toString()}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group inline-flex items-center gap-1"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <span className="border-b border-transparent group-hover:border-border">
+                    {shortAddress(asset.mint.publicKey.toString())}
+                  </span>
+                  <IconExternalLink size={14} />
+                </Link>
               </TableCell>
               <TableCell>{formatUsd(asset.price || 0)}</TableCell>
               {address && (

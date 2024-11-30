@@ -1,6 +1,6 @@
 "use client";
 
-import { PriceChart } from "@/components/sol/price-chart";
+import { Sparkline } from "@/components/sol/sparkline";
 
 import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
 
@@ -171,25 +171,21 @@ const chartData = [
   },
 ];
 
-export default function PriceChartPage() {
+export default function SparklinePage() {
   const variants: DocsVariant[] = [
     {
       label: "Default",
       value: "default",
       preview: (
         <div className="w-full max-w-2xl">
-          <PriceChart
-            token="SOL"
-            description="SOL price over the last 24 hours"
-            data={chartData}
-          />
+          <Sparkline data={chartData} />
         </div>
       ),
-      code: `import { PriceChart } from "@/components/sol/price-chart"
+      code: `import { Sparkline } from "@/components/sol/sparkline"
 
-export function AvatarDemo() {
+export function SparklineDemo() {
   return (
-    <PriceChart data={chartData} />
+    <Sparkline data={chartData} />
   )
 }`,
     },

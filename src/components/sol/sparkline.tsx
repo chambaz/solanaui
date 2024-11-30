@@ -1,137 +1,101 @@
 import React from "react";
 
-import { Area, AreaChart, CartesianGrid } from "recharts";
-import { format } from "date-fns";
+import { LineChart, CartesianGrid, XAxis, YAxis, Line } from "recharts";
 
-import { formatUsd } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
-
-import { TokenIcon } from "@/components/sol/token-icon";
+import { ChartConfig, ChartContainer } from "@/components/ui/chart";
 
 type SparklineProps = {
-  token: string;
-  title?: string;
-  description?: string;
   data: {
     timestamp: number;
     price: number;
   }[];
 };
 
-const Sparkline = ({ token, title, description, data }: SparklineProps) => {
-  const chartData = React.useMemo(
-    () =>
-      data.map((item) => ({
-        ...item,
-        label: format(item.timestamp * 1000, "MMM do hh:mm a"),
-      })),
-    [data],
-  );
+const chartConfig = {
+  desktop: {
+    label: "Price",
+    color: "hsl(var(--chart-1))",
+  },
+} satisfies ChartConfig;
 
-  const chartConfig = React.useMemo(
-    () =>
-      ({
-        token: {
-          label: "Token label",
-          color:
-            chartData[0].price > chartData[chartData.length - 1].price
-              ? "hsl(var(--negative))"
-              : "hsl(var(--positive))",
-        },
-      }) satisfies ChartConfig,
-    [chartData],
-  );
-
-  const chartTitle = React.useMemo(() => {
-    return token ? `${token} Price` : title;
-  }, [token, title]);
+const PercentageChange = ({ data }: { data: SparklineProps["data"] }) => {
+  const percentageChange =
+    ((data[data.length - 1].price - data[0].price) / data[0].price) * 100;
 
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <TokenIcon token={token} /> {chartTitle}
-        </CardTitle>
-        {description && <CardDescription>{description}</CardDescription>}
-      </CardHeader>
-      <CardContent>
-        <ChartContainer config={chartConfig}>
-          <AreaChart
-            accessibilityLayer
-            data={chartData}
-            margin={{
-              left: 12,
-              right: 12,
-            }}
-          >
-            <CartesianGrid vertical={false} />
-            <ChartTooltip
-              cursor={false}
-              content={
-                <ChartTooltipContent
-                  labelKey="label"
-                  formatter={(value) => {
-                    const num = Number(value);
-                    return (
-                      <div className="flex w-full items-center justify-center gap-2">
-                        <strong className="font-medium">Price:</strong>
-                        <span>
-                          {num > 0.00001
-                            ? formatUsd(num)
-                            : `$${num.toExponential(2)}`}
-                        </span>
-                      </div>
-                    );
-                  }}
-                  labelFormatter={(value) => {
-                    if (!value) {
-                      return "Now";
-                    }
+    <div
+      className={cn(
+        "text-xs",
+        percentageChange > 0 ? "text-[#75ba80]" : "text-[#e07d6f]",
+      )}
+    >
+      {percentageChange > 0 ? "+" : ""}
+      {percentageChange.toFixed(2)}%
+    </div>
+  );
+};
 
-                    return value;
-                  }}
-                />
-              }
-            />
-            <defs>
-              <linearGradient id="fillToken" x1="0" y1="0" x2="0" y2="1">
-                <stop
-                  offset="5%"
-                  stopColor="var(--color-token)"
-                  stopOpacity={0.8}
-                />
-                <stop
-                  offset="95%"
-                  stopColor="var(--color-token)"
-                  stopOpacity={0.1}
-                />
-              </linearGradient>
-            </defs>
-            <Area
-              dataKey="price"
-              type="natural"
-              fill="url(#fillToken)"
-              fillOpacity={0.4}
-              stroke="var(--color-token)"
-              stackId="a"
-            />
-          </AreaChart>
-        </ChartContainer>
-      </CardContent>
-    </Card>
+const Sparkline = ({ data }: SparklineProps) => {
+  if (!data.length) return null;
+
+  const minPrice = Math.min(...data.map((d) => d.price));
+  const maxPrice = Math.max(...data.map((d) => d.price));
+
+  return (
+    <div className="flex max-w-xs items-start justify-center gap-2">
+      <ChartContainer config={chartConfig} className="h-[80px] w-full">
+        <LineChart accessibilityLayer data={data}>
+          <CartesianGrid horizontal={false} vertical={false} />
+          <XAxis
+            dataKey="time"
+            tickLine={false}
+            axisLine={false}
+            minTickGap={32}
+            tickMargin={8}
+            className="text-xs"
+          />
+          <YAxis
+            domain={[minPrice, maxPrice]}
+            hide={true} // Hide the axis but keep the scaling
+          />
+          <defs>
+            <linearGradient id="fill" x1="0" y1="0" x2="0" y2="1">
+              <stop
+                offset="5%"
+                stopColor={
+                  data[data.length - 1].price >= data[0].price
+                    ? "#75ba80"
+                    : "#e07d6f"
+                }
+                stopOpacity={0.8}
+              />
+              <stop
+                offset="95%"
+                stopColor={
+                  data[data.length - 1].price >= data[0].price
+                    ? "#75ba80"
+                    : "#e07d6f"
+                }
+                stopOpacity={0.1}
+              />
+            </linearGradient>
+          </defs>
+          <Line
+            dataKey="price"
+            type="natural"
+            dot={false}
+            stroke={
+              data[data.length - 1].price >= data[0].price
+                ? "#75ba80"
+                : "#e07d6f"
+            }
+          />
+        </LineChart>
+      </ChartContainer>
+      <PercentageChange data={data} />
+    </div>
   );
 };
 

@@ -44,11 +44,15 @@ const TokenCard = ({ address }: TokenCardProps) => {
     return (
       <Card className="w-[350px]">
         <CardHeader>
-          <CardTitle>Loading...</CardTitle>
-          <CardDescription>Loading...</CardDescription>
+          <CardTitle className="flex items-center gap-3">
+            <span className="sr-only">Loading...</span>
+            <Skeleton className="h-[46px] w-[46px] shrink-0 rounded-full" />
+            <Skeleton className="h-[22px] w-3/5" />
+          </CardTitle>
+          <CardDescription className="sr-only">Loading...</CardDescription>
         </CardHeader>
         <CardContent>
-          <Skeleton className="h-[300px] w-[300px]" />
+          <Skeleton className="h-[42px] w-[300px]" />
         </CardContent>
       </Card>
     );

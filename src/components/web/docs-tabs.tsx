@@ -6,7 +6,8 @@ import jsx from "react-syntax-highlighter/dist/esm/languages/prism/jsx";
 import ColdDark from "react-syntax-highlighter/dist/esm/styles/prism/coldark-dark";
 import { IconRocket } from "@tabler/icons-react";
 
-import { ConnectWalletDialog } from "@/components/sol/connect-wallet-dialog";
+import { ConnectWallet } from "@/components/web/connect-wallet";
+
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   Select,
@@ -54,8 +55,12 @@ const DocsTabs = ({
           <IconRocket size={20} />
           <AlertTitle>Heads up!</AlertTitle>
           <AlertDescription>
-            <ConnectWalletDialog>Connect your wallet</ConnectWalletDialog> to
-            enable all example features and demos.
+            <ConnectWallet>
+              <button className="border-b border-primary text-primary">
+                Connect your wallet
+              </button>
+            </ConnectWallet>{" "}
+            to enable all example features and demos.
           </AlertDescription>
         </Alert>
       )}

@@ -1,7 +1,10 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React from "react";
+
 import Image from "next/image";
+import Link from "next/link";
+
 import { PublicKey } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
 
@@ -23,9 +26,9 @@ type NFTCardProps = {
 const NFTCard = ({ address }: NFTCardProps) => {
   const { publicKey } = useWallet();
   const { fetchAssets, isLoading } = useAssets();
-  const [asset, setAsset] = useState<ExtendedDigitalAsset | null>(null);
+  const [asset, setAsset] = React.useState<ExtendedDigitalAsset | null>(null);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const fetchAsset = async () => {
       try {
         const assets = await fetchAssets([address], publicKey ?? undefined);
@@ -41,9 +44,16 @@ const NFTCard = ({ address }: NFTCardProps) => {
   if (isLoading) {
     return (
       <Card className="w-[350px]">
-        <CardHeader>
-          <CardTitle>Loading...</CardTitle>
-          <CardDescription>Loading...</CardDescription>
+        <CardHeader className="relative">
+          <CardTitle className="flex items-start justify-between gap-3">
+            <span className="sr-only">Loading...</span>
+            <div className="flex w-3/5 flex-col items-center gap-2">
+              <Skeleton className="h-[18px] w-full" />
+              <Skeleton className="h-[18px] w-full" />
+            </div>
+            <Skeleton className="absolute right-6 top-4 h-[42px] w-[42px] shrink-0 rounded-full" />
+          </CardTitle>
+          <CardDescription className="sr-only">Loading...</CardDescription>
         </CardHeader>
         <CardContent>
           <Skeleton className="h-[300px] w-[300px]" />
@@ -56,11 +66,34 @@ const NFTCard = ({ address }: NFTCardProps) => {
 
   return (
     <Card className="w-[350px]">
-      <CardHeader>
-        <CardTitle>{asset.metadata.name}</CardTitle>
-        <CardDescription className={cn(!asset.collection && "sr-only")}>
-          {asset.collection || "No collection"}
+      <CardHeader className="relative">
+        <CardTitle>
+          <Link
+            href={`https://www.tensor.trade/item/${address.toBase58()}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {asset.metadata.name}
+          </Link>
+        </CardTitle>
+        <CardDescription className={cn(!asset.collection?.name && "sr-only")}>
+          {asset.collection?.name}
         </CardDescription>
+        {asset.collection?.imageUrl && (
+          <Link
+            href={`https://www.tensor.trade/item/${address.toBase58()}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Image
+              src={asset.collection?.imageUrl}
+              alt={asset.collection?.name}
+              width={42}
+              height={42}
+              className="absolute right-6 top-4 rounded-full"
+            />
+          </Link>
+        )}
       </CardHeader>
       <CardContent>
         <Image

@@ -16,10 +16,15 @@ import {
   PythCluster,
 } from "@pythnetwork/client";
 
+type Collection = {
+  name: string;
+  imageUrl: string | null;
+};
+
 export type ExtendedDigitalAsset = {
   imageUrl?: string;
   price?: number;
-  collection?: string;
+  collection?: Collection;
 } & (
   | (DigitalAsset & { hasToken: false })
   | (DigitalAssetWithToken & {
@@ -67,7 +72,7 @@ export function useAssets() {
 
           // fetch metadata and image
           let imageUrl: string | undefined;
-          let collection: string | undefined;
+          let collection: Collection | undefined;
           try {
             if (assetRes.metadata.uri) {
               const data = await fetch(assetRes.metadata.uri).then((res) =>
@@ -80,11 +85,27 @@ export function useAssets() {
             }
 
             if (isSome(assetRes.metadata.collection)) {
+              let collectionImageUrl: string | null = null;
+
               const collectionRes = await fetchDigitalAsset(
                 umi,
                 publicKey(assetRes.metadata.collection.value.key),
               );
-              collection = collectionRes.metadata.name;
+
+              if (collectionRes.metadata.uri) {
+                const data = await fetch(collectionRes.metadata.uri).then(
+                  (res) => res.json(),
+                );
+
+                if (data.image) {
+                  collectionImageUrl = data.image;
+                }
+              }
+
+              collection = {
+                name: collectionRes.metadata.name,
+                imageUrl: collectionImageUrl,
+              };
             }
           } catch (error) {
             console.error("Error fetching token image:", error);

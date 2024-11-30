@@ -14,7 +14,7 @@ export default function NFTCardPage() {
       preview: (
         <NFTCard
           address={
-            new PublicKey("62baPs2cMBBCqu3d1NKSJ25mVPxdv9VcH2x7EWVnf8Rh")
+            new PublicKey("9qLBa1XiByTHeviYt2g83VCkWAX3g8J79BHrsQQrJUkz")
           }
         />
       ),
@@ -24,7 +24,7 @@ export function NFTCardDemo() {
   return (
     <NFTCard
       address={
-        new PublicKey('D1bj9NDgFVRxUiKkNyxW9BtYJ1kesQknnqm6xAnk1h8q')
+        new PublicKey('9qLBa1XiByTHeviYt2g83VCkWAX3g8J79BHrsQQrJUkz')
       }
     />
   )

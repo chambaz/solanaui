@@ -8,6 +8,11 @@ const nextConfig = {
       },
       {
         protocol: "https",
+        hostname: "nftstorage.link",
+        pathname: "/**/*",
+      },
+      {
+        protocol: "https",
         hostname: "arweave.net",
         pathname: "/*",
       },

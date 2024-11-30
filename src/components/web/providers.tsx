@@ -9,15 +9,20 @@ import {
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 
 import { TxnSettingsProvider } from "@/components/sol/txn-settings";
+import { ThemeProvider, ThemeWrapper } from "@/components/web/themes";
 
 const Providers = ({ children }: { children: React.ReactNode }) => {
   return (
     <ConnectionProvider endpoint={process.env.NEXT_PUBLIC_RPC_URL as string}>
       <WalletProvider wallets={[]} autoConnect>
         <TxnSettingsProvider>
-          <NextThemesProvider attribute="class" defaultTheme="system">
-            {children}
-          </NextThemesProvider>
+          <ThemeProvider>
+            <ThemeWrapper>
+              <NextThemesProvider attribute="class" defaultTheme="system">
+                {children}
+              </NextThemesProvider>
+            </ThemeWrapper>
+          </ThemeProvider>
         </TxnSettingsProvider>
       </WalletProvider>
     </ConnectionProvider>

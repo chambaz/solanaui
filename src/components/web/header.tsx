@@ -1,18 +1,21 @@
 "use client";
 
+import React from "react";
+
 import Link from "next/link";
 
 import { PublicKey } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
-
 import { IconBrandGithub, IconBrandX, IconMenu } from "@tabler/icons-react";
 
 import { ConnectWallet } from "@/components/web/connect-wallet";
-import { ThemeToggle } from "@/components/web/theme-toggle";
+import { ModeToggle } from "@/components/web/themes";
 
 import { UserDropdown } from "@/components/sol/user-dropdown";
 
 import { Button } from "@/components/ui/button";
+
+import { ThemeSelector } from "@/components/web/themes";
 
 const navItems = [
   {
@@ -24,8 +27,8 @@ const navItems = [
     href: "/docs/components/connect-wallet-dialog",
   },
   {
-    label: "examples",
-    href: "/examples",
+    label: "demo",
+    href: "/demo",
   },
 ];
 
@@ -55,6 +58,9 @@ const Header = () => {
                 </Link>
               </li>
             ))}
+            <li className="flex items-center">
+              <ThemeSelector />
+            </li>
           </ul>
           {connected && publicKey ? (
             <UserDropdown address={publicKey} tokens={userTokens} />
@@ -73,7 +79,7 @@ const Header = () => {
               </Link>
             </li>
             <li>
-              <ThemeToggle />
+              <ModeToggle />
             </li>
           </ul>
           <Button variant="ghost" size="icon" className="md:hidden">

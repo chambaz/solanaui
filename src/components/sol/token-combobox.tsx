@@ -3,9 +3,9 @@
 import * as React from "react";
 
 import { PublicKey } from "@solana/web3.js";
-import { IconSelector, IconCheck } from "@tabler/icons-react";
+import { IconSelector } from "@tabler/icons-react";
 
-import { cn, formatUsd, formatNumber } from "@/lib/utils";
+import { formatUsd, formatNumber } from "@/lib/utils";
 import { useAssets, ExtendedDigitalAsset } from "@/hooks/use-assets";
 
 import { Button } from "@/components/ui/button";
@@ -29,23 +29,34 @@ type TokenComboboxProps = {
   tokens: PublicKey[];
   owner?: PublicKey | null;
   onSelect?: (token: ExtendedDigitalAsset) => void;
+  children?: React.ReactNode;
 };
 
-const TokenCombobox = ({ tokens, owner, onSelect }: TokenComboboxProps) => {
+const TokenCombobox = ({
+  tokens,
+  owner,
+  onSelect,
+  children,
+}: TokenComboboxProps) => {
   const { fetchAssets, isLoading } = useAssets();
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
   const [assets, setAssets] = React.useState<ExtendedDigitalAsset[]>([]);
 
   const selectedAsset = React.useMemo(
-    () => assets.find((asset) => asset.mint.publicKey === value),
+    () => assets.find((asset) => asset.metadata.symbol === value),
     [assets, value],
   );
 
   React.useEffect(() => {
     const init = async () => {
       const fetchedAssets = await fetchAssets(tokens, owner ?? undefined);
-      setAssets(fetchedAssets);
+      const sortedAssets = fetchedAssets.sort((a, b) => {
+        const aAmount = a.price ? a.price : 0;
+        const bAmount = b.price ? b.price : 0;
+        return bAmount - aAmount;
+      });
+      setAssets(sortedAssets);
     };
     init();
   }, [fetchAssets, tokens, owner]);
@@ -53,24 +64,27 @@ const TokenCombobox = ({ tokens, owner, onSelect }: TokenComboboxProps) => {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          role="combobox"
-          aria-expanded={open}
-          className="w-[200px] justify-start"
-        >
-          {selectedAsset ? (
-            <>
-              <TokenIcon token={selectedAsset.metadata.symbol} />
-              {selectedAsset.metadata.symbol}
-            </>
-          ) : (
-            "Select token..."
-          )}
-          <IconSelector className="ml-auto shrink-0 opacity-50" size={16} />
-        </Button>
+        {children || (
+          <Button
+            variant="outline"
+            role="combobox"
+            size="lg"
+            aria-expanded={open}
+            className="h-12 w-[300px] justify-start gap-2.5 px-3 font-medium"
+          >
+            {selectedAsset ? (
+              <>
+                <TokenIcon token={selectedAsset.metadata.symbol} />
+                {selectedAsset.metadata.symbol}
+              </>
+            ) : (
+              "Select token..."
+            )}
+            <IconSelector className="ml-auto shrink-0 opacity-50" size={16} />
+          </Button>
+        )}
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
+      <PopoverContent className="w-[300px] p-0">
         <Command>
           <CommandInput placeholder="Search tokens..." />
           <CommandList>
@@ -81,40 +95,37 @@ const TokenCombobox = ({ tokens, owner, onSelect }: TokenComboboxProps) => {
               {assets.map((asset) => (
                 <CommandItem
                   key={asset.mint.publicKey}
-                  value={asset.mint.publicKey}
+                  value={asset.metadata.symbol}
                   onSelect={(currentValue) => {
                     setValue(currentValue === value ? "" : currentValue);
                     setOpen(false);
                     if (onSelect) onSelect(asset);
                   }}
+                  className="flex items-center gap-2"
                 >
-                  <IconCheck
-                    className={cn(
-                      "mr-2",
-                      value === asset.mint.publicKey
-                        ? "opacity-100"
-                        : "opacity-0",
-                    )}
-                    size={16}
-                  />
                   <TokenIcon token={asset.metadata.symbol} />
                   {asset.metadata.symbol}
-                  {asset.hasToken && asset.tokenAmount && (
-                    <span className="ml-auto flex flex-col text-right">
-                      {formatNumber(asset.tokenAmount)}
-                      {asset.price && (
-                        <span className="text-xs text-muted-foreground">
-                          {formatUsd(asset.tokenAmount * asset.price)}
-                        </span>
-                      )}
-                    </span>
-                  )}
 
-                  {!asset.hasToken && asset.price && (
-                    <span className="ml-auto flex flex-col text-right">
-                      {formatUsd(asset.price)}
-                    </span>
-                  )}
+                  <span className="ml-auto flex flex-col text-right">
+                    {!owner ? (
+                      formatUsd(asset.price ?? 0)
+                    ) : (
+                      <>
+                        {asset.hasToken && asset.tokenAmount > 0
+                          ? formatNumber(asset.tokenAmount)
+                          : 0}
+
+                        {asset.price && (
+                          <span className="text-xs text-muted-foreground">
+                            {formatUsd(
+                              ((asset.hasToken && asset.tokenAmount) || 1) *
+                                asset.price,
+                            )}
+                          </span>
+                        )}
+                      </>
+                    )}
+                  </span>
                 </CommandItem>
               ))}
             </CommandGroup>

@@ -20,6 +20,9 @@ export default function TokenCardPage() {
             "3aKWM9U91KHHVyB1C9pE7kxDSPiFKz7CrqikHGBpbAPMtPBeE6HfZ4pyWjH6w8ZKT3xofxEekMQ2ZfxUDNsm3by2",
             "DoRCpn8HYxsEa2JBSUXCtxnxL5snnHtHcANa6ugJh2VhczTbfHVPRq7HY3h123xZRRSZ2AcXUZr8TwsidHrRUDo",
           ]}
+          onClick={(txn) => {
+            alert(txn.transaction.signatures[0]);
+          }}
         />
       ),
       code: `import { TokenList } from "@/components/sol/token-list"
@@ -35,7 +38,7 @@ export function TokenCardDemo() {
         publicKey ?? new PublicKey("11111111111111111111111111111111")
       }
       onClick={(token) => {
-        console.log(token);
+        alert(txn.transaction.signatures[0]);
       }}
     />
   )

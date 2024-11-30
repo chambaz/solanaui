@@ -7,11 +7,10 @@ import {
   Connection,
   LAMPORTS_PER_SOL,
 } from "@solana/web3.js";
-import { IconAlertCircle } from "@tabler/icons-react";
-
 import { formatDistanceToNow } from "date-fns";
+import { IconAlertCircle, IconExternalLink } from "@tabler/icons-react";
 
-import { shortAddress } from "@/lib/utils";
+import { shortAddress, cn } from "@/lib/utils";
 
 import {
   Table,
@@ -21,14 +20,16 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type TxnListProps = {
   signatures: TransactionSignature[];
+  onClick?: (txn: VersionedTransactionResponse) => void;
 };
 
 const connection = new Connection(process.env.NEXT_PUBLIC_RPC_URL ?? "");
 
-const TxnList = ({ signatures }: TxnListProps) => {
+const TxnList = ({ signatures, onClick }: TxnListProps) => {
   const [txns, setTxns] = React.useState<VersionedTransactionResponse[]>([]);
   const [isLoading, setIsLoading] = React.useState(false);
   const [currentSlot, setCurrentSlot] = React.useState<number | null>(null);
@@ -93,7 +94,7 @@ const TxnList = ({ signatures }: TxnListProps) => {
   return (
     <Table>
       <TableHeader>
-        <TableRow>
+        <TableRow className="hover:bg-transparent">
           <TableHead>Signature</TableHead>
           <TableHead>Block</TableHead>
           <TableHead>Time</TableHead>
@@ -103,33 +104,58 @@ const TxnList = ({ signatures }: TxnListProps) => {
       </TableHeader>
       <TableBody>
         {isLoading ? (
-          <TableRow>
-            <TableCell colSpan={4}>Loading...</TableCell>
-          </TableRow>
+          <>
+            {[...Array(signatures.length)].map((_, index) => (
+              <TableRow key={index} className="hover:bg-transparent">
+                {[...Array(5)].map((_, index) => (
+                  <TableCell key={index}>
+                    <Skeleton className="h-[22px] w-full" />
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </>
         ) : (
           txns.map((txn) => (
-            <TableRow key={txn.transaction.signatures[0]}>
+            <TableRow
+              key={txn.transaction.signatures[0]}
+              className={cn(
+                "group odd:bg-muted/25 hover:bg-transparent hover:text-primary hover:odd:bg-muted/25",
+                onClick && "cursor-pointer",
+              )}
+              onClick={() => onClick && onClick(txn)}
+            >
               <TableCell>
                 <Link
-                  className="group inline-flex items-center gap-1"
                   href={`https://solscan.io/tx/${txn.transaction.signatures[0]}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group inline-flex items-center gap-1"
+                  onClick={(e) => e.stopPropagation()}
                 >
-                  {txn.meta?.err && (
-                    <IconAlertCircle size={16} className="text-destructive" />
-                  )}
-                  <span className="border-b border-border transition-colors group-hover:border-transparent">
+                  <IconExternalLink size={14} />
+                  <span className="border-b border-transparent group-hover:border-border">
                     {shortAddress(txn.transaction.signatures[0])}
                   </span>
+                  {txn.meta?.err && (
+                    <IconAlertCircle size={14} className="text-destructive" />
+                  )}
                 </Link>
               </TableCell>
               <TableCell>{txn.blockTime}</TableCell>
               <TableCell>{estimateTimestamp(txn.slot)}</TableCell>
               <TableCell>
                 <Link
-                  className="border-b border-border transition-colors hover:border-transparent"
                   href={`https://solscan.io/account/${txn.transaction.message.staticAccountKeys[0]}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group inline-flex items-center gap-1"
+                  onClick={(e) => e.stopPropagation()}
                 >
-                  {shortAddress(txn.transaction.message.staticAccountKeys[0])}
+                  <IconExternalLink size={14} />
+                  <span className="border-b border-transparent group-hover:border-border">
+                    {shortAddress(txn.transaction.message.staticAccountKeys[0])}
+                  </span>
                 </Link>
               </TableCell>
               <TableCell>{(txn.meta?.fee || 0) / LAMPORTS_PER_SOL}</TableCell>

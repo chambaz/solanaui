@@ -131,10 +131,10 @@ export const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
             ref={amountInputRef}
             type="text"
             placeholder="0"
-            className="text-right"
+            className="h-12 text-right"
             inputMode="numeric"
             value={amount ?? undefined}
-            disabled={!selectedToken}
+            disabled={!selectedToken || !maxAmount}
             onChange={(e) => handleInputChange(e.target.value)}
           />
         </div>

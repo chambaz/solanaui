@@ -11,24 +11,30 @@ export default function TokenCardPage() {
       label: "Default",
       value: "default",
       preview: (
-        <div>
+        <div className="flex flex-col items-center justify-center gap-4">
           <ul>
             {settings.priorityFee && (
-              <li>Priority fee: {settings.priorityFee}</li>
+              <li>
+                <strong className="text-primary">Priority fee</strong>:{" "}
+                {settings.priorityFee}
+              </li>
             )}
             {settings.rpcProvider && (
-              <li>RPC provider: {settings.rpcProvider}</li>
+              <li>
+                <strong className="text-primary">RPC provider</strong>:{" "}
+                {settings.rpcProvider}
+              </li>
             )}
           </ul>
           <TxnSettings
             rpcProviders={[
               {
                 name: "RPC 1",
-                url: "https://mainnet.solana.com",
+                url: process.env.NEXT_PUBLIC_RPC_URL!,
               },
               {
                 name: "RPC 2",
-                url: "https://mainnet.solana.com/two",
+                url: "https://mainnet.solana.com",
               },
             ]}
           />

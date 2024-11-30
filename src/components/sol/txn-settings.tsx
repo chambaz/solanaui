@@ -42,7 +42,7 @@ export const TxnSettingsProvider: React.FC<{
   const [isOpen, setIsOpen] = React.useState(false);
   const [settings, setSettings] = React.useState<TxnSettingsType>({
     priorityFee: "normal",
-    rpcProvider: "",
+    rpcProvider: process.env.NEXT_PUBLIC_RPC_URL!,
   });
 
   const updateSettings = (newSettings: Partial<TxnSettingsType>) => {
@@ -100,17 +100,24 @@ const TxnSettings = ({ rpcProviders }: TxnSettingsProps) => {
           <IconSettings size={16} />
         </Button>
       </PopoverTrigger>
-      <PopoverContent side="bottom">
-        <div className="space-y-8">
-          <div className="space-y-2">
+      <PopoverContent side="bottom" className="p-6">
+        <form
+          className="space-y-10"
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSave();
+          }}
+        >
+          <div className="space-y-4">
             <div className="space-y-2">
-              <h4 className="font-medium leading-none">Priority fee</h4>
+              <h4 className="font-medium">Priority fee</h4>
               <p className="text-sm text-muted-foreground">
                 Set the priority fee for your transactions.
               </p>
             </div>
             <ToggleGroup
               type="single"
+              className="justify-start"
               value={tempSettings.priorityFee}
               onValueChange={(value) =>
                 setTempSettings((prev) => ({ ...prev, priorityFee: value }))
@@ -121,19 +128,21 @@ const TxnSettings = ({ rpcProviders }: TxnSettingsProps) => {
               <ToggleGroupItem value="turbo">Turbo</ToggleGroupItem>
             </ToggleGroup>
           </div>
-          <div className="space-y-2">
+          <div className="space-y-4">
             <div className="space-y-2">
-              <h4 className="font-medium leading-none">RPC Provider</h4>
+              <h4 className="font-medium">RPC Provider</h4>
               <p className="text-sm text-muted-foreground">
                 Set the RPC provider for your transactions.
               </p>
             </div>
             <ToggleGroup
               type="single"
+              className="justify-start"
               value={tempSettings.rpcProvider}
-              onValueChange={(value) =>
-                setTempSettings((prev) => ({ ...prev, rpcProvider: value }))
-              }
+              onValueChange={(value) => {
+                customRpcInputRef.current!.value = "";
+                setTempSettings((prev) => ({ ...prev, rpcProvider: value }));
+              }}
             >
               {rpcProviders.map((provider, index) => (
                 <ToggleGroupItem key={index} value={provider.url}>
@@ -143,23 +152,24 @@ const TxnSettings = ({ rpcProviders }: TxnSettingsProps) => {
             </ToggleGroup>
             <Input
               ref={customRpcInputRef}
+              type="url"
               defaultValue={isCustomRpc ? settings.rpcProvider : ""}
               placeholder="Custom RPC"
-              onChange={(e) =>
+              onChange={(e) => {
                 setTempSettings((prev) => ({
                   ...prev,
                   rpcProvider: e.target.value,
-                }))
-              }
+                }));
+              }}
             />
           </div>
           <div className="flex flex-col gap-2">
-            <Button onClick={handleSave}>Save</Button>
+            <Button type="submit">Save</Button>
             <Button variant="link" onClick={handleCancel}>
               Cancel
             </Button>
           </div>
-        </div>
+        </form>
       </PopoverContent>
     </Popover>
   );

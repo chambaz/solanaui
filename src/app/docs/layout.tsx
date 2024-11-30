@@ -9,7 +9,6 @@ import { Providers } from "@/components/web/providers";
 import { Header } from "@/components/web/header";
 import { Footer } from "@/components/web/footer";
 import { Sidebar } from "@/components/web/sidebar";
-import { Toaster } from "@/components/ui/toaster";
 
 import "@/app/globals.css";
 
@@ -50,7 +49,6 @@ export default function DocsLayout({
             </main>
           </div>
           <Footer />
-          <Toaster />
           <TxnToaster />
         </Providers>
       </body>

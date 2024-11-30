@@ -10,7 +10,7 @@ import type { ToastActionElement, ToastProps } from "@/components/ui/toast";
 import { ToastAction } from "@/components/ui/toast";
 
 const TOAST_LIMIT = 10;
-const TOAST_REMOVE_DELAY = 1000000;
+const TOAST_REMOVE_DELAY = 3000;
 
 type ToasterToast = ToastProps & {
   id: string;
@@ -141,12 +141,10 @@ function dispatch(action: Action) {
   });
 }
 
-type Toast = Omit<ToasterToast, "id"> & {
-  signature?: string;
-  confirmation?: Promise<RpcResponseAndContext<SignatureResult>>;
-};
-
-function txnToast({ signature, confirmation, ...props }: Toast) {
+function txnToast(
+  title: string = "Signing Transaction",
+  description: string = "Please sign the transaction in your wallet.",
+) {
   const id = genId();
 
   const update = (props: ToasterToast) =>
@@ -159,9 +157,8 @@ function txnToast({ signature, confirmation, ...props }: Toast) {
   dispatch({
     type: "ADD_TOAST",
     toast: {
-      ...props,
-      title: "Transaction Pending",
-      description: "Waiting for transaction confirmation.",
+      title,
+      description,
       id,
       open: true,
       onOpenChange: (open) => {
@@ -170,64 +167,80 @@ function txnToast({ signature, confirmation, ...props }: Toast) {
     },
   });
 
-  if (!signature || !confirmation) {
-    return {
-      id: id,
-      dismiss,
-      update,
-    };
-  }
+  const confirm = async (
+    signature: string,
+    confirmation: Promise<RpcResponseAndContext<SignatureResult>>,
+  ) => {
+    update({
+      id,
+      title: "Transaction Pending",
+      description: "Waiting for transaction confirmation.",
+    });
 
-  confirmation
-    .then((conf) => {
-      if (conf.value.err) {
-        const error = conf.value.err;
-        let errorMessage = "The transaction failed.";
+    confirmation
+      .then((conf) => {
+        if (conf.value.err) {
+          const error = conf.value.err;
+          let errorMessage = "The transaction failed.";
 
-        if (typeof error === "object" && error !== null && "message" in error) {
-          errorMessage = `Transaction failed: ${error.message}`;
-        } else if (typeof error === "string") {
-          errorMessage = `Transaction failed: ${error}`;
+          if (
+            typeof error === "object" &&
+            error !== null &&
+            "message" in error
+          ) {
+            errorMessage = `Transaction failed: ${error.message}`;
+          } else if (typeof error === "string") {
+            errorMessage = `Transaction failed: ${error}`;
+          }
+
+          update({
+            id,
+            variant: "destructive",
+            title: "Transaction Error",
+            description: errorMessage,
+            duration: TOAST_REMOVE_DELAY,
+          });
+        } else {
+          update({
+            id,
+            title: "Transaction Complete",
+            description: `The transaction has been confirmed.`,
+            duration: TOAST_REMOVE_DELAY,
+            action: (
+              <ToastAction
+                onClick={() =>
+                  window.open(`https://solscan.io/tx/${signature}`, "_blank")
+                }
+                altText="View on Solscan"
+              >
+                View on Solscan
+              </ToastAction>
+            ),
+          });
         }
-
+      })
+      .catch(() => {
         update({
           id,
           variant: "destructive",
           title: "Transaction Error",
-          description: errorMessage,
+          description: "The transaction has failed.",
+          duration: TOAST_REMOVE_DELAY,
         });
-      } else {
-        update({
-          id,
-          title: "Transaction Complete",
-          description: `The transaction has been confirmed.`,
-          action: (
-            <ToastAction
-              onClick={() =>
-                window.open(`https://solscan.io/tx/${signature}`, "_blank")
-              }
-              altText="View on Solscan"
-            >
-              View on Solscan
-            </ToastAction>
-          ),
-        });
-      }
-    })
-    .catch(() => {
-      update({
-        id,
-        variant: "destructive",
-        title: "Transaction Error",
-        description: "The transaction has failed.",
       });
-    });
-
-  return {
-    id: id,
-    dismiss,
-    update,
   };
+
+  const error = (error: string) => {
+    update({
+      id,
+      variant: "destructive",
+      title: "Transaction Error",
+      description: error || "Something went wrong",
+      duration: TOAST_REMOVE_DELAY,
+    });
+  };
+
+  return { confirm, error };
 }
 
 function useTxnToast() {

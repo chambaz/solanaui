@@ -53,3 +53,38 @@ export async function getPriceBirdeye(
     return null;
   }
 }
+
+export async function getPriceHistoryBirdeye(
+  token: TokenData,
+  start: number,
+  end: number,
+): Promise<number | null> {
+  try {
+    const response = await fetch(
+      `https://public-api.birdeye.so/defi/history_price?address=${token.mint}&type=1H&time_from=${start}&time_to=${end}`,
+      {
+        headers: {
+          "x-api-key": process.env.BIRDEYE_API_KEY!,
+        },
+      },
+    );
+
+    const priceHistoryData = await response.json();
+
+    if (!priceHistoryData?.data || !priceHistoryData.data.items) {
+      return null;
+    }
+
+    return priceHistoryData.data.items.map(
+      (item: { unixTime: number; value: number }) => {
+        return {
+          timestamp: item.unixTime,
+          price: item.value,
+        };
+      },
+    );
+  } catch (error) {
+    console.error("Error fetching price from Birdeye:", error);
+    return null;
+  }
+}

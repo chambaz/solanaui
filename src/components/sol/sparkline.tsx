@@ -56,10 +56,7 @@ const Sparkline = ({ data }: SparklineProps) => {
             tickMargin={8}
             className="text-xs"
           />
-          <YAxis
-            domain={[minPrice, maxPrice]}
-            hide={true} // Hide the axis but keep the scaling
-          />
+          <YAxis domain={[minPrice, maxPrice]} hide={true} />
           <defs>
             <linearGradient id="fill" x1="0" y1="0" x2="0" y2="1">
               <stop

@@ -1,5 +1,5 @@
 import React from "react";
-import { PublicKey, Connection } from "@solana/web3.js";
+import { PublicKey } from "@solana/web3.js";
 import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
 import {
   mplTokenMetadata,
@@ -9,12 +9,7 @@ import {
   DigitalAsset,
 } from "@metaplex-foundation/mpl-token-metadata";
 import { publicKey, isSome } from "@metaplex-foundation/umi";
-import {
-  PythHttpClient,
-  getPythClusterApiUrl,
-  getPythProgramKeyForCluster,
-  PythCluster,
-} from "@pythnetwork/client";
+import { getPricePyth } from "@/lib/price";
 
 type Collection = {
   name: string;
@@ -38,18 +33,12 @@ const umi = createUmi(process.env.NEXT_PUBLIC_RPC_URL as string).use(
   mplTokenMetadata(),
 );
 
-const PYTHNET_CLUSTER_NAME: PythCluster = "pythnet";
-const connection = new Connection(getPythClusterApiUrl(PYTHNET_CLUSTER_NAME));
-const pythPublicKey = getPythProgramKeyForCluster(PYTHNET_CLUSTER_NAME);
-
 export function useAssets() {
   const [isLoading, setIsLoading] = React.useState(false);
 
   const fetchAssets = React.useCallback(
     async (addresses: PublicKey[], owner?: PublicKey) => {
       setIsLoading(true);
-      const pythClient = new PythHttpClient(connection, pythPublicKey);
-      const pythData = await pythClient.getData();
       const fetchedAssets: ExtendedDigitalAsset[] = [];
 
       try {
@@ -112,14 +101,12 @@ export function useAssets() {
           }
 
           // fetch price from pyth
-          const priceData = pythData.productPrice.get(
-            `Crypto.${assetRes.metadata.symbol.replace("$", "").toUpperCase()}/USD`,
-          );
+          const price = await getPricePyth(assetRes.metadata.symbol);
 
           const item = {
             ...assetRes,
             imageUrl,
-            price: priceData?.price || null,
+            price,
             collection,
             hasToken: "token" in assetRes,
           } as ExtendedDigitalAsset;

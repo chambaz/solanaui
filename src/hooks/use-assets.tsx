@@ -8,18 +8,11 @@ import {
   DigitalAssetWithToken,
   DigitalAsset,
 } from "@metaplex-foundation/mpl-token-metadata";
-import { publicKey, isSome } from "@metaplex-foundation/umi";
-import { getPricePyth } from "@/lib/price";
-
-type Collection = {
-  name: string;
-  imageUrl: string | null;
-};
+import { publicKey } from "@metaplex-foundation/umi";
 
 export type ExtendedDigitalAsset = {
   imageUrl?: string;
   price?: number;
-  collection?: Collection;
 } & (
   | (DigitalAsset & { hasToken: false })
   | (DigitalAssetWithToken & {
@@ -61,7 +54,6 @@ export function useAssets() {
 
           // fetch metadata and image
           let imageUrl: string | undefined;
-          let collection: Collection | undefined;
           try {
             if (assetRes.metadata.uri) {
               const data = await fetch(assetRes.metadata.uri).then((res) =>
@@ -72,42 +64,19 @@ export function useAssets() {
                 imageUrl = data.image;
               }
             }
-
-            if (isSome(assetRes.metadata.collection)) {
-              let collectionImageUrl: string | null = null;
-
-              const collectionRes = await fetchDigitalAsset(
-                umi,
-                publicKey(assetRes.metadata.collection.value.key),
-              );
-
-              if (collectionRes.metadata.uri) {
-                const data = await fetch(collectionRes.metadata.uri).then(
-                  (res) => res.json(),
-                );
-
-                if (data.image) {
-                  collectionImageUrl = data.image;
-                }
-              }
-
-              collection = {
-                name: collectionRes.metadata.name,
-                imageUrl: collectionImageUrl,
-              };
-            }
           } catch (error) {
             console.error("Error fetching token image:", error);
           }
 
-          // fetch price from pyth
-          const price = await getPricePyth(assetRes.metadata.symbol);
+          const priceRes = await fetch(
+            `/api/price?mint=${assetRes.mint.publicKey.toString()}&symbol=${assetRes.metadata.symbol}`,
+          );
+          const price = await priceRes.json();
 
           const item = {
             ...assetRes,
             imageUrl,
-            price,
-            collection,
+            price: price.price || null,
             hasToken: "token" in assetRes,
           } as ExtendedDigitalAsset;
 

@@ -49,6 +49,8 @@ const TokenCombobox = ({
   );
 
   React.useEffect(() => {
+    if (assets.length) return;
+
     const init = async () => {
       const fetchedAssets = await fetchAssets(tokens, owner ?? undefined);
       const sortedAssets = fetchedAssets.sort((a, b) => {
@@ -59,7 +61,7 @@ const TokenCombobox = ({
       setAssets(sortedAssets);
     };
     init();
-  }, [fetchAssets, tokens, owner]);
+  }, [fetchAssets, assets, tokens, owner]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>

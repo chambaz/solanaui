@@ -9,6 +9,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { IconX, IconLoader2 } from "@tabler/icons-react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 
+import { cn } from "@/lib/utils";
 import {
   Dialog,
   DialogOverlay,
@@ -22,8 +23,8 @@ import {
 import { Button } from "@/components/ui/button";
 
 type ConnectWalletDialogProps = {
-  title: string | React.ReactNode;
-  description: string | React.ReactNode;
+  title?: string | React.ReactNode;
+  description?: string | React.ReactNode;
   children?: React.ReactNode;
 };
 
@@ -42,9 +43,11 @@ const ConnectWalletDialog = ({
       <DialogPortal>
         <DialogOverlay className="fixed inset-0 z-50 bg-background/50 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
         <DialogPrimitive.DialogContent className="fixed bottom-0 left-0 right-0 top-0 z-50 m-auto flex h-screen w-screen flex-col items-center justify-center gap-4 border bg-background/75 px-8 pb-10 pt-8 shadow-lg outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 sm:rounded-lg md:h-fit md:max-w-md">
-          <DialogHeader className="sm:text-center">
-            <DialogTitle>{title}</DialogTitle>
-            <DialogDescription>{description}</DialogDescription>
+          <DialogHeader className={cn("sm:text-center", !title && "sr-only")}>
+            <DialogTitle>{title || "Connect Wallet"}</DialogTitle>
+            <DialogDescription>
+              {description || "Connect your wallet to continue"}
+            </DialogDescription>
           </DialogHeader>
           <ul className="mt-12 flex w-full flex-col justify-center gap-4 text-center md:mt-6">
             {wallets.map((walletItem: Wallet) => (

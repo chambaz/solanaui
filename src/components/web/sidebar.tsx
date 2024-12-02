@@ -30,6 +30,10 @@ const navItems = [
         label: "Connect Wallet Dialog",
         href: "/docs/components/connect-wallet-dialog",
       },
+      {
+        label: "Connect Wallet Popover",
+        href: "/docs/components/connect-wallet-popover",
+      },
       { label: "Avatar", href: "/docs/components/avatar" },
       { label: "User Dropdown", href: "/docs/components/user-dropdown" },
 

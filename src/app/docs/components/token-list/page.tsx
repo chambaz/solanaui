@@ -3,6 +3,7 @@
 import { PublicKey } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
 
+import { WSOL_MINT, USDC_MINT } from "@/lib/constants";
 import { TokenList } from "@/components/sol/token-list";
 
 import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
@@ -17,10 +18,10 @@ export default function TokenCardPage() {
       preview: (
         <TokenList
           tokens={[
-            new PublicKey("So11111111111111111111111111111111111111112"),
+            WSOL_MINT,
+            USDC_MINT,
             new PublicKey("EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm"),
             new PublicKey("MEW1gQWJ3nEXg2qgERiKu7FAFj79PHvQVREQUzScPP5"),
-            new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"),
             new PublicKey("DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263"),
           ]}
           address={

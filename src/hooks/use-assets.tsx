@@ -1,5 +1,5 @@
 import React from "react";
-import { PublicKey } from "@solana/web3.js";
+import { PublicKey, LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
 import {
   mplTokenMetadata,
@@ -9,16 +9,19 @@ import {
   DigitalAsset,
 } from "@metaplex-foundation/mpl-token-metadata";
 import { publicKey } from "@metaplex-foundation/umi";
+import { useConnection } from "@solana/wallet-adapter-react";
+
+import { WSOL_MINT } from "@/lib/constants";
 
 export type ExtendedDigitalAsset = {
   imageUrl?: string;
   price?: number;
+  tokenAmount?: number;
+  tokenAmountUsd?: number;
 } & (
   | (DigitalAsset & { hasToken: false })
   | (DigitalAssetWithToken & {
       hasToken: true;
-      tokenAmount: number;
-      tokenAmountUsd: number;
     })
 );
 
@@ -28,7 +31,7 @@ const umi = createUmi(process.env.NEXT_PUBLIC_RPC_URL as string).use(
 
 export function useAssets() {
   const [isLoading, setIsLoading] = React.useState(false);
-
+  const { connection } = useConnection();
   const fetchAssets = React.useCallback(
     async (addresses: PublicKey[], owner?: PublicKey) => {
       setIsLoading(true);
@@ -84,6 +87,20 @@ export function useAssets() {
             item.tokenAmount =
               Number(item.token.amount) / Math.pow(10, item.mint.decimals);
             if (item.price) item.tokenAmountUsd = item.tokenAmount * item.price;
+          }
+
+          if (address.equals(WSOL_MINT) && owner) {
+            const balance = await connection.getBalance(owner);
+
+            if (item.tokenAmount) {
+              item.tokenAmount += balance / LAMPORTS_PER_SOL;
+            } else {
+              item.tokenAmount = balance / LAMPORTS_PER_SOL;
+            }
+
+            if (item.tokenAmount && item.price) {
+              item.tokenAmountUsd = item.tokenAmount * item.price;
+            }
           }
 
           fetchedAssets.push(item);

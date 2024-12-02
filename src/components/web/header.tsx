@@ -4,9 +4,10 @@ import React from "react";
 
 import Link from "next/link";
 
-import { PublicKey } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { IconBrandGithub, IconBrandX, IconMenu } from "@tabler/icons-react";
+
+import { WSOL_MINT, USDC_MINT } from "@/lib/constants";
 
 import { ConnectWallet } from "@/components/web/connect-wallet";
 import { ModeToggle } from "@/components/web/themes";
@@ -32,10 +33,7 @@ const navItems = [
   },
 ];
 
-const userTokens = [
-  new PublicKey("So11111111111111111111111111111111111111112"),
-  new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"),
-];
+const userTokens = [WSOL_MINT, USDC_MINT];
 
 const Header = () => {
   const { connected, publicKey } = useWallet();

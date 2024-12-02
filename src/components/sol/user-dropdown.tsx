@@ -36,10 +36,7 @@ const UserDropdown = ({ address, size = 42, tokens }: UserDropdownProps) => {
   const [domain, setDomain] = React.useState<string | null>(null);
 
   const totalBalance = React.useMemo(() => {
-    return assets.reduce(
-      (acc, asset) => acc + (asset.hasToken ? asset.tokenAmountUsd : 0),
-      0,
-    );
+    return assets.reduce((acc, asset) => acc + (asset.tokenAmountUsd || 0), 0);
   }, [assets]);
 
   React.useEffect(() => {
@@ -123,7 +120,7 @@ const UserDropdown = ({ address, size = 42, tokens }: UserDropdownProps) => {
                   <TokenIcon token={asset.metadata.symbol} size={32} />
                   <span>{asset.metadata.symbol}</span>
                   <span className="ml-auto flex flex-col text-right">
-                    {asset.hasToken && asset.tokenAmount > 0 ? (
+                    {asset.tokenAmount && asset.tokenAmount > 0 ? (
                       <>
                         {formatNumber(asset.tokenAmount)}
                         {asset.price && (

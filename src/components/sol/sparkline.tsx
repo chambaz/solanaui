@@ -2,7 +2,7 @@ import React from "react";
 
 import { LineChart, CartesianGrid, XAxis, YAxis, Line } from "recharts";
 
-import { cn } from "@/lib/utils";
+import { PriceChange } from "@/components/sol/price-change";
 
 import { ChartConfig, ChartContainer } from "@/components/ui/chart";
 
@@ -20,23 +20,6 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-const PercentageChange = ({ data }: { data: SparklineProps["data"] }) => {
-  const percentageChange =
-    ((data[data.length - 1].price - data[0].price) / data[0].price) * 100;
-
-  return (
-    <div
-      className={cn(
-        "text-xs",
-        percentageChange > 0 ? "text-[#75ba80]" : "text-[#e07d6f]",
-      )}
-    >
-      {percentageChange > 0 ? "+" : ""}
-      {percentageChange.toFixed(2)}%
-    </div>
-  );
-};
-
 const Sparkline = ({ data }: SparklineProps) => {
   if (!data.length) return null;
 
@@ -44,8 +27,11 @@ const Sparkline = ({ data }: SparklineProps) => {
   const maxPrice = Math.max(...data.map((d) => d.price));
 
   return (
-    <div className="flex max-w-xs items-start justify-center gap-2">
-      <ChartContainer config={chartConfig} className="h-[80px] w-full">
+    <div className="relative w-full">
+      <ChartContainer
+        config={chartConfig}
+        className="h-[80px] w-full shrink-0 pr-16"
+      >
         <LineChart accessibilityLayer data={data}>
           <CartesianGrid horizontal={false} vertical={false} />
           <XAxis
@@ -91,7 +77,9 @@ const Sparkline = ({ data }: SparklineProps) => {
           />
         </LineChart>
       </ChartContainer>
-      <PercentageChange data={data} />
+      <div className="absolute right-0 top-0 z-10">
+        <PriceChange data={data} type="$" />
+      </div>
     </div>
   );
 };

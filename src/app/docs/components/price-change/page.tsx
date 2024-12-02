@@ -2,11 +2,10 @@
 
 import React from "react";
 
-import { Sparkline } from "@/components/sol/sparkline";
-
+import { PriceChange } from "@/components/sol/price-change";
 import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
 
-export default function SparklinePage() {
+export default function PriceChangePage() {
   const [chartData, setChartData] = React.useState<
     {
       timestamp: number;
@@ -33,15 +32,18 @@ export default function SparklinePage() {
       label: "Default",
       value: "default",
       preview: (
-        <div className="flex w-full max-w-xs items-center justify-center">
-          <Sparkline data={chartData} />
+        <div className="flex w-full max-w-2xl flex-col items-center justify-center gap-4">
+          <p className="text-sm text-muted-foreground">
+            Click to toggle between % and $
+          </p>
+          <PriceChange data={chartData} />
         </div>
       ),
-      code: `import { Sparkline } from "@/components/sol/sparkline"
+      code: `import { PriceChange } from "@/components/sol/price-change"
 
-export function SparklineDemo() {
+export function PriceChangeDemo() {
   return (
-    <Sparkline data={chartData} />
+    <PriceChange data={chartData} />
   )
 }`,
     },

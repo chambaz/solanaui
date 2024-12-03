@@ -88,6 +88,13 @@ const navItems = [
       { label: "useTxnToast", href: "/docs/hooks/use-txn-toast" },
     ],
   },
+  {
+    section: "Utils",
+    children: [
+      { label: "Price data", href: "/docs/utils/price-data" },
+      { label: "Formatters", href: "/docs/utils/formatters" },
+    ],
+  },
 ];
 
 const Sidebar = () => {

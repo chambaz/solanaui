@@ -1,9 +1,9 @@
 "use client";
 
-export default function ExamplesPage() {
+export default function DemoPage() {
   return (
     <div className="max-w-2xl space-y-4">
-      <h2 className="text-xl font-medium text-primary">Examples</h2>
+      <h2 className="text-xl font-medium text-primary">Demo</h2>
       <p>
         Pariatur anim mollit esse aliqua adipisicing est exercitation. Aute quis
         quis voluptate do enim do sint aute irure occaecat sit ad veniam enim.

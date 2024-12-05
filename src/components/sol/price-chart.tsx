@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Area, AreaChart, CartesianGrid } from "recharts";
+import { Area, AreaChart, XAxis } from "recharts";
 import { format } from "date-fns";
 
 import { formatUsd } from "@/lib/utils";
@@ -16,56 +16,121 @@ import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
-  ChartTooltipContent,
 } from "@/components/ui/chart";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 import { TokenIcon } from "@/components/sol/token-icon";
 
-type PriceChartProps = {
+export type TimeScale = "time" | "day" | "date" | "month";
+
+export type PriceChartProps = {
   token: string;
   title?: string;
   description?: string;
+  timeScale: TimeScale;
+  onDateRangeChange?: (value: string) => void;
+  dateRangeOptions?: string[];
+  defaultDateRange?: string;
   data: {
     timestamp: number;
     price: number;
   }[];
 };
 
-const PriceChart = ({ token, title, description, data }: PriceChartProps) => {
-  const chartData = React.useMemo(
-    () =>
-      data.map((item) => ({
-        ...item,
-        label: format(item.timestamp * 1000, "MMM do hh:mm a"),
-      })),
-    [data],
-  );
+const formatTimestamp = (timestamp: number, timeScale: TimeScale) => {
+  const ts = timestamp * 1000;
+  if (timeScale === "month") {
+    return format(ts, "MMM");
+  } else if (timeScale === "date") {
+    return format(ts, "MMM dd");
+  } else if (timeScale === "day") {
+    return format(ts, "MMM do");
+  }
+  return format(ts, "HH:mm");
+};
 
-  const chartConfig = React.useMemo(
-    () =>
-      ({
-        token: {
-          label: "Token label",
-          color:
-            chartData[0].price > chartData[chartData.length - 1].price
-              ? "hsl(var(--negative))"
-              : "hsl(var(--positive))",
-        },
-      }) satisfies ChartConfig,
-    [chartData],
+const PriceChart = ({
+  token,
+  title,
+  description,
+  timeScale = "time",
+  onDateRangeChange,
+  dateRangeOptions,
+  defaultDateRange,
+  data,
+}: PriceChartProps) => {
+  const [dateRange, setDateRange] = React.useState(
+    dateRangeOptions?.[
+      typeof defaultDateRange === "number" ? defaultDateRange : 0
+    ] || "1D",
   );
+  const prevDateRange = React.useRef(dateRange);
+
+  const chartColor = React.useMemo(() => {
+    if (!data.length) return "";
+    return data[0].price > data[data.length - 1].price
+      ? "hsl(var(--destructive))"
+      : "hsl(var(--chart-2))";
+  }, [data]);
+
+  const formatXAxis = (timestamp: number) => {
+    return formatTimestamp(timestamp, timeScale);
+  };
+
+  const chartData = React.useMemo(() => {
+    return data.map((item) => ({
+      ...item,
+      label: formatTimestamp(item.timestamp, timeScale),
+    }));
+  }, [data, timeScale]);
+
+  const chartConfig = React.useMemo(() => {
+    if (!chartData.length) return null;
+
+    return {
+      desktop: {
+        label: token,
+        color: chartColor,
+      },
+      mobile: {
+        label: token,
+        color: chartColor,
+      },
+    } satisfies ChartConfig;
+  }, [chartData, token, chartColor]);
 
   const chartTitle = React.useMemo(() => {
     return token ? `${token} Price` : title;
   }, [token, title]);
 
+  React.useEffect(() => {
+    if (prevDateRange.current !== dateRange) {
+      onDateRangeChange?.(dateRange);
+      prevDateRange.current = dateRange;
+    }
+  }, [dateRange, onDateRangeChange]);
+
+  if (!data.length || !chartConfig) return null;
+
   return (
     <Card className="w-full">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
+      <CardHeader className="relative gap-1.5">
+        <CardTitle className="flex items-center gap-2 text-xl">
           <TokenIcon token={token} /> {chartTitle}
         </CardTitle>
         {description && <CardDescription>{description}</CardDescription>}
+        <ToggleGroup
+          type="single"
+          value={dateRange}
+          className="absolute right-6 top-6"
+          onValueChange={(value) => setDateRange(value)}
+        >
+          {dateRangeOptions?.map((value) => (
+            <ToggleGroupItem key={value} value={value}>
+              {value}
+            </ToggleGroupItem>
+          ))}
+        </ToggleGroup>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
@@ -73,49 +138,59 @@ const PriceChart = ({ token, title, description, data }: PriceChartProps) => {
             accessibilityLayer
             data={chartData}
             margin={{
-              left: 12,
+              top: 10,
               right: 12,
+              bottom: 20,
+              left: 12,
             }}
           >
-            <CartesianGrid vertical={false} />
+            <XAxis
+              dataKey="timestamp"
+              axisLine={false}
+              tickLine={false}
+              tickFormatter={formatXAxis}
+              interval="preserveStart"
+              minTickGap={50}
+              fontSize={12}
+              className="text-muted-foreground"
+            />
             <ChartTooltip
               cursor={false}
-              content={
-                <ChartTooltipContent
-                  labelKey="label"
-                  formatter={(value) => {
-                    const num = Number(value);
-                    return (
-                      <div className="flex w-full items-center justify-center gap-2">
+              content={(props) => {
+                if (!props.active || !props.payload || !props.payload[0]) {
+                  return null;
+                }
+
+                const data = props.payload[0].payload;
+                return (
+                  <div className="rounded-lg border bg-background p-2 shadow-sm">
+                    <div className="flex flex-col">
+                      <span className="text-xs text-muted-foreground">
+                        {data.label}
+                      </span>
+                      <div className="flex items-center gap-2">
                         <strong className="font-medium">Price:</strong>
                         <span>
-                          {num > 0.00001
-                            ? formatUsd(num)
-                            : `$${num.toExponential(2)}`}
+                          {data.price > 0.00001
+                            ? formatUsd(data.price)
+                            : `$${data.price.toExponential(2)}`}
                         </span>
                       </div>
-                    );
-                  }}
-                  labelFormatter={(value) => {
-                    if (!value) {
-                      return "Now";
-                    }
-
-                    return value;
-                  }}
-                />
-              }
+                    </div>
+                  </div>
+                );
+              }}
             />
             <defs>
               <linearGradient id="fillToken" x1="0" y1="0" x2="0" y2="1">
                 <stop
                   offset="5%"
-                  stopColor="var(--color-token)"
+                  stopColor={chartConfig.desktop.color}
                   stopOpacity={0.8}
                 />
                 <stop
                   offset="95%"
-                  stopColor="var(--color-token)"
+                  stopColor={chartConfig.desktop.color}
                   stopOpacity={0.1}
                 />
               </linearGradient>
@@ -125,7 +200,7 @@ const PriceChart = ({ token, title, description, data }: PriceChartProps) => {
               type="natural"
               fill="url(#fillToken)"
               fillOpacity={0.4}
-              stroke="var(--color-token)"
+              stroke={chartConfig.desktop.color}
               stackId="a"
             />
           </AreaChart>

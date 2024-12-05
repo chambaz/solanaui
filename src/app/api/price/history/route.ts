@@ -6,6 +6,7 @@ export async function GET(request: Request) {
   const symbol = searchParams.get("symbol");
   const start = searchParams.get("start");
   const end = searchParams.get("end");
+  const interval = searchParams.get("interval");
 
   if (!mint || !symbol || !start || !end) {
     return Response.json(
@@ -18,6 +19,7 @@ export async function GET(request: Request) {
     { mint, symbol },
     Number(start),
     Number(end),
+    interval || "1H",
   );
 
   return Response.json({ data: priceHistory });

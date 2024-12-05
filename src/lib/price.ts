@@ -58,10 +58,11 @@ export async function getPriceHistoryBirdeye(
   token: TokenData,
   start: number,
   end: number,
+  interval: string = "1H",
 ): Promise<number | null> {
   try {
     const response = await fetch(
-      `https://public-api.birdeye.so/defi/history_price?address=${token.mint}&type=1H&time_from=${start}&time_to=${end}`,
+      `https://public-api.birdeye.so/defi/history_price?address=${token.mint}&type=${interval}&time_from=${start}&time_to=${end}`,
       {
         headers: {
           "x-api-key": process.env.BIRDEYE_API_KEY!,

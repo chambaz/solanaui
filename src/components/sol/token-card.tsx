@@ -8,7 +8,7 @@ import { PublicKey } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { IconExternalLink } from "@tabler/icons-react";
 
-import { formatUsd, shortAddress } from "@/lib/utils";
+import { formatUsd, shortAddress, cn } from "@/lib/utils";
 import { ExtendedDigitalAsset, useAssets } from "@/hooks/use-assets";
 import {
   Card,
@@ -24,9 +24,10 @@ import { Sparkline } from "@/components/sol/sparkline";
 
 type TokenCardProps = {
   address: PublicKey;
+  size?: "sm" | "md";
 };
 
-const TokenCard = ({ address }: TokenCardProps) => {
+const TokenCard = ({ address, size = "md" }: TokenCardProps) => {
   const { fetchAssets, isLoading } = useAssets();
   const { publicKey } = useWallet();
   const [asset, setAsset] = React.useState<ExtendedDigitalAsset | null>(null);
@@ -66,8 +67,8 @@ const TokenCard = ({ address }: TokenCardProps) => {
 
   if (isLoading) {
     return (
-      <Card className="w-[350px]">
-        <CardHeader>
+      <Card className="w-full">
+        <CardHeader className={cn("p-5", size === "md" && "p-6")}>
           <CardTitle className="flex items-center gap-3">
             <span className="sr-only">Loading...</span>
             <Skeleton className="h-[48px] w-[48px] shrink-0 rounded-full" />
@@ -78,8 +79,8 @@ const TokenCard = ({ address }: TokenCardProps) => {
           </CardTitle>
           <CardDescription className="sr-only">Loading...</CardDescription>
         </CardHeader>
-        <CardContent>
-          <Skeleton className="h-[116px] w-[300px]" />
+        <CardContent className={cn("p-5", size === "md" && "p-6")}>
+          <Skeleton className="h-[116px] w-full" />
         </CardContent>
       </Card>
     );
@@ -88,10 +89,18 @@ const TokenCard = ({ address }: TokenCardProps) => {
   if (!asset) return null;
 
   return (
-    <Card className="w-[350px]">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-lg">
-          <TokenIcon token={asset.metadata.symbol} size={48} />
+    <Card className="w-full">
+      <CardHeader className={cn("p-5 pb-2", size === "md" && "p-6")}>
+        <CardTitle
+          className={cn(
+            "flex items-center gap-2 text-base",
+            size === "md" && "text-lg",
+          )}
+        >
+          <TokenIcon
+            token={asset.metadata.symbol}
+            size={size === "sm" ? 32 : 48}
+          />
           <div className="flex flex-col">
             {asset.metadata.name}
             <Link
@@ -104,8 +113,12 @@ const TokenCard = ({ address }: TokenCardProps) => {
           </div>
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4 pb-0">
-        {asset.price && <p className="text-4xl">{formatUsd(asset.price)}</p>}
+      <CardContent className={cn("space-y-4 p-5 pb-0", size === "md" && "p-6")}>
+        {asset.price && (
+          <p className={cn("text-2xl", size === "md" && "text-4xl")}>
+            {formatUsd(asset.price)}
+          </p>
+        )}
         <Sparkline data={chartData} />
       </CardContent>
     </Card>

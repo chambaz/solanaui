@@ -25,16 +25,16 @@ export type TimeScale = "time" | "day" | "date" | "month";
 
 export type PriceChartProps = {
   token: string;
-  title?: string;
-  description?: string;
-  timeScale: TimeScale;
-  onDateRangeChange?: (value: string) => void;
-  dateRangeOptions?: string[];
-  defaultDateRange?: string;
   data: {
     timestamp: number;
     price: number;
   }[];
+  timeScale?: TimeScale;
+  title?: string;
+  description?: string;
+  onDateRangeChange?: (value: string) => void;
+  dateRangeOptions?: string[];
+  defaultDateRange?: string;
 };
 
 const formatTimestamp = (timestamp: number, timeScale: TimeScale) => {
@@ -60,9 +60,9 @@ const PriceChart = ({
   data,
 }: PriceChartProps) => {
   const [dateRange, setDateRange] = React.useState(
-    dateRangeOptions?.[
-      typeof defaultDateRange === "number" ? defaultDateRange : 0
-    ] || "1D",
+    defaultDateRange && dateRangeOptions?.includes(defaultDateRange)
+      ? defaultDateRange
+      : dateRangeOptions?.[0] || "1D",
   );
   const prevDateRange = React.useRef(dateRange);
 

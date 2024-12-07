@@ -12,11 +12,13 @@ export default function TokenCardPage() {
       label: "Default",
       value: "default",
       preview: (
-        <TokenCard
-          address={
-            new PublicKey("EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm")
-          }
-        />
+        <div className="w-full max-w-md">
+          <TokenCard
+            address={
+              new PublicKey("EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm")
+            }
+          />
+        </div>
       ),
       code: `import { TokenCard } from "@/components/sol/token-card"
 

@@ -44,7 +44,6 @@ export async function getPriceBirdeye(
       },
     );
     const priceData = await response.json();
-    console.log(priceData);
     return priceData?.data && priceData.data.price
       ? priceData.data.price
       : null;

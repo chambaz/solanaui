@@ -110,10 +110,11 @@ const TokenList = ({ tokens, address, onClick }: TokenListProps) => {
               {address && (
                 <>
                   <TableCell>
-                    {asset.hasToken && formatNumberShort(asset.tokenAmount)}
+                    {asset.hasToken &&
+                      formatNumberShort(asset.tokenAmount || 0)}
                   </TableCell>
                   <TableCell>
-                    {asset.hasToken && formatUsd(asset.tokenAmountUsd)}
+                    {asset.hasToken && formatUsd(asset.tokenAmountUsd || 0)}
                   </TableCell>
                 </>
               )}

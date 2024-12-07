@@ -1,4 +1,4 @@
-import { getPricePyth } from "@/lib/price";
+import { getPriceBirdeye } from "@/lib/price";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -9,6 +9,6 @@ export async function GET(request: Request) {
     return Response.json({ error: "Missing mint or symbol" }, { status: 400 });
   }
 
-  const price = await getPricePyth({ mint, symbol });
+  const price = await getPriceBirdeye({ mint, symbol });
   return Response.json({ price });
 }

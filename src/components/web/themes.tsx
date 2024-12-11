@@ -66,23 +66,29 @@ const ThemeContext = React.createContext<ThemeContextType | undefined>(
   undefined,
 );
 
-const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
-  const [theme, setTheme] = React.useState<Theme | null>(null);
+const ThemeProvider = ({
+  children,
+  defaultColorTheme = "zinc",
+}: {
+  children: React.ReactNode;
+  defaultColorTheme?: Theme;
+}) => {
+  const [theme, setTheme] = React.useState<Theme>(defaultColorTheme);
 
-  React.useEffect(() => {
-    if (!theme) return;
-    localStorage.setItem("sol-theme", theme);
-  }, [theme]);
+  const updateTheme = React.useCallback((newTheme: Theme) => {
+    setTheme(newTheme);
+    document.cookie = `sol-theme=${newTheme};path=/;max-age=31536000`;
 
-  React.useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const savedTheme = localStorage.getItem("sol-theme") || "zinc";
-    setTheme(savedTheme as Theme);
+    document.documentElement.classList.forEach((className) => {
+      if (className.startsWith("theme-")) {
+        document.documentElement.classList.remove(className);
+      }
+    });
+    document.documentElement.classList.add(`theme-${newTheme}`);
   }, []);
 
   return (
-    <ThemeContext.Provider value={{ theme, setTheme }}>
+    <ThemeContext.Provider value={{ theme, setTheme: updateTheme }}>
       {children}
     </ThemeContext.Provider>
   );
@@ -94,11 +100,6 @@ const useTheme = () => {
     throw new Error("useTheme must be used within a ThemeProvider");
   }
   return context;
-};
-
-const ThemeWrapper = ({ children }: { children: React.ReactNode }) => {
-  const { theme } = useTheme();
-  return <div className={`theme-${theme}`}>{children}</div>;
 };
 
 const ThemeSelector = () => {
@@ -224,4 +225,4 @@ const ModeToggle = ({ type = "toggle" }: ModeToggleProps) => {
   return null;
 };
 
-export { ThemeProvider, ThemeSelector, ThemeWrapper, useTheme, ModeToggle };
+export { ThemeProvider, ThemeSelector, useTheme, ModeToggle };

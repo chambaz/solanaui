@@ -9,7 +9,7 @@ import {
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 
 import { TxnSettingsProvider } from "@/components/sol/txn-settings";
-import { ThemeProvider, ThemeWrapper } from "@/components/web/themes";
+import { ThemeProvider } from "@/components/web/themes";
 
 const Providers = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -17,11 +17,13 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
       <WalletProvider wallets={[]} autoConnect>
         <TxnSettingsProvider>
           <ThemeProvider>
-            <ThemeWrapper>
-              <NextThemesProvider attribute="class" defaultTheme="system">
-                {children}
-              </NextThemesProvider>
-            </ThemeWrapper>
+            <NextThemesProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem={true}
+            >
+              {children}
+            </NextThemesProvider>
           </ThemeProvider>
         </TxnSettingsProvider>
       </WalletProvider>

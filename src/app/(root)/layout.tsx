@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Roboto_Mono } from "next/font/google";
+import { cookies } from "next/headers";
 
 import { cn } from "@/lib/utils";
 
@@ -30,10 +31,17 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const cookieStore = cookies();
+  const colorTheme = cookieStore.get("sol-theme")?.value || "zinc";
+
   return (
     <html
       lang="en"
-      className={cn(inter.variable, roboto_mono.variable)}
+      className={cn(
+        inter.variable,
+        roboto_mono.variable,
+        `theme-${colorTheme}`,
+      )}
       suppressHydrationWarning
     >
       <body>

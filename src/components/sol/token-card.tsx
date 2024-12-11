@@ -80,7 +80,7 @@ const TokenCard = ({ address, size = "md" }: TokenCardProps) => {
           <CardDescription className="sr-only">Loading...</CardDescription>
         </CardHeader>
         <CardContent className={cn("p-5", size === "md" && "p-6")}>
-          <Skeleton className="h-[116px] w-full" />
+          <Skeleton className="h-[88px] w-full" />
         </CardContent>
       </Card>
     );
@@ -89,7 +89,7 @@ const TokenCard = ({ address, size = "md" }: TokenCardProps) => {
   if (!asset) return null;
 
   return (
-    <Card className="w-full">
+    <Card className="min-h-[218px] w-full">
       <CardHeader className={cn("p-5 pb-2", size === "md" && "p-6")}>
         <CardTitle
           className={cn(

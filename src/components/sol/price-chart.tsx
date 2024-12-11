@@ -18,6 +18,7 @@ import {
   ChartTooltip,
 } from "@/components/ui/chart";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { Skeleton } from "@/components/ui/skeleton";
 
 import { TokenIcon } from "@/components/sol/token-icon";
 
@@ -110,7 +111,26 @@ const PriceChart = ({
     }
   }, [dateRange, onDateRangeChange]);
 
-  if (!data.length || !chartConfig) return null;
+  if (!data.length || !chartConfig) {
+    return (
+      <Card className="w-full">
+        <CardHeader className="relative gap-1.5">
+          <CardTitle className="flex items-center gap-3 text-xl">
+            <Skeleton className="h-[32px] w-[32px] shrink-0 rounded-full" />
+            <Skeleton className="h-[16px] w-1/4" />
+            <Skeleton className="ml-auto h-[16px] w-1/4" />
+            <span className="sr-only">Loading...</span>
+          </CardTitle>
+          <CardDescription className="sr-only">Loading...</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="relative w-full pt-[55%]">
+            <Skeleton className="absolute inset-0" />
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card className="w-full">

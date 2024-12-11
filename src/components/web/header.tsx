@@ -5,7 +5,13 @@ import React from "react";
 import Link from "next/link";
 
 import { useWallet } from "@solana/wallet-adapter-react";
-import { IconBrandGithub, IconBrandX, IconMenu } from "@tabler/icons-react";
+import {
+  IconBrandGithub,
+  IconBrandX,
+  IconMenu,
+  IconLayoutDashboard,
+  IconRefresh,
+} from "@tabler/icons-react";
 
 import { WSOL_MINT, USDC_MINT } from "@/lib/constants";
 
@@ -14,6 +20,13 @@ import { ModeToggle } from "@/components/web/themes";
 
 import { UserDropdown } from "@/components/sol/user-dropdown";
 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 
 import { ThemeSelector } from "@/components/web/themes";
@@ -27,16 +40,13 @@ const navItems = [
     label: "components",
     href: "/docs/components/connect-wallet-dialog",
   },
-  {
-    label: "demo",
-    href: "/demo",
-  },
 ];
 
 const userTokens = [WSOL_MINT, USDC_MINT];
 
 const Header = () => {
   const { connected, publicKey } = useWallet();
+  const [demoDropdownOpen, setDemoDropdownOpen] = React.useState(false);
 
   return (
     <header className="flex h-16 items-center border-b border-border px-4 md:px-8">
@@ -56,6 +66,49 @@ const Header = () => {
                 </Link>
               </li>
             ))}
+            <li>
+              <DropdownMenu
+                open={demoDropdownOpen}
+                onOpenChange={setDemoDropdownOpen}
+              >
+                <DropdownMenuTrigger asChild>
+                  <button className="text-sm text-muted-foreground outline-none transition-colors hover:text-primary">
+                    Demo
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  className="w-56"
+                  side="bottom"
+                  align="center"
+                  sideOffset={12}
+                >
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem
+                      onClick={() => setDemoDropdownOpen(false)}
+                    >
+                      <Link
+                        href="/demo"
+                        className="flex w-full cursor-pointer items-center gap-2"
+                      >
+                        <IconLayoutDashboard size={16} />
+                        <span>Dashboard</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => setDemoDropdownOpen(false)}
+                    >
+                      <Link
+                        href="/demo?view=swap"
+                        className="flex w-full cursor-pointer items-center gap-2"
+                      >
+                        <IconRefresh size={16} />
+                        <span>Swap</span>
+                      </Link>
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </li>
             <li className="flex items-center">
               <ThemeSelector />
             </li>

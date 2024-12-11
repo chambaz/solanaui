@@ -31,10 +31,15 @@ const TOKENS = {
   LST: new PublicKey("LSTxxxnJzKDFSLr4dUkPcmCf5VyryEqzPLz5j4bpxFp"),
 };
 
-export default function DemoPage() {
+export default function DemoPage({
+  searchParams,
+}: {
+  searchParams: { view: string };
+}) {
+  const view = searchParams.view;
   const { connected, publicKey } = useWallet();
   const [demoState, setDemoState] = React.useState<DemoState>(
-    DemoState.DASHBOARD,
+    view === "swap" ? DemoState.SWAP : DemoState.DASHBOARD,
   );
   const [dateRange, setDateRange] = React.useState<DateRangeKey>("1M");
   const prevDateRange = React.useRef(dateRange);
@@ -110,7 +115,13 @@ export default function DemoPage() {
     ).then((data) => {
       setChartData(data);
     });
-  }, []);
+  }, [dateRange, fetchChartData, timestamps]);
+
+  React.useEffect(() => {
+    if (view) {
+      setDemoState(view === "swap" ? DemoState.SWAP : DemoState.DASHBOARD);
+    }
+  }, [view]);
 
   if (!connected || !publicKey) {
     return (

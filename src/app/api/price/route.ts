@@ -1,14 +1,22 @@
-import { getPriceBirdeye } from "@/lib/price";
+import { getPricesBirdeye } from "@/lib/price";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const mint = searchParams.get("mint");
-  const symbol = searchParams.get("symbol");
+  const mints = searchParams.getAll("mint");
+  const symbols = searchParams.getAll("symbol");
 
-  if (!mint || !symbol) {
-    return Response.json({ error: "Missing mint or symbol" }, { status: 400 });
+  if (!mints.length || !symbols.length || mints.length !== symbols.length) {
+    return Response.json(
+      { error: "Missing or mismatched mints and symbols" },
+      { status: 400 },
+    );
   }
 
-  const price = await getPriceBirdeye({ mint, symbol });
-  return Response.json({ price });
+  const tokens = mints.map((mint, index) => ({
+    mint,
+    symbol: symbols[index],
+  }));
+
+  const prices = await getPricesBirdeye(tokens);
+  return Response.json({ prices });
 }

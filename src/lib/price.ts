@@ -15,28 +15,32 @@ type TokenData = {
   symbol: string;
 };
 
-export async function getPricePyth(token: TokenData): Promise<number | null> {
+export async function getPricesPyth(
+  tokens: TokenData[],
+): Promise<(number | null)[]> {
   try {
     const pythClient = new PythHttpClient(connection, pythPublicKey);
     const pythData = await pythClient.getData();
 
-    const priceData = pythData.productPrice.get(
-      `Crypto.${token.symbol.replace("$", "").toUpperCase()}/USD`,
-    );
-
-    return priceData?.price || null;
+    return tokens.map((token) => {
+      const priceData = pythData.productPrice.get(
+        `Crypto.${token.symbol.replace("$", "").toUpperCase()}/USD`,
+      );
+      return priceData?.price || null;
+    });
   } catch (error) {
     console.error("Error fetching price from Pyth:", error);
-    return null;
+    return tokens.map(() => null);
   }
 }
 
-export async function getPriceBirdeye(
-  token: TokenData,
-): Promise<number | null> {
+export async function getPricesBirdeye(
+  tokens: TokenData[],
+): Promise<(number | null)[]> {
   try {
+    const listAddress = tokens.map((token) => token.mint).join(",");
     const response = await fetch(
-      `https://public-api.birdeye.so/defi/token_overview?address=${token.mint}`,
+      `https://public-api.birdeye.so/defi/multi_price?list_address=${listAddress}`,
       {
         headers: {
           "x-api-key": process.env.BIRDEYE_API_KEY!,
@@ -44,12 +48,12 @@ export async function getPriceBirdeye(
       },
     );
     const priceData = await response.json();
-    return priceData?.data && priceData.data.price
-      ? priceData.data.price
-      : null;
+
+    // Return array of prices in same order as input tokens
+    return tokens.map((token) => priceData?.data?.[token.mint]?.value ?? null);
   } catch (error) {
-    console.error("Error fetching price from Birdeye:", error);
-    return null;
+    console.error("Error fetching prices from Birdeye:", error);
+    return tokens.map(() => null);
   }
 }
 

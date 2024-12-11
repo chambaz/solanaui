@@ -38,13 +38,15 @@ const umi = createUmi(process.env.NEXT_PUBLIC_RPC_URL as string).use(
 export function useAssets() {
   const [isLoading, setIsLoading] = React.useState(false);
   const { connection } = useConnection();
+
   const fetchAssets = React.useCallback(
     async (addresses: PublicKey[], owner?: PublicKey) => {
       setIsLoading(true);
       const fetchedAssets: ExtendedDigitalAsset[] = [];
 
       try {
-        for (const address of addresses) {
+        // First fetch all assets and their metadata
+        const assetsPromises = addresses.map(async (address) => {
           let assetRes: DigitalAssetWithToken | DigitalAsset | null = null;
 
           if (owner) {
@@ -98,48 +100,71 @@ export function useAssets() {
             console.error("Error fetching token image:", error);
           }
 
-          const priceRes = await fetch(
-            `/api/price?mint=${assetRes.mint.publicKey.toString()}&symbol=${assetRes.metadata.symbol}`,
-          );
-          const price = await priceRes.json();
-
-          const item = {
-            ...assetRes,
+          return {
+            assetRes,
             imageUrl,
-            price: price.price || null,
             collection,
-            hasToken: "token" in assetRes,
-          } as ExtendedDigitalAsset;
+          };
+        });
 
-          if (item.hasToken) {
-            item.tokenAmount =
-              Number(item.token.amount) / Math.pow(10, item.mint.decimals);
-            if (item.price) item.tokenAmountUsd = item.tokenAmount * item.price;
-          }
+        const assets = await Promise.all(assetsPromises);
 
-          if (address.equals(WSOL_MINT) && owner) {
-            const balance = await connection.getBalance(owner);
+        // Fetch all prices in one batch
+        const priceRes = await fetch(
+          `/api/price?${assets
+            .map(
+              ({ assetRes }) =>
+                `mint=${assetRes.mint.publicKey.toString()}&symbol=${assetRes.metadata.symbol}`,
+            )
+            .join("&")}`,
+        );
+        const { prices } = await priceRes.json();
 
-            if (item.tokenAmount) {
-              item.tokenAmount += balance / LAMPORTS_PER_SOL;
-            } else {
-              item.tokenAmount = balance / LAMPORTS_PER_SOL;
+        // Combine asset data with prices
+        const processAssets = await Promise.all(
+          assets.map(async ({ assetRes, imageUrl, collection }, index) => {
+            const item = {
+              ...assetRes,
+              imageUrl,
+              price: prices[index] || null,
+              collection,
+              hasToken: "token" in assetRes,
+            } as ExtendedDigitalAsset;
+
+            if (item.hasToken) {
+              item.tokenAmount =
+                Number(item.token.amount) / Math.pow(10, item.mint.decimals);
+              if (item.price)
+                item.tokenAmountUsd = item.tokenAmount * item.price;
             }
 
-            if (item.tokenAmount && item.price) {
-              item.tokenAmountUsd = item.tokenAmount * item.price;
-            }
-          }
+            // Handle WSOL balance
+            if (addresses[index].equals(WSOL_MINT) && owner) {
+              const balance = await connection.getBalance(owner);
 
-          fetchedAssets.push(item);
-        }
+              if (item.tokenAmount) {
+                item.tokenAmount += balance / LAMPORTS_PER_SOL;
+              } else {
+                item.tokenAmount = balance / LAMPORTS_PER_SOL;
+              }
+
+              if (item.tokenAmount && item.price) {
+                item.tokenAmountUsd = item.tokenAmount * item.price;
+              }
+            }
+
+            return item;
+          }),
+        );
+
+        fetchedAssets.push(...processAssets);
       } finally {
         setIsLoading(false);
       }
 
       return fetchedAssets;
     },
-    [],
+    [connection],
   );
 
   return { fetchAssets, isLoading };

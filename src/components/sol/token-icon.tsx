@@ -1,10 +1,12 @@
+"use client";
+
 import React from "react";
 
 import Image from "next/image";
 
 import { PublicKey } from "@solana/web3.js";
 
-import { getTokenIconUrl } from "@/lib/token-icon";
+import { cn } from "@/lib/utils";
 
 type IconProps = {
   token: PublicKey;
@@ -13,16 +15,32 @@ type IconProps = {
 };
 
 const TokenIcon = ({ token, size = 24, alt }: IconProps) => {
-  const imagePath = getTokenIconUrl(token);
+  const [isLoading, setIsLoading] = React.useState(true);
+  const [icon, setIcon] = React.useState<string>(
+    "/token-icons/placeholder.jpg",
+  );
+
+  const getIcon = async (mint: string) => {
+    const response = await fetch(`/api/icon?mint=${mint}`);
+    const { icon } = await response.json();
+    return icon;
+  };
+
+  React.useEffect(() => {
+    getIcon(token.toBase58()).then((icon) => {
+      setIcon(icon);
+      setIsLoading(false);
+    });
+  }, [token]);
 
   return (
     <div className="rounded-full border border-border bg-background p-0">
       <Image
-        src={imagePath}
+        src={icon}
         alt={alt ?? token.toBase58()}
         width={size}
         height={size}
-        className="rounded-full"
+        className={cn("rounded-full", isLoading && "animate-pulse")}
         style={{
           width: size,
           height: size,

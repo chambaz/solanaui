@@ -88,7 +88,7 @@ const TokenList = ({ tokens, address, onClick }: TokenListProps) => {
             >
               <TableCell>
                 <div className="flex items-center gap-2 font-medium">
-                  <TokenIcon token={asset.metadata.symbol} size={32} />
+                  <TokenIcon token={new PublicKey(asset.mint.publicKey)} />
                   {asset.metadata.symbol}
                 </div>
               </TableCell>

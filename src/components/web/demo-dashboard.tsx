@@ -26,6 +26,8 @@ type DemoDashboardProps = {
   setDateRange: (dateRange: DateRangeKey) => void;
 };
 
+const SOL_MINT = new PublicKey("So11111111111111111111111111111111111111112");
+
 const DemoDashboard = ({
   chartData,
   timestamps,
@@ -40,6 +42,7 @@ const DemoDashboard = ({
       <div className="mb-8 flex w-full items-center gap-8">
         <div className="w-1/2">
           <PriceChart
+            mint={SOL_MINT}
             token="SOL"
             data={chartData}
             timeScale={timestamps[dateRange].timeScale}

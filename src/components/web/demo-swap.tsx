@@ -1,8 +1,12 @@
 "use client";
 
+import React from "react";
+
 import { useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey } from "@solana/web3.js";
 import { IconArrowUp, IconArrowDown } from "@tabler/icons-react";
+
+import { ExtendedDigitalAsset } from "@/hooks/use-assets";
 
 import { TokenInput } from "@/components/sol/token-input";
 
@@ -13,7 +17,23 @@ type DemoSwapProps = {
 };
 
 const DemoSwap = ({ tokens }: DemoSwapProps) => {
+  const [tokenFrom, setTokenFrom] = React.useState<ExtendedDigitalAsset | null>(
+    null,
+  );
+  const [tokenTo, setTokenTo] = React.useState<ExtendedDigitalAsset | null>(
+    null,
+  );
+  const [amountFrom, setAmountFrom] = React.useState<number>(0);
+  const [amountTo, setAmountTo] = React.useState<number>(0);
   const { publicKey } = useWallet();
+
+  const handleSwap = () => {
+    console.log("Swap!");
+    console.log("Token From", tokenFrom);
+    console.log("Token To", tokenTo);
+    console.log("Amount From", amountFrom);
+    console.log("Amount To", amountTo);
+  };
 
   return (
     <div>
@@ -26,14 +46,29 @@ const DemoSwap = ({ tokens }: DemoSwapProps) => {
       </div>
       <div className="rounded-lg border p-4">
         <div className="flex flex-col items-center justify-center gap-4">
-          <TokenInput tokens={tokens} owner={publicKey} />
+          <TokenInput
+            tokens={tokens}
+            owner={publicKey}
+            onTokenSelect={setTokenFrom}
+            onAmountChange={setAmountFrom}
+          />
           <div className="flex gap-2">
             <IconArrowUp size={18} />
             <IconArrowDown size={18} />
           </div>
-          <TokenInput tokens={tokens} owner={publicKey} />
+          <TokenInput
+            tokens={tokens}
+            owner={publicKey}
+            disabled={true}
+            showWalletBalance={false}
+            showQuickAmountButtons={false}
+            onTokenSelect={setTokenTo}
+            onAmountChange={setAmountTo}
+          />
         </div>
-        <Button className="mt-4 w-full">Swap</Button>
+        <Button className="mt-4 w-full" onClick={handleSwap}>
+          Swap
+        </Button>
       </div>
     </div>
   );

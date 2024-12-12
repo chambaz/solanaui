@@ -2,11 +2,15 @@
 
 import React from "react";
 
+import { PublicKey } from "@solana/web3.js";
+
 import { PriceChart, TimeScale } from "@/components/sol/price-chart";
 
 import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
 
 type DateRangeKey = "1D" | "1W" | "1M" | "1Y";
+
+const WIF_MINT = new PublicKey("EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm");
 
 export default function PriceChartPage() {
   const timestamps: Record<
@@ -91,6 +95,7 @@ export default function PriceChartPage() {
       preview: (
         <div className="w-full max-w-3xl">
           <PriceChart
+            mint={WIF_MINT}
             token="$WIF"
             description="$WIF price over the last 24 hours"
             data={chartData}

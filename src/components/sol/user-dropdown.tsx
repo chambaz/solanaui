@@ -117,7 +117,7 @@ const UserDropdown = ({ address, size = 42, tokens }: UserDropdownProps) => {
                   key={asset.mint.publicKey.toString()}
                   className="flex items-center gap-2"
                 >
-                  <TokenIcon token={asset.metadata.symbol} size={32} />
+                  <TokenIcon token={new PublicKey(asset.mint.publicKey)} />
                   <span>{asset.metadata.symbol}</span>
                   <span className="ml-auto flex flex-col text-right">
                     {asset.tokenAmount && asset.tokenAmount > 0 ? (

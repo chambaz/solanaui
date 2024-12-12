@@ -98,7 +98,7 @@ const TokenCard = ({ address, size = "md" }: TokenCardProps) => {
           )}
         >
           <TokenIcon
-            token={asset.metadata.symbol}
+            token={new PublicKey(asset.mint.publicKey)}
             size={size === "sm" ? 32 : 48}
           />
           <div className="flex flex-col">

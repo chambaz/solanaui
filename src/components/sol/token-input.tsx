@@ -17,13 +17,24 @@ import { Button } from "@/components/ui/button";
 type TokenInputProps = {
   tokens: PublicKey[];
   owner?: PublicKey | null;
+  disabled?: boolean;
+  showWalletBalance?: boolean;
+  showQuickAmountButtons?: boolean;
   onTokenSelect?: (token: ExtendedDigitalAsset) => void;
   onAmountChange?: (amount: number) => void;
 };
 
 export const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
   (
-    { tokens, owner, onTokenSelect, onAmountChange },
+    {
+      tokens,
+      owner,
+      disabled,
+      showWalletBalance = true,
+      showQuickAmountButtons = true,
+      onTokenSelect,
+      onAmountChange,
+    },
     amountInputRef: React.ForwardedRef<HTMLInputElement>,
   ) => {
     const [amount, setAmount] = React.useState<string>("");
@@ -80,34 +91,42 @@ export const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
     return (
       <div className="relative w-full space-y-4">
         <div className="flex items-center justify-end gap-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => {
-              setAmount(formatNumberGrouped(maxAmount));
-            }}
-          >
-            <IconWallet size={16} />
-            {formatNumberShort(maxAmount)}
-          </Button>
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => {
-              setAmount(formatNumberGrouped(maxAmount / 2));
-            }}
-          >
-            Half
-          </Button>
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => {
-              setAmount(formatNumberGrouped(maxAmount));
-            }}
-          >
-            Max
-          </Button>
+          {showWalletBalance && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => {
+                setAmount(formatNumberGrouped(maxAmount));
+              }}
+            >
+              <IconWallet size={16} />
+              {formatNumberShort(maxAmount)}
+            </Button>
+          )}
+          {showQuickAmountButtons && (
+            <>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => {
+                  setAmount(formatNumberGrouped(maxAmount / 2));
+                  onAmountChange && onAmountChange(maxAmount / 2);
+                }}
+              >
+                Half
+              </Button>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => {
+                  setAmount(formatNumberGrouped(maxAmount));
+                  onAmountChange && onAmountChange(maxAmount);
+                }}
+              >
+                Max
+              </Button>
+            </>
+          )}
         </div>
         <div className="flex items-center gap-2">
           <TokenCombobox
@@ -115,7 +134,7 @@ export const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
             owner={owner}
             onSelect={(token) => {
               setSelectedToken(token);
-              setMaxAmount(token.hasToken ? token.tokenAmount : 0);
+              setMaxAmount(token.hasToken ? (token.tokenAmount ?? 0) : 0);
               setAmount("");
               if (
                 amountInputRef &&
@@ -134,7 +153,7 @@ export const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
             className="h-12 text-right"
             inputMode="numeric"
             value={amount ?? undefined}
-            disabled={!selectedToken || !maxAmount}
+            disabled={disabled || !selectedToken || !maxAmount}
             onChange={(e) => handleInputChange(e.target.value)}
           />
         </div>

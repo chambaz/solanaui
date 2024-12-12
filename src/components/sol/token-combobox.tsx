@@ -76,7 +76,9 @@ const TokenCombobox = ({
           >
             {selectedAsset ? (
               <>
-                <TokenIcon token={selectedAsset.metadata.symbol} />
+                <TokenIcon
+                  token={new PublicKey(selectedAsset.mint.publicKey)}
+                />
                 {selectedAsset.metadata.symbol}
               </>
             ) : (
@@ -105,7 +107,7 @@ const TokenCombobox = ({
                   }}
                   className="flex items-center gap-2"
                 >
-                  <TokenIcon token={asset.metadata.symbol} />
+                  <TokenIcon token={new PublicKey(asset.mint.publicKey)} />
                   {asset.metadata.symbol}
 
                   <span className="ml-auto flex flex-col text-right">
@@ -113,7 +115,9 @@ const TokenCombobox = ({
                       formatUsd(asset.price ?? 0)
                     ) : (
                       <>
-                        {asset.hasToken && asset.tokenAmount > 0
+                        {asset.hasToken &&
+                        asset.tokenAmount &&
+                        asset.tokenAmount > 0
                           ? formatNumber(asset.tokenAmount)
                           : 0}
 

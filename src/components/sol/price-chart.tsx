@@ -1,5 +1,6 @@
 import React from "react";
 
+import { PublicKey } from "@solana/web3.js";
 import { Area, AreaChart, XAxis } from "recharts";
 import { format } from "date-fns";
 
@@ -25,6 +26,7 @@ import { TokenIcon } from "@/components/sol/token-icon";
 export type TimeScale = "time" | "day" | "date" | "month";
 
 export type PriceChartProps = {
+  mint: PublicKey;
   token: string;
   data: {
     timestamp: number;
@@ -51,6 +53,7 @@ const formatTimestamp = (timestamp: number, timeScale: TimeScale) => {
 };
 
 const PriceChart = ({
+  mint,
   token,
   title,
   description,
@@ -136,7 +139,7 @@ const PriceChart = ({
     <Card className="w-full">
       <CardHeader className="relative gap-1.5">
         <CardTitle className="flex items-center gap-2 text-xl">
-          <TokenIcon token={token} /> {chartTitle}
+          <TokenIcon token={mint} /> {chartTitle}
         </CardTitle>
         {description && <CardDescription>{description}</CardDescription>}
         <ToggleGroup

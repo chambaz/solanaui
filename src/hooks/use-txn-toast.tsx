@@ -17,6 +17,7 @@ type ToasterToast = ToastProps & {
   title?: React.ReactNode;
   description?: React.ReactNode;
   action?: ToastActionElement;
+  isLoading?: boolean;
 };
 
 const actionTypes = {
@@ -175,6 +176,8 @@ function txnToast(
       id,
       title: "Transaction Pending",
       description: "Waiting for transaction confirmation.",
+      isLoading: true,
+      duration: 300000,
     });
 
     confirmation
@@ -199,6 +202,7 @@ function txnToast(
             title: "Transaction Error",
             description: errorMessage,
             duration: TOAST_REMOVE_DELAY,
+            isLoading: false,
           });
         } else {
           update({
@@ -206,6 +210,7 @@ function txnToast(
             title: "Transaction Complete",
             description: `The transaction has been confirmed.`,
             duration: TOAST_REMOVE_DELAY,
+            isLoading: false,
             action: (
               <ToastAction
                 onClick={() =>
@@ -226,6 +231,7 @@ function txnToast(
           title: "Transaction Error",
           description: "The transaction has failed.",
           duration: TOAST_REMOVE_DELAY,
+          isLoading: false,
         });
       });
   };
@@ -237,6 +243,7 @@ function txnToast(
       title: "Transaction Error",
       description: error || "Something went wrong",
       duration: TOAST_REMOVE_DELAY,
+      isLoading: false,
     });
   };
 

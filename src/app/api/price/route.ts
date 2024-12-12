@@ -1,4 +1,4 @@
-import { getPricesBirdeye } from "@/lib/price";
+import { getPricesBirdeye as getPrices } from "@/lib/price";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -17,6 +17,6 @@ export async function GET(request: Request) {
     symbol: symbols[index],
   }));
 
-  const prices = await getPricesBirdeye(tokens);
+  const prices = await getPrices(tokens);
   return Response.json({ prices });
 }

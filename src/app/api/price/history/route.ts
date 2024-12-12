@@ -1,4 +1,4 @@
-import { getPriceHistoryBirdeye } from "@/lib/price";
+import { getPriceHistoryBirdeye as getPriceHistory } from "@/lib/price";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -15,7 +15,7 @@ export async function GET(request: Request) {
     );
   }
 
-  const priceHistory = await getPriceHistoryBirdeye(
+  const priceHistory = await getPriceHistory(
     { mint, symbol },
     Number(start),
     Number(end),

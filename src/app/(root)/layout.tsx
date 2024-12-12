@@ -4,6 +4,8 @@ import { cookies } from "next/headers";
 
 import { cn } from "@/lib/utils";
 
+import { TxnToaster } from "@/components/sol/txn-toast";
+
 import { Providers } from "@/components/web/providers";
 import { Header } from "@/components/web/header";
 import { Footer } from "@/components/web/footer";
@@ -51,6 +53,7 @@ export default function RootLayout({
             {children}
           </main>
           <Footer />
+          <TxnToaster />
         </Providers>
       </body>
     </html>

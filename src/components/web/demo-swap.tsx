@@ -2,11 +2,12 @@
 
 import React from "react";
 
-import { useWallet } from "@solana/wallet-adapter-react";
-import { PublicKey } from "@solana/web3.js";
+import { useWallet, useConnection } from "@solana/wallet-adapter-react";
+import { PublicKey, VersionedTransaction } from "@solana/web3.js";
 import { IconArrowUp, IconArrowDown } from "@tabler/icons-react";
 
 import { ExtendedDigitalAsset } from "@/hooks/use-assets";
+import { useTxnToast } from "@/hooks/use-txn-toast";
 
 import { TokenInput } from "@/components/sol/token-input";
 
@@ -25,15 +26,104 @@ const DemoSwap = ({ tokens }: DemoSwapProps) => {
   );
   const [amountFrom, setAmountFrom] = React.useState<number>(0);
   const [amountTo, setAmountTo] = React.useState<number>(0);
-  const { publicKey } = useWallet();
+  const [isTransacting, setIsTransacting] = React.useState<boolean>(false);
+  const { publicKey, sendTransaction, wallet } = useWallet();
+  const { connection } = useConnection();
+  const { txnToast } = useTxnToast();
 
-  const handleSwap = () => {
-    console.log("Swap!");
-    console.log("Token From", tokenFrom);
-    console.log("Token To", tokenTo);
-    console.log("Amount From", amountFrom);
-    console.log("Amount To", amountTo);
-  };
+  const handleSwap = React.useCallback(async () => {
+    if (isTransacting) {
+      return;
+    }
+
+    const signingToast = txnToast();
+
+    if (!wallet || !publicKey) {
+      signingToast.error("Wallet not connected.");
+      return;
+    }
+
+    if (!tokenFrom || !tokenTo || !amountFrom) {
+      signingToast.error("Missing required information for swap.");
+      return;
+    }
+
+    try {
+      setIsTransacting(true);
+      // Define the input and output mint addresses
+      const inputMint = tokenFrom.mint.publicKey.toString();
+      const outputMint = tokenTo.mint.publicKey.toString();
+
+      // Convert amountTo to the smallest unit (e.g., lamports for SOL)
+      const amount = amountFrom * Math.pow(10, tokenFrom.mint.decimals);
+
+      // Fetch the quote from Jupiter API
+      const quoteResponse = await fetch(
+        `https://quote-api.jup.ag/v6/quote?inputMint=${inputMint}&outputMint=${outputMint}&amount=${amount}&slippageBps=50`,
+      ).then((res) => res.json());
+
+      console.log("Quote Response:", quoteResponse);
+
+      const { swapTransaction } = await fetch(
+        "https://quote-api.jup.ag/v6/swap",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            quoteResponse,
+            userPublicKey: publicKey.toString(),
+            wrapAndUnwrapSol: true,
+          }),
+        },
+      ).then((res) => res.json());
+
+      // Deserialize the transaction
+      const transactionBuffer = Buffer.from(swapTransaction, "base64");
+      const transaction = VersionedTransaction.deserialize(transactionBuffer);
+
+      // Fetch latest blockhash for transaction
+      const latestBlockhash = await connection.getLatestBlockhash();
+      transaction.message.recentBlockhash = latestBlockhash.blockhash;
+
+      // Sign and send the transaction using wallet adapter
+      const signature = await sendTransaction(transaction, connection);
+
+      // Confirm the transaction using the updated confirmation method
+      const confirmation = connection.confirmTransaction(
+        {
+          signature,
+          blockhash: latestBlockhash.blockhash,
+          lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
+        },
+        "finalized",
+      );
+
+      signingToast.confirm(signature, confirmation);
+
+      confirmation.then(() => {
+        console.log(
+          `Transaction confirmed: https://solscan.io/tx/${signature}`,
+        );
+      });
+    } catch (error) {
+      console.error("Error during swap:", error);
+      signingToast.error(
+        error instanceof Error ? error.message : "Something went wrong",
+      );
+    } finally {
+      setIsTransacting(false);
+    }
+  }, [
+    tokenFrom,
+    tokenTo,
+    amountFrom,
+    publicKey,
+    wallet,
+    connection,
+    sendTransaction,
+    isTransacting,
+    txnToast,
+  ]);
 
   return (
     <div>

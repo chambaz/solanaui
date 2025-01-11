@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 
 import { IconLink } from "@tabler/icons-react";
@@ -6,14 +8,20 @@ import css from "react-syntax-highlighter/dist/esm/languages/prism/css";
 import bash from "react-syntax-highlighter/dist/esm/languages/prism/bash";
 import ColdDark from "react-syntax-highlighter/dist/esm/styles/prism/coldark-dark";
 
+import { cn } from "@/lib/utils";
+
 import { ThemeSelector } from "@/components/web/themes";
+import { useSidebar } from "@/components/ui/sidebar";
 
 SyntaxHighlighter.registerLanguage("css", css);
 SyntaxHighlighter.registerLanguage("bash", bash);
 
 export default function IntroductionPage() {
+  const { open } = useSidebar();
   return (
-    <div className="prose max-w-4xl dark:prose-invert">
+    <div
+      className={cn("prose max-w-5xl dark:prose-invert", !open && "mx-auto")}
+    >
       <div id="getting-started" className="pt-0.5">
         <Link href="/docs#getting-started" className="no-underline">
           <h2 className="flex items-center gap-2">

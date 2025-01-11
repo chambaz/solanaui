@@ -1,6 +1,9 @@
+"use client";
+
 import React from "react";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import {
   IconComponents,
@@ -27,15 +30,15 @@ const navItems = [
     children: [
       {
         label: "Introduction",
-        href: "/docs",
+        href: "/docs#getting-started",
       },
       {
         label: "Installation",
-        href: "/docs/installation",
+        href: "/docs#installation",
       },
       {
         label: "Themes",
-        href: "/docs/themes",
+        href: "/docs#themes",
       },
     ],
   },
@@ -118,6 +121,8 @@ const navItems = [
 ];
 
 const AppSidebar = () => {
+  const pathname = usePathname();
+
   return (
     <Sidebar>
       <SidebarContent className="pb-8 pt-2">
@@ -135,7 +140,10 @@ const AppSidebar = () => {
               <SidebarMenu>
                 {item.children.map((child) => (
                   <SidebarMenuItem key={child.href}>
-                    <SidebarMenuButton asChild>
+                    <SidebarMenuButton
+                      isActive={child.href === pathname}
+                      asChild
+                    >
                       <Link href={child.href}>{child.label}</Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>

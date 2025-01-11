@@ -54,7 +54,7 @@ const DocsTabs = ({
   }, [variants, activeVariantIndex]);
 
   return (
-    <div className="space-y-4">
+    <div className="mt-6 space-y-6">
       {!connected && !connecting && isMounted && showConnectWalletAlert && (
         <Alert>
           <IconRocket size={20} />

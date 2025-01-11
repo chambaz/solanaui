@@ -56,7 +56,7 @@ export default function DocsLayout({
               <AppSidebar />
               <main className="flex min-h-screen w-full flex-col">
                 <Header showSidebarTrigger={true} />
-                <div className="px-4 py-8 md:px-6">{children}</div>
+                <div className="px-4 pb-16 md:px-6">{children}</div>
                 <Footer />
               </main>
             </SidebarProvider>

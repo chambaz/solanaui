@@ -34,7 +34,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   const cookieStore = cookies();
-  const colorTheme = cookieStore.get("sol-theme")?.value || "zinc";
+  const colorTheme = cookieStore.get("sol-theme")?.value || "blue";
 
   return (
     <html

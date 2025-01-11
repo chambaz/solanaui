@@ -69,7 +69,7 @@ const ThemeContext = React.createContext<ThemeContextType | undefined>(
 
 const ThemeProvider = ({
   children,
-  defaultColorTheme = "zinc",
+  defaultColorTheme = "blue",
 }: {
   children: React.ReactNode;
   defaultColorTheme?: Theme;
@@ -103,13 +103,22 @@ const useTheme = () => {
   return context;
 };
 
-const ThemeSelector = () => {
+type ThemeSelectorProps = {
+  className?: string;
+};
+
+const ThemeSelector = ({ className }: ThemeSelectorProps) => {
   const { theme, setTheme } = useTheme();
 
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <button className="flex translate-y-[1px] items-center gap-2 font-mono text-sm text-muted-foreground transition-colors hover:text-primary data-[state=open]:text-primary">
+        <button
+          className={cn(
+            "flex translate-y-[1px] items-center gap-2 font-mono text-sm text-muted-foreground transition-colors hover:text-primary data-[state=open]:text-primary",
+            className,
+          )}
+        >
           <IconPalette size={16} />
           Themes
         </button>
@@ -191,7 +200,6 @@ const ModeToggle = ({ type = "toggle" }: ModeToggleProps) => {
         className="justify-start gap-2"
         value={theme}
         onValueChange={(value) => {
-          console.log("value", value);
           setTheme(value);
         }}
       >

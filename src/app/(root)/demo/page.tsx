@@ -10,11 +10,10 @@ import { cn } from "@/lib/utils";
 import { UserDropdown } from "@/components/sol/user-dropdown";
 import { TimeScale } from "@/components/sol/price-chart";
 
-import { Button } from "@/components/ui/button";
-
-import { ConnectWallet } from "@/components/web/connect-wallet";
 import { DemoDashboard } from "@/components/web/demo-dashboard";
 import { DemoSwap } from "@/components/web/demo-swap";
+
+import { Button } from "@/components/ui/button";
 
 type DateRangeKey = "1D" | "1W" | "1M" | "1Y";
 
@@ -123,22 +122,9 @@ export default function DemoPage({
     }
   }, [view]);
 
-  if (!connected || !publicKey) {
-    return (
-      <div className="flex w-full flex-col items-center justify-center space-y-4">
-        <h2 className="text-2xl font-medium text-foreground">
-          Connect your wallet to get started
-        </h2>
-        <ConnectWallet />
-      </div>
-    );
-  }
-
   return (
-    <div className="flex w-full flex-col items-center rounded-lg bg-muted/25 p-8">
+    <div className="flex min-h-[calc(100vh-140px)] w-full flex-col items-center bg-muted/25 p-8">
       <header className="mb-8 flex w-full items-center justify-between gap-8 px-2">
-        <h2 className="text-2xl font-medium text-foreground">SolanaUI Demo</h2>
-
         <nav className="ml-auto">
           <ul className="flex items-center gap-4">
             <li>
@@ -167,7 +153,9 @@ export default function DemoPage({
             </li>
           </ul>
         </nav>
-        <UserDropdown address={publicKey} tokens={Object.values(TOKENS)} />
+        {connected && publicKey && (
+          <UserDropdown address={publicKey} tokens={Object.values(TOKENS)} />
+        )}
       </header>
       {demoState === DemoState.DASHBOARD && (
         <DemoDashboard

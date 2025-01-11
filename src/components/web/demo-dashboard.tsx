@@ -53,7 +53,7 @@ const DemoDashboard = ({
             }}
           />
         </div>
-        <div className="grid w-1/2 grid-cols-2 gap-5">
+        <div className="grid w-1/2 grid-cols-2 gap-8">
           {tokens.slice(1).map((token, index) => (
             <TokenCard address={token} size="sm" key={index} />
           ))}

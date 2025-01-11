@@ -122,6 +122,20 @@ const navItems = [
 
 const AppSidebar = () => {
   const pathname = usePathname();
+  const [hash, setHash] = React.useState("");
+
+  const isLinkActive = React.useCallback(
+    (href: string) => {
+      // For hash links (like /docs#getting-started)
+      if (href.includes("#")) {
+        const [pathPart, hashPart] = href.split("#");
+        return pathname === pathPart && hash === hashPart;
+      }
+      // For regular links
+      return href === pathname;
+    },
+    [pathname, hash],
+  );
 
   return (
     <Sidebar>
@@ -141,7 +155,14 @@ const AppSidebar = () => {
                 {item.children.map((child) => (
                   <SidebarMenuItem key={child.href}>
                     <SidebarMenuButton
-                      isActive={child.href === pathname}
+                      isActive={isLinkActive(child.href)}
+                      onClick={() => {
+                        if (child.href.includes("#")) {
+                          setHash(child.href.split("#")[1]);
+                        } else {
+                          setHash("");
+                        }
+                      }}
                       asChild
                     >
                       <Link href={child.href}>{child.label}</Link>

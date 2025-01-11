@@ -48,11 +48,11 @@ export default function RootLayout({
     >
       <body>
         <Providers>
-          <Header />
-          <main className="container mx-auto flex min-h-[calc(100vh-144px)] gap-8 p-8">
+          <main className="flex min-h-screen flex-col">
+            <Header />
             {children}
+            <Footer />
           </main>
-          <Footer />
           <TxnToaster />
         </Providers>
       </body>

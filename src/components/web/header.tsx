@@ -27,45 +27,54 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 
 import { ThemeSelector } from "@/components/web/themes";
 
-const navItems = [
-  {
-    label: "get started",
-    href: "/docs",
-  },
-  {
-    label: "components",
-    href: "/docs/components/connect-wallet-dialog",
-  },
-];
-
 const userTokens = [WSOL_MINT, USDC_MINT];
 
-const Header = () => {
-  const { connected, publicKey } = useWallet();
+type HeaderProps = {
+  showSidebarTrigger?: boolean;
+};
+
+const Header = ({ showSidebarTrigger = false }: HeaderProps) => {
+  const { connected, publicKey, connecting } = useWallet();
   const [demoDropdownOpen, setDemoDropdownOpen] = React.useState(false);
+  const [isMounted, setIsMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsMounted(!connecting);
+  }, [connecting]);
 
   return (
-    <header className="flex h-16 items-center border-b border-border px-4 md:px-8">
-      <div className="flex w-full items-center justify-between gap-6">
-        <Link href="/" className="mr-auto">
-          <h1 className="text-3xl font-semibold">SolanaUI</h1>
-        </Link>
-        <nav className="flex items-center gap-4 font-mono md:gap-10">
-          <ul className="hidden items-center gap-10 md:flex">
-            {navItems.map((item) => (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  className="text-sm text-muted-foreground transition-colors hover:text-primary"
-                >
-                  {item.label}
-                </Link>
-              </li>
-            ))}
+    <header className="flex h-16 w-full items-center border-b border-border">
+      <div className="flex w-full items-center justify-between gap-6 px-4 lg:px-6">
+        <div className="flex items-center gap-3">
+          {showSidebarTrigger && <SidebarTrigger />}
+          <Link href="/" className="mr-auto">
+            <h1 className="text-3xl font-semibold">SolanaUI</h1>
+          </Link>
+        </div>
+        <nav className="flex items-center gap-4 font-mono lg:gap-10">
+          <ul className="hidden items-center gap-10 lg:flex">
+            <li>
+              <Link
+                href="/docs"
+                className="hidden text-sm text-muted-foreground transition-colors hover:text-primary xl:block"
+              >
+                Getting started
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/docs/components/connect-wallet-dialog"
+                className="text-sm text-muted-foreground transition-colors hover:text-primary"
+              >
+                Components
+              </Link>
+            </li>
             <li>
               <DropdownMenu
                 open={demoDropdownOpen}
@@ -113,12 +122,18 @@ const Header = () => {
               <ThemeSelector />
             </li>
           </ul>
-          {connected && publicKey ? (
-            <UserDropdown address={publicKey} tokens={userTokens} />
+          {!isMounted ? (
+            <Skeleton className="h-[42px] w-[42px] rounded-full" />
           ) : (
-            <ConnectWallet />
+            <>
+              {connected && publicKey ? (
+                <UserDropdown address={publicKey} tokens={userTokens} />
+              ) : (
+                <ConnectWallet />
+              )}
+            </>
           )}
-          <ul className="hidden items-center gap-4 md:flex">
+          <ul className="hidden items-center gap-4 lg:flex">
             <li>
               <Link href="">
                 <IconBrandGithub size={18} />
@@ -133,7 +148,7 @@ const Header = () => {
               <ModeToggle />
             </li>
           </ul>
-          <Button variant="ghost" size="icon" className="md:hidden">
+          <Button variant="ghost" size="icon" className="lg:hidden">
             <IconMenu size={18} />
           </Button>
         </nav>

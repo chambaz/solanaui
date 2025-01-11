@@ -38,11 +38,16 @@ const DocsTabs = ({
   variants,
   showConnectWalletAlert = true,
 }: DocsTabsProps) => {
-  const { connected } = useWallet();
+  const { connected, connecting } = useWallet();
   const [activeVariantIndex, setActiveVariantIndex] = React.useState<number>(0);
   const [activeVariant, setActiveVariant] = React.useState<DocsVariant>(
     variants[activeVariantIndex],
   );
+  const [isMounted, setIsMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   React.useEffect(() => {
     setActiveVariant(variants[activeVariantIndex]);
@@ -50,7 +55,7 @@ const DocsTabs = ({
 
   return (
     <div className="space-y-4">
-      {!connected && showConnectWalletAlert && (
+      {!connected && !connecting && isMounted && showConnectWalletAlert && (
         <Alert>
           <IconRocket size={20} />
           <AlertTitle>Heads up!</AlertTitle>

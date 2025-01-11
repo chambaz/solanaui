@@ -9,7 +9,9 @@ import { TxnToaster } from "@/components/sol/txn-toast";
 import { Providers } from "@/components/web/providers";
 import { Header } from "@/components/web/header";
 import { Footer } from "@/components/web/footer";
-import { Sidebar } from "@/components/web/sidebar";
+// import { Sidebar } from "@/components/web/sidebar";
+import { AppSidebar } from "@/components/web/app-sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 
 import "@/app/globals.css";
 
@@ -49,14 +51,16 @@ export default function DocsLayout({
     >
       <body>
         <Providers>
-          <Header />
-          <div className="container flex min-h-screen gap-8 p-8">
-            <Sidebar />
-            <main className="w-full text-sm text-muted-foreground">
-              {children}
-            </main>
+          <div>
+            <SidebarProvider>
+              <AppSidebar />
+              <main className="flex min-h-screen w-full flex-col">
+                <Header showSidebarTrigger={true} />
+                <div className="px-4 py-8 md:px-6">{children}</div>
+                <Footer />
+              </main>
+            </SidebarProvider>
           </div>
-          <Footer />
           <TxnToaster />
         </Providers>
       </body>

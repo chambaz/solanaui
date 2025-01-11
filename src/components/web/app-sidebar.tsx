@@ -1,13 +1,29 @@
-"use client";
+import React from "react";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 
-import { cn } from "@/lib/utils";
+import {
+  IconComponents,
+  IconFishHook,
+  IconHome,
+  IconTools,
+} from "@tabler/icons-react";
+
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from "@/components/ui/sidebar";
 
 const navItems = [
   {
     section: "Getting started",
+    icon: <IconHome />,
     children: [
       {
         label: "Introduction",
@@ -25,6 +41,7 @@ const navItems = [
   },
   {
     section: "Components",
+    icon: <IconComponents />,
     children: [
       {
         label: "Connect Wallet Dialog",
@@ -83,6 +100,7 @@ const navItems = [
   },
   {
     section: "Hooks",
+    icon: <IconFishHook />,
     children: [
       { label: "useAssets", href: "/docs/hooks/use-assets" },
       { label: "useTxnToast", href: "/docs/hooks/use-txn-toast" },
@@ -90,43 +108,45 @@ const navItems = [
   },
   {
     section: "Utils",
+    icon: <IconTools />,
     children: [
       { label: "Price data", href: "/docs/utils/price-data" },
+      { label: "Token icons", href: "/docs/utils/token-icons" },
       { label: "Formatters", href: "/docs/utils/formatters" },
     ],
   },
 ];
 
-const Sidebar = () => {
-  const pathname = usePathname();
+const AppSidebar = () => {
   return (
-    <aside className="h-full min-w-52 overflow-auto pr-4">
-      <nav>
-        <ul className="space-y-4">
-          {navItems.map((item, index) => (
-            <li key={index} className="text-sm font-medium text-primary">
-              {item.section}
-              <ul className="mb-6 mt-2 space-y-2">
-                {item.children.map((child, index) => (
-                  <li key={index}>
-                    <Link
-                      href={child.href}
-                      className={cn(
-                        "block py-1 text-xs text-muted-foreground transition-colors hover:text-primary",
-                        child.href === pathname && "text-primary",
-                      )}
-                    >
-                      {child.label}
-                    </Link>
-                  </li>
+    <Sidebar>
+      <SidebarContent className="pb-8 pt-2">
+        {navItems.map((item) => (
+          <SidebarGroup key={item.section}>
+            <SidebarGroupLabel>
+              <div className="flex items-center gap-2 text-sm">
+                {React.cloneElement(item.icon, {
+                  size: 18,
+                })}
+                <span>{item.section}</span>
+              </div>
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {item.children.map((child) => (
+                  <SidebarMenuItem key={child.href}>
+                    <SidebarMenuButton asChild>
+                      <Link href={child.href}>{child.label}</Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
                 ))}
-              </ul>
-            </li>
-          ))}
-        </ul>
-      </nav>
-    </aside>
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        ))}
+      </SidebarContent>
+    </Sidebar>
   );
 };
 
-export { Sidebar };
+export { AppSidebar };

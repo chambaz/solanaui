@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 export default function HomePage() {
   return (
     <div className="w-full">
-      <div className="flex w-full flex-col items-center gap-8 py-8 text-center">
+      <div className="flex w-full flex-col items-center gap-8 py-16 text-center">
         <h1 className="text-7xl font-bold">
           Build{" "}
           <span className="bg-gradient-to-r from-teal-200 to-violet-500 bg-clip-text text-transparent">

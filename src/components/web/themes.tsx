@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/popover";
 import { Toggle } from "@/components/ui/toggle";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { Skeleton } from "../ui/skeleton";
 
 type Theme = (typeof themes)[number]["name"];
 
@@ -110,7 +111,7 @@ const ThemeSelector = () => {
       <PopoverTrigger asChild>
         <button className="flex translate-y-[1px] items-center gap-2 font-mono text-sm text-muted-foreground transition-colors hover:text-primary data-[state=open]:text-primary">
           <IconPalette size={16} />
-          themes
+          Themes
         </button>
       </PopoverTrigger>
       <PopoverContent
@@ -171,7 +172,7 @@ const ModeToggle = ({ type = "toggle" }: ModeToggleProps) => {
   }, []);
 
   if (!mounted) {
-    return null;
+    return <Skeleton className="h-[36px] w-[42px] rounded-lg" />;
   }
 
   if (type === "toggle") {

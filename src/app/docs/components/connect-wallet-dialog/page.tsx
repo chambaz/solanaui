@@ -35,7 +35,10 @@ export function ConnectWalletDialogDemo() {
   ];
 
   return (
-    <div className={cn("w-full max-w-5xl space-y-8 pt-8", !open && "mx-auto")}>
+    <div
+      className={cn("w-full max-w-5xl space-y-8 pt-8", !open && "mx-auto")}
+      id="demo"
+    >
       <div className="space-y-2">
         <h1 className="text-3xl font-medium">Connect Wallet Dialog</h1>
         <p className="text-muted-foreground">
@@ -44,7 +47,10 @@ export function ConnectWalletDialogDemo() {
         </p>
       </div>
       <DocsTabs variants={variants} />
-      <div className="prose w-full max-w-none dark:prose-invert">
+      <div
+        className="prose w-full max-w-none pt-2 dark:prose-invert"
+        id="installation"
+      >
         <h2>Installation</h2>
         <p>
           Deserunt cillum qui anim consectetur quis deserunt occaecat. Fugiat
@@ -342,7 +348,7 @@ export {
 />`}
         />
 
-        <div className="!space-y-0">
+        <div className="mt-6 !space-y-0 pt-2" id="props">
           <h2 className="!mb-0">Props</h2>
           <PropsTable
             data={[

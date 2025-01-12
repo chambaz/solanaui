@@ -21,7 +21,15 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubItem,
+  SidebarMenuSubButton,
 } from "@/components/ui/sidebar";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 
 const navItems = [
   {
@@ -154,19 +162,49 @@ const AppSidebar = () => {
               <SidebarMenu>
                 {item.children.map((child) => (
                   <SidebarMenuItem key={child.href}>
-                    <SidebarMenuButton
-                      isActive={isLinkActive(child.href)}
-                      onClick={() => {
-                        if (child.href.includes("#")) {
-                          setHash(child.href.split("#")[1]);
-                        } else {
-                          setHash("");
-                        }
-                      }}
-                      asChild
+                    <Collapsible
+                      open={isLinkActive(child.href)}
+                      className="group/collapsible"
                     >
-                      <Link href={child.href}>{child.label}</Link>
-                    </SidebarMenuButton>
+                      <CollapsibleTrigger asChild>
+                        <SidebarMenuButton
+                          isActive={isLinkActive(child.href)}
+                          onClick={() => {
+                            if (child.href.includes("#")) {
+                              setHash(child.href.split("#")[1]);
+                            } else {
+                              setHash("");
+                            }
+                          }}
+                          asChild
+                        >
+                          <Link href={child.href}>{child.label}</Link>
+                        </SidebarMenuButton>
+                      </CollapsibleTrigger>
+                      {item.section === "Components" && (
+                        <CollapsibleContent>
+                          <SidebarMenuSub>
+                            <SidebarMenuSubItem>
+                              <SidebarMenuSubButton asChild>
+                                <Link href={`${child.href}#demo`}>Demo</Link>
+                              </SidebarMenuSubButton>
+                            </SidebarMenuSubItem>
+                            <SidebarMenuSubItem>
+                              <SidebarMenuSubButton asChild>
+                                <Link href={`${child.href}#installation`}>
+                                  Installation
+                                </Link>
+                              </SidebarMenuSubButton>
+                            </SidebarMenuSubItem>
+                            <SidebarMenuSubItem>
+                              <SidebarMenuSubButton asChild>
+                                <Link href={`${child.href}#props`}>Props</Link>
+                              </SidebarMenuSubButton>
+                            </SidebarMenuSubItem>
+                          </SidebarMenuSub>
+                        </CollapsibleContent>
+                      )}
+                    </Collapsible>
                   </SidebarMenuItem>
                 ))}
               </SidebarMenu>

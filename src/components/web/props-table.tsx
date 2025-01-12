@@ -1,3 +1,8 @@
+import { PrismLight as SyntaxHighlighter } from "react-syntax-highlighter";
+import jsx from "react-syntax-highlighter/dist/esm/languages/prism/jsx";
+import ts from "react-syntax-highlighter/dist/esm/languages/prism/typescript";
+import ColdDark from "react-syntax-highlighter/dist/esm/styles/prism/coldark-dark";
+
 import {
   Table,
   TableBody,
@@ -6,6 +11,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { cn } from "@/lib/utils";
+
+SyntaxHighlighter.registerLanguage("jsx", jsx);
+SyntaxHighlighter.registerLanguage("ts", ts);
 
 type PropsTableProps = {
   data: {
@@ -20,20 +29,46 @@ const PropsTable = ({ data }: PropsTableProps) => {
     <Table>
       <TableHeader>
         <TableRow className="bg-muted/50 hover:bg-muted/50">
-          <TableHead>Name</TableHead>
+          <TableHead className="rounded-tl-md">Name</TableHead>
           <TableHead>Type</TableHead>
-          <TableHead>Default</TableHead>
+          <TableHead className="rounded-tr-md">Default</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {data.map((item) => (
+        {data.map((item, index) => (
           <TableRow
-            key={item.name}
+            key={index}
             className="border-border even:bg-muted/20 hover:bg-transparent even:hover:bg-muted/20"
           >
-            <TableCell>{item.name}</TableCell>
-            <TableCell>{item.type}</TableCell>
-            <TableCell>{item.default && item.default}</TableCell>
+            <TableCell
+              className={cn(index === data.length - 1 && "rounded-bl-md")}
+            >
+              {item.name}
+            </TableCell>
+            <TableCell>
+              <SyntaxHighlighter
+                language="ts"
+                style={ColdDark}
+                customStyle={{ backgroundColor: "transparent", margin: 0 }}
+                wrapLines
+              >
+                {item.type}
+              </SyntaxHighlighter>
+            </TableCell>
+            <TableCell
+              className={cn(index === data.length - 1 && "rounded-br-md")}
+            >
+              {item.default && (
+                <SyntaxHighlighter
+                  language="jsx"
+                  style={ColdDark}
+                  customStyle={{ backgroundColor: "transparent", margin: 0 }}
+                  wrapLines
+                >
+                  {item.default}
+                </SyntaxHighlighter>
+              )}
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>

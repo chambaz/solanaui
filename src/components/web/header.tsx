@@ -29,7 +29,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 
 import { ThemeSelector } from "@/components/web/themes";
 
@@ -122,16 +121,10 @@ const Header = ({ showSidebarTrigger = false }: HeaderProps) => {
               <ThemeSelector />
             </li>
           </ul>
-          {!isMounted ? (
-            <Skeleton className="h-[42px] w-[42px] rounded-full" />
+          {!isMounted || (connected && publicKey) ? (
+            <UserDropdown address={publicKey} tokens={userTokens} />
           ) : (
-            <>
-              {connected && publicKey ? (
-                <UserDropdown address={publicKey} tokens={userTokens} />
-              ) : (
-                <ConnectWallet />
-              )}
-            </>
+            <ConnectWallet />
           )}
           <ul className="hidden items-center gap-4 lg:flex">
             <li>

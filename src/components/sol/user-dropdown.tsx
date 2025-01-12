@@ -19,9 +19,9 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-
+import { Skeleton } from "@/components/ui/skeleton";
 type UserDropdownProps = {
-  address: PublicKey;
+  address?: PublicKey | null;
   size?: number;
   tokens?: PublicKey[];
 };
@@ -43,6 +43,8 @@ const UserDropdown = ({ address, size = 42, tokens }: UserDropdownProps) => {
     if (!connection || !address) return;
 
     async function fetchDomain() {
+      if (!address) return;
+
       try {
         const { reverse } = await getPrimaryDomain(connection, address);
         setDomain(`${reverse}.sol`);
@@ -56,7 +58,7 @@ const UserDropdown = ({ address, size = 42, tokens }: UserDropdownProps) => {
 
   React.useEffect(() => {
     const loadAssets = async () => {
-      if (!tokens || tokens.length === 0) return;
+      if (!tokens || tokens.length === 0 || !address) return;
       try {
         const fetchedAssets = await fetchAssets(tokens, address);
         setAssets(fetchedAssets);
@@ -67,6 +69,14 @@ const UserDropdown = ({ address, size = 42, tokens }: UserDropdownProps) => {
 
     loadAssets();
   }, [tokens, address, fetchAssets]);
+
+  if (!address)
+    return (
+      <Skeleton
+        className="h-full w-full rounded-full"
+        style={{ width: size, height: size }}
+      />
+    );
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>

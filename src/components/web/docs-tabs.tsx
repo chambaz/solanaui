@@ -112,14 +112,9 @@ const DocsTabs = ({
           </div>
         </TabsContent>
         <TabsContent value="code">
-          <div className="rounded-lg bg-[#131B26] px-3 text-sm">
+          <div className="rounded-lg bg-[#131B26] text-sm">
             {activeVariant.code && (
-              <SyntaxHighlighter
-                language="jsx"
-                style={ColdDark}
-                showLineNumbers
-                wrapLines
-              >
+              <SyntaxHighlighter language="jsx" style={ColdDark} wrapLines>
                 {activeVariant.code}
               </SyntaxHighlighter>
             )}

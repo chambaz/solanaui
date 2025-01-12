@@ -49,7 +49,11 @@ const PropsTable = ({ data }: PropsTableProps) => {
               <SyntaxHighlighter
                 language="ts"
                 style={ColdDark}
-                customStyle={{ backgroundColor: "transparent", margin: 0 }}
+                customStyle={{
+                  backgroundColor: "transparent",
+                  margin: 0,
+                  transform: "translateX(-10px)",
+                }}
                 wrapLines
               >
                 {item.type}
@@ -62,7 +66,11 @@ const PropsTable = ({ data }: PropsTableProps) => {
                 <SyntaxHighlighter
                   language="jsx"
                   style={ColdDark}
-                  customStyle={{ backgroundColor: "transparent", margin: 0 }}
+                  customStyle={{
+                    backgroundColor: "transparent",
+                    margin: 0,
+                    transform: "translateX(-10px)",
+                  }}
                   wrapLines
                 >
                   {item.default}

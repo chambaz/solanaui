@@ -55,12 +55,6 @@ export function ConnectWalletDialogDemo() {
           id="installation"
         >
           <h2>Installation</h2>
-          <p>
-            Deserunt cillum qui anim consectetur quis deserunt occaecat. Fugiat
-            commodo fugiat tempor laboris dolor. Excepteur eiusmod ex nostrud
-            dolore in pariatur exercitation consequat sit consequat ipsum ut
-            aliqua.
-          </p>
 
           <h3 className="text-lg">1. Install Dependencies</h3>
           <p>

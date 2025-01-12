@@ -4,7 +4,7 @@ import React from "react";
 
 import { useWallet } from "@solana/wallet-adapter-react";
 import { PrismLight as SyntaxHighlighter } from "react-syntax-highlighter";
-import jsx from "react-syntax-highlighter/dist/esm/languages/prism/jsx";
+import tsx from "react-syntax-highlighter/dist/esm/languages/prism/tsx";
 import ColdDark from "react-syntax-highlighter/dist/esm/styles/prism/coldark-dark";
 import { IconRocket } from "@tabler/icons-react";
 
@@ -34,7 +34,7 @@ type DocsTabsProps = {
   showConnectWalletAlert?: boolean;
 };
 
-SyntaxHighlighter.registerLanguage("jsx", jsx);
+SyntaxHighlighter.registerLanguage("tsx", tsx);
 
 const DocsTabs = ({
   variants,
@@ -116,7 +116,7 @@ const DocsTabs = ({
         <TabsContent value="code">
           <div className="rounded-lg bg-[#131B26] text-sm">
             {activeVariant.code && (
-              <SyntaxHighlighter language="jsx" style={ColdDark} wrapLines>
+              <SyntaxHighlighter language="tsx" style={ColdDark} wrapLines>
                 {activeVariant.code}
               </SyntaxHighlighter>
             )}

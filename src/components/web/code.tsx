@@ -4,7 +4,7 @@ import React from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
 import { PrismLight as SyntaxHighlighter } from "react-syntax-highlighter";
-import jsx from "react-syntax-highlighter/dist/esm/languages/prism/jsx";
+import tsx from "react-syntax-highlighter/dist/esm/languages/prism/tsx";
 import bash from "react-syntax-highlighter/dist/esm/languages/prism/bash";
 import ColdDark from "react-syntax-highlighter/dist/esm/styles/prism/coldark-dark";
 import {
@@ -18,19 +18,19 @@ import { cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
 
-SyntaxHighlighter.registerLanguage("jsx", jsx);
+SyntaxHighlighter.registerLanguage("tsx", tsx);
 SyntaxHighlighter.registerLanguage("bash", bash);
 
 type CodeProps = {
   code: string;
-  language?: "jsx" | "bash";
+  language?: "tsx" | "bash";
   reveal?: boolean;
   pinnedControls?: boolean;
 };
 
 const Code = ({
   code,
-  language = "jsx",
+  language = "tsx",
   reveal = true,
   pinnedControls = true,
 }: CodeProps) => {

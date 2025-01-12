@@ -9,7 +9,6 @@ import { TxnToaster } from "@/components/sol/txn-toast";
 import { Providers } from "@/components/web/providers";
 import { Header } from "@/components/web/header";
 import { Footer } from "@/components/web/footer";
-// import { Sidebar } from "@/components/web/sidebar";
 import { AppSidebar } from "@/components/web/app-sidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
 
@@ -28,7 +27,7 @@ const roboto_mono = Roboto_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "solanaui",
+  title: "Docs - SolanaUI",
 };
 
 export default function DocsLayout({

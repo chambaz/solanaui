@@ -25,7 +25,7 @@ const roboto_mono = Roboto_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "solanaui",
+  title: "SolanaUI",
 };
 
 export default function RootLayout({

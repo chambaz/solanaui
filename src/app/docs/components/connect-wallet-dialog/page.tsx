@@ -1,22 +1,26 @@
-"use client";
-import { cn } from "@/lib/utils";
+import type { Metadata } from "next";
 
 import { ConnectWalletDialog } from "@/components/sol/connect-wallet-dialog";
 
+import { DocsWrapper } from "@/components/web/docs-wrapper";
 import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
 import { Code } from "@/components/web/code";
 import { PropsTable } from "@/components/web/props-table";
 
-import { useSidebar } from "@/components/ui/sidebar";
+import { Button } from "@/components/ui/button";
+
+export const metadata: Metadata = {
+  title: "Connect Wallet Dialog - SolanaUI",
+};
 
 export default function ConnectWalletDialogPage() {
-  const { open } = useSidebar();
   const variants: DocsVariant[] = [
     {
       label: "Default",
       value: "default",
       preview: (
         <ConnectWalletDialog
+          trigger={<Button>Connect Wallet</Button>}
           title="Connect Wallet"
           description="Connect your wallet to continue"
         />
@@ -26,6 +30,7 @@ export default function ConnectWalletDialogPage() {
 export function ConnectWalletDialogDemo() {
   return (
     <ConnectWalletDialog
+      trigger={<Button>Connect Wallet</Button>}
       title="Connect Wallet"
       description="Connect your wallet to continue"
     />
@@ -35,49 +40,47 @@ export function ConnectWalletDialogDemo() {
   ];
 
   return (
-    <div
-      className={cn("w-full max-w-5xl space-y-8 pt-8", !open && "mx-auto")}
-      id="demo"
-    >
-      <div className="space-y-2">
-        <h1 className="text-3xl font-medium">Connect Wallet Dialog</h1>
-        <p className="text-muted-foreground">
-          The Connect Wallet Dialog component is a modal that allows users to
-          connect their wallet to your app via Solana Wallet Adapter.
-        </p>
-      </div>
-      <DocsTabs variants={variants} />
-      <div
-        className="prose w-full max-w-none pt-2 dark:prose-invert"
-        id="installation"
-      >
-        <h2>Installation</h2>
-        <p>
-          Deserunt cillum qui anim consectetur quis deserunt occaecat. Fugiat
-          commodo fugiat tempor laboris dolor. Excepteur eiusmod ex nostrud
-          dolore in pariatur exercitation consequat sit consequat ipsum ut
-          aliqua.
-        </p>
+    <DocsWrapper>
+      <div id="demo">
+        <div className="space-y-2">
+          <h1 className="text-3xl font-medium">Connect Wallet Dialog</h1>
+          <p className="text-muted-foreground">
+            The Connect Wallet Dialog component is a modal that allows users to
+            connect their wallet to your app via Solana Wallet Adapter.
+          </p>
+        </div>
+        <DocsTabs variants={variants} />
+        <div
+          className="prose w-full max-w-none pt-8 dark:prose-invert"
+          id="installation"
+        >
+          <h2>Installation</h2>
+          <p>
+            Deserunt cillum qui anim consectetur quis deserunt occaecat. Fugiat
+            commodo fugiat tempor laboris dolor. Excepteur eiusmod ex nostrud
+            dolore in pariatur exercitation consequat sit consequat ipsum ut
+            aliqua.
+          </p>
 
-        <h3 className="text-lg">1. Install Dependencies</h3>
-        <p>
-          ConnectWalletDialog requires shadcn/ui dialog component and Solana
-          Wallet Adapter.
-        </p>
-        <Code
-          language="bash"
-          pinnedControls={false}
-          code={`npm install @radix-ui/react-dialog @solana/wallet-adapter-react @solana/wallet-adapter-wallets @solana/wallet-adapter-react-ui`}
-        />
+          <h3 className="text-lg">1. Install Dependencies</h3>
+          <p>
+            ConnectWalletDialog requires shadcn/ui dialog component and Solana
+            Wallet Adapter.
+          </p>
+          <Code
+            language="bash"
+            pinnedControls={false}
+            code={`npm install @radix-ui/react-dialog @solana/wallet-adapter-react @solana/wallet-adapter-wallets @solana/wallet-adapter-react-ui`}
+          />
 
-        <h3 className="text-lg">2. Install shadcn/ui dialog component</h3>
-        <p>
-          Use shadcn/ui CLI or manually copy the code below to{" "}
-          <code>src/components/ui/dialog.tsx</code>.
-        </p>
-        <Code
-          reveal={false}
-          code={`"use client"
+          <h3 className="text-lg">2. Install shadcn/ui dialog component</h3>
+          <p>
+            Use shadcn/ui CLI or manually copy the code below to{" "}
+            <code>src/components/ui/dialog.tsx</code>.
+          </p>
+          <Code
+            reveal={false}
+            code={`"use client"
 
 import * as React from "react"
 import * as DialogPrimitive from "@radix-ui/react-dialog"
@@ -200,16 +203,16 @@ export {
   DialogDescription,
 }
 `}
-        />
+          />
 
-        <h3 className="text-lg">3. Install SolanaUI Connect Wallet Dialog</h3>
-        <p>
-          Copy the code below to{" "}
-          <code>src/components/sol/connect-wallet-dialog.tsx</code>.
-        </p>
-        <Code
-          reveal={false}
-          code={`"use client"
+          <h3 className="text-lg">3. Install SolanaUI Connect Wallet Dialog</h3>
+          <p>
+            Copy the code below to{" "}
+            <code>src/components/sol/connect-wallet-dialog.tsx</code>.
+          </p>
+          <Code
+            reveal={false}
+            code={`"use client"
 
 import * as React from "react"
 import * as DialogPrimitive from "@radix-ui/react-dialog"
@@ -332,45 +335,46 @@ export {
   DialogDescription,
 }
 `}
-        />
+          />
 
-        <h3 className="text-lg">3. Install SolanaUI Connect Wallet Dialog</h3>
-        <p>
-          Copy the code below to{" "}
-          <code>src/components/sol/connect-wallet-dialog.tsx</code>.
-        </p>
-        <Code
-          reveal={true}
-          code={`<ConnectWalletDialog
+          <h3 className="text-lg">4. Use Connect Wallet Dialog</h3>
+          <p>
+            Import the <code>ConnectWalletDialog</code> component and use it in
+            your app.
+          </p>
+          <Code
+            reveal={true}
+            code={`<ConnectWalletDialog
   trigger={<Button>Connect Wallet</Button>}
   title="Connect Wallet"
   description="Connect your wallet to continue"
 />`}
-        />
-
-        <div className="mt-6 !space-y-0 pt-2" id="props">
-          <h2 className="!mb-0">Props</h2>
-          <PropsTable
-            data={[
-              {
-                name: "trigger",
-                type: "React.ReactNode",
-                default: `<Button>Connect Wallet</Button>`,
-              },
-              {
-                name: "title",
-                type: "string | React.ReactNode",
-                default: `"Connect Wallet"`,
-              },
-              {
-                name: "description",
-                type: "string | React.ReactNode",
-                default: `"Connect your wallet to continue"`,
-              },
-            ]}
           />
+
+          <div className="!space-y-0" id="props">
+            <h2 className="!mb-0">Props</h2>
+            <PropsTable
+              data={[
+                {
+                  name: "trigger",
+                  type: "React.ReactNode",
+                  default: `<Button>Connect Wallet</Button>`,
+                },
+                {
+                  name: "title",
+                  type: "string | React.ReactNode",
+                  default: `"Connect Wallet"`,
+                },
+                {
+                  name: "description",
+                  type: "string | React.ReactNode",
+                  default: `"Connect your wallet to continue"`,
+                },
+              ]}
+            />
+          </div>
         </div>
       </div>
-    </div>
+    </DocsWrapper>
   );
 }

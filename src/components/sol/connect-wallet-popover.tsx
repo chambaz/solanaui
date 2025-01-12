@@ -14,15 +14,15 @@ import {
 import { Button } from "@/components/ui/button";
 
 type ConnectWalletPopoverProps = {
+  trigger?: React.ReactNode;
   title?: string | React.ReactNode;
   description?: string | React.ReactNode;
-  children?: React.ReactNode;
 } & Omit<React.ComponentPropsWithoutRef<typeof PopoverContent>, "children">;
 
 const ConnectWalletPopover = ({
+  trigger,
   title,
   description,
-  children,
   ...popoverProps
 }: ConnectWalletPopoverProps) => {
   const { wallets, select, connecting, wallet } = useWallet();
@@ -30,7 +30,7 @@ const ConnectWalletPopover = ({
   return (
     <Popover>
       <PopoverTrigger asChild>
-        {children || (
+        {trigger || (
           <Button size="icon">
             <IconWallet size={18} />
           </Button>

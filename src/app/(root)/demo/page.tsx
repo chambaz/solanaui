@@ -2,6 +2,8 @@
 
 import React from "react";
 
+import type { Metadata } from "next";
+
 import { useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey } from "@solana/web3.js";
 
@@ -28,6 +30,10 @@ const TOKENS = {
   WIF: new PublicKey("EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm"),
   BONK: new PublicKey("DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263"),
   LST: new PublicKey("LSTxxxnJzKDFSLr4dUkPcmCf5VyryEqzPLz5j4bpxFp"),
+};
+
+export const metadata: Metadata = {
+  title: "SolanaUI - Demo",
 };
 
 export default function DemoPage({

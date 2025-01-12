@@ -45,9 +45,9 @@ const Code = ({
   return (
     <div
       className={cn(
-        "relative h-24",
+        "relative",
         !pinnedControls && "pt-2",
-        !reveal && "overflow-hidden",
+        !reveal && "h-24 overflow-hidden",
         !reveal && expanded && "h-auto pb-16",
       )}
     >

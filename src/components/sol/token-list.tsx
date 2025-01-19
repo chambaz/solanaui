@@ -6,7 +6,7 @@ import { PublicKey } from "@solana/web3.js";
 import { IconExternalLink } from "@tabler/icons-react";
 
 import { shortAddress, formatUsd, formatNumberShort, cn } from "@/lib/utils";
-import { useAssets, ExtendedDigitalAsset } from "@/hooks/use-assets";
+import { useAssets, SolAsset } from "@/hooks/use-assets";
 
 import {
   Table,
@@ -23,12 +23,12 @@ import { TokenIcon } from "@/components/sol/token-icon";
 type TokenListProps = {
   tokens: PublicKey[];
   address?: PublicKey;
-  onClick?: (token: ExtendedDigitalAsset) => void;
+  onClick?: (token: SolAsset) => void;
 };
 
 const TokenList = ({ tokens, address, onClick }: TokenListProps) => {
   const { fetchAssets, isLoading } = useAssets();
-  const [assets, setAssets] = React.useState<ExtendedDigitalAsset[]>([]);
+  const [assets, setAssets] = React.useState<SolAsset[]>([]);
 
   React.useEffect(() => {
     const loadAssets = async () => {
@@ -42,8 +42,9 @@ const TokenList = ({ tokens, address, onClick }: TokenListProps) => {
       }
     };
 
+    if (assets.length > 0) return;
     loadAssets();
-  }, [tokens, fetchAssets, address]);
+  }, [tokens, fetchAssets, address, assets]);
 
   return (
     <Table>
@@ -79,7 +80,7 @@ const TokenList = ({ tokens, address, onClick }: TokenListProps) => {
         ) : (
           assets.map((asset) => (
             <TableRow
-              key={asset.mint.publicKey.toString()}
+              key={asset.mint.toBase58()}
               className={cn(
                 "group odd:bg-muted/25 hover:bg-transparent hover:text-primary hover:odd:bg-muted/25",
                 onClick && "cursor-pointer",
@@ -88,20 +89,20 @@ const TokenList = ({ tokens, address, onClick }: TokenListProps) => {
             >
               <TableCell>
                 <div className="flex items-center gap-2 font-medium">
-                  <TokenIcon token={new PublicKey(asset.mint.publicKey)} />
-                  {asset.metadata.symbol}
+                  <TokenIcon token={asset.mint} image={asset.image} />
+                  {asset.symbol}
                 </div>
               </TableCell>
               <TableCell>
                 <Link
-                  href={`https://solscan.io/token/${asset.mint.publicKey.toString()}`}
+                  href={`https://solscan.io/token/${asset.mint.toBase58()}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="group inline-flex items-center gap-1"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <span className="border-b border-transparent group-hover:border-border">
-                    {shortAddress(asset.mint.publicKey.toString())}
+                    {shortAddress(asset.mint.toBase58())}
                   </span>
                   <IconExternalLink size={14} />
                 </Link>
@@ -110,11 +111,12 @@ const TokenList = ({ tokens, address, onClick }: TokenListProps) => {
               {address && (
                 <>
                   <TableCell>
-                    {asset.hasToken &&
-                      formatNumberShort(asset.tokenAmount || 0)}
+                    {asset.userTokenAccount?.amount &&
+                      formatNumberShort(asset.userTokenAccount.amount)}
                   </TableCell>
                   <TableCell>
-                    {asset.hasToken && formatUsd(asset.tokenAmountUsd || 0)}
+                    {asset.userTokenAccount?.amount &&
+                      formatUsd(asset.userTokenAccount.amount * asset.price)}
                   </TableCell>
                 </>
               )}

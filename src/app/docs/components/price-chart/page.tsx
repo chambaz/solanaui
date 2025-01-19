@@ -4,8 +4,8 @@ import React from "react";
 
 import { PublicKey } from "@solana/web3.js";
 
+import { useAssets } from "@/hooks/use-assets";
 import { PriceChart, TimeScale } from "@/components/sol/price-chart";
-
 import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
 
 type DateRangeKey = "1D" | "1W" | "1M" | "1Y";
@@ -13,6 +13,7 @@ type DateRangeKey = "1D" | "1W" | "1M" | "1Y";
 const WIF_MINT = new PublicKey("EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm");
 
 export default function PriceChartPage() {
+  const { fetchPriceHistory } = useAssets();
   const timestamps: Record<
     DateRangeKey,
     { start: number; end: number; interval: string; timeScale: TimeScale }
@@ -56,13 +57,11 @@ export default function PriceChartPage() {
 
   const fetchChartData = React.useCallback(
     async (start: number, end: number, interval: string) => {
-      const res = await fetch(
-        `/api/price/history?mint=EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm&symbol=SOL&start=${start}&end=${end}&interval=${interval}`,
-      );
-      const data = await res.json();
-      return data.data;
+      const data = await fetchPriceHistory(WIF_MINT, start, end, interval);
+      if (!data) return;
+      setChartData(data);
     },
-    [],
+    [fetchPriceHistory],
   );
 
   React.useEffect(() => {
@@ -71,22 +70,19 @@ export default function PriceChartPage() {
         timestamps[dateRange].start,
         timestamps[dateRange].end,
         timestamps[dateRange].interval,
-      ).then((data) => {
-        setChartData(data);
-      });
+      );
       prevDateRange.current = dateRange;
     }
   }, [dateRange, fetchChartData, timestamps]);
 
   React.useEffect(() => {
+    if (chartData.length > 0) return;
     fetchChartData(
       timestamps[dateRange].start,
       timestamps[dateRange].end,
       timestamps[dateRange].interval,
-    ).then((data) => {
-      setChartData(data);
-    });
-  }, []);
+    );
+  }, [fetchChartData, dateRange, timestamps, chartData]);
 
   const variants: DocsVariant[] = [
     {

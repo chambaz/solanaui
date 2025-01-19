@@ -2,11 +2,13 @@
 
 import React from "react";
 
+import { useAssets } from "@/hooks/use-assets";
 import { Sparkline } from "@/components/sol/sparkline";
-
 import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
+import { PublicKey } from "@solana/web3.js";
 
 export default function SparklinePage() {
+  const { fetchPriceHistory } = useAssets();
   const [chartData, setChartData] = React.useState<
     {
       timestamp: number;
@@ -14,19 +16,21 @@ export default function SparklinePage() {
     }[]
   >([]);
 
-  const fetchChartData = async () => {
-    const res = await fetch(
-      "/api/price/history?mint=ED5nyyWEzpPPiWimP8vYm7sD7TD3LAt3Q3gRTWHzPJBY&symbol=SOL&start=1729497600&end=1730073600",
+  const fetchChartData = React.useCallback(async () => {
+    const data = await fetchPriceHistory(
+      new PublicKey("ED5nyyWEzpPPiWimP8vYm7sD7TD3LAt3Q3gRTWHzPJBY"),
+      1729497600,
+      1730073600,
+      "1H",
     );
-    const data = await res.json();
-    return data.data;
-  };
+    if (!data) return;
+    setChartData(data);
+  }, [fetchPriceHistory]);
 
   React.useEffect(() => {
-    fetchChartData().then((data) => {
-      setChartData(data);
-    });
-  }, []);
+    if (chartData.length > 0) return;
+    fetchChartData();
+  }, [fetchChartData, chartData]);
 
   const variants: DocsVariant[] = [
     {

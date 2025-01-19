@@ -9,7 +9,7 @@ import { IconCopy, IconCheck } from "@tabler/icons-react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
 import { formatNumber, formatUsd, shortAddress } from "@/lib/utils";
-import { useAssets, ExtendedDigitalAsset } from "@/hooks/use-assets";
+import { useAssets, SolAsset } from "@/hooks/use-assets";
 
 import { Avatar } from "@/components/sol/avatar";
 import { TokenIcon } from "@/components/sol/token-icon";
@@ -30,13 +30,16 @@ const UserDropdown = ({ address, size = 42, tokens }: UserDropdownProps) => {
   const { connected, disconnect } = useWallet();
   const { connection } = useConnection();
   const { fetchAssets, isLoading } = useAssets();
-  const [assets, setAssets] = React.useState<ExtendedDigitalAsset[]>([]);
+  const [assets, setAssets] = React.useState<SolAsset[]>([]);
   const [isOpen, setIsOpen] = React.useState(false);
   const [isCopied, setIsCopied] = React.useState(false);
   const [domain, setDomain] = React.useState<string | null>(null);
 
   const totalBalance = React.useMemo(() => {
-    return assets.reduce((acc, asset) => acc + (asset.tokenAmountUsd || 0), 0);
+    return assets.reduce(
+      (acc, asset) => acc + (asset.userTokenAccount?.amount || 0),
+      0,
+    );
   }, [assets]);
 
   React.useEffect(() => {
@@ -58,7 +61,8 @@ const UserDropdown = ({ address, size = 42, tokens }: UserDropdownProps) => {
 
   React.useEffect(() => {
     const loadAssets = async () => {
-      if (!tokens || tokens.length === 0 || !address) return;
+      if (!tokens || tokens.length === 0 || !address || assets.length > 0)
+        return;
       try {
         const fetchedAssets = await fetchAssets(tokens, address);
         setAssets(fetchedAssets);
@@ -68,7 +72,7 @@ const UserDropdown = ({ address, size = 42, tokens }: UserDropdownProps) => {
     };
 
     loadAssets();
-  }, [tokens, address, fetchAssets]);
+  }, [tokens, address, fetchAssets, assets]);
 
   if (!address)
     return (
@@ -124,18 +128,21 @@ const UserDropdown = ({ address, size = 42, tokens }: UserDropdownProps) => {
             <ul className="space-y-1">
               {assets.map((asset) => (
                 <li
-                  key={asset.mint.publicKey.toString()}
+                  key={asset.mint.toBase58()}
                   className="flex items-center gap-2"
                 >
-                  <TokenIcon token={new PublicKey(asset.mint.publicKey)} />
-                  <span>{asset.metadata.symbol}</span>
+                  <TokenIcon token={asset.mint} image={asset.image} />
+                  <span>{asset.symbol}</span>
                   <span className="ml-auto flex flex-col text-right">
-                    {asset.tokenAmount && asset.tokenAmount > 0 ? (
+                    {asset.userTokenAccount?.amount &&
+                    asset.userTokenAccount.amount > 0 ? (
                       <>
-                        {formatNumber(asset.tokenAmount)}
+                        {formatNumber(asset.userTokenAccount.amount)}
                         {asset.price && (
                           <span className="text-xs text-muted-foreground">
-                            {formatUsd(asset.tokenAmount * asset.price)}
+                            {formatUsd(
+                              asset.userTokenAccount.amount * asset.price,
+                            )}
                           </span>
                         )}
                       </>

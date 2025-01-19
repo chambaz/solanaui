@@ -6,41 +6,42 @@ import Image from "next/image";
 
 import { PublicKey } from "@solana/web3.js";
 
-import { cn } from "@/lib/utils";
+import { Avatar } from "./avatar";
 
 type IconProps = {
   token: PublicKey;
+  image?: string;
   size?: number;
   alt?: string;
 };
 
-const TokenIcon = ({ token, size = 24, alt }: IconProps) => {
-  const [isLoading, setIsLoading] = React.useState(true);
-  const [icon, setIcon] = React.useState<string>(
-    "/token-icons/placeholder.jpg",
-  );
-
-  const getIcon = async (mint: string) => {
-    const response = await fetch(`/api/icon?mint=${mint}`);
-    const { icon } = await response.json();
-    return icon;
-  };
-
-  React.useEffect(() => {
-    getIcon(token.toBase58()).then((icon) => {
-      setIcon(icon);
-      setIsLoading(false);
-    });
-  }, [token]);
+const TokenIcon = ({ token, image, size = 24, alt }: IconProps) => {
+  if (!image) {
+    return <Avatar address={token} size={size} />;
+  }
 
   return (
-    <div className="rounded-full border border-border bg-background p-0">
+    <div
+      className="relative rounded-full border border-border bg-background p-0"
+      style={{
+        width: size,
+        height: size,
+      }}
+    >
       <Image
-        src={icon}
+        src="/token-icons/placeholder.jpg"
         alt={alt ?? token.toBase58()}
         width={size}
         height={size}
-        className={cn("rounded-full", isLoading && "animate-pulse")}
+        className="absolute inset-0 rounded-full"
+      />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={image}
+        alt={alt ?? token.toBase58()}
+        width={size}
+        height={size}
+        className="absolute inset-0 rounded-full"
         style={{
           width: size,
           height: size,

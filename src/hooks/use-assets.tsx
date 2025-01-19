@@ -1,39 +1,23 @@
+"use client";
+
 import React from "react";
-import { PublicKey, LAMPORTS_PER_SOL } from "@solana/web3.js";
-import { createUmi } from "@metaplex-foundation/umi-bundle-defaults";
-import {
-  mplTokenMetadata,
-  fetchDigitalAsset,
-  fetchDigitalAssetWithAssociatedToken,
-  DigitalAssetWithToken,
-  DigitalAsset,
-} from "@metaplex-foundation/mpl-token-metadata";
-import { isSome, publicKey } from "@metaplex-foundation/umi";
+import { PublicKey } from "@solana/web3.js";
 import { useConnection } from "@solana/wallet-adapter-react";
+import { fetchAssetsBirdeye as fetchAssetsSource } from "@/lib/assets";
+import { getPriceHistoryBirdeye as fetchPriceHistorySource } from "@/lib/price";
 
-import { WSOL_MINT } from "@/lib/constants";
-
-type Collection = {
+export type SolAsset = {
+  mint: PublicKey;
   name: string;
-  imageUrl: string | null;
+  symbol: string;
+  image: string;
+  decimals: number;
+  price: number;
+  userTokenAccount?: {
+    address: PublicKey;
+    amount: number;
+  };
 };
-
-export type ExtendedDigitalAsset = {
-  imageUrl?: string;
-  price?: number;
-  tokenAmount?: number;
-  tokenAmountUsd?: number;
-  collection?: Collection;
-} & (
-  | (DigitalAsset & { hasToken: false })
-  | (DigitalAssetWithToken & {
-      hasToken: true;
-    })
-);
-
-const umi = createUmi(process.env.NEXT_PUBLIC_RPC_URL as string).use(
-  mplTokenMetadata(),
-);
 
 export function useAssets() {
   const [isLoading, setIsLoading] = React.useState(false);
@@ -41,131 +25,29 @@ export function useAssets() {
 
   const fetchAssets = React.useCallback(
     async (addresses: PublicKey[], owner?: PublicKey) => {
+      if (isLoading) return [];
       setIsLoading(true);
-      const fetchedAssets: ExtendedDigitalAsset[] = [];
-
       try {
-        // First fetch all assets and their metadata
-        const assetsPromises = addresses.map(async (address) => {
-          let assetRes: DigitalAssetWithToken | DigitalAsset | null = null;
-
-          if (owner) {
-            try {
-              assetRes = await fetchDigitalAssetWithAssociatedToken(
-                umi,
-                publicKey(address),
-                publicKey(owner),
-              );
-            } catch (error) {
-              assetRes = await fetchDigitalAsset(umi, publicKey(address));
-            }
-          } else {
-            assetRes = await fetchDigitalAsset(umi, publicKey(address));
-          }
-
-          // fetch metadata and image
-          let imageUrl: string | undefined;
-          let collection: Collection | undefined;
-          try {
-            if (assetRes.metadata.uri) {
-              const data = await fetch(assetRes.metadata.uri).then((res) =>
-                res.json(),
-              );
-
-              if (data.image) {
-                imageUrl = data.image;
-              }
-            }
-
-            if (isSome(assetRes.metadata.collection)) {
-              let collectionImageUrl: string | null = null;
-              const collectionRes = await fetchDigitalAsset(
-                umi,
-                publicKey(assetRes.metadata.collection.value.key),
-              );
-              if (collectionRes.metadata.uri) {
-                const data = await fetch(collectionRes.metadata.uri).then(
-                  (res) => res.json(),
-                );
-                if (data.image) {
-                  collectionImageUrl = data.image;
-                }
-              }
-              collection = {
-                name: collectionRes.metadata.name,
-                imageUrl: collectionImageUrl,
-              };
-            }
-          } catch (error) {
-            console.error("Error fetching token image:", error);
-          }
-
-          return {
-            assetRes,
-            imageUrl,
-            collection,
-          };
-        });
-
-        const assets = await Promise.all(assetsPromises);
-
-        // Fetch all prices in one batch
-        const priceRes = await fetch(
-          `/api/price?${assets
-            .map(
-              ({ assetRes }) =>
-                `mint=${assetRes.mint.publicKey.toString()}&symbol=${assetRes.metadata.symbol}`,
-            )
-            .join("&")}`,
-        );
-        const { prices } = await priceRes.json();
-
-        // Combine asset data with prices
-        const processAssets = await Promise.all(
-          assets.map(async ({ assetRes, imageUrl, collection }, index) => {
-            const item = {
-              ...assetRes,
-              imageUrl,
-              price: prices[index] || null,
-              collection,
-              hasToken: "token" in assetRes,
-            } as ExtendedDigitalAsset;
-
-            if (item.hasToken) {
-              item.tokenAmount =
-                Number(item.token.amount) / Math.pow(10, item.mint.decimals);
-              if (item.price)
-                item.tokenAmountUsd = item.tokenAmount * item.price;
-            }
-
-            // Handle WSOL balance
-            if (addresses[index].equals(WSOL_MINT) && owner) {
-              const balance = await connection.getBalance(owner);
-
-              if (item.tokenAmount) {
-                item.tokenAmount += balance / LAMPORTS_PER_SOL;
-              } else {
-                item.tokenAmount = balance / LAMPORTS_PER_SOL;
-              }
-
-              if (item.tokenAmount && item.price) {
-                item.tokenAmountUsd = item.tokenAmount * item.price;
-              }
-            }
-
-            return item;
-          }),
-        );
-
-        fetchedAssets.push(...processAssets);
+        return await fetchAssetsSource({ addresses, owner, connection });
       } finally {
         setIsLoading(false);
       }
-
-      return fetchedAssets;
     },
-    [connection],
+    [connection, isLoading],
   );
 
-  return { fetchAssets, isLoading };
+  const fetchPriceHistory = React.useCallback(
+    async (mint: PublicKey, start: number, end: number, interval: string) => {
+      if (isLoading) return [];
+      setIsLoading(true);
+      try {
+        return await fetchPriceHistorySource(mint, start, end, interval);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [isLoading],
+  );
+
+  return { fetchAssets, fetchPriceHistory, isLoading };
 }

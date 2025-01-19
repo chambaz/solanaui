@@ -18,7 +18,8 @@ export default function UserDropdownPage() {
       preview: (
         <UserDropdown
           address={
-            publicKey || new PublicKey("11111111111111111111111111111111")
+            publicKey ||
+            new PublicKey("D1bj9NDgFVRxUiKkNyxW9BtYJ1kesQknnqm6xAnk1h8q")
           }
           tokens={[
             WSOL_MINT,
@@ -28,7 +29,7 @@ export default function UserDropdownPage() {
           ]}
         />
       ),
-      code: `import { Avatar } from "@/components/sol/avatar"
+      code: `import { UserDropdown } from "@/components/sol/user-dropdown"
 
 export function UserDropdownDemo() {
   return (

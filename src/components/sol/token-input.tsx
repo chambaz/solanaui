@@ -7,7 +7,7 @@ import { IconWallet } from "@tabler/icons-react";
 
 import { formatNumberGrouped, formatNumberShort } from "@/lib/utils";
 
-import { ExtendedDigitalAsset } from "@/hooks/use-assets";
+import { SolAsset } from "@/hooks/use-assets";
 
 import { TokenCombobox } from "@/components/sol/token-combobox";
 
@@ -20,7 +20,7 @@ type TokenInputProps = {
   disabled?: boolean;
   showWalletBalance?: boolean;
   showQuickAmountButtons?: boolean;
-  onTokenSelect?: (token: ExtendedDigitalAsset) => void;
+  onTokenSelect?: (token: SolAsset) => void;
   onAmountChange?: (amount: number) => void;
 };
 
@@ -39,8 +39,7 @@ export const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
   ) => {
     const [amount, setAmount] = React.useState<string>("");
     const [maxAmount, setMaxAmount] = React.useState<number>(0);
-    const [selectedToken, setSelectedToken] =
-      React.useState<ExtendedDigitalAsset>();
+    const [selectedToken, setSelectedToken] = React.useState<SolAsset>();
 
     const handleInputChange = React.useCallback(
       (newAmount: string) => {
@@ -58,7 +57,7 @@ export const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
             : Number.parseFloat(newAmountWithoutCommas);
           formattedAmount = formatNumberGrouped(amount).concat(".");
         } else if (selectedToken) {
-          const mintDecimals = selectedToken?.mint.decimals;
+          const mintDecimals = selectedToken?.decimals;
           const isDecimalPartInvalid = isNaN(Number.parseFloat(decimalPart));
           if (!isDecimalPartInvalid)
             decimalPart = decimalPart.substring(0, mintDecimals);
@@ -134,7 +133,7 @@ export const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
             owner={owner}
             onSelect={(token) => {
               setSelectedToken(token);
-              setMaxAmount(token.hasToken ? (token.tokenAmount ?? 0) : 0);
+              setMaxAmount(token.userTokenAccount?.amount ?? 0);
               setAmount("");
               if (
                 amountInputRef &&

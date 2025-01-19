@@ -9,7 +9,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { IconExternalLink } from "@tabler/icons-react";
 
 import { formatUsd, shortAddress, cn } from "@/lib/utils";
-import { ExtendedDigitalAsset, useAssets } from "@/hooks/use-assets";
+import { useAssets, SolAsset } from "@/hooks/use-assets";
 import {
   Card,
   CardContent,
@@ -28,9 +28,9 @@ type TokenCardProps = {
 };
 
 const TokenCard = ({ address, size = "md" }: TokenCardProps) => {
-  const { fetchAssets, isLoading } = useAssets();
+  const { fetchAssets, fetchPriceHistory, isLoading } = useAssets();
   const { publicKey } = useWallet();
-  const [asset, setAsset] = React.useState<ExtendedDigitalAsset | null>(null);
+  const [asset, setAsset] = React.useState<SolAsset | null>(null);
   const [chartData, setChartData] = React.useState<
     {
       timestamp: number;
@@ -38,19 +38,22 @@ const TokenCard = ({ address, size = "md" }: TokenCardProps) => {
     }[]
   >([]);
 
-  const fetchChartData = async () => {
-    const res = await fetch(
-      "/api/price/history?mint=EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm&symbol=SOL&start=1729497600&end=1730073600",
-    );
-    const data = await res.json();
-    return data.data;
-  };
-
   React.useEffect(() => {
-    fetchChartData().then((data) => {
-      setChartData(data);
-    });
-  }, []);
+    const fetchChartData = async () => {
+      if (!asset?.symbol) return;
+      try {
+        const data = await fetchPriceHistory(address, 1729497600, 1730073600);
+        if (data) {
+          setChartData(data);
+        }
+      } catch (error) {
+        console.error("Error fetching chart data:", error);
+      }
+    };
+
+    if (chartData.length > 0) return;
+    fetchChartData();
+  }, [address, asset, fetchPriceHistory, chartData]);
 
   React.useEffect(() => {
     const fetchAsset = async () => {
@@ -62,8 +65,9 @@ const TokenCard = ({ address, size = "md" }: TokenCardProps) => {
       }
     };
 
+    if (asset) return;
     fetchAsset();
-  }, [address, publicKey, fetchAssets]);
+  }, [address, publicKey, fetchAssets, asset]);
 
   if (isLoading) {
     return (
@@ -98,17 +102,18 @@ const TokenCard = ({ address, size = "md" }: TokenCardProps) => {
           )}
         >
           <TokenIcon
-            token={new PublicKey(asset.mint.publicKey)}
+            token={asset.mint}
+            image={asset.image}
             size={size === "sm" ? 32 : 48}
           />
           <div className="flex flex-col">
-            {asset.metadata.name}
+            {asset.symbol}
             <Link
-              href={`https://solscan.io/token/${asset.publicKey.toString()}`}
+              href={`https://solscan.io/token/${asset.mint.toBase58()}`}
               className="inline-flex items-center gap-1 text-xs font-normal text-muted-foreground"
             >
               <IconExternalLink size={12} />
-              {shortAddress(asset.publicKey)}
+              {shortAddress(asset.mint)}
             </Link>
           </div>
         </CardTitle>

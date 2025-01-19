@@ -6,7 +6,7 @@ import { PublicKey } from "@solana/web3.js";
 import { IconSelector } from "@tabler/icons-react";
 
 import { formatUsd, formatNumber } from "@/lib/utils";
-import { useAssets, ExtendedDigitalAsset } from "@/hooks/use-assets";
+import { useAssets, SolAsset } from "@/hooks/use-assets";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -28,7 +28,7 @@ import { TokenIcon } from "@/components/sol/token-icon";
 type TokenComboboxProps = {
   tokens: PublicKey[];
   owner?: PublicKey | null;
-  onSelect?: (token: ExtendedDigitalAsset) => void;
+  onSelect?: (token: SolAsset) => void;
   children?: React.ReactNode;
 };
 
@@ -41,10 +41,10 @@ const TokenCombobox = ({
   const { fetchAssets, isLoading } = useAssets();
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
-  const [assets, setAssets] = React.useState<ExtendedDigitalAsset[]>([]);
+  const [assets, setAssets] = React.useState<SolAsset[]>([]);
 
   const selectedAsset = React.useMemo(
-    () => assets.find((asset) => asset.metadata.symbol === value),
+    () => assets.find((asset) => asset.symbol === value),
     [assets, value],
   );
 
@@ -77,9 +77,10 @@ const TokenCombobox = ({
             {selectedAsset ? (
               <>
                 <TokenIcon
-                  token={new PublicKey(selectedAsset.mint.publicKey)}
+                  token={selectedAsset.mint}
+                  image={selectedAsset.image}
                 />
-                {selectedAsset.metadata.symbol}
+                {selectedAsset.symbol}
               </>
             ) : (
               "Select token..."
@@ -98,8 +99,8 @@ const TokenCombobox = ({
             <CommandGroup>
               {assets.map((asset) => (
                 <CommandItem
-                  key={asset.mint.publicKey}
-                  value={asset.metadata.symbol}
+                  key={asset.mint.toBase58()}
+                  value={asset.symbol}
                   onSelect={(currentValue) => {
                     setValue(currentValue === value ? "" : currentValue);
                     setOpen(false);
@@ -107,25 +108,26 @@ const TokenCombobox = ({
                   }}
                   className="flex items-center gap-2"
                 >
-                  <TokenIcon token={new PublicKey(asset.mint.publicKey)} />
-                  {asset.metadata.symbol}
+                  <TokenIcon token={asset.mint} image={asset.image} />
+                  {asset.symbol}
 
                   <span className="ml-auto flex flex-col text-right">
                     {!owner ? (
                       formatUsd(asset.price ?? 0)
                     ) : (
                       <>
-                        {asset.hasToken &&
-                        asset.tokenAmount &&
-                        asset.tokenAmount > 0
-                          ? formatNumber(asset.tokenAmount)
+                        {asset.userTokenAccount &&
+                        asset.userTokenAccount.amount &&
+                        asset.userTokenAccount.amount > 0
+                          ? formatNumber(asset.userTokenAccount.amount)
                           : 0}
 
                         {asset.price && (
                           <span className="text-xs text-muted-foreground">
                             {formatUsd(
-                              ((asset.hasToken && asset.tokenAmount) || 1) *
-                                asset.price,
+                              ((asset.userTokenAccount &&
+                                asset.userTokenAccount.amount) ||
+                                1) * asset.price,
                             )}
                           </span>
                         )}

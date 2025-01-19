@@ -1,7 +1,6 @@
 "use client";
 
 import { PublicKey } from "@solana/web3.js";
-import { useWallet } from "@solana/wallet-adapter-react";
 
 import { WSOL_MINT, USDC_MINT } from "@/lib/constants";
 
@@ -9,8 +8,6 @@ import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
 import { TokenInput } from "@/components/sol/token-input";
 
 export default function TokenInputPage() {
-  const { publicKey } = useWallet();
-
   const variants: DocsVariant[] = [
     {
       label: "Default",
@@ -24,7 +21,9 @@ export default function TokenInputPage() {
               new PublicKey("EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm"),
               new PublicKey("DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263"),
             ]}
-            owner={publicKey}
+            owner={
+              new PublicKey("D1bj9NDgFVRxUiKkNyxW9BtYJ1kesQknnqm6xAnk1h8q")
+            }
           />
         </div>
       ),

@@ -218,3 +218,57 @@ export const fetchAssetsBirdeye = async ({
 
   return fetchedAssets;
 };
+
+export const searchAssetsBirdeye = async ({
+  query,
+}: {
+  query: string;
+}): Promise<SolAsset[]> => {
+  const headers = {
+    "x-api-key": process.env.NEXT_PUBLIC_BIRDEYE_API_KEY!,
+  };
+
+  const params = new URLSearchParams({
+    chain: "solana",
+    target: "token",
+    sort_by: "volume_24h_usd",
+    sort_type: "desc",
+    offset: "0",
+    limit: "20",
+    keyword: query,
+  });
+
+  try {
+    const response = await fetch(
+      `https://public-api.birdeye.so/defi/v3/search?${params.toString()}`,
+      {
+        headers,
+      },
+    );
+
+    const searchResults = await response.json();
+
+    const results = searchResults.data.items[0].result;
+
+    return results.map(
+      (result: {
+        address: string;
+        name: string;
+        symbol: string;
+        logo_uri: string;
+        price: number;
+        decimals: number;
+      }) => ({
+        mint: new PublicKey(result.address),
+        name: result.name,
+        symbol: result.symbol,
+        image: result.logo_uri,
+        price: result.price,
+        decimals: result.decimals,
+      }),
+    );
+  } catch (error) {
+    console.error("Error searching assets:", error);
+    return [];
+  }
+};

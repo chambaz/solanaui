@@ -3,7 +3,10 @@
 import React from "react";
 import { PublicKey } from "@solana/web3.js";
 import { useConnection } from "@solana/wallet-adapter-react";
-import { fetchAssetsBirdeye as fetchAssetsSource } from "@/lib/assets";
+import {
+  fetchAssetsBirdeye as fetchAssetsSource,
+  searchAssetsBirdeye as searchAssetsSource,
+} from "@/lib/assets";
 import { getPriceHistoryBirdeye as fetchPriceHistorySource } from "@/lib/price";
 
 export type SolAsset = {
@@ -25,7 +28,6 @@ export function useAssets() {
 
   const fetchAssets = React.useCallback(
     async (addresses: PublicKey[], owner?: PublicKey) => {
-      if (isLoading) return [];
       setIsLoading(true);
       try {
         return await fetchAssetsSource({ addresses, owner, connection });
@@ -33,12 +35,11 @@ export function useAssets() {
         setIsLoading(false);
       }
     },
-    [connection, isLoading],
+    [connection],
   );
 
   const fetchPriceHistory = React.useCallback(
     async (mint: PublicKey, start: number, end: number, interval: string) => {
-      if (isLoading) return [];
       setIsLoading(true);
       try {
         return await fetchPriceHistorySource(mint, start, end, interval);
@@ -46,8 +47,17 @@ export function useAssets() {
         setIsLoading(false);
       }
     },
-    [isLoading],
+    [],
   );
 
-  return { fetchAssets, fetchPriceHistory, isLoading };
+  const searchAssets = React.useCallback(async (query: string) => {
+    try {
+      setIsLoading(true);
+      return await searchAssetsSource({ query });
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  return { fetchAssets, fetchPriceHistory, searchAssets, isLoading };
 }

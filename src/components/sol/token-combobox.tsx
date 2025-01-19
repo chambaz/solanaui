@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import debounce from "lodash/debounce";
 
 import { PublicKey } from "@solana/web3.js";
 import { IconSelector } from "@tabler/icons-react";
@@ -26,6 +27,7 @@ import {
 import { TokenIcon } from "@/components/sol/token-icon";
 
 type TokenComboboxProps = {
+  search?: boolean;
   tokens: PublicKey[];
   owner?: PublicKey | null;
   onSelect?: (token: SolAsset) => void;
@@ -33,19 +35,29 @@ type TokenComboboxProps = {
 };
 
 const TokenCombobox = ({
+  search,
   tokens,
   owner,
   onSelect,
   children,
 }: TokenComboboxProps) => {
-  const { fetchAssets, isLoading } = useAssets();
+  const { fetchAssets, searchAssets, isLoading } = useAssets();
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
+  const [searchValue, setSearchValue] = React.useState("");
   const [assets, setAssets] = React.useState<SolAsset[]>([]);
 
   const selectedAsset = React.useMemo(
-    () => assets.find((asset) => asset.symbol === value),
+    () => assets.find((asset) => asset.mint.toBase58().toLowerCase() === value),
     [assets, value],
+  );
+
+  const debouncedSearchFn = React.useMemo(
+    () =>
+      debounce((query: string) => {
+        searchAssets(query).then(setAssets);
+      }, 300),
+    [searchAssets],
   );
 
   React.useEffect(() => {
@@ -62,6 +74,15 @@ const TokenCombobox = ({
     };
     init();
   }, [fetchAssets, assets, tokens, owner]);
+
+  React.useEffect(() => {
+    if (!search || !searchValue || searchValue.length < 2) return;
+    debouncedSearchFn(searchValue);
+
+    return () => {
+      debouncedSearchFn.cancel();
+    };
+  }, [searchValue, search, debouncedSearchFn]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -90,17 +111,23 @@ const TokenCombobox = ({
         )}
       </PopoverTrigger>
       <PopoverContent className="w-[300px] p-0">
-        <Command>
-          <CommandInput placeholder="Search tokens..." />
+        <Command shouldFilter={!search}>
+          <CommandInput
+            placeholder="Search tokens..."
+            value={searchValue}
+            onValueChange={setSearchValue}
+          />
           <CommandList>
-            <CommandEmpty>
-              {isLoading ? "Loading..." : "No tokens found."}
-            </CommandEmpty>
+            {(!search || assets.length === 0) && (
+              <CommandEmpty>
+                {isLoading ? "Loading..." : "No tokens found."}
+              </CommandEmpty>
+            )}
             <CommandGroup>
               {assets.map((asset) => (
                 <CommandItem
                   key={asset.mint.toBase58()}
-                  value={asset.symbol}
+                  value={asset.mint.toBase58().toLowerCase()}
                   onSelect={(currentValue) => {
                     setValue(currentValue === value ? "" : currentValue);
                     setOpen(false);

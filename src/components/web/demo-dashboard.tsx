@@ -1,12 +1,14 @@
 "use client";
 
-import { useWallet } from "@solana/wallet-adapter-react";
-import { PublicKey } from "@solana/web3.js";
+import React from "react";
+
+import { VersionedTransactionResponse } from "@solana/web3.js";
 
 import { PriceChart, TimeScale } from "@/components/sol/price-chart";
 import { TokenCard } from "@/components/sol/token-card";
 import { TokenList } from "@/components/sol/token-list";
 import { TxnList } from "@/components/sol/txn-list";
+import { SolAsset } from "@/lib/assets";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -22,27 +24,25 @@ type DemoDashboardProps = {
     { start: number; end: number; interval: string; timeScale: TimeScale }
   >;
   dateRange: DateRangeKey;
-  tokens: PublicKey[];
   setDateRange: (dateRange: DateRangeKey) => void;
+  assets: SolAsset[];
+  transactions: VersionedTransactionResponse[];
 };
-
-const SOL_MINT = new PublicKey("So11111111111111111111111111111111111111112");
 
 const DemoDashboard = ({
   chartData,
   timestamps,
   dateRange,
   setDateRange,
-  tokens,
+  assets,
+  transactions,
 }: DemoDashboardProps) => {
-  const { publicKey } = useWallet();
-
   return (
     <>
       <div className="mb-8 flex w-full items-center gap-8">
         <div className="w-1/2">
           <PriceChart
-            mint={SOL_MINT}
+            mint={assets[0]?.mint}
             token="SOL"
             data={chartData}
             timeScale={timestamps[dateRange].timeScale}
@@ -54,8 +54,8 @@ const DemoDashboard = ({
           />
         </div>
         <div className="grid w-1/2 grid-cols-2 gap-8">
-          {tokens.slice(1).map((token, index) => (
-            <TokenCard address={token} size="sm" key={index} />
+          {assets.slice(1).map((asset, index) => (
+            <TokenCard asset={asset} size="sm" key={index} />
           ))}
         </div>
       </div>
@@ -67,27 +67,16 @@ const DemoDashboard = ({
           </TabsList>
           <TabsContent value="tokens">
             <TokenList
-              tokens={tokens}
-              address={
-                publicKey ?? new PublicKey("11111111111111111111111111111111")
-              }
+              assets={assets}
               onClick={(token) => {
-                alert(`Clicked ${token.metadata.symbol}`);
+                alert(`Clicked ${token.mint.toBase58()}`);
                 console.log(token);
               }}
             />
           </TabsContent>
           <TabsContent value="transactions">
             <TxnList
-              signatures={[
-                "2EaBnbW5nranKYGguV7roVYRfHBQtKDDFutsDJCpVdggE2aMRgnv8R29KLAWWu9SMmhnGB4q6jbrA5AM4VLznVYT",
-                "4uWXpZQk5ESz67uMFPfRo1X9eegpKUCrCJ1dsxktqVGbLh5fGRXsGGSq63n9AdjLp1mSxC8WCHig6Cd1wdpY38sQ",
-                "2ynHGAkRP3RVdax6kTh68t7n6tLG5RadvbMMShf4d46JMEpcdY9dao1mBbBMPT7tuhtvSMtVgKyutaR2z7uShfLB",
-                "2gYLu4wW16p5bdpYhB5DQ3udSSFQCngAE9xnuZb2wS4iA5fsPW6NTLPz4PYVSE6rewAB3UKePZ2HN3XSrdNP337H",
-                "euoUXwshHbqTqchFVuUy8QBX3jMi6RXnXHM3a4HBFfk1pekFW4iECQuasLoALBksTaNmJtaLLNmPYtmxMms3W7o",
-                "3aKWM9U91KHHVyB1C9pE7kxDSPiFKz7CrqikHGBpbAPMtPBeE6HfZ4pyWjH6w8ZKT3xofxEekMQ2ZfxUDNsm3by2",
-                "DoRCpn8HYxsEa2JBSUXCtxnxL5snnHtHcANa6ugJh2VhczTbfHVPRq7HY3h123xZRRSZ2AcXUZr8TwsidHrRUDo",
-              ]}
+              transactions={transactions}
               onClick={(txn) => {
                 alert(txn.transaction.signatures[0]);
               }}

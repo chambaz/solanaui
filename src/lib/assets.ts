@@ -10,14 +10,26 @@ import {
 import { publicKey } from "@metaplex-foundation/umi";
 
 import { WSOL_MINT } from "@/lib/constants";
-import { SolAsset } from "@/hooks/use-assets";
 import {
   PythHttpClient,
   getPythClusterApiUrl,
   getPythProgramKeyForCluster,
 } from "@pythnetwork/client";
 
-type FetchAssetsArgs = {
+export type SolAsset = {
+  mint: PublicKey;
+  name: string;
+  symbol: string;
+  image: string;
+  decimals: number;
+  price: number;
+  userTokenAccount?: {
+    address: PublicKey;
+    amount: number;
+  };
+};
+
+export type FetchAssetsArgs = {
   addresses: PublicKey[];
   owner?: PublicKey;
   connection?: Connection;

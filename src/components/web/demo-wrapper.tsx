@@ -1,18 +1,21 @@
 "use client";
 
 import React from "react";
-
 import { useWallet } from "@solana/wallet-adapter-react";
-import { PublicKey } from "@solana/web3.js";
+import {
+  Connection,
+  PublicKey,
+  VersionedTransactionResponse,
+} from "@solana/web3.js";
 
 import { cn } from "@/lib/utils";
+import { fetchAssetsBirdeye, SolAsset } from "@/lib/assets";
+import { fetchPriceHistoryBirdeye } from "@/lib/price";
 
 import { DemoDashboard } from "@/components/web/demo-dashboard";
-import { DemoSwap } from "@/components/web/demo-swap";
-
+// import { DemoSwap } from "@/components/web/demo-swap";
 import { UserDropdown } from "@/components/sol/user-dropdown";
 import { TimeScale } from "@/components/sol/price-chart";
-
 import { Button } from "@/components/ui/button";
 
 type DateRangeKey = "1D" | "1W" | "1M" | "1Y";
@@ -42,10 +45,11 @@ const DemoWrapper = ({ view = "dashboard" }: DemoWrapperProps) => {
   const [dateRange, setDateRange] = React.useState<DateRangeKey>("1M");
   const prevDateRange = React.useRef(dateRange);
   const [chartData, setChartData] = React.useState<
-    {
-      timestamp: number;
-      price: number;
-    }[]
+    { timestamp: number; price: number }[]
+  >([]);
+  const [assets, setAssets] = React.useState<SolAsset[]>([]);
+  const [transactions, setTransactions] = React.useState<
+    VersionedTransactionResponse[]
   >([]);
 
   const timestamps: Record<
@@ -83,14 +87,37 @@ const DemoWrapper = ({ view = "dashboard" }: DemoWrapperProps) => {
 
   const fetchChartData = React.useCallback(
     async (start: number, end: number, interval: string) => {
-      const res = await fetch(
-        `/api/price/history?mint=EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm&symbol=SOL&start=${start}&end=${end}&interval=${interval}`,
+      const res = await fetchPriceHistoryBirdeye(
+        TOKENS.SOL,
+        start,
+        end,
+        interval,
       );
-      const data = await res.json();
-      return data.data;
+      return res;
     },
     [],
   );
+
+  const fetchAssets = React.useCallback(async () => {
+    const fetchedAssets = await fetchAssetsBirdeye({
+      addresses: Object.values(TOKENS),
+      owner: publicKey ?? undefined,
+    });
+    setAssets(fetchedAssets);
+  }, [publicKey]);
+
+  const fetchTransactions = React.useCallback(async () => {
+    const connection = new Connection(process.env.NEXT_PUBLIC_RPC_URL ?? "");
+    const signatures = [
+      "2EaBnbW5nranKYGguV7roVYRfHBQtKDDFutsDJCpVdggE2aMRgnv8R29KLAWWu9SMmhnGB4q6jbrA5AM4VLznVYT",
+      "4uWXpZQk5ESz67uMFPfRo1X9eegpKUCrCJ1dsxktqVGbLh5fGRXsGGSq63n9AdjLp1mSxC8WCHig6Cd1wdpY38sQ",
+    ];
+
+    const fetchedTxns = await connection.getTransactions(signatures, {
+      maxSupportedTransactionVersion: 0,
+    });
+    setTransactions(fetchedTxns.filter((txn) => txn !== null));
+  }, []);
 
   React.useEffect(() => {
     if (prevDateRange.current !== dateRange) {
@@ -99,7 +126,7 @@ const DemoWrapper = ({ view = "dashboard" }: DemoWrapperProps) => {
         timestamps[dateRange].end,
         timestamps[dateRange].interval,
       ).then((data) => {
-        setChartData(data);
+        setChartData(data ?? []);
       });
       prevDateRange.current = dateRange;
     }
@@ -111,9 +138,19 @@ const DemoWrapper = ({ view = "dashboard" }: DemoWrapperProps) => {
       timestamps[dateRange].end,
       timestamps[dateRange].interval,
     ).then((data) => {
-      setChartData(data);
+      setChartData(data ?? []);
     });
   }, [dateRange, fetchChartData, timestamps]);
+
+  React.useEffect(() => {
+    if (assets.length) return;
+    fetchAssets();
+  }, [fetchAssets, assets]);
+
+  React.useEffect(() => {
+    if (transactions.length) return;
+    fetchTransactions();
+  }, [fetchTransactions, transactions]);
 
   React.useEffect(() => {
     if (view) {
@@ -153,7 +190,7 @@ const DemoWrapper = ({ view = "dashboard" }: DemoWrapperProps) => {
           </ul>
         </nav>
         {connected && publicKey && (
-          <UserDropdown address={publicKey} tokens={Object.values(TOKENS)} />
+          <UserDropdown address={publicKey} assets={assets} />
         )}
       </header>
       {demoState === DemoState.DASHBOARD && (
@@ -162,12 +199,11 @@ const DemoWrapper = ({ view = "dashboard" }: DemoWrapperProps) => {
           timestamps={timestamps}
           dateRange={dateRange}
           setDateRange={setDateRange}
-          tokens={Object.values(TOKENS)}
+          assets={assets}
+          transactions={transactions}
         />
       )}
-      {demoState === DemoState.SWAP && (
-        <DemoSwap tokens={Object.values(TOKENS)} />
-      )}
+      {/* {demoState === DemoState.SWAP && <DemoSwap assets={assets} />} */}
     </div>
   );
 };

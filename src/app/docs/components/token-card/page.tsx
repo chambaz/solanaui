@@ -6,9 +6,12 @@ import { useWallet } from "@solana/wallet-adapter-react";
 
 import { TokenCard } from "@/components/sol/token-card";
 import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
-import { fetchAssetsHelius } from "@/lib/assets";
-import { getPriceHistoryBirdeye } from "@/lib/price";
-import { SolAsset } from "@/hooks/use-assets";
+import { fetchAssetsBirdeye, SolAsset } from "@/lib/assets";
+import { fetchPriceHistoryBirdeye } from "@/lib/price";
+
+const tokenAddress = new PublicKey(
+  "EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm",
+);
 
 export default function TokenCardPage() {
   const { publicKey } = useWallet();
@@ -16,21 +19,22 @@ export default function TokenCardPage() {
   const [chartData, setChartData] = React.useState<
     { timestamp: number; price: number }[]
   >([]);
+  const [isFetching, setIsFetching] = React.useState(false);
 
-  const tokenAddress = new PublicKey(
-    "EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm",
-  );
+  const fetchAssets = React.useCallback(async () => {
+    if (isFetching) return;
 
-  React.useEffect(() => {
-    const init = async () => {
-      const fetchedAssets = await fetchAssetsHelius({
+    try {
+      setIsFetching(true);
+      console.log("fetching assets");
+      const fetchedAssets = await fetchAssetsBirdeye({
         addresses: [tokenAddress],
         owner: publicKey ?? undefined,
       });
       setAsset(fetchedAssets[0]);
 
       if (fetchedAssets[0]) {
-        const data = await getPriceHistoryBirdeye(
+        const data = await fetchPriceHistoryBirdeye(
           tokenAddress,
           1729497600,
           1730073600,
@@ -38,10 +42,18 @@ export default function TokenCardPage() {
         );
         setChartData(data || []);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching assets:", error);
+    } finally {
+      setIsFetching(false);
+    }
+  }, [publicKey, isFetching]);
 
-    init();
-  }, [publicKey]);
+  React.useEffect(() => {
+    if (!asset && !isFetching) {
+      fetchAssets();
+    }
+  }, [fetchAssets, asset, isFetching]);
 
   const variants: DocsVariant[] = [
     {
@@ -53,32 +65,43 @@ export default function TokenCardPage() {
         </div>
       ),
       code: `import { TokenCard } from "@/components/sol/token-card"
-import { fetchAssetsHelius } from "@/lib/assets"
-import { getPriceHistoryBirdeye } from "@/lib/price"
+import { fetchAssetsBirdeye } from "@/lib/assets"
+import { fetchPriceHistoryBirdeye } from "@/lib/price"
 
 export function TokenCardDemo() {
   const [asset, setAsset] = React.useState(null);
   const [chartData, setChartData] = React.useState([]);
+  const [isFetching, setIsFetching] = React.useState(false);
 
   React.useEffect(() => {
     const init = async () => {
-      const tokenAddress = new PublicKey("EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm");
-      const fetchedAssets = await fetchAssetsHelius({
-        addresses: [tokenAddress]
-      });
-      setAsset(fetchedAssets[0]);
+      if (isFetching) return;
+      
+      try {
+        setIsFetching(true);
+        const tokenAddress = new PublicKey("EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm");
+        const fetchedAssets = await fetchAssetsBirdeye({
+          addresses: [tokenAddress]
+        });
+        setAsset(fetchedAssets[0]);
 
-      if (fetchedAssets[0]) {
-        const data = await getPriceHistoryBirdeye(
-          tokenAddress,
-          1729497600,
-          1730073600,
-          "1H"
-        );
-        setChartData(data || []);
+        if (fetchedAssets[0]) {
+          const data = await fetchPriceHistoryBirdeye(
+            tokenAddress,
+            1729497600,
+            1730073600,
+            "1H"
+          );
+          setChartData(data || []);
+        }
+      } finally {
+        setIsFetching(false);
       }
     };
-    init();
+    
+    if (!asset) {
+      init();
+    }
   }, []);
 
   return <TokenCard asset={asset} chartData={chartData} />

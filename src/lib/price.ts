@@ -1,6 +1,6 @@
 import { PublicKey } from "@solana/web3.js";
 
-export async function getPriceHistoryBirdeye(
+export async function fetchPriceHistoryBirdeye(
   mint: PublicKey,
   start: number,
   end: number,

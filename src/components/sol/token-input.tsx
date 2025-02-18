@@ -1,39 +1,40 @@
 "use client";
 
 import React from "react";
-
 import { PublicKey } from "@solana/web3.js";
 import { IconWallet } from "@tabler/icons-react";
 
 import { formatNumberGrouped, formatNumberShort } from "@/lib/utils";
-
-import { SolAsset } from "@/hooks/use-assets";
+import { SolAsset } from "@/lib/assets";
 
 import { TokenCombobox } from "@/components/sol/token-combobox";
-
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 type TokenInputProps = {
-  tokens: PublicKey[];
-  owner?: PublicKey | null;
-  disabled?: boolean;
+  assets: SolAsset[];
   showWalletBalance?: boolean;
   showQuickAmountButtons?: boolean;
   onTokenSelect?: (token: SolAsset) => void;
   onAmountChange?: (amount: number) => void;
+  onSearch?: ({
+    query,
+    owner,
+  }: {
+    query: string;
+    owner?: PublicKey;
+  }) => Promise<SolAsset[]>;
 };
 
 export const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
   (
     {
-      tokens,
-      owner,
-      disabled,
+      assets,
       showWalletBalance = true,
       showQuickAmountButtons = true,
       onTokenSelect,
       onAmountChange,
+      onSearch,
     },
     amountInputRef: React.ForwardedRef<HTMLInputElement>,
   ) => {
@@ -129,11 +130,10 @@ export const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
         </div>
         <div className="flex items-center gap-2">
           <TokenCombobox
-            tokens={tokens}
-            owner={owner}
+            assets={assets}
             onSelect={(token) => {
               setSelectedToken(token);
-              setMaxAmount(token.userTokenAccount?.amount ?? 0);
+              setMaxAmount(token?.userTokenAccount?.amount ?? 0);
               setAmount("");
               if (
                 amountInputRef &&
@@ -144,6 +144,7 @@ export const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
               }
               if (onTokenSelect) onTokenSelect(token);
             }}
+            onSearch={onSearch}
           />
           <Input
             ref={amountInputRef}
@@ -152,7 +153,7 @@ export const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
             className="h-12 text-right"
             inputMode="numeric"
             value={amount ?? undefined}
-            disabled={disabled || !selectedToken || !maxAmount}
+            disabled={!selectedToken || !maxAmount}
             onChange={(e) => handleInputChange(e.target.value)}
           />
         </div>

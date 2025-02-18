@@ -4,18 +4,21 @@ import React from "react";
 import { PublicKey } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
 
-import { fetchAssetsHelius } from "@/lib/assets";
+import { fetchAssetsBirdeye, SolAsset } from "@/lib/assets";
 import { WSOL_MINT, USDC_MINT } from "@/lib/constants";
-import { SolAsset } from "@/hooks/use-assets";
 import { TokenList } from "@/components/sol/token-list";
 import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
 
 export default function TokenListPage() {
   const { publicKey } = useWallet();
   const [assets, setAssets] = React.useState<SolAsset[]>([]);
+  const [isFetching, setIsFetching] = React.useState(false);
 
-  React.useEffect(() => {
-    const init = async () => {
+  const fetchAssets = React.useCallback(async () => {
+    if (isFetching) return;
+
+    try {
+      setIsFetching(true);
       const tokens = [
         WSOL_MINT,
         USDC_MINT,
@@ -23,15 +26,21 @@ export default function TokenListPage() {
         new PublicKey("MEW1gQWJ3nEXg2qgERiKu7FAFj79PHvQVREQUzScPP5"),
         new PublicKey("DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263"),
       ];
-      const fetchedAssets = await fetchAssetsHelius({
+      const fetchedAssets = await fetchAssetsBirdeye({
         addresses: tokens,
         owner: publicKey ?? undefined,
       });
       setAssets(fetchedAssets);
-    };
+    } finally {
+      setIsFetching(false);
+    }
+  }, [publicKey, isFetching]);
 
-    init();
-  }, [publicKey]);
+  React.useEffect(() => {
+    if (assets.length === 0 && !isFetching) {
+      fetchAssets();
+    }
+  }, [fetchAssets, assets.length, isFetching]);
 
   const variants: DocsVariant[] = [
     {
@@ -47,20 +56,31 @@ export default function TokenListPage() {
         />
       ),
       code: `import { TokenList } from "@/components/sol/token-list"
-import { fetchAssetsHelius } from "@/lib/assets"
+import { fetchAssetsBirdeye } from "@/lib/assets"
 
 export function TokenListDemo() {
   const [assets, setAssets] = React.useState([]);
+  const [isFetching, setIsFetching] = React.useState(false);
 
   React.useEffect(() => {
     const init = async () => {
-      const tokens = [/* your token addresses */];
-      const fetchedAssets = await fetchAssetsHelius({
-        addresses: tokens
-      });
-      setAssets(fetchedAssets);
+      if (isFetching) return;
+      
+      try {
+        setIsFetching(true);
+        const tokens = [/* your token addresses */];
+        const fetchedAssets = await fetchAssetsBirdeye({
+          addresses: tokens
+        });
+        setAssets(fetchedAssets);
+      } finally {
+        setIsFetching(false);
+      }
     };
-    init();
+    
+    if (assets.length === 0) {
+      init();
+    }
   }, []);
 
   return (

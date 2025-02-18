@@ -15,10 +15,10 @@ import {
 
 import { WSOL_MINT, USDC_MINT } from "@/lib/constants";
 
-import { ConnectWallet } from "@/components/web/connect-wallet";
 import { ModeToggle } from "@/components/web/themes";
 
 import { UserDropdown } from "@/components/sol/user-dropdown";
+import { ConnectWalletDialog } from "@/components/sol/connect-wallet-dialog";
 
 import {
   DropdownMenu,
@@ -32,7 +32,9 @@ import { Button } from "@/components/ui/button";
 
 import { ThemeSelector } from "@/components/web/themes";
 
-const userTokens = [WSOL_MINT, USDC_MINT];
+import { fetchAssetsBirdeye, SolAsset } from "@/lib/assets";
+
+const userAssets = [WSOL_MINT, USDC_MINT];
 
 type HeaderProps = {
   showSidebarTrigger?: boolean;
@@ -42,10 +44,24 @@ const Header = ({ showSidebarTrigger = false }: HeaderProps) => {
   const { connected, publicKey, connecting } = useWallet();
   const [demoDropdownOpen, setDemoDropdownOpen] = React.useState(false);
   const [isMounted, setIsMounted] = React.useState(false);
+  const [assets, setAssets] = React.useState<SolAsset[]>([]);
+
+  const fetchAssets = React.useCallback(async () => {
+    const fetchedAssets = await fetchAssetsBirdeye({
+      addresses: userAssets,
+      owner: publicKey ?? undefined,
+    });
+    setAssets(fetchedAssets);
+  }, [publicKey]);
 
   React.useEffect(() => {
     setIsMounted(!connecting);
   }, [connecting]);
+
+  React.useEffect(() => {
+    if (assets.length) return;
+    fetchAssets();
+  }, [fetchAssets, assets]);
 
   return (
     <header className="flex h-16 w-full items-center border-b border-border">
@@ -122,9 +138,20 @@ const Header = ({ showSidebarTrigger = false }: HeaderProps) => {
             </li>
           </ul>
           {!isMounted || (connected && publicKey) ? (
-            <UserDropdown address={publicKey} tokens={userTokens} />
+            <UserDropdown address={publicKey} assets={assets} />
           ) : (
-            <ConnectWallet />
+            <ConnectWalletDialog
+              title={
+                <span className="text-4xl dark:bg-gradient-to-r dark:from-teal-200 dark:to-violet-500 dark:bg-clip-text dark:text-transparent">
+                  SolanaUI
+                </span>
+              }
+              description={
+                <span className="font-mono">
+                  Connect your wallet to continue
+                </span>
+              }
+            />
           )}
           <ul className="hidden items-center gap-4 lg:flex">
             <li>

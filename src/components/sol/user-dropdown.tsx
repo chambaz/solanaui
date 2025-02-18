@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-
 import { PublicKey } from "@solana/web3.js";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { getPrimaryDomain } from "@bonfida/spl-name-service";
@@ -9,7 +8,7 @@ import { IconCopy, IconCheck } from "@tabler/icons-react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
 import { formatNumber, formatUsd, shortAddress } from "@/lib/utils";
-import { useAssets, SolAsset } from "@/hooks/use-assets";
+import { SolAsset } from "@/lib/assets";
 
 import { Avatar } from "@/components/sol/avatar";
 import { TokenIcon } from "@/components/sol/token-icon";
@@ -20,67 +19,55 @@ import {
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+
 type UserDropdownProps = {
-  address?: PublicKey | null;
+  address: PublicKey | null;
+  assets?: SolAsset[];
   size?: number;
-  tokens?: PublicKey[];
 };
 
-const UserDropdown = ({ address, size = 42, tokens }: UserDropdownProps) => {
+const UserDropdown = ({
+  address,
+  assets = [],
+  size = 42,
+}: UserDropdownProps) => {
   const { connected, disconnect } = useWallet();
   const { connection } = useConnection();
-  const { fetchAssets, isLoading } = useAssets();
-  const [assets, setAssets] = React.useState<SolAsset[]>([]);
   const [isOpen, setIsOpen] = React.useState(false);
   const [isCopied, setIsCopied] = React.useState(false);
   const [domain, setDomain] = React.useState<string | null>(null);
 
   const totalBalance = React.useMemo(() => {
     return assets.reduce(
-      (acc, asset) => acc + (asset.userTokenAccount?.amount || 0),
+      (acc, asset) =>
+        acc + (asset.userTokenAccount?.amount || 0) * (asset.price || 0),
       0,
     );
   }, [assets]);
 
-  React.useEffect(() => {
+  const fetchDomain = React.useCallback(async () => {
     if (!connection || !address) return;
-
-    async function fetchDomain() {
-      if (!address) return;
-
-      try {
-        const { reverse } = await getPrimaryDomain(connection, address);
-        setDomain(`${reverse}.sol`);
-      } catch (error) {
-        setDomain(null);
-      }
+    try {
+      const { reverse } = await getPrimaryDomain(connection, address);
+      setDomain(`${reverse}.sol`);
+    } catch (error) {
+      setDomain(null);
     }
-
-    fetchDomain();
-  }, [address, connection]);
+  }, [connection, address]);
 
   React.useEffect(() => {
-    const loadAssets = async () => {
-      if (!tokens || tokens.length === 0 || !address || assets.length > 0)
-        return;
-      try {
-        const fetchedAssets = await fetchAssets(tokens, address);
-        setAssets(fetchedAssets);
-      } catch (error) {
-        console.error("Error fetching assets:", error);
-      }
-    };
+    if (domain) return;
+    fetchDomain();
+  }, [fetchDomain, domain]);
 
-    loadAssets();
-  }, [tokens, address, fetchAssets, assets]);
-
-  if (!address)
+  if (!address) {
     return (
       <Skeleton
         className="h-full w-full rounded-full"
         style={{ width: size, height: size }}
       />
     );
+  }
 
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
@@ -122,9 +109,9 @@ const UserDropdown = ({ address, size = 42, tokens }: UserDropdownProps) => {
             <dt>Balance</dt>
             <dd className="flex justify-end">{formatUsd(totalBalance)}</dd>
           </dl>
-          {isLoading ? (
+          {assets.length === 0 ? (
             <p>Loading tokens...</p>
-          ) : assets.length > 0 ? (
+          ) : (
             <ul className="space-y-1">
               {assets.map((asset) => (
                 <li
@@ -134,8 +121,7 @@ const UserDropdown = ({ address, size = 42, tokens }: UserDropdownProps) => {
                   <TokenIcon token={asset.mint} image={asset.image} />
                   <span>{asset.symbol}</span>
                   <span className="ml-auto flex flex-col text-right">
-                    {asset.userTokenAccount?.amount &&
-                    asset.userTokenAccount.amount > 0 ? (
+                    {asset.userTokenAccount?.amount ? (
                       <>
                         {formatNumber(asset.userTokenAccount.amount)}
                         {asset.price && (
@@ -158,8 +144,6 @@ const UserDropdown = ({ address, size = 42, tokens }: UserDropdownProps) => {
                 </li>
               ))}
             </ul>
-          ) : (
-            <p>No tokens found</p>
           )}
 
           {connected && (

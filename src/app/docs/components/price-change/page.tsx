@@ -2,35 +2,40 @@
 
 import React from "react";
 
-import { useAssets } from "@/hooks/use-assets";
-import { PriceChange } from "@/components/sol/price-change";
-import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
 import { PublicKey } from "@solana/web3.js";
 
+import { fetchPriceHistoryBirdeye } from "@/lib/price";
+import { PriceChange } from "@/components/sol/price-change";
+import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
+
 export default function PriceChangePage() {
-  const { fetchPriceHistory } = useAssets();
   const [chartData, setChartData] = React.useState<
-    {
-      timestamp: number;
-      price: number;
-    }[]
+    { timestamp: number; price: number }[]
   >([]);
+  const [isFetching, setIsFetching] = React.useState(false);
 
   const fetchChartData = React.useCallback(async () => {
-    const data = await fetchPriceHistory(
-      new PublicKey("ED5nyyWEzpPPiWimP8vYm7sD7TD3LAt3Q3gRTWHzPJBY"),
-      1729497600,
-      1730073600,
-      "1H",
-    );
-    if (!data) return;
-    setChartData(data);
-  }, [fetchPriceHistory]);
+    if (isFetching) return;
+
+    try {
+      setIsFetching(true);
+      const data = await fetchPriceHistoryBirdeye(
+        new PublicKey("ED5nyyWEzpPPiWimP8vYm7sD7TD3LAt3Q3gRTWHzPJBY"),
+        1729497600,
+        1730073600,
+        "1H",
+      );
+      if (data) setChartData(data);
+    } finally {
+      setIsFetching(false);
+    }
+  }, [isFetching]);
 
   React.useEffect(() => {
-    if (chartData.length > 0) return;
-    fetchChartData();
-  }, [fetchChartData, chartData]);
+    if (chartData.length === 0 && !isFetching) {
+      fetchChartData();
+    }
+  }, [fetchChartData, chartData.length, isFetching]);
 
   const variants: DocsVariant[] = [
     {

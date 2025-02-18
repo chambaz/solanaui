@@ -4,29 +4,35 @@ import React from "react";
 
 import { PublicKey } from "@solana/web3.js";
 
-import { SolAsset, useAssets } from "@/hooks/use-assets";
-
+import { SolAsset, fetchAssetsUmi } from "@/lib/assets";
 import { TokenIcon } from "@/components/sol/token-icon";
 import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
 
 export default function TokenIconPage() {
   const [assets, setAssets] = React.useState<SolAsset[]>([]);
-  const { fetchAssets } = useAssets();
+  const [isFetching, setIsFetching] = React.useState(false);
+
+  const fetchAssets = React.useCallback(async () => {
+    if (isFetching) return;
+
+    try {
+      setIsFetching(true);
+      const fetchedAssets = await fetchAssetsUmi({
+        addresses: [
+          new PublicKey("So11111111111111111111111111111111111111112"),
+        ],
+      });
+      setAssets(fetchedAssets);
+    } finally {
+      setIsFetching(false);
+    }
+  }, [isFetching]);
 
   React.useEffect(() => {
-    const init = async () => {
-      const fetchedAssets = await fetchAssets([
-        new PublicKey("So11111111111111111111111111111111111111112"),
-        new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"),
-        new PublicKey("EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm"),
-        new PublicKey("DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263"),
-      ]);
-      setAssets(fetchedAssets);
-    };
-
-    if (assets.length) return;
-    init();
-  }, [assets, fetchAssets]);
+    if (assets.length === 0 && !isFetching) {
+      fetchAssets();
+    }
+  }, [fetchAssets, assets.length, isFetching]);
 
   const variants: DocsVariant[] = [
     {

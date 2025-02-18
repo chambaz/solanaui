@@ -6,7 +6,7 @@ import { PublicKey } from "@solana/web3.js";
 import { IconSelector } from "@tabler/icons-react";
 
 import { formatUsd, formatNumber } from "@/lib/utils";
-import { SolAsset } from "@/hooks/use-assets";
+import { SolAsset } from "@/lib/assets";
 
 import { Button } from "@/components/ui/button";
 import {

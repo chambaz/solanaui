@@ -1,9 +1,10 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
 
 import {
   VersionedTransactionResponse,
-  TransactionSignature,
   Connection,
   LAMPORTS_PER_SOL,
 } from "@solana/web3.js";
@@ -23,34 +24,24 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 
 type TxnListProps = {
-  signatures: TransactionSignature[];
+  transactions: VersionedTransactionResponse[];
   onClick?: (txn: VersionedTransactionResponse) => void;
 };
 
-const connection = new Connection(process.env.NEXT_PUBLIC_RPC_URL ?? "");
-
-const TxnList = ({ signatures, onClick }: TxnListProps) => {
-  const [txns, setTxns] = React.useState<VersionedTransactionResponse[]>([]);
-  const [isLoading, setIsLoading] = React.useState(false);
+const TxnList = ({ transactions, onClick }: TxnListProps) => {
   const [currentSlot, setCurrentSlot] = React.useState<number | null>(null);
   const [averageBlockTime, setAverageBlockTime] = React.useState<number>(0.4);
 
   React.useEffect(() => {
-    const loadTxns = async () => {
-      if (!signatures || signatures.length === 0) return;
-      setIsLoading(true);
+    const init = async () => {
       try {
-        const [fetchedTxns, slot, recentPerformanceSamples] = await Promise.all(
-          [
-            connection.getTransactions(signatures, {
-              maxSupportedTransactionVersion: 0,
-            }),
-            connection.getSlot(),
-            connection.getRecentPerformanceSamples(30),
-          ],
+        const connection = new Connection(
+          process.env.NEXT_PUBLIC_RPC_URL ?? "",
         );
-
-        console.log("fetchedTxns", fetchedTxns);
+        const [slot, recentPerformanceSamples] = await Promise.all([
+          connection.getSlot(),
+          connection.getRecentPerformanceSamples(30),
+        ]);
 
         const totalSampleSeconds = recentPerformanceSamples.reduce(
           (acc, sample) => acc + sample.samplePeriodSecs,
@@ -62,28 +53,21 @@ const TxnList = ({ signatures, onClick }: TxnListProps) => {
         );
         const calculatedAverageBlockTime = totalSampleSeconds / totalSamples;
 
-        setTxns(
-          fetchedTxns.filter(
-            (txn) => txn !== null,
-          ) as VersionedTransactionResponse[],
-        );
         setCurrentSlot(slot);
         setAverageBlockTime(calculatedAverageBlockTime);
       } catch (error) {
-        console.error("Error fetching txns:", error);
-      } finally {
-        setIsLoading(false);
+        console.error("Error fetching block time:", error);
       }
     };
 
-    loadTxns();
-  }, [signatures]);
+    init();
+  }, []);
 
   const estimateTimestamp = (blockTime: number | null | undefined) => {
     if (blockTime === null || blockTime === undefined || currentSlot === null) {
       return "Unknown";
     }
-    const currentTime = Date.now() / 1000; // Current time in seconds
+    const currentTime = Date.now() / 1000;
     const blockDifference = currentSlot - blockTime;
     const estimatedTimestamp = currentTime - blockDifference * averageBlockTime;
     return formatDistanceToNow(new Date(estimatedTimestamp * 1000), {
@@ -103,9 +87,9 @@ const TxnList = ({ signatures, onClick }: TxnListProps) => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {isLoading ? (
+        {transactions.length === 0 ? (
           <>
-            {[...Array(signatures.length)].map((_, index) => (
+            {[...Array(5)].map((_, index) => (
               <TableRow key={index} className="hover:bg-transparent">
                 {[...Array(5)].map((_, index) => (
                   <TableCell key={index}>
@@ -116,7 +100,7 @@ const TxnList = ({ signatures, onClick }: TxnListProps) => {
             ))}
           </>
         ) : (
-          txns.map((txn) => (
+          transactions.map((txn) => (
             <TableRow
               key={txn.transaction.signatures[0]}
               className={cn(

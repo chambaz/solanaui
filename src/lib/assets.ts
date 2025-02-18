@@ -27,7 +27,7 @@ const umi = createUmi(process.env.NEXT_PUBLIC_RPC_URL as string).use(
   mplTokenMetadata(),
 );
 
-export const fetchAssetsOnchain = async ({
+export const fetchAssetsUmi = async ({
   addresses,
   owner,
   connection,
@@ -219,10 +219,114 @@ export const fetchAssetsBirdeye = async ({
   return fetchedAssets;
 };
 
+export const fetchAssetsHelius = async ({
+  addresses,
+  owner,
+}: FetchAssetsArgs): Promise<SolAsset[]> => {
+  const fetchedAssets: SolAsset[] = [];
+
+  try {
+    const metadataResponse = await fetch(
+      `https://mainnet.helius-rpc.com/?api-key=${process.env.NEXT_PUBLIC_HELIUS_API_KEY}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: "test",
+          jsonrpc: "2.0",
+          method: "getAssetBatch",
+          params: {
+            ids: addresses.map((a) => a.toString()),
+            options: {
+              showFungible: true,
+            },
+          },
+        }),
+      },
+    );
+
+    const metadataData = await metadataResponse.json();
+
+    if (!metadataData || !metadataData.result || metadataData.error) {
+      console.error("Error fetching assets:", metadataData.error);
+      return [];
+    }
+
+    // If owner is provided, fetch token balances individually
+    const balances: Record<string, number> = {};
+    if (owner) {
+      const balancePromises = addresses.map((address) =>
+        fetch(
+          `https://mainnet.helius-rpc.com/?api-key=${process.env.NEXT_PUBLIC_HELIUS_API_KEY}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              jsonrpc: "2.0",
+              id: "my-id",
+              method: "getTokenAccounts",
+              params: {
+                owner: owner.toString(),
+                mint: address.toString(),
+              },
+            }),
+          },
+        ).then((res) => res.json()),
+      );
+
+      const balanceResults = await Promise.all(balancePromises);
+
+      balanceResults.forEach((result, index) => {
+        if (result.result && result.result.token_accounts.length > 0) {
+          const mint = addresses[index].toString();
+          const tokenAccount = result.result.token_accounts[0];
+          const assetData = metadataData.result.find(
+            (asset: { id: string }) => asset.id === mint,
+          );
+          console.log(assetData);
+          if (assetData) {
+            balances[mint] =
+              Number(tokenAccount.amount) /
+              Math.pow(10, assetData.token_info.decimals);
+          }
+        }
+      });
+    }
+
+    for (const asset of metadataData.result) {
+      fetchedAssets.push({
+        mint: new PublicKey(asset.id),
+        name: asset.content.metadata.name,
+        symbol: asset.content.metadata.symbol,
+        image: asset.content.files[0].cdn_uri || asset.content.files[0].uri,
+        price: asset.token_info.price_info.price_per_token,
+        decimals: asset.token_info.decimals,
+        userTokenAccount: owner
+          ? {
+              address: new PublicKey(asset.id),
+              amount: balances[asset.id] || 0,
+            }
+          : undefined,
+      });
+    }
+
+    return fetchedAssets;
+  } catch (error) {
+    console.error("Error fetching assets:", error);
+    return [];
+  }
+};
+
 export const searchAssetsBirdeye = async ({
   query,
+  owner,
 }: {
   query: string;
+  owner?: PublicKey;
 }): Promise<SolAsset[]> => {
   const headers = {
     "x-api-key": process.env.NEXT_PUBLIC_BIRDEYE_API_KEY!,
@@ -234,21 +338,48 @@ export const searchAssetsBirdeye = async ({
     sort_by: "volume_24h_usd",
     sort_type: "desc",
     offset: "0",
-    limit: "20",
+    limit: "10",
     keyword: query,
   });
 
   try {
-    const response = await fetch(
+    const searchResponse = await fetch(
       `https://public-api.birdeye.so/defi/v3/search?${params.toString()}`,
       {
         headers,
       },
     );
 
-    const searchResults = await response.json();
-
+    const searchResults = await searchResponse.json();
     const results = searchResults.data.items[0].result;
+
+    // If owner is provided, fetch balances for each token
+    let balanceData: Record<string, { address: string; uiAmount: number }> = {};
+    if (owner) {
+      const balancePromises = results.map((result: { address: string }) =>
+        fetch(
+          `https://public-api.birdeye.so/v1/wallet/token_balance?wallet=${owner.toString()}&token_address=${result.address}`,
+          {
+            headers,
+          },
+        ).then((res) => res.json()),
+      );
+
+      const balanceResponses = await Promise.all(balancePromises);
+      balanceData = balanceResponses.reduce(
+        (
+          acc: Record<string, { address: string; uiAmount: number }>,
+          response,
+          index,
+        ) => {
+          acc[results[index].address] = response.data;
+          return acc;
+        },
+        {},
+      );
+    }
+
+    console.log(balanceData);
 
     return results.map(
       (result: {
@@ -265,6 +396,13 @@ export const searchAssetsBirdeye = async ({
         image: result.logo_uri,
         price: result.price,
         decimals: result.decimals,
+        userTokenAccount:
+          owner && balanceData[result.address]
+            ? {
+                address: new PublicKey(balanceData[result.address].address),
+                amount: balanceData[result.address].uiAmount,
+              }
+            : undefined,
       }),
     );
   } catch (error) {

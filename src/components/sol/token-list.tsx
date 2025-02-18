@@ -1,12 +1,11 @@
+"use client";
+
 import React from "react";
-
 import Link from "next/link";
-
-import { PublicKey } from "@solana/web3.js";
 import { IconExternalLink } from "@tabler/icons-react";
 
 import { shortAddress, formatUsd, formatNumberShort, cn } from "@/lib/utils";
-import { useAssets, SolAsset } from "@/hooks/use-assets";
+import { SolAsset } from "@/hooks/use-assets";
 
 import {
   Table,
@@ -17,35 +16,19 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
-
 import { TokenIcon } from "@/components/sol/token-icon";
 
 type TokenListProps = {
-  tokens: PublicKey[];
-  address?: PublicKey;
+  assets: SolAsset[];
+  showBalances?: boolean;
   onClick?: (token: SolAsset) => void;
 };
 
-const TokenList = ({ tokens, address, onClick }: TokenListProps) => {
-  const { fetchAssets, isLoading } = useAssets();
-  const [assets, setAssets] = React.useState<SolAsset[]>([]);
-
-  React.useEffect(() => {
-    const loadAssets = async () => {
-      if (!tokens || tokens.length === 0) return;
-      try {
-        const fetchedAssets = await fetchAssets(tokens, address ?? undefined);
-        console.log("fetchedAssets", fetchedAssets);
-        setAssets(fetchedAssets);
-      } catch (error) {
-        console.error("Error fetching assets:", error);
-      }
-    };
-
-    if (assets.length > 0) return;
-    loadAssets();
-  }, [tokens, fetchAssets, address, assets]);
-
+const TokenList = ({
+  assets,
+  showBalances = true,
+  onClick,
+}: TokenListProps) => {
   return (
     <Table>
       <TableHeader>
@@ -53,16 +36,16 @@ const TokenList = ({ tokens, address, onClick }: TokenListProps) => {
           <TableHead>Token</TableHead>
           <TableHead>Mint</TableHead>
           <TableHead>Price</TableHead>
-          {address && <TableHead>Balance</TableHead>}
-          {address && <TableHead>Value</TableHead>}
+          {showBalances && <TableHead>Balance</TableHead>}
+          {showBalances && <TableHead>Value</TableHead>}
         </TableRow>
       </TableHeader>
       <TableBody>
-        {isLoading ? (
+        {assets.length === 0 ? (
           <>
-            {[...Array(tokens.length)].map((_, index) => (
+            {[...Array(3)].map((_, index) => (
               <TableRow key={index} className="hover:bg-transparent">
-                {[...Array(address ? 5 : 4)].map((_, index) => (
+                {[...Array(showBalances ? 5 : 3)].map((_, index) => (
                   <TableCell key={index}>
                     {index === 0 ? (
                       <div className="flex items-center gap-3">
@@ -108,7 +91,7 @@ const TokenList = ({ tokens, address, onClick }: TokenListProps) => {
                 </Link>
               </TableCell>
               <TableCell>{formatUsd(asset.price || 0)}</TableCell>
-              {address && (
+              {showBalances && (
                 <>
                   <TableCell>
                     {asset.userTokenAccount?.amount &&
@@ -116,7 +99,9 @@ const TokenList = ({ tokens, address, onClick }: TokenListProps) => {
                   </TableCell>
                   <TableCell>
                     {asset.userTokenAccount?.amount &&
-                      formatUsd(asset.userTokenAccount.amount * asset.price)}
+                      formatUsd(
+                        asset.userTokenAccount.amount * (asset.price || 0),
+                      )}
                   </TableCell>
                 </>
               )}

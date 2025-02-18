@@ -1,13 +1,12 @@
 "use client";
 
-import * as React from "react";
-import debounce from "lodash/debounce";
+import React from "react";
 
 import { PublicKey } from "@solana/web3.js";
 import { IconSelector } from "@tabler/icons-react";
 
 import { formatUsd, formatNumber } from "@/lib/utils";
-import { useAssets, SolAsset } from "@/hooks/use-assets";
+import { SolAsset } from "@/hooks/use-assets";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -27,62 +26,71 @@ import {
 import { TokenIcon } from "@/components/sol/token-icon";
 
 type TokenComboboxProps = {
-  search?: boolean;
-  tokens: PublicKey[];
-  owner?: PublicKey | null;
+  assets: SolAsset[];
+  showBalances?: boolean;
   onSelect?: (token: SolAsset) => void;
+  onSearch?: ({
+    query,
+    owner,
+  }: {
+    query: string;
+    owner?: PublicKey;
+  }) => Promise<SolAsset[]>;
   children?: React.ReactNode;
 };
 
 const TokenCombobox = ({
-  search,
-  tokens,
-  owner,
+  assets: initialAssets,
+  showBalances = true,
   onSelect,
+  onSearch,
   children,
 }: TokenComboboxProps) => {
-  const { fetchAssets, searchAssets, isLoading } = useAssets();
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
   const [searchValue, setSearchValue] = React.useState("");
-  const [assets, setAssets] = React.useState<SolAsset[]>([]);
+  const [assets, setAssets] = React.useState<SolAsset[]>(initialAssets);
+  const searchTimeout = React.useRef<NodeJS.Timeout>();
 
   const selectedAsset = React.useMemo(
     () => assets.find((asset) => asset.mint.toBase58().toLowerCase() === value),
     [assets, value],
   );
 
-  const debouncedSearchFn = React.useMemo(
-    () =>
-      debounce((query: string) => {
-        searchAssets(query).then(setAssets);
-      }, 300),
-    [searchAssets],
-  );
-
   React.useEffect(() => {
-    if (assets.length) return;
+    const handleSearch = async () => {
+      if (!searchValue) {
+        setAssets(initialAssets);
+        return;
+      }
 
-    const init = async () => {
-      const fetchedAssets = await fetchAssets(tokens, owner ?? undefined);
-      const sortedAssets = fetchedAssets.sort((a, b) => {
-        const aAmount = a.price ? a.price : 0;
-        const bAmount = b.price ? b.price : 0;
-        return bAmount - aAmount;
-      });
-      setAssets(sortedAssets);
+      if (onSearch) {
+        if (searchTimeout.current) {
+          clearTimeout(searchTimeout.current);
+        }
+
+        searchTimeout.current = setTimeout(async () => {
+          const searchResults = await onSearch({
+            query: searchValue,
+          });
+          setAssets(searchResults);
+        }, 300);
+      } else {
+        const filtered = initialAssets.filter((asset) =>
+          asset.symbol.toLowerCase().includes(searchValue.toLowerCase()),
+        );
+        setAssets(filtered);
+      }
     };
-    init();
-  }, [fetchAssets, assets, tokens, owner]);
 
-  React.useEffect(() => {
-    if (!search || !searchValue || searchValue.length < 2) return;
-    debouncedSearchFn(searchValue);
+    handleSearch();
 
     return () => {
-      debouncedSearchFn.cancel();
+      if (searchTimeout.current) {
+        clearTimeout(searchTimeout.current);
+      }
     };
-  }, [searchValue, search, debouncedSearchFn]);
+  }, [searchValue, initialAssets, onSearch]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -111,16 +119,16 @@ const TokenCombobox = ({
         )}
       </PopoverTrigger>
       <PopoverContent className="w-[300px] p-0">
-        <Command shouldFilter={!search}>
+        <Command shouldFilter={false}>
           <CommandInput
             placeholder="Search tokens..."
             value={searchValue}
             onValueChange={setSearchValue}
           />
           <CommandList>
-            {(!search || assets.length === 0) && (
+            {assets.length === 0 && (
               <CommandEmpty>
-                {isLoading ? "Loading..." : "No tokens found."}
+                {searchValue ? "No tokens found." : "Loading..."}
               </CommandEmpty>
             )}
             <CommandGroup>
@@ -139,7 +147,7 @@ const TokenCombobox = ({
                   {asset.symbol}
 
                   <span className="ml-auto flex flex-col text-right">
-                    {!owner ? (
+                    {!showBalances ? (
                       formatUsd(asset.price ?? 0)
                     ) : (
                       <>

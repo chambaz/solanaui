@@ -1,15 +1,11 @@
 "use client";
 
 import React from "react";
-
 import Link from "next/link";
-
-import { PublicKey } from "@solana/web3.js";
-import { useWallet } from "@solana/wallet-adapter-react";
 import { IconExternalLink } from "@tabler/icons-react";
 
 import { formatUsd, shortAddress, cn } from "@/lib/utils";
-import { useAssets, SolAsset } from "@/hooks/use-assets";
+import { SolAsset } from "@/hooks/use-assets";
 import {
   Card,
   CardContent,
@@ -18,58 +14,17 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-
 import { TokenIcon } from "@/components/sol/token-icon";
 import { Sparkline } from "@/components/sol/sparkline";
 
 type TokenCardProps = {
-  address: PublicKey;
+  asset: SolAsset | null;
+  chartData?: { timestamp: number; price: number }[];
   size?: "sm" | "md";
 };
 
-const TokenCard = ({ address, size = "md" }: TokenCardProps) => {
-  const { fetchAssets, fetchPriceHistory, isLoading } = useAssets();
-  const { publicKey } = useWallet();
-  const [asset, setAsset] = React.useState<SolAsset | null>(null);
-  const [chartData, setChartData] = React.useState<
-    {
-      timestamp: number;
-      price: number;
-    }[]
-  >([]);
-
-  React.useEffect(() => {
-    const fetchChartData = async () => {
-      if (!asset?.symbol) return;
-      try {
-        const data = await fetchPriceHistory(address, 1729497600, 1730073600);
-        if (data) {
-          setChartData(data);
-        }
-      } catch (error) {
-        console.error("Error fetching chart data:", error);
-      }
-    };
-
-    if (chartData.length > 0) return;
-    fetchChartData();
-  }, [address, asset, fetchPriceHistory, chartData]);
-
-  React.useEffect(() => {
-    const fetchAsset = async () => {
-      try {
-        const assets = await fetchAssets([address], publicKey ?? undefined);
-        setAsset(assets[0] || null);
-      } catch (error) {
-        console.error("Error fetching asset:", error);
-      }
-    };
-
-    if (asset) return;
-    fetchAsset();
-  }, [address, publicKey, fetchAssets, asset]);
-
-  if (isLoading) {
+const TokenCard = ({ asset, chartData = [], size = "md" }: TokenCardProps) => {
+  if (!asset) {
     return (
       <Card className="w-full">
         <CardHeader className={cn("p-5", size === "md" && "p-6")}>
@@ -89,8 +44,6 @@ const TokenCard = ({ address, size = "md" }: TokenCardProps) => {
       </Card>
     );
   }
-
-  if (!asset) return null;
 
   return (
     <Card className="min-h-[218px] w-full">

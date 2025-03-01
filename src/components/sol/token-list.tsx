@@ -5,7 +5,7 @@ import Link from "next/link";
 import { IconExternalLink } from "@tabler/icons-react";
 
 import { shortAddress, formatUsd, formatNumberShort, cn } from "@/lib/utils";
-import { SolAsset } from "@/lib/assets";
+import { SolAsset } from "@/lib/types";
 
 import {
   Table,

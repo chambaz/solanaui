@@ -105,9 +105,10 @@ const useTheme = () => {
 
 type ThemeSelectorProps = {
   className?: string;
+  label?: string;
 };
 
-const ThemeSelector = ({ className }: ThemeSelectorProps) => {
+const ThemeSelector = ({ className, label = "Themes" }: ThemeSelectorProps) => {
   const { theme, setTheme } = useTheme();
 
   return (
@@ -120,7 +121,7 @@ const ThemeSelector = ({ className }: ThemeSelectorProps) => {
           )}
         >
           <IconPalette size={16} />
-          Themes
+          {label}
         </button>
       </PopoverTrigger>
       <PopoverContent

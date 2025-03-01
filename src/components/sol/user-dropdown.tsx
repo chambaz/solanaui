@@ -8,7 +8,7 @@ import { IconCopy, IconCheck } from "@tabler/icons-react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
 import { formatNumber, formatUsd, shortAddress } from "@/lib/utils";
-import { SolAsset } from "@/lib/assets";
+import { SolAsset } from "@/lib/types";
 
 import { Avatar } from "@/components/sol/avatar";
 import { TokenIcon } from "@/components/sol/token-icon";

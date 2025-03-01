@@ -5,7 +5,7 @@ import { PublicKey } from "@solana/web3.js";
 import { IconWallet } from "@tabler/icons-react";
 
 import { formatNumberGrouped, formatNumberShort } from "@/lib/utils";
-import { SolAsset } from "@/lib/assets";
+import { SolAsset } from "@/lib/types";
 
 import { TokenCombobox } from "@/components/sol/token-combobox";
 import { Input } from "@/components/ui/input";

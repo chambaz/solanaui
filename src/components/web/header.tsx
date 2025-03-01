@@ -32,7 +32,7 @@ import { Button } from "@/components/ui/button";
 
 import { ThemeSelector } from "@/components/web/themes";
 
-import { SolAsset } from "@/lib/assets";
+import { SolAsset } from "@/lib/types";
 import { fetchAssets } from "@/lib/assets/birdeye";
 
 const userAssets = [WSOL_MINT, USDC_MINT];
@@ -80,7 +80,7 @@ const Header = ({ showSidebarTrigger = false }: HeaderProps) => {
                 href="/docs"
                 className="hidden text-sm text-muted-foreground transition-colors hover:text-primary xl:block"
               >
-                Getting started
+                Get started
               </Link>
             </li>
             <li>

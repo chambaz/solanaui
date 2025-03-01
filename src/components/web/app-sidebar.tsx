@@ -104,12 +104,11 @@ const navItems = [
     ],
   },
   {
-    section: "Hooks & utils",
+    section: "Utils",
     icon: <IconTools />,
     children: [
-      { label: "fetchAssets", href: "/docs/utils/assets" },
-      { label: "fetchPriceHistory", href: "/docs/utils/price" },
-      { label: "useTxnToast", href: "/docs/utils/txn-toast" },
+      { label: "Assets", href: "/docs/utils/assets" },
+      { label: "Prices", href: "/docs/utils/prices" },
     ],
   },
 ];

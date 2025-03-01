@@ -32,7 +32,8 @@ import { Button } from "@/components/ui/button";
 
 import { ThemeSelector } from "@/components/web/themes";
 
-import { fetchAssetsBirdeye, SolAsset } from "@/lib/assets";
+import { SolAsset } from "@/lib/assets";
+import { fetchAssets } from "@/lib/assets/birdeye";
 
 const userAssets = [WSOL_MINT, USDC_MINT];
 
@@ -46,8 +47,8 @@ const Header = ({ showSidebarTrigger = false }: HeaderProps) => {
   const [isMounted, setIsMounted] = React.useState(false);
   const [assets, setAssets] = React.useState<SolAsset[]>([]);
 
-  const fetchAssets = React.useCallback(async () => {
-    const fetchedAssets = await fetchAssetsBirdeye({
+  const fetchData = React.useCallback(async () => {
+    const fetchedAssets = await fetchAssets({
       addresses: userAssets,
       owner: publicKey ?? undefined,
     });
@@ -60,8 +61,8 @@ const Header = ({ showSidebarTrigger = false }: HeaderProps) => {
 
   React.useEffect(() => {
     if (assets.length) return;
-    fetchAssets();
-  }, [fetchAssets, assets]);
+    fetchData();
+  }, [fetchData, assets]);
 
   return (
     <header className="flex h-16 w-full items-center border-b border-border">

@@ -5,12 +5,7 @@ import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import {
-  IconComponents,
-  IconFishHook,
-  IconHome,
-  IconTools,
-} from "@tabler/icons-react";
+import { IconComponents, IconHome, IconTools } from "@tabler/icons-react";
 
 import {
   Sidebar,
@@ -47,6 +42,10 @@ const navItems = [
       {
         label: "Themes",
         href: "/docs#themes",
+      },
+      {
+        label: "Fetching Data",
+        href: "/docs#fetching-data",
       },
     ],
   },
@@ -105,20 +104,12 @@ const navItems = [
     ],
   },
   {
-    section: "Hooks",
-    icon: <IconFishHook />,
-    children: [
-      { label: "useAssets", href: "/docs/hooks/use-assets" },
-      { label: "useTxnToast", href: "/docs/hooks/use-txn-toast" },
-    ],
-  },
-  {
-    section: "Utils",
+    section: "Hooks & utils",
     icon: <IconTools />,
     children: [
-      { label: "Price data", href: "/docs/utils/price-data" },
-      { label: "Token icons", href: "/docs/utils/token-icons" },
-      { label: "Formatters", href: "/docs/utils/formatters" },
+      { label: "fetchAssets", href: "/docs/utils/assets" },
+      { label: "fetchPriceHistory", href: "/docs/utils/price" },
+      { label: "useTxnToast", href: "/docs/utils/txn-toast" },
     ],
   },
 ];

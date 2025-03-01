@@ -9,8 +9,9 @@ import {
 } from "@solana/web3.js";
 
 import { cn } from "@/lib/utils";
-import { fetchAssetsBirdeye, SolAsset } from "@/lib/assets";
-import { fetchPriceHistoryBirdeye } from "@/lib/price";
+import { SolAsset } from "@/lib/assets";
+import { fetchAssets } from "@/lib/assets/birdeye";
+import { fetchPriceHistoryBirdeye } from "@/lib/prices/birdeye";
 
 import { DemoDashboard } from "@/components/web/demo-dashboard";
 // import { DemoSwap } from "@/components/web/demo-swap";
@@ -98,8 +99,8 @@ const DemoWrapper = ({ view = "dashboard" }: DemoWrapperProps) => {
     [],
   );
 
-  const fetchAssets = React.useCallback(async () => {
-    const fetchedAssets = await fetchAssetsBirdeye({
+  const fetchData = React.useCallback(async () => {
+    const fetchedAssets = await fetchAssets({
       addresses: Object.values(TOKENS),
       owner: publicKey ?? undefined,
     });
@@ -144,8 +145,8 @@ const DemoWrapper = ({ view = "dashboard" }: DemoWrapperProps) => {
 
   React.useEffect(() => {
     if (assets.length) return;
-    fetchAssets();
-  }, [fetchAssets, assets]);
+    fetchData();
+  }, [fetchData, assets]);
 
   React.useEffect(() => {
     if (transactions.length) return;

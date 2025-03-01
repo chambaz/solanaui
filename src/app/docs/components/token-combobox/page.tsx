@@ -4,11 +4,8 @@ import React from "react";
 import { PublicKey } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
 
-import {
-  fetchAssetsBirdeye,
-  searchAssetsBirdeye,
-  SolAsset,
-} from "@/lib/assets";
+import { SolAsset } from "@/lib/types";
+import { fetchAssets, searchAssets } from "@/lib/assets/birdeye";
 import { WSOL_MINT, USDC_MINT } from "@/lib/constants";
 import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
 import { TokenCombobox } from "@/components/sol/token-combobox";
@@ -18,7 +15,7 @@ export default function TokenDropdownPage() {
   const [assets, setAssets] = React.useState<SolAsset[]>([]);
   const [isFetching, setIsFetching] = React.useState(false);
 
-  const fetchAssets = React.useCallback(async () => {
+  const fetchData = React.useCallback(async () => {
     if (isFetching) return;
 
     try {
@@ -29,7 +26,7 @@ export default function TokenDropdownPage() {
         new PublicKey("EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm"),
         new PublicKey("DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263"),
       ];
-      const fetchedAssets = await fetchAssetsBirdeye({
+      const fetchedAssets = await fetchAssets({
         addresses: tokens,
         owner: publicKey ?? undefined,
       });
@@ -41,9 +38,9 @@ export default function TokenDropdownPage() {
 
   React.useEffect(() => {
     if (assets.length === 0 && !isFetching) {
-      fetchAssets();
+      fetchData();
     }
-  }, [fetchAssets, assets.length, isFetching]);
+  }, [fetchData, assets.length, isFetching]);
 
   const variants: DocsVariant[] = [
     {
@@ -51,7 +48,7 @@ export default function TokenDropdownPage() {
       value: "default",
       preview: <TokenCombobox assets={assets} showBalances={!!publicKey} />,
       code: `import { TokenCombobox } from "@/components/sol/token-combobox"
-import { fetchAssetsBirdeye } from "@/lib/assets"
+import { fetchAssets } from "@/lib/assets/birdeye"
 
 export function TokenComboboxDemo() {
   const [assets, setAssets] = React.useState([]);
@@ -59,7 +56,7 @@ export function TokenComboboxDemo() {
   React.useEffect(() => {
     const init = async () => {
       const tokens = [/* your token addresses */];
-      const fetchedAssets = await fetchAssetsBirdeye({
+      const fetchedAssets = await fetchAssets({
         addresses: tokens
       });
       setAssets(fetchedAssets);
@@ -82,11 +79,11 @@ export function TokenComboboxDemo() {
         <TokenCombobox
           assets={assets}
           showBalances={!!publicKey}
-          onSearch={searchAssetsBirdeye}
+          onSearch={searchAssets}
         />
       ),
       code: `import { TokenCombobox } from "@/components/sol/token-combobox"
-import { fetchAssetsBirdeye, searchAssetsBirdeye } from "@/lib/assets"
+import { fetchAssets, searchAssets } from "@/lib/assets/birdeye"
 
 export function TokenComboboxDemo() {
   const [assets, setAssets] = React.useState([]);
@@ -94,7 +91,7 @@ export function TokenComboboxDemo() {
   React.useEffect(() => {
     const init = async () => {
       const tokens = [/* your token addresses */];
-      const fetchedAssets = await fetchAssetsBirdeye({
+      const fetchedAssets = await fetchAssets({
         addresses: tokens
       });
       setAssets(fetchedAssets);
@@ -106,7 +103,7 @@ export function TokenComboboxDemo() {
     <TokenCombobox
       assets={assets}
       showBalances={false}
-      onSearch={searchAssetsBirdeye}
+      onSearch={searchAssets}
     />
   )
 }`,

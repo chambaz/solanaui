@@ -6,8 +6,9 @@ import { useWallet } from "@solana/wallet-adapter-react";
 
 import { TokenCard } from "@/components/sol/token-card";
 import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
-import { fetchAssetsBirdeye, SolAsset } from "@/lib/assets";
-import { fetchPriceHistoryBirdeye } from "@/lib/price";
+import { SolAsset } from "@/lib/types";
+import { fetchAssets } from "@/lib/assets/birdeye";
+import { fetchPriceHistoryBirdeye } from "@/lib/prices/birdeye";
 
 const tokenAddress = new PublicKey(
   "EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm",
@@ -21,13 +22,13 @@ export default function TokenCardPage() {
   >([]);
   const [isFetching, setIsFetching] = React.useState(false);
 
-  const fetchAssets = React.useCallback(async () => {
+  const fetchData = React.useCallback(async () => {
     if (isFetching) return;
 
     try {
       setIsFetching(true);
       console.log("fetching assets");
-      const fetchedAssets = await fetchAssetsBirdeye({
+      const fetchedAssets = await fetchAssets({
         addresses: [tokenAddress],
         owner: publicKey ?? undefined,
       });
@@ -51,9 +52,9 @@ export default function TokenCardPage() {
 
   React.useEffect(() => {
     if (!asset && !isFetching) {
-      fetchAssets();
+      fetchData();
     }
-  }, [fetchAssets, asset, isFetching]);
+  }, [fetchData, asset, isFetching]);
 
   const variants: DocsVariant[] = [
     {
@@ -65,7 +66,7 @@ export default function TokenCardPage() {
         </div>
       ),
       code: `import { TokenCard } from "@/components/sol/token-card"
-import { fetchAssetsBirdeye } from "@/lib/assets"
+import { fetchAssets } from "@/lib/assets/birdeye"
 import { fetchPriceHistoryBirdeye } from "@/lib/price"
 
 export function TokenCardDemo() {
@@ -80,7 +81,7 @@ export function TokenCardDemo() {
       try {
         setIsFetching(true);
         const tokenAddress = new PublicKey("EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm");
-        const fetchedAssets = await fetchAssetsBirdeye({
+        const fetchedAssets = await fetchAssets({
           addresses: [tokenAddress]
         });
         setAsset(fetchedAssets[0]);

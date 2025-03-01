@@ -4,7 +4,8 @@ import React from "react";
 
 import { PublicKey } from "@solana/web3.js";
 
-import { SolAsset, fetchAssetsUmi } from "@/lib/assets";
+import { SolAsset } from "@/lib/types";
+import { fetchAssets } from "@/lib/assets/birdeye";
 import { TokenIcon } from "@/components/sol/token-icon";
 import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
 
@@ -12,12 +13,12 @@ export default function TokenIconPage() {
   const [assets, setAssets] = React.useState<SolAsset[]>([]);
   const [isFetching, setIsFetching] = React.useState(false);
 
-  const fetchAssets = React.useCallback(async () => {
+  const fetchData = React.useCallback(async () => {
     if (isFetching) return;
 
     try {
       setIsFetching(true);
-      const fetchedAssets = await fetchAssetsUmi({
+      const fetchedAssets = await fetchAssets({
         addresses: [
           new PublicKey("So11111111111111111111111111111111111111112"),
         ],
@@ -30,9 +31,9 @@ export default function TokenIconPage() {
 
   React.useEffect(() => {
     if (assets.length === 0 && !isFetching) {
-      fetchAssets();
+      fetchData();
     }
-  }, [fetchAssets, assets.length, isFetching]);
+  }, [fetchData, assets.length, isFetching]);
 
   const variants: DocsVariant[] = [
     {

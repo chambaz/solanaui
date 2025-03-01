@@ -4,7 +4,7 @@ import React from "react";
 
 import { PublicKey } from "@solana/web3.js";
 
-import { fetchPriceHistoryBirdeye } from "@/lib/price";
+import { fetchPriceHistoryBirdeye } from "@/lib/prices/birdeye";
 import { PriceChart, TimeScale } from "@/components/sol/price-chart";
 import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
 

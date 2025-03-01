@@ -5,11 +5,8 @@ import { PublicKey } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
 
 import { WSOL_MINT, USDC_MINT } from "@/lib/constants";
-import {
-  fetchAssetsBirdeye,
-  searchAssetsBirdeye,
-  SolAsset,
-} from "@/lib/assets";
+import { SolAsset } from "@/lib/types";
+import { fetchAssets, searchAssets } from "@/lib/assets/birdeye";
 import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
 import { TokenInput } from "@/components/sol/token-input";
 
@@ -22,7 +19,7 @@ export default function TokenInputPage() {
   const [assets, setAssets] = React.useState<SolAsset[]>([]);
   const [isFetching, setIsFetching] = React.useState(false);
 
-  const fetchAssets = React.useCallback(async () => {
+  const fetchData = React.useCallback(async () => {
     if (isFetching) return;
 
     try {
@@ -33,7 +30,7 @@ export default function TokenInputPage() {
         new PublicKey("EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm"),
         new PublicKey("DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263"),
       ];
-      const fetchedAssets = await fetchAssetsBirdeye({
+      const fetchedAssets = await fetchAssets({
         addresses: tokens,
         owner: publicKey ?? demoAddress,
       });
@@ -45,9 +42,9 @@ export default function TokenInputPage() {
 
   React.useEffect(() => {
     if (assets.length === 0 && !isFetching) {
-      fetchAssets();
+      fetchData();
     }
-  }, [fetchAssets, assets.length, isFetching]);
+  }, [fetchData, assets.length, isFetching]);
 
   const variants: DocsVariant[] = [
     {
@@ -57,7 +54,7 @@ export default function TokenInputPage() {
         <div className="max-w-lg">
           <TokenInput
             assets={assets}
-            onSearch={searchAssetsBirdeye}
+            onSearch={searchAssets}
             onTokenSelect={(token) => {
               console.log("Selected token:", token);
             }}
@@ -68,7 +65,7 @@ export default function TokenInputPage() {
         </div>
       ),
       code: `import { TokenInput } from "@/components/sol/token-input"
-import { fetchAssetsBirdeye, searchAssetsBirdeye } from "@/lib/assets"
+import { fetchAssets, searchAssets } from "@/lib/assets/birdeye"
 
 export function TokenInputDemo() {
   const [assets, setAssets] = React.useState([]);
@@ -77,7 +74,7 @@ export function TokenInputDemo() {
   React.useEffect(() => {
     const init = async () => {
       const tokens = [/* your token addresses */];
-      const fetchedAssets = await fetchAssetsBirdeye({
+      const fetchedAssets = await fetchAssets({
         addresses: tokens,
         owner: address,
       });
@@ -89,7 +86,7 @@ export function TokenInputDemo() {
   return (
     <TokenInput
       assets={assets}
-      onSearch={searchAssetsBirdeye}
+      onSearch={searchAssets}
       onTokenSelect={(token) => {
         console.log("Selected token:", token);
       }}

@@ -138,6 +138,18 @@ export default function IntroductionPage() {
         </p>
         <ThemeSelector className="translate-y-[3px] rounded-md bg-secondary px-4 py-2" />
       </div>
+      <div id="fetching-data" className="pt-0.5">
+        <Link href="/docs#fetching-data" className="no-underline">
+          <h2 className="flex items-center gap-2">
+            <IconLink size={20} className="text-muted-foreground" /> Fetching
+            Data
+          </h2>
+        </Link>
+        <p>
+          SolanaUI provides a set of hooks and utils to help you fetch and
+          display data on your project.
+        </p>
+      </div>
     </div>
   );
 }

@@ -24,6 +24,7 @@ export default function TokenListPage() {
   const [assets, setAssets] = React.useState<SolAsset[]>([]);
   const [isFetching, setIsFetching] = React.useState(false);
   const [componentSource, setComponentSource] = React.useState("");
+  const [tokenIconSource, setTokenIconSource] = React.useState("");
 
   const fetchData = React.useCallback(async () => {
     if (isFetching) return;
@@ -56,6 +57,9 @@ export default function TokenListPage() {
   React.useEffect(() => {
     getComponentSource("src/components/sol/token-list.tsx").then(
       setComponentSource,
+    );
+    getComponentSource("src/components/sol/token-icon.tsx").then(
+      setTokenIconSource,
     );
   }, []);
 
@@ -160,13 +164,20 @@ export function TokenListDemo() {
           code={"npx shadcn@latest add table"}
         />
 
-        <h3 className="text-lg">2. Install SolanaUI TokenList</h3>
+        <h3 className="text-lg">2. Install SolanaUI TokenIcon</h3>
+        <p>
+          TokenList requires the <code>TokenIcon</code> component. Copy the code
+          below to <code>src/components/sol/token-icon.tsx</code>.
+        </p>
+        <Code reveal={false} code={tokenIconSource} />
+
+        <h3 className="text-lg">3. Install SolanaUI TokenList</h3>
         <p>
           Copy the code below to <code>src/components/sol/token-list.tsx</code>.
         </p>
         <Code reveal={false} code={componentSource} />
 
-        <h3 className="text-lg">3. Use TokenList</h3>
+        <h3 className="text-lg">4. Use TokenList</h3>
         <p>
           Import the <code>TokenList</code> component and use it in your app.
         </p>

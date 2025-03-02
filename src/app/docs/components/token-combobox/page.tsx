@@ -24,6 +24,7 @@ export default function TokenDropdownPage() {
   const [assets, setAssets] = React.useState<SolAsset[]>([]);
   const [isFetching, setIsFetching] = React.useState(false);
   const [componentSource, setComponentSource] = React.useState("");
+  const [tokenIconSource, setTokenIconSource] = React.useState("");
 
   const fetchData = React.useCallback(async () => {
     if (isFetching) return;
@@ -55,6 +56,9 @@ export default function TokenDropdownPage() {
   React.useEffect(() => {
     getComponentSource("src/components/sol/token-combobox.tsx").then(
       setComponentSource,
+    );
+    getComponentSource("src/components/sol/token-icon.tsx").then(
+      setTokenIconSource,
     );
   }, []);
 
@@ -226,14 +230,21 @@ export function TokenComboboxDemo() {
           code={"npx shadcn@latest add popover command"}
         />
 
-        <h3 className="text-lg">2. Install SolanaUI TokenCombobox</h3>
+        <h3 className="text-lg">2. Install SolanaUI TokenIcon</h3>
+        <p>
+          TokenCombobox requires the <code>TokenIcon</code> component. Copy the
+          code below to <code>src/components/sol/token-icon.tsx</code>.
+        </p>
+        <Code reveal={false} code={tokenIconSource} />
+
+        <h3 className="text-lg">3. Install SolanaUI TokenCombobox</h3>
         <p>
           Copy the code below to{" "}
           <code>src/components/sol/token-combobox.tsx</code>.
         </p>
         <Code reveal={false} code={componentSource} />
 
-        <h3 className="text-lg">3. Use TokenCombobox</h3>
+        <h3 className="text-lg">4. Use TokenCombobox</h3>
         <p>
           Import the <code>TokenCombobox</code> component and use it in your
           app.
@@ -247,7 +258,10 @@ export function TokenComboboxDemo() {
         />
 
         <div className="!space-y-0" id="props">
-          <DocsH2 href="/docs/components/token-list#props" className="!mb-0">
+          <DocsH2
+            href="/docs/components/token-combobox#props"
+            className="!mb-0"
+          >
             Props
           </DocsH2>
           <PropsTable

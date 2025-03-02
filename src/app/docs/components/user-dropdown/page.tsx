@@ -25,6 +25,7 @@ export default function UserDropdownPage() {
   const [isFetching, setIsFetching] = React.useState(false);
   const [componentSource, setComponentSource] = React.useState("");
   const [avatarComponentSource, setAvatarComponentSource] = React.useState("");
+  const [tokenIconSource, setTokenIconSource] = React.useState("");
 
   const fetchData = React.useCallback(async () => {
     if (isFetching) return;
@@ -60,6 +61,9 @@ export default function UserDropdownPage() {
     );
     getComponentSource("src/components/sol/avatar.tsx").then(
       setAvatarComponentSource,
+    );
+    getComponentSource("src/components/sol/token-icon.tsx").then(
+      setTokenIconSource,
     );
   }, []);
 
@@ -200,6 +204,14 @@ export function UserDropdownDemo() {
             <code>src/components/sol/avatar.tsx</code>.
           </p>
           <Code reveal={false} code={avatarComponentSource} />
+
+          <h3 className="text-lg">4. Install SolanaUI TokenIcon</h3>
+          <p>
+            The UserDropdown component requires the <code>TokenIcon</code>{" "}
+            component. Copy the code below to{" "}
+            <code>src/components/sol/token-icon.tsx</code>.
+          </p>
+          <Code reveal={false} code={tokenIconSource} />
 
           <h3 className="text-lg">4. Install SolanaUI UserDropdown</h3>
           <p>

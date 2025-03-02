@@ -32,6 +32,8 @@ export default function TokenCardPage() {
   >([]);
   const [isFetching, setIsFetching] = React.useState(false);
   const [componentSource, setComponentSource] = React.useState("");
+  const [tokenIconSource, setTokenIconSource] = React.useState("");
+  const [sparklineSource, setSparklineSource] = React.useState("");
 
   const fetchData = React.useCallback(async () => {
     if (isFetching) return;
@@ -69,6 +71,12 @@ export default function TokenCardPage() {
   React.useEffect(() => {
     getComponentSource("src/components/sol/token-card.tsx").then(
       setComponentSource,
+    );
+    getComponentSource("src/components/sol/token-icon.tsx").then(
+      setTokenIconSource,
+    );
+    getComponentSource("src/components/sol/sparkline.tsx").then(
+      setSparklineSource,
     );
   }, []);
 
@@ -169,14 +177,28 @@ export function TokenCardDemo() {
             code={"npx shadcn@latest add card"}
           />
 
-          <h3 className="text-lg">3. Install SolanaUI TokenCard</h3>
+          <h3 className="text-lg">3. Install SolanaUI TokenIcon</h3>
+          <p>
+            TokenCard requires the <code>TokenIcon</code> component. Copy the
+            code below to <code>src/components/sol/token-icon.tsx</code>.
+          </p>
+          <Code reveal={false} code={tokenIconSource} />
+
+          <h3 className="text-lg">4. Install SolanaUI Sparkline</h3>
+          <p>
+            TokenCard requires Sparkline to display the price history. Copy the
+            code below to <code>src/components/sol/sparkline.tsx</code>.
+          </p>
+          <Code reveal={false} code={sparklineSource} />
+
+          <h3 className="text-lg">5. Install SolanaUI TokenCard</h3>
           <p>
             Copy the code below to{" "}
             <code>src/components/sol/token-card.tsx</code>.
           </p>
           <Code reveal={false} code={componentSource} />
 
-          <h3 className="text-lg">4. Use TokenCard</h3>
+          <h3 className="text-lg">6. Use TokenCard</h3>
           <p>
             Import the <code>TokenCard</code> component and use it in your app.
           </p>

@@ -4,20 +4,22 @@ import React from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey } from "@solana/web3.js";
 
+import { getComponentSource } from "@/actions/get-component-source";
 import { WSOL_MINT, USDC_MINT } from "@/lib/constants";
 import { SolAsset } from "@/lib/types";
 import { fetchAssets } from "@/lib/assets/birdeye";
-import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
-import { UserDropdown } from "@/components/sol/user-dropdown";
 
-const demoAddress = new PublicKey(
-  "D1bj9NDgFVRxUiKkNyxW9BtYJ1kesQknnqm6xAnk1h8q",
-);
+import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
+
+import { UserDropdown } from "@/components/sol/user-dropdown";
 
 export default function UserDropdownPage() {
   const { publicKey } = useWallet();
   const [assets, setAssets] = React.useState<SolAsset[]>([]);
   const [isFetching, setIsFetching] = React.useState(false);
+  const [componentSource, setComponentSource] = React.useState("");
+
+  console.log(componentSource);
 
   const fetchData = React.useCallback(async () => {
     if (isFetching) return;
@@ -33,7 +35,7 @@ export default function UserDropdownPage() {
 
       const fetchedAssets = await fetchAssets({
         addresses: tokens,
-        owner: publicKey ?? demoAddress,
+        owner: publicKey ?? PublicKey.default,
       });
       setAssets(fetchedAssets);
     } finally {
@@ -47,13 +49,17 @@ export default function UserDropdownPage() {
     }
   }, [fetchData, assets.length, isFetching]);
 
+  React.useEffect(() => {
+    getComponentSource("src/components/sol/user-dropdown.tsx").then(
+      setComponentSource,
+    );
+  }, []);
+
   const variants: DocsVariant[] = [
     {
       label: "Default",
       value: "default",
-      preview: (
-        <UserDropdown address={publicKey || demoAddress} assets={assets} />
-      ),
+      preview: <UserDropdown address={publicKey} assets={assets} />,
       code: `import { UserDropdown } from "@/components/sol/user-dropdown"
 import { fetchAssets } from "@/lib/assets/birdeye"
 

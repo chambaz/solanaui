@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import path from "path";
-import { promises as fs } from "fs";
+import { getComponentSource } from "@/actions/get-component-source";
 
 import { ConnectWalletDialog } from "@/components/sol/connect-wallet-dialog";
 
@@ -19,9 +18,8 @@ export const metadata: Metadata = {
 };
 
 export default async function ConnectWalletDialogPage() {
-  const componentSource = await fs.readFile(
-    path.join(process.cwd(), "src/components/sol/connect-wallet-dialog.tsx"),
-    "utf8",
+  const componentSource = await getComponentSource(
+    "src/components/sol/connect-wallet-dialog.tsx",
   );
 
   const variants: DocsVariant[] = [

@@ -2,8 +2,6 @@
 
 import React from "react";
 
-import Image from "next/image";
-
 import { Wallet } from "@solana/wallet-adapter-react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { IconX, IconLoader2 } from "@tabler/icons-react";
@@ -65,7 +63,7 @@ const ConnectWalletDialog = ({
                   }}
                   disabled={connecting}
                 >
-                  <Image
+                  <img
                     src={walletItem.adapter.icon}
                     alt={walletItem.adapter.name}
                     width={20}

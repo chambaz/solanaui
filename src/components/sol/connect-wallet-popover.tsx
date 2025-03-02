@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
+
 import { Wallet } from "@solana/wallet-adapter-react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { IconLoader2, IconWallet } from "@tabler/icons-react";
@@ -25,10 +25,11 @@ const ConnectWalletPopover = ({
   description,
   ...popoverProps
 }: ConnectWalletPopoverProps) => {
+  const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
   const { wallets, select, connecting, wallet } = useWallet();
 
   return (
-    <Popover>
+    <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
       <PopoverTrigger asChild>
         {trigger || (
           <Button size="icon">
@@ -51,11 +52,14 @@ const ConnectWalletPopover = ({
               <li key={walletItem.adapter.name}>
                 <Button
                   variant="secondary"
-                  className="w-full justify-start gap-2"
-                  onClick={() => select(walletItem.adapter.name)}
+                  className="w-full justify-start gap-3 pl-3"
+                  onClick={() => {
+                    select(walletItem.adapter.name);
+                    setIsPopoverOpen(false);
+                  }}
                   disabled={connecting}
                 >
-                  <Image
+                  <img
                     src={walletItem.adapter.icon}
                     alt={walletItem.adapter.name}
                     width={20}

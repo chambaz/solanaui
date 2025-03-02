@@ -2,8 +2,6 @@
 
 import React from "react";
 
-import Image from "next/image";
-
 import { PublicKey } from "@solana/web3.js";
 
 import { Avatar } from "./avatar";
@@ -28,14 +26,13 @@ const TokenIcon = ({ token, image, size = 24, alt }: IconProps) => {
         height: size,
       }}
     >
-      <Image
+      <img
         src="/token-icons/placeholder.jpg"
         alt={alt ?? token.toBase58()}
         width={size}
         height={size}
         className="absolute inset-0 rounded-full"
       />
-      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={image}
         alt={alt ?? token.toBase58()}

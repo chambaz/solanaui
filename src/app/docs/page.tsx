@@ -43,14 +43,22 @@ export default function IntroductionPage() {
             rel="noopener noreferrer"
           >
             TailwindCSS
-          </Link>{" "}
-          and{" "}
+          </Link>
+          ,{" "}
           <Link
             href="https://ui.shadcn.com/"
             target="_blank"
             rel="noopener noreferrer"
           >
             shadcn/ui
+          </Link>
+          , and{" "}
+          <Link
+            href="https://solana-labs.github.io/solana-web3.js/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Solana web3.js
           </Link>
           . If you have an existing project then skip this step.
         </p>
@@ -64,6 +72,11 @@ export default function IntroductionPage() {
           <li>
             <a href="https://ui.shadcn.com/docs/installation/nextjs">
               Install shadcn/ui
+            </a>
+          </li>
+          <li>
+            <a href="https://solana-labs.github.io/solana-web3.js/">
+              Install Solana web3.js
             </a>
           </li>
         </ul>

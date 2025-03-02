@@ -69,9 +69,10 @@ export default function UserDropdownPage() {
 import { useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey } from "@solana/web3.js";
 
-import { UserDropdown } from "@/components/sol/user-dropdown"
 import { fetchAssets } from "@/lib/assets/birdeye"
 import { WSOL_MINT, USDC_MINT } from "@/lib/constants";
+
+import { UserDropdown } from "@/components/sol/user-dropdown"
 
 export function UserDropdownDemo() {
   const { publicKey } = useWallet();

@@ -27,6 +27,7 @@ import { TokenIcon } from "@/components/sol/token-icon";
 
 type TokenComboboxProps = {
   assets: SolAsset[];
+  trigger?: React.ReactNode;
   showBalances?: boolean;
   onSelect?: (token: SolAsset) => void;
   onSearch?: ({
@@ -36,15 +37,14 @@ type TokenComboboxProps = {
     query: string;
     owner?: PublicKey;
   }) => Promise<SolAsset[]>;
-  children?: React.ReactNode;
 };
 
 const TokenCombobox = ({
   assets: initialAssets,
+  trigger,
   showBalances = true,
   onSelect,
   onSearch,
-  children,
 }: TokenComboboxProps) => {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
@@ -95,7 +95,7 @@ const TokenCombobox = ({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        {children || (
+        {trigger || (
           <Button
             variant="outline"
             role="combobox"

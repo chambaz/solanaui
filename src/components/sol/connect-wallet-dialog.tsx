@@ -33,10 +33,11 @@ const ConnectWalletDialog = ({
   title,
   description,
 }: ConnectWalletDialogProps) => {
+  const [isDialogOpen, setIsDialogOpen] = React.useState(false);
   const { wallets, select, connecting, wallet } = useWallet();
 
   return (
-    <Dialog>
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
         {trigger || <Button>Connect Wallet</Button>}
       </DialogTrigger>
@@ -59,8 +60,8 @@ const ConnectWalletDialog = ({
                   size="lg"
                   className="h-10 w-4/5 justify-start gap-4 px-3 disabled:opacity-80 md:w-3/5"
                   onClick={() => {
-                    console.log(select, walletItem.adapter.name);
                     select(walletItem.adapter.name);
+                    setIsDialogOpen(false);
                   }}
                   disabled={connecting}
                 >

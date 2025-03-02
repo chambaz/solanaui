@@ -1,24 +1,24 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+
+import path from "path";
+import { promises as fs } from "fs";
 
 import { ConnectWalletDialog } from "@/components/sol/connect-wallet-dialog";
 
 import { DocsWrapper } from "@/components/web/docs-wrapper";
 import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
+import { DocsH1, DocsH2 } from "@/components/web/docs-heading";
 import { Code } from "@/components/web/code";
 import { PropsTable } from "@/components/web/props-table";
 
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { promises as fs } from "fs";
-import path from "path";
-import { DocsH1, DocsH2 } from "@/components/web/docs-heading";
 
 export const metadata: Metadata = {
   title: "Connect Wallet Dialog - SolanaUI",
 };
 
 export default async function ConnectWalletDialogPage() {
-  // Read the component source code
   const componentSource = await fs.readFile(
     path.join(process.cwd(), "src/components/sol/connect-wallet-dialog.tsx"),
     "utf8",

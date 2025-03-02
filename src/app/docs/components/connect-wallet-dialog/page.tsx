@@ -3,8 +3,6 @@ import Link from "next/link";
 
 import { getComponentSource } from "@/actions/get-component-source";
 
-import { ConnectWalletDialog } from "@/components/sol/connect-wallet-dialog";
-
 import { DocsWrapper } from "@/components/web/docs-wrapper";
 import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
 import { DocsH1, DocsH2 } from "@/components/web/docs-heading";
@@ -12,6 +10,8 @@ import { Code } from "@/components/web/code";
 import { PropsTable } from "@/components/web/props-table";
 
 import { Button } from "@/components/ui/button";
+
+import { ConnectWalletDialog } from "@/components/sol/connect-wallet-dialog";
 
 export const metadata: Metadata = {
   title: "Connect Wallet Dialog - SolanaUI",

@@ -5,9 +5,9 @@ import Link from "next/link";
 
 import {
   VersionedTransactionResponse,
-  Connection,
   LAMPORTS_PER_SOL,
 } from "@solana/web3.js";
+import { useConnection } from "@solana/wallet-adapter-react";
 import { formatDistanceToNow } from "date-fns";
 import { IconAlertCircle, IconExternalLink } from "@tabler/icons-react";
 
@@ -29,15 +29,13 @@ type TxnListProps = {
 };
 
 const TxnList = ({ transactions, onClick }: TxnListProps) => {
+  const { connection } = useConnection();
   const [currentSlot, setCurrentSlot] = React.useState<number | null>(null);
   const [averageBlockTime, setAverageBlockTime] = React.useState<number>(0.4);
 
   React.useEffect(() => {
     const init = async () => {
       try {
-        const connection = new Connection(
-          process.env.NEXT_PUBLIC_RPC_URL ?? "",
-        );
         const [slot, recentPerformanceSamples] = await Promise.all([
           connection.getSlot(),
           connection.getRecentPerformanceSamples(30),

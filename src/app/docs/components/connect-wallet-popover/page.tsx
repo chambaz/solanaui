@@ -5,8 +5,6 @@ import { IconWallet } from "@tabler/icons-react";
 
 import { getComponentSource } from "@/actions/get-component-source";
 
-import { ConnectWalletPopover } from "@/components/sol/connect-wallet-popover";
-
 import { DocsWrapper } from "@/components/web/docs-wrapper";
 import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
 import { DocsH1, DocsH2 } from "@/components/web/docs-heading";
@@ -14,6 +12,8 @@ import { Code } from "@/components/web/code";
 import { PropsTable } from "@/components/web/props-table";
 
 import { Button } from "@/components/ui/button";
+
+import { ConnectWalletPopover } from "@/components/sol/connect-wallet-popover";
 
 export const metadata: Metadata = {
   title: "Connect Wallet Popover - SolanaUI",

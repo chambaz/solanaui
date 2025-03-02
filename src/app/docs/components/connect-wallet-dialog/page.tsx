@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { promises as fs } from "fs";
 import path from "path";
+import { DocsH1, DocsH2 } from "@/components/web/docs-heading";
 
 export const metadata: Metadata = {
   title: "Connect Wallet Dialog - SolanaUI",
@@ -34,7 +35,7 @@ export default async function ConnectWalletDialogPage() {
           description="Connect your wallet to continue"
         />
       ),
-      code: `import { ConnectWallet } from "@/components/web/connect-wallet"
+      code: `import { ConnectWalletDialog } from "@/components/sol/connect-wallet-dialog"
 
 export function ConnectWalletDialogDemo() {
   return (
@@ -51,28 +52,27 @@ export function ConnectWalletDialogDemo() {
   return (
     <DocsWrapper>
       <div id="demo">
-        <div className="space-y-2">
-          <h1 className="text-3xl font-medium">Connect Wallet Dialog</h1>
-          <p className="text-muted-foreground">
-            The Connect Wallet Dialog component is a dialog window that allows
-            users to connect their wallet via{" "}
-            <Link
-              href="https://github.com/anza-xyz/wallet-adapter"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="border-b border-foreground/75 text-foreground transition-colors hover:border-transparent"
-            >
-              Solana Wallet Adapter
-            </Link>
-            .
-          </p>
-        </div>
+        <DocsH1 href="/docs/components/connect-wallet-dialog#demo">
+          Connect Wallet Dialog
+        </DocsH1>
+        <p className="text-muted-foreground">
+          The Connect Wallet Dialog component is a dialog window that allows
+          users to connect their wallet via{" "}
+          <Link
+            href="https://github.com/anza-xyz/wallet-adapter"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="border-b border-foreground/75 text-foreground"
+          >
+            Solana Wallet Adapter
+          </Link>
+          .
+        </p>
         <DocsTabs variants={variants} />
-        <div
-          className="prose w-full max-w-none pt-8 dark:prose-invert"
-          id="installation"
-        >
-          <h2>Installation</h2>
+        <div className="w-full max-w-none" id="installation">
+          <DocsH2 href="/docs/components/connect-wallet-dialog#installation">
+            Installation
+          </DocsH2>
 
           <h3 className="text-lg">1. Install Dependencies</h3>
           <p>ConnectWalletDialog requires Solana Wallet Adapter.</p>
@@ -84,8 +84,15 @@ export function ConnectWalletDialogDemo() {
 
           <h3 className="text-lg">2. Install shadcn/ui dialog component</h3>
           <p>
-            Use shadcn/ui CLI or manually copy the code below to{" "}
-            <code>src/components/ui/dialog.tsx</code>.
+            Use shadcn/ui CLI or manually install the{" "}
+            <Link
+              href="https://ui.shadcn.com/docs/components/dialog"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              shadcn/ui dialog
+            </Link>{" "}
+            component.
           </p>
           <Code
             language="shell"
@@ -115,7 +122,12 @@ export function ConnectWalletDialogDemo() {
           />
 
           <div className="!space-y-0" id="props">
-            <h2 className="!mb-0">Props</h2>
+            <DocsH2
+              href="/docs/components/connect-wallet-dialog#props"
+              className="!mb-0"
+            >
+              Props
+            </DocsH2>
             <PropsTable
               data={[
                 {

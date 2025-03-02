@@ -72,7 +72,7 @@ export function ConnectWalletDialogDemo() {
             Wallet Adapter.
           </p>
           <Code
-            language="bash"
+            language="shell"
             pinnedControls={false}
             code={`npm install @radix-ui/react-popover @solana/wallet-adapter-react @solana/wallet-adapter-wallets @solana/wallet-adapter-react-ui`}
           />

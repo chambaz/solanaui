@@ -5,7 +5,7 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 
 import { PrismLight as SyntaxHighlighter } from "react-syntax-highlighter";
 import tsx from "react-syntax-highlighter/dist/esm/languages/prism/tsx";
-import bash from "react-syntax-highlighter/dist/esm/languages/prism/bash";
+import shell from "react-syntax-highlighter/dist/esm/languages/prism/shell-session";
 import ColdDark from "react-syntax-highlighter/dist/esm/styles/prism/coldark-dark";
 import {
   IconCheck,
@@ -19,11 +19,11 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
 SyntaxHighlighter.registerLanguage("tsx", tsx);
-SyntaxHighlighter.registerLanguage("bash", bash);
+SyntaxHighlighter.registerLanguage("shell", shell);
 
 type CodeProps = {
   code: string;
-  language?: "tsx" | "bash";
+  language?: "tsx" | "shell";
   reveal?: boolean;
   pinnedControls?: boolean;
 };

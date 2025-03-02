@@ -3,17 +3,11 @@
 import Link from "next/link";
 
 import { IconLink } from "@tabler/icons-react";
-import { PrismLight as SyntaxHighlighter } from "react-syntax-highlighter";
-import css from "react-syntax-highlighter/dist/esm/languages/prism/css";
-import bash from "react-syntax-highlighter/dist/esm/languages/prism/bash";
 
 import { cn } from "@/lib/utils";
 
 import { ThemeSelector } from "@/components/web/themes";
 import { useSidebar } from "@/components/ui/sidebar";
-
-SyntaxHighlighter.registerLanguage("css", css);
-SyntaxHighlighter.registerLanguage("bash", bash);
 
 export default function IntroductionPage() {
   const { open } = useSidebar();

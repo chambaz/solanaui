@@ -54,7 +54,7 @@ export function AvatarDemo() {
           <h3 className="text-lg">1. Install Dependencies</h3>
           <p>Avatar requires @solana/web3.js and minidenticons.</p>
           <Code
-            language="bash"
+            language="shell"
             pinnedControls={false}
             code={`npm install @solana/web3.js minidenticons`}
           />

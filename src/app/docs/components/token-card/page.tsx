@@ -98,7 +98,6 @@ export function TokenCardDemo() {
     { timestamp: number; price: number }[]
   >([]);
   const [isFetching, setIsFetching] = React.useState(false);
-  const [componentSource, setComponentSource] = React.useState("");
 
   const fetchData = React.useCallback(async () => {
     if (isFetching) return;

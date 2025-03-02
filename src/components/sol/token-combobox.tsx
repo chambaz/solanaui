@@ -28,6 +28,7 @@ import { TokenIcon } from "@/components/sol/token-icon";
 type TokenComboboxProps = {
   assets: SolAsset[];
   trigger?: React.ReactNode;
+  address?: PublicKey | null;
   showBalances?: boolean;
   onSelect?: (token: SolAsset) => void;
   onSearch?: ({
@@ -42,6 +43,7 @@ type TokenComboboxProps = {
 const TokenCombobox = ({
   assets: initialAssets,
   trigger,
+  address,
   showBalances = true,
   onSelect,
   onSearch,
@@ -72,6 +74,7 @@ const TokenCombobox = ({
         searchTimeout.current = setTimeout(async () => {
           const searchResults = await onSearch({
             query: searchValue,
+            owner: address ?? undefined,
           });
           setAssets(searchResults);
         }, 300);

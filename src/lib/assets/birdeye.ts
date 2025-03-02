@@ -94,7 +94,7 @@ const searchAssets = async ({
   const params = new URLSearchParams({
     chain: "solana",
     target: "token",
-    sort_by: "volume_24h_usd",
+    sort_by: "liquidity",
     sort_type: "desc",
     offset: "0",
     limit: "10",

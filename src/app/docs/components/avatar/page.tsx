@@ -61,7 +61,7 @@ export function AvatarDemo() {
           <Code
             language="shell"
             pinnedControls={false}
-            code={`npm install @solana/web3.js minidenticons`}
+            code={`npm install minidenticons`}
           />
 
           <h3 className="text-lg">2. Install SolanaUI Avatar</h3>

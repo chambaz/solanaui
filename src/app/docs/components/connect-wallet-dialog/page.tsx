@@ -73,11 +73,40 @@ export function ConnectWalletDialogDemo() {
           </DocsH2>
 
           <h3 className="text-lg">1. Install Dependencies</h3>
-          <p>ConnectWalletDialog requires Solana Wallet Adapter.</p>
+          <p>
+            ConnectWalletDialog requires{" "}
+            <Link
+              href="https://github.com/anza-xyz/wallet-adapter"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="border-b border-foreground/75 text-foreground"
+            >
+              Solana Wallet Adapter
+            </Link>{" "}
+            and must be wrapped in{" "}
+            <Link
+              href="https://github.com/anza-xyz/wallet-adapter/blob/master/APP.md"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Connection and Wallet provider
+            </Link>{" "}
+            components.
+          </p>
           <Code
             language="shell"
             pinnedControls={false}
             code={`npm install @solana/wallet-adapter-react @solana/wallet-adapter-wallets`}
+          />
+
+          <Code
+            language="tsx"
+            pinnedControls={false}
+            code={`<ConnectionProvider endpoint={process.env.YOUR_RPC_URL}>
+  <WalletProvider wallets={wallets}>
+    <App />
+  </WalletProvider>
+</ConnectionProvider>`}
           />
 
           <h3 className="text-lg">2. Install shadcn/ui dialog component</h3>

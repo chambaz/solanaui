@@ -41,7 +41,7 @@ const DocsTabs = ({ variants }: DocsTabsProps) => {
   }, [variants, activeVariantIndex]);
 
   return (
-    <div className="mt-6 space-y-6">
+    <div className="space-y-6">
       <Tabs defaultValue="preview">
         <TabsList>
           <TabsTrigger value="preview">Preview</TabsTrigger>

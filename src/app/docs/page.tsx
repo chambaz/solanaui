@@ -2,26 +2,15 @@
 
 import Link from "next/link";
 
-import { IconLink } from "@tabler/icons-react";
-
-import { cn } from "@/lib/utils";
-
 import { ThemeSelector } from "@/components/web/themes";
-import { useSidebar } from "@/components/ui/sidebar";
+import { DocsWrapper } from "@/components/web/docs-wrapper";
+import { DocsH1, DocsH2 } from "@/components/web/docs-heading";
 
 export default function IntroductionPage() {
-  const { open } = useSidebar();
   return (
-    <div
-      className={cn("prose max-w-5xl dark:prose-invert", !open && "mx-auto")}
-    >
-      <div id="getting-started" className="pt-0.5">
-        <Link href="/docs#getting-started" className="no-underline">
-          <h2 className="flex items-center gap-2">
-            <IconLink size={20} className="text-muted-foreground" /> Getting
-            Started with SolanaUI
-          </h2>
-        </Link>
+    <DocsWrapper>
+      <div id="getting-started">
+        <DocsH1 href="/docs#getting-started">Getting Started</DocsH1>
         <p>
           SolanaUI is a library of UI components for crafting frontends for
           Solana apps. It is built on top of{" "}
@@ -44,13 +33,8 @@ export default function IntroductionPage() {
           starting point for your project and can be extended as needed.
         </p>
       </div>
-      <div id="installation" className="pt-0.5">
-        <Link href="/docs#installation" className="no-underline">
-          <h2 className="flex items-center gap-2">
-            <IconLink size={20} className="text-muted-foreground" />{" "}
-            Installation
-          </h2>
-        </Link>
+      <div id="installation">
+        <DocsH2 href="/docs#installation">Installation</DocsH2>
         <p>
           To get started with SolanaUI, you&apos;ll need a React project with{" "}
           <Link
@@ -84,12 +68,8 @@ export default function IntroductionPage() {
           </li>
         </ul>
       </div>
-      <div id="themes" className="pt-0.5">
-        <Link href="/docs#themes" className="no-underline">
-          <h2 className="flex items-center gap-2">
-            <IconLink size={20} className="text-muted-foreground" /> Themes
-          </h2>
-        </Link>
+      <div id="themes">
+        <DocsH2 href="/docs#themes">Themes</DocsH2>
         <p>
           SolanaUI inherits the{" "}
           <Link
@@ -109,13 +89,8 @@ export default function IntroductionPage() {
           />
         </div>
       </div>
-      <div id="fetching-data" className="pt-0.5">
-        <Link href="/docs#fetching-data" className="no-underline">
-          <h2 className="flex items-center gap-2">
-            <IconLink size={20} className="text-muted-foreground" /> Fetching
-            Data
-          </h2>
-        </Link>
+      <div id="fetching-data">
+        <DocsH2 href="/docs#fetching-data">Fetching Data</DocsH2>
         <p>
           Fetching data on Solana is notoriously complex. If you are doing
           anything at scale you likely have your own indexing and data storage /
@@ -131,6 +106,6 @@ export default function IntroductionPage() {
           </Link>
         </p>
       </div>
-    </div>
+    </DocsWrapper>
   );
 }

@@ -24,6 +24,7 @@ export default function UserDropdownPage() {
   const [assets, setAssets] = React.useState<SolAsset[]>([]);
   const [isFetching, setIsFetching] = React.useState(false);
   const [componentSource, setComponentSource] = React.useState("");
+  const [avatarComponentSource, setAvatarComponentSource] = React.useState("");
 
   const fetchData = React.useCallback(async () => {
     if (isFetching) return;
@@ -56,6 +57,9 @@ export default function UserDropdownPage() {
   React.useEffect(() => {
     getComponentSource("src/components/sol/user-dropdown.tsx").then(
       setComponentSource,
+    );
+    getComponentSource("src/components/sol/avatar.tsx").then(
+      setAvatarComponentSource,
     );
   }, []);
 
@@ -189,14 +193,22 @@ export function UserDropdownDemo() {
             code={"npx shadcn@latest add dropdown-menu"}
           />
 
-          <h3 className="text-lg">3. Install SolanaUI UserDropdown</h3>
+          <h3 className="text-lg">3. Install SolanaUI Avatar</h3>
+          <p>
+            The UserDropdown component requires the <code>Avatar</code>{" "}
+            component. Copy the code below to{" "}
+            <code>src/components/sol/avatar.tsx</code>.
+          </p>
+          <Code reveal={false} code={avatarComponentSource} />
+
+          <h3 className="text-lg">4. Install SolanaUI UserDropdown</h3>
           <p>
             Copy the code below to{" "}
             <code>src/components/sol/user-dropdown.tsx</code>.
           </p>
           <Code reveal={false} code={componentSource} />
 
-          <h3 className="text-lg">4. Use UserDropdown</h3>
+          <h3 className="text-lg">5. Use UserDropdown</h3>
           <p>
             Import the <code>UserDropdown</code> component and use it in your
             app.

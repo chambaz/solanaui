@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { cookies } from "next/headers";
 import { Inter, Roboto_Mono } from "next/font/google";
 
 import { cn } from "@/lib/utils";
@@ -35,17 +34,10 @@ export default function DocsLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const cookieStore = cookies();
-  const colorTheme = cookieStore.get("sol-theme")?.value || "blue";
-
   return (
     <html
       lang="en"
-      className={cn(
-        inter.variable,
-        roboto_mono.variable,
-        `theme-${colorTheme}`,
-      )}
+      className={cn(inter.variable, roboto_mono.variable, `theme-blue`)}
       suppressHydrationWarning
     >
       <body>

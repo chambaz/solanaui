@@ -78,7 +78,6 @@ const ThemeProvider = ({
 
   const updateTheme = React.useCallback((newTheme: Theme) => {
     setTheme(newTheme);
-    document.cookie = `sol-theme=${newTheme};path=/;max-age=31536000`;
 
     document.documentElement.classList.forEach((className) => {
       if (className.startsWith("theme-")) {

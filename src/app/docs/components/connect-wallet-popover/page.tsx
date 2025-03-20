@@ -104,13 +104,11 @@ export function ConnectWalletPopoverDemo() {
           </p>
           <Code
             language="shell"
-            pinnedControls={false}
             code={`npm install @solana/wallet-adapter-react @solana/wallet-adapter-wallets`}
           />
 
           <Code
             language="tsx"
-            pinnedControls={false}
             code={`<ConnectionProvider endpoint={process.env.YOUR_RPC_URL}>
   <WalletProvider wallets={wallets}>
     <App />
@@ -130,11 +128,7 @@ export function ConnectWalletPopoverDemo() {
             </Link>{" "}
             component.
           </p>
-          <Code
-            language="shell"
-            pinnedControls={false}
-            code={"npx shadcn@latest add popover"}
-          />
+          <Code language="shell" code={"npx shadcn@latest add popover"} />
 
           <h3 className="text-lg">
             3. Install SolanaUI Connect Wallet Popover

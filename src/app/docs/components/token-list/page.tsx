@@ -158,11 +158,7 @@ export function TokenListDemo() {
           </Link>{" "}
           component.
         </p>
-        <Code
-          language="shell"
-          pinnedControls={false}
-          code={"npx shadcn@latest add table"}
-        />
+        <Code language="shell" code={"npx shadcn@latest add table"} />
 
         <h3 className="text-lg">2. Install SolanaUI TokenIcon</h3>
         <p>

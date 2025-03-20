@@ -95,13 +95,11 @@ export function ConnectWalletDialogDemo() {
           </p>
           <Code
             language="shell"
-            pinnedControls={false}
             code={`npm install @solana/wallet-adapter-react @solana/wallet-adapter-wallets`}
           />
 
           <Code
             language="tsx"
-            pinnedControls={false}
             code={`<ConnectionProvider endpoint={process.env.YOUR_RPC_URL}>
   <WalletProvider wallets={wallets}>
     <App />
@@ -121,11 +119,7 @@ export function ConnectWalletDialogDemo() {
             </Link>{" "}
             component.
           </p>
-          <Code
-            language="shell"
-            pinnedControls={false}
-            code={"npx shadcn@latest add dialog"}
-          />
+          <Code language="shell" code={"npx shadcn@latest add dialog"} />
 
           <h3 className="text-lg">3. Install SolanaUI Connect Wallet Dialog</h3>
           <p>

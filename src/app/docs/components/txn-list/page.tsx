@@ -153,13 +153,11 @@ export function TxnListDemo() {
           </p>
           <Code
             language="shell"
-            pinnedControls={false}
             code={`npm install @solana/wallet-adapter-react @solana/wallet-adapter-wallets`}
           />
 
           <Code
             language="tsx"
-            pinnedControls={false}
             code={`<ConnectionProvider endpoint={process.env.YOUR_RPC_URL}>
   <App />
 </ConnectionProvider>`}
@@ -177,11 +175,7 @@ export function TxnListDemo() {
             </Link>{" "}
             component.
           </p>
-          <Code
-            language="shell"
-            pinnedControls={false}
-            code={"npx shadcn@latest add table"}
-          />
+          <Code language="shell" code={"npx shadcn@latest add table"} />
 
           <h3 className="text-lg">3. Install SolanaUI TxnList</h3>
           <p>

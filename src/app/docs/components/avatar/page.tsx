@@ -58,11 +58,7 @@ export function AvatarDemo() {
 
           <h3 className="text-lg">1. Install Dependencies</h3>
           <p>Avatar requires minidenticons.</p>
-          <Code
-            language="shell"
-            pinnedControls={false}
-            code={`npm install minidenticons`}
-          />
+          <Code language="shell" code={`npm install minidenticons`} />
 
           <h3 className="text-lg">2. Install SolanaUI Avatar</h3>
           <p>

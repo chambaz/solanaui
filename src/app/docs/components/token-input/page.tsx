@@ -174,11 +174,7 @@ export function TokenInputDemo() {
             </Link>{" "}
             components.
           </p>
-          <Code
-            language="shell"
-            pinnedControls={false}
-            code={"npx shadcn@latest add input button"}
-          />
+          <Code language="shell" code={"npx shadcn@latest add input button"} />
 
           <h3 className="text-lg">2. Install SolanaUI TokenCombobox</h3>
           <p>

@@ -163,13 +163,11 @@ export function UserDropdownDemo() {
           </p>
           <Code
             language="shell"
-            pinnedControls={false}
             code={`npm install @solana/wallet-adapter-react @solana/wallet-adapter-wallets`}
           />
 
           <Code
             language="tsx"
-            pinnedControls={false}
             code={`<ConnectionProvider endpoint={process.env.YOUR_RPC_URL}>
   <WalletProvider wallets={wallets}>
     <App />
@@ -191,11 +189,7 @@ export function UserDropdownDemo() {
             </Link>{" "}
             component.
           </p>
-          <Code
-            language="shell"
-            pinnedControls={false}
-            code={"npx shadcn@latest add dropdown-menu"}
-          />
+          <Code language="shell" code={"npx shadcn@latest add dropdown-menu"} />
 
           <h3 className="text-lg">3. Install SolanaUI Avatar</h3>
           <p>

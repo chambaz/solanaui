@@ -153,23 +153,31 @@ export function TokenInputDemo() {
           </DocsH2>
 
           <h3 className="text-lg">
-            1. Install shadcn/ui dropdown-menu component
+            1. Install shadcn/ui input and button components
           </h3>
           <p>
             Use shadcn/ui CLI or manually install the{" "}
             <Link
-              href="https://ui.shadcn.com/docs/components/dropdown-menu"
+              href="https://ui.shadcn.com/docs/components/input"
               target="_blank"
               rel="noopener noreferrer"
             >
-              shadcn/ui dropdown-menu
+              input
             </Link>{" "}
-            component.
+            and{" "}
+            <Link
+              href="https://ui.shadcn.com/docs/components/button"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              button
+            </Link>{" "}
+            components.
           </p>
           <Code
             language="shell"
             pinnedControls={false}
-            code={"npx shadcn@latest add dropdown-menu"}
+            code={"npx shadcn@latest add input button"}
           />
 
           <h3 className="text-lg">2. Install SolanaUI TokenCombobox</h3>

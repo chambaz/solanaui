@@ -15,6 +15,7 @@ import { Code } from "@/components/web/code";
 
 import { Button } from "@/components/ui/button";
 
+import { PropsTable } from "@/components/web/props-table";
 import { useTxnToast } from "@/hooks/use-txn-toast";
 
 export default function UserDropdownPage() {
@@ -236,6 +237,26 @@ signingToast.confirm(signature, confirmation);
 // show toast error state
 signingToast.error(error || "Something went wrong");
 `}
+          />
+        </div>
+        <div className="!space-y-0" id="api">
+          <DocsH2 href="/docs/components/connect-wallet-dialog#api">API</DocsH2>
+          <p>
+            Call <code>txnToast()</code> to initiate a toast in pending state.
+            The returned object has <code>confirm</code> and <code>error</code>{" "}
+            methods to update the toast state.
+          </p>
+          <PropsTable
+            data={[
+              {
+                name: "confirm",
+                type: "(signature: string, confirmation: Promise<RpcResponseAndContext<SignatureResult>>) => void",
+              },
+              {
+                name: "error",
+                type: "(error: string) => void",
+              },
+            ]}
           />
         </div>
       </div>

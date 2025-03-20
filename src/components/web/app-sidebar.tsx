@@ -84,6 +84,7 @@ const navItems = [
       {
         label: "Txn Toast",
         href: "/docs/components/txn-toast",
+        hasAPI: true,
       },
       {
         label: "Txn Settings",
@@ -182,11 +183,21 @@ const AppSidebar = () => {
                                 </Link>
                               </SidebarMenuSubButton>
                             </SidebarMenuSubItem>
-                            <SidebarMenuSubItem>
-                              <SidebarMenuSubButton asChild>
-                                <Link href={`${child.href}#props`}>Props</Link>
-                              </SidebarMenuSubButton>
-                            </SidebarMenuSubItem>
+                            {child.hasAPI ? (
+                              <SidebarMenuSubItem>
+                                <SidebarMenuSubButton asChild>
+                                  <Link href={`${child.href}#api`}>API</Link>
+                                </SidebarMenuSubButton>
+                              </SidebarMenuSubItem>
+                            ) : (
+                              <SidebarMenuSubItem>
+                                <SidebarMenuSubButton asChild>
+                                  <Link href={`${child.href}#props`}>
+                                    Props
+                                  </Link>
+                                </SidebarMenuSubButton>
+                              </SidebarMenuSubItem>
+                            )}
                           </SidebarMenuSub>
                         </CollapsibleContent>
                       )}

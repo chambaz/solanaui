@@ -25,13 +25,16 @@ type PropsTableProps = {
 };
 
 const PropsTable = ({ data }: PropsTableProps) => {
+  const hasDefaults = data.some((item) => item.default);
   return (
     <Table>
       <TableHeader>
         <TableRow className="bg-muted/50 hover:bg-muted/50">
           <TableHead className="rounded-tl-md">Name</TableHead>
           <TableHead>Type</TableHead>
-          <TableHead className="rounded-tr-md">Default</TableHead>
+          {hasDefaults && (
+            <TableHead className="rounded-tr-md">Default</TableHead>
+          )}
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -59,24 +62,26 @@ const PropsTable = ({ data }: PropsTableProps) => {
                 {item.type}
               </SyntaxHighlighter>
             </TableCell>
-            <TableCell
-              className={cn(index === data.length - 1 && "rounded-br-md")}
-            >
-              {item.default && (
-                <SyntaxHighlighter
-                  language="jsx"
-                  style={ColdDark}
-                  customStyle={{
-                    backgroundColor: "transparent",
-                    margin: 0,
-                    transform: "translateX(-10px)",
-                  }}
-                  wrapLines
-                >
-                  {item.default}
-                </SyntaxHighlighter>
-              )}
-            </TableCell>
+            {hasDefaults && (
+              <TableCell
+                className={cn(index === data.length - 1 && "rounded-br-md")}
+              >
+                {item.default && (
+                  <SyntaxHighlighter
+                    language="jsx"
+                    style={ColdDark}
+                    customStyle={{
+                      backgroundColor: "transparent",
+                      margin: 0,
+                      transform: "translateX(-10px)",
+                    }}
+                    wrapLines
+                  >
+                    {item.default}
+                  </SyntaxHighlighter>
+                )}
+              </TableCell>
+            )}
           </TableRow>
         ))}
       </TableBody>

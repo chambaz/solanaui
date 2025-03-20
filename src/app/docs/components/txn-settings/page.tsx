@@ -1,11 +1,22 @@
 "use client";
 
-import { TxnSettings, useTxnSettings } from "@/components/sol/txn-settings";
+import React from "react";
 
+import { getComponentSource } from "@/actions/get-component-source";
+
+import { TxnSettings, useTxnSettings } from "@/components/sol/txn-settings";
 import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
 
 export default function TokenCardPage() {
   const { settings } = useTxnSettings();
+  const [componentSource, setComponentSource] = React.useState("");
+
+  React.useEffect(() => {
+    getComponentSource("src/components/sol/txn-settings.tsx").then(
+      setComponentSource,
+    );
+  }, []);
+
   const variants: DocsVariant[] = [
     {
       label: "Default",

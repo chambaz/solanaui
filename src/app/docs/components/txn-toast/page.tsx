@@ -12,18 +12,17 @@ import { DocsWrapper } from "@/components/web/docs-wrapper";
 import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
 import { DocsH1, DocsH2 } from "@/components/web/docs-heading";
 import { Code } from "@/components/web/code";
+import { PropsTable } from "@/components/web/props-table";
 
 import { Button } from "@/components/ui/button";
 
-import { PropsTable } from "@/components/web/props-table";
-import { useTxnToast } from "@/hooks/use-txn-toast";
+import { useTxnToast } from "@/components/sol/txn-toast";
 
 export default function UserDropdownPage() {
   const { publicKey, sendTransaction } = useWallet();
   const { connection } = useConnection();
   const { txnToast } = useTxnToast();
   const [componentSource, setComponentSource] = React.useState("");
-  const [hookSource, setHookSource] = React.useState("");
 
   const handleClick = async () => {
     const signingToast = txnToast();
@@ -72,7 +71,6 @@ export default function UserDropdownPage() {
   };
 
   React.useEffect(() => {
-    getComponentSource("src/hooks/use-txn-toast.tsx").then(setHookSource);
     getComponentSource("src/components/sol/txn-toast.tsx").then(
       setComponentSource,
     );
@@ -198,7 +196,7 @@ export function TxnSettingsDemo() {
 </ConnectionProvider>`}
           />
 
-          <h3 className="text-lg">2. Install shadcn/ui sonner component</h3>
+          <h3 className="text-lg">2. Install shadcn/ui toast component</h3>
           <p>
             Use shadcn/ui CLI or manually install the{" "}
             <Link
@@ -206,11 +204,11 @@ export function TxnSettingsDemo() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              shadcn/ui sonner
+              shadcn/ui toast
             </Link>{" "}
             component.
           </p>
-          <Code language="shell" code={"npx shadcn@latest add sonner"} />
+          <Code language="shell" code={"npx shadcn@latest add toast"} />
 
           <h3 className="text-lg">3. Install SolanaUI TxnToast</h3>
           <p>
@@ -219,21 +217,15 @@ export function TxnSettingsDemo() {
           </p>
           <Code reveal={false} code={componentSource} />
 
-          <h3 className="text-lg">4. Install SolanaUI useTxnToast hook</h3>
+          <h3 className="text-lg">5. Add Toaster to your app</h3>
           <p>
-            Copy the code below to <code>src/hooks/use-txn-toast.ts</code>.
-          </p>
-          <Code reveal={false} code={hookSource} />
-
-          <h3 className="text-lg">5. Add TxnToaster to your app</h3>
-          <p>
-            Add the <code>TxnToaster</code> component to your layout file.
+            Add the <code>Toaster</code> component to your layout file.
           </p>
           <Code
             reveal={true}
             code={`import { TxnToaster } from "@/components/sol/txn-toast";
 
-export default function DocsLayout({
+export default function Layout({
   children,
 }: {
   children: React.ReactNode;
@@ -250,11 +242,12 @@ export default function DocsLayout({
 
           <h3 className="text-lg">6. Use TxnToast</h3>
           <p>
-            Import the <code>TxnToast</code> component and use it in your app.
+            Import the <code>useTxnToast</code> hook and use it in your app.
           </p>
           <Code
             reveal={true}
-            code={`const { txnToast } = useTxnToast();
+            code={`import { useTxnToast } from "@/components/sol/txn-toast";
+const { txnToast } = useTxnToast();
 
 // initiate a txn toast
 const signingToast = txnToast();

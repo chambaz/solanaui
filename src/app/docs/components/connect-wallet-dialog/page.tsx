@@ -107,19 +107,29 @@ export function ConnectWalletDialogDemo() {
 </ConnectionProvider>`}
           />
 
-          <h3 className="text-lg">2. Install shadcn/ui dialog component</h3>
+          <h3 className="text-lg">
+            2. Install shadcn/ui dialog and button components
+          </h3>
           <p>
-            Use shadcn/ui CLI or manually install the{" "}
+            Use shadcn/ui CLI or manually install the shadcn/ui{" "}
             <Link
               href="https://ui.shadcn.com/docs/components/dialog"
               target="_blank"
               rel="noopener noreferrer"
             >
-              shadcn/ui dialog
+              dialog
             </Link>{" "}
-            component.
+            and{" "}
+            <Link
+              href="https://ui.shadcn.com/docs/components/button"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              button
+            </Link>{" "}
+            components.
           </p>
-          <Code language="shell" code={"npx shadcn@latest add dialog"} />
+          <Code language="shell" code={"npx shadcn@latest add dialog button"} />
 
           <h3 className="text-lg">3. Install SolanaUI Connect Wallet Dialog</h3>
           <p>

@@ -116,19 +116,32 @@ export function ConnectWalletPopoverDemo() {
 </ConnectionProvider>`}
           />
 
-          <h3 className="text-lg">2. Install shadcn/ui popover component</h3>
+          <h3 className="text-lg">
+            2. Install shadcn/ui popover and button components
+          </h3>
           <p>
             Use shadcn/ui CLI or manually install the{" "}
             <Link
-              href="https://ui.shadcn.com/docs/components/  "
+              href="https://ui.shadcn.com/docs/components/popover"
               target="_blank"
               rel="noopener noreferrer"
             >
-              shadcn/ui popover
+              popover
             </Link>{" "}
-            component.
+            and{" "}
+            <Link
+              href="https://ui.shadcn.com/docs/components/button"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              button
+            </Link>{" "}
+            components.
           </p>
-          <Code language="shell" code={"npx shadcn@latest add popover"} />
+          <Code
+            language="shell"
+            code={"npx shadcn@latest add popover button"}
+          />
 
           <h3 className="text-lg">
             3. Install SolanaUI Connect Wallet Popover

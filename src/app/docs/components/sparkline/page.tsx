@@ -2,11 +2,19 @@
 
 import React from "react";
 
+import Link from "next/link";
+
 import { PublicKey } from "@solana/web3.js";
 
 import { fetchPriceHistoryBirdeye } from "@/lib/prices/birdeye";
+import { getComponentSource } from "@/actions/get-component-source";
+
 import { Sparkline } from "@/components/sol/sparkline";
 import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
+import { DocsWrapper } from "@/components/web/docs-wrapper";
+import { DocsH1, DocsH2 } from "@/components/web/docs-heading";
+import { PropsTable } from "@/components/web/props-table";
+import { Code } from "@/components/web/code";
 
 export default function SparklinePage() {
   const [chartData, setChartData] = React.useState<
@@ -16,6 +24,8 @@ export default function SparklinePage() {
     }[]
   >([]);
   const [isFetching, setIsFetching] = React.useState(false);
+  const [componentSource, setComponentSource] = React.useState<string>("");
+  const [priceChangeSource, setPriceChangeSource] = React.useState<string>("");
 
   const fetchChartData = React.useCallback(async () => {
     if (isFetching) return;
@@ -40,6 +50,15 @@ export default function SparklinePage() {
     }
   }, [fetchChartData, chartData.length, isFetching]);
 
+  React.useEffect(() => {
+    getComponentSource("src/components/sol/sparkline.tsx").then(
+      setComponentSource,
+    );
+    getComponentSource("src/components/sol/price-change.tsx").then(
+      setPriceChangeSource,
+    );
+  }, []);
+
   const variants: DocsVariant[] = [
     {
       label: "Default",
@@ -59,5 +78,73 @@ export function SparklineDemo() {
     },
   ];
 
-  return <DocsTabs variants={variants} />;
+  return (
+    <DocsWrapper>
+      <div id="demo">
+        <DocsH1 href="/docs/components/sparkline#demo">Sparkline</DocsH1>
+        <p className="text-muted-foreground">
+          The Sparkline component is a line chart that displays the price of a
+          token over time.
+        </p>
+        <DocsTabs variants={variants} />
+        <div className="w-full max-w-none" id="installation">
+          <DocsH2 href="/docs/components/connect-wallet-dialog#installation">
+            Installation
+          </DocsH2>
+
+          <h3 className="text-lg">1. Install shadcn/ui chart component</h3>
+          <p>
+            Use shadcn/ui CLI or manually install the{" "}
+            <Link
+              href="https://ui.shadcn.com/docs/components/chart"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              chart
+            </Link>
+          </p>
+          <Code language="shell" code={"npx shadcn@latest add chart"} />
+
+          <h3 className="text-lg">2. Install SolanaUI PriceChange</h3>
+          <p>
+            The Sparkline component requires the <code>PriceChange</code>{" "}
+            component. Copy the code below to{" "}
+            <code>src/components/sol/price-change.tsx</code>.
+          </p>
+          <Code reveal={false} code={priceChangeSource} />
+
+          <h3 className="text-lg">2. Install SolanaUI Sparkline</h3>
+          <p>
+            Copy the code below to <code>src/components/sol/sparkline.tsx</code>
+            .
+          </p>
+          <Code reveal={false} code={componentSource} />
+
+          <h3 className="text-lg">4. Use Sparkline</h3>
+          <p>
+            Import the <code>Sparkline</code> component and use it in your app.
+          </p>
+          <Code reveal={true} code={`<Sparkline data={chartData} />`} />
+
+          <div className="!space-y-0" id="props">
+            <DocsH2 href="/docs/components/sparkline#props" className="!mb-0">
+              Props
+            </DocsH2>
+            <PropsTable
+              data={[
+                {
+                  name: "data",
+                  type: `{
+  timestamp: number;
+  price: number;
+}[]`,
+                  default: `[]`,
+                },
+              ]}
+            />
+          </div>
+        </div>
+      </div>
+    </DocsWrapper>
+  );
 }

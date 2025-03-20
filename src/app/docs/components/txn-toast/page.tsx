@@ -23,6 +23,7 @@ export default function UserDropdownPage() {
   const { connection } = useConnection();
   const { txnToast } = useTxnToast();
   const [componentSource, setComponentSource] = React.useState("");
+  const [hookSource, setHookSource] = React.useState("");
 
   const handleClick = async () => {
     const signingToast = txnToast();
@@ -71,7 +72,10 @@ export default function UserDropdownPage() {
   };
 
   React.useEffect(() => {
-    getComponentSource("src/hooks/use-txn-toast.tsx").then(setComponentSource);
+    getComponentSource("src/hooks/use-txn-toast.tsx").then(setHookSource);
+    getComponentSource("src/components/sol/txn-toast.tsx").then(
+      setComponentSource,
+    );
   }, []);
 
   const variants: DocsVariant[] = [
@@ -184,13 +188,11 @@ export function TxnSettingsDemo() {
           </p>
           <Code
             language="shell"
-            pinnedControls={false}
             code={`npm install @solana/wallet-adapter-react @solana/wallet-adapter-wallets`}
           />
 
           <Code
             language="tsx"
-            pinnedControls={false}
             code={`<ConnectionProvider endpoint={process.env.YOUR_RPC_URL}>
   <App />
 </ConnectionProvider>`}
@@ -208,19 +210,45 @@ export function TxnSettingsDemo() {
             </Link>{" "}
             component.
           </p>
-          <Code
-            language="shell"
-            pinnedControls={false}
-            code={"npx shadcn@latest add sonner"}
-          />
+          <Code language="shell" code={"npx shadcn@latest add sonner"} />
 
           <h3 className="text-lg">3. Install SolanaUI TxnToast</h3>
           <p>
-            Copy the code below to <code>src/hooks/use-txn-toast.ts</code>.
+            Copy the code below to <code>src/components/sol/txn-toast.tsx</code>
+            .
           </p>
           <Code reveal={false} code={componentSource} />
 
-          <h3 className="text-lg">4. Use TxnToast</h3>
+          <h3 className="text-lg">4. Install SolanaUI useTxnToast hook</h3>
+          <p>
+            Copy the code below to <code>src/hooks/use-txn-toast.ts</code>.
+          </p>
+          <Code reveal={false} code={hookSource} />
+
+          <h3 className="text-lg">5. Add TxnToaster to your app</h3>
+          <p>
+            Add the <code>TxnToaster</code> component to your layout file.
+          </p>
+          <Code
+            reveal={true}
+            code={`import { TxnToaster } from "@/components/sol/txn-toast";
+
+export default function DocsLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <div>
+      {children}
+      <TxnToaster />
+    </div>
+  )
+}
+              `}
+          />
+
+          <h3 className="text-lg">6. Use TxnToast</h3>
           <p>
             Import the <code>TxnToast</code> component and use it in your app.
           </p>

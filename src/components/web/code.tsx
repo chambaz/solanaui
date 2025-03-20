@@ -25,14 +25,14 @@ type CodeProps = {
   code: string;
   language?: "tsx" | "shell";
   reveal?: boolean;
-  pinnedControls?: boolean;
+  className?: string;
 };
 
 const Code = ({
   code,
   language = "tsx",
   reveal = true,
-  pinnedControls = true,
+  className,
 }: CodeProps) => {
   const [expanded, setExpanded] = React.useState(false);
   const [copied, setCopied] = React.useState(false);
@@ -46,7 +46,7 @@ const Code = ({
     <div
       className={cn(
         "relative",
-        !pinnedControls && "pt-2",
+        className,
         !reveal && "h-24 overflow-hidden",
         !reveal && expanded && "h-auto pb-16",
       )}
@@ -58,10 +58,7 @@ const Code = ({
         expanded={expanded}
         handleCopy={handleCopy}
         setExpanded={setExpanded}
-        className={cn(
-          "absolute right-4 top-4 z-30",
-          !pinnedControls && "-top-7 right-0",
-        )}
+        className={cn("absolute right-2 top-4 z-30", reveal && "top-2")}
       />
       <div className="relative">
         {!reveal && (

@@ -11,18 +11,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-type RpcProvider = {
-  name: string;
-  url: string;
-};
-
-type TxnSettingsProps = {
-  rpcProviders: RpcProvider[];
-};
-
 type TxnSettingsType = {
-  priorityFee: string;
-  rpcProvider: string;
+  priority: string;
+  priorityFeeCap: "dynamic" | number;
 };
 
 type TxnSettingsContextType = {
@@ -36,13 +27,13 @@ const TxnSettingsContext = React.createContext<
   TxnSettingsContextType | undefined
 >(undefined);
 
-export const TxnSettingsProvider: React.FC<{
+const TxnSettingsProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const [settings, setSettings] = React.useState<TxnSettingsType>({
-    priorityFee: "normal",
-    rpcProvider: process.env.NEXT_PUBLIC_RPC_URL!,
+    priority: "normal",
+    priorityFeeCap: "dynamic",
   });
 
   const updateSettings = (newSettings: Partial<TxnSettingsType>) => {
@@ -66,25 +57,18 @@ const useTxnSettings = () => {
   return context;
 };
 
-const TxnSettings = ({ rpcProviders }: TxnSettingsProps) => {
+type TxnSettingsProps = {
+  trigger?: React.ReactNode;
+};
+
+const TxnSettings = ({ trigger }: TxnSettingsProps) => {
   const { settings, updateSettings, isOpen, setIsOpen } = useTxnSettings();
   const [tempSettings, setTempSettings] =
     React.useState<TxnSettingsType>(settings);
-  const customRpcInputRef = React.useRef<HTMLInputElement>(null);
-
-  const isCustomRpc = !rpcProviders.some(
-    (provider) => provider.url === settings.rpcProvider,
-  );
+  const [manualFee, setManualFee] = React.useState("");
 
   const handleSave = () => {
-    const customRpcValue = customRpcInputRef.current?.value || "";
-    updateSettings({
-      ...tempSettings,
-      rpcProvider:
-        tempSettings.rpcProvider === "custom"
-          ? customRpcValue
-          : tempSettings.rpcProvider,
-    });
+    updateSettings(tempSettings);
     setIsOpen(false);
   };
 
@@ -96,9 +80,11 @@ const TxnSettings = ({ rpcProviders }: TxnSettingsProps) => {
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
-        <Button variant="outline" size="icon">
-          <IconSettings size={16} />
-        </Button>
+        {trigger || (
+          <Button variant="outline" size="icon">
+            <IconSettings size={16} />
+          </Button>
+        )}
       </PopoverTrigger>
       <PopoverContent side="bottom" className="p-6">
         <form
@@ -118,9 +104,9 @@ const TxnSettings = ({ rpcProviders }: TxnSettingsProps) => {
             <ToggleGroup
               type="single"
               className="justify-start"
-              value={tempSettings.priorityFee}
+              value={tempSettings.priority}
               onValueChange={(value) =>
-                setTempSettings((prev) => ({ ...prev, priorityFee: value }))
+                setTempSettings((prev) => ({ ...prev, priority: value }))
               }
             >
               <ToggleGroupItem value="normal">Normal</ToggleGroupItem>
@@ -130,38 +116,50 @@ const TxnSettings = ({ rpcProviders }: TxnSettingsProps) => {
           </div>
           <div className="space-y-4">
             <div className="space-y-2">
-              <h4 className="font-medium">RPC Provider</h4>
+              <h4 className="font-medium">Priority fee cap</h4>
               <p className="text-sm text-muted-foreground">
-                Set the RPC provider for your transactions.
+                Set the priority fee cap for your transactions.
               </p>
             </div>
             <ToggleGroup
               type="single"
               className="justify-start"
-              value={tempSettings.rpcProvider}
+              value={
+                tempSettings.priorityFeeCap === "dynamic" ? "dynamic" : "manual"
+              }
               onValueChange={(value) => {
-                customRpcInputRef.current!.value = "";
-                setTempSettings((prev) => ({ ...prev, rpcProvider: value }));
+                if (value === "dynamic") {
+                  setTempSettings((prev) => ({
+                    ...prev,
+                    priorityFeeCap: "dynamic",
+                  }));
+                } else if (value === "manual") {
+                  setTempSettings((prev) => ({ ...prev, priorityFeeCap: 0 }));
+                }
               }}
             >
-              {rpcProviders.map((provider, index) => (
-                <ToggleGroupItem key={index} value={provider.url}>
-                  {provider.name}
-                </ToggleGroupItem>
-              ))}
+              <ToggleGroupItem value="manual">Manual</ToggleGroupItem>
+              <ToggleGroupItem value="dynamic">Dynamic</ToggleGroupItem>
             </ToggleGroup>
-            <Input
-              ref={customRpcInputRef}
-              type="url"
-              defaultValue={isCustomRpc ? settings.rpcProvider : ""}
-              placeholder="Custom RPC"
-              onChange={(e) => {
-                setTempSettings((prev) => ({
-                  ...prev,
-                  rpcProvider: e.target.value,
-                }));
-              }}
-            />
+            {tempSettings.priorityFeeCap !== "dynamic" && (
+              <Input
+                type="number"
+                placeholder="Enter priority fee cap"
+                value={manualFee}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setManualFee(value);
+                  const numValue = parseFloat(value);
+                  if (!isNaN(numValue)) {
+                    setTempSettings((prev) => ({
+                      ...prev,
+                      priorityFeeCap: numValue,
+                    }));
+                  }
+                }}
+                className="mt-2"
+              />
+            )}
           </div>
           <div className="flex flex-col gap-2">
             <Button type="submit">Save</Button>
@@ -175,5 +173,5 @@ const TxnSettings = ({ rpcProviders }: TxnSettingsProps) => {
   );
 };
 
-export { TxnSettings, useTxnSettings };
+export { TxnSettingsProvider, TxnSettings, useTxnSettings };
 export type { TxnSettingsType };

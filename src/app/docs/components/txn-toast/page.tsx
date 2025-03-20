@@ -159,7 +159,7 @@ export function TxnSettingsDemo() {
         </p>
         <DocsTabs variants={variants} />
         <div className="w-full max-w-none" id="installation">
-          <DocsH2 href="/docs/components/txn-list#installation">
+          <DocsH2 href="/docs/components/txn-toast#installation">
             Installation
           </DocsH2>
 
@@ -217,10 +217,7 @@ export function TxnSettingsDemo() {
           </p>
           <Code reveal={false} code={componentSource} />
 
-          <h3 className="text-lg">5. Add Toaster to your app</h3>
-          <p>
-            Add the <code>Toaster</code> component to your layout file.
-          </p>
+          <h3 className="mb-4 text-lg">5. Add Toaster to your app</h3>
           <Code
             reveal={true}
             code={`import { TxnToaster } from "@/components/sol/txn-toast";

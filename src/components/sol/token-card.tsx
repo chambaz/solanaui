@@ -54,11 +54,7 @@ const TokenCard = ({ asset, chartData = [], size = "md" }: TokenCardProps) => {
             size === "md" && "text-lg",
           )}
         >
-          <TokenIcon
-            token={asset.mint}
-            image={asset.image}
-            size={size === "sm" ? 32 : 48}
-          />
+          <TokenIcon asset={asset} size={size === "sm" ? 32 : 48} />
           <div className="flex flex-col">
             {asset.symbol}
             <Link

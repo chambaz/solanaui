@@ -8,43 +8,49 @@ import { PriceChart, TimeScale } from "@/components/sol/price-chart";
 import { TokenCard } from "@/components/sol/token-card";
 import { TokenList } from "@/components/sol/token-list";
 import { TxnList } from "@/components/sol/txn-list";
-import { SolAsset } from "@/lib/assets";
+import { SolAsset } from "@/lib/types";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 type DateRangeKey = "1D" | "1W" | "1M" | "1Y";
 
 type DemoDashboardProps = {
-  chartData: {
+  mainChartData: {
     timestamp: number;
     price: number;
   }[];
+  chartData: {
+    timestamp: number;
+    price: number;
+  }[][];
   timestamps: Record<
     DateRangeKey,
     { start: number; end: number; interval: string; timeScale: TimeScale }
   >;
   dateRange: DateRangeKey;
   setDateRange: (dateRange: DateRangeKey) => void;
+  mainAsset: SolAsset | null;
   assets: SolAsset[];
   transactions: VersionedTransactionResponse[];
 };
 
 const DemoDashboard = ({
+  mainChartData,
   chartData,
   timestamps,
   dateRange,
   setDateRange,
+  mainAsset,
   assets,
   transactions,
 }: DemoDashboardProps) => {
   return (
     <>
-      <div className="mb-8 flex w-full items-center gap-8">
+      <div className="mb-8 flex w-full gap-8">
         <div className="w-1/2">
           <PriceChart
-            mint={assets[0]?.mint}
-            token="SOL"
-            data={chartData}
+            asset={mainAsset ?? null}
+            data={mainChartData}
             timeScale={timestamps[dateRange].timeScale}
             dateRangeOptions={Object.keys(timestamps)}
             defaultDateRange={"1M"}
@@ -54,9 +60,22 @@ const DemoDashboard = ({
           />
         </div>
         <div className="grid w-1/2 grid-cols-2 gap-8">
-          {assets.slice(1).map((asset, index) => (
-            <TokenCard asset={asset} size="sm" key={index} />
-          ))}
+          {assets.length === 0 ? (
+            <>
+              {[...new Array(4)].map((_, index) => (
+                <TokenCard asset={null} size="sm" key={index} />
+              ))}
+            </>
+          ) : (
+            assets.map((asset, index) => (
+              <TokenCard
+                asset={asset}
+                chartData={chartData[index]}
+                size="sm"
+                key={index}
+              />
+            ))
+          )}
         </div>
       </div>
       <div className="mt-4 flex w-full flex-col items-center">

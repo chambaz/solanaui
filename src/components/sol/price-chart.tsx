@@ -1,6 +1,5 @@
 import React from "react";
 
-import { PublicKey } from "@solana/web3.js";
 import { Area, AreaChart, XAxis } from "recharts";
 import { format } from "date-fns";
 
@@ -22,12 +21,12 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import { TokenIcon } from "@/components/sol/token-icon";
+import { SolAsset } from "@/lib/types";
 
 export type TimeScale = "time" | "day" | "date" | "month";
 
 export type PriceChartProps = {
-  mint: PublicKey;
-  token: string;
+  asset: SolAsset | null;
   data: {
     timestamp: number;
     price: number;
@@ -53,8 +52,7 @@ const formatTimestamp = (timestamp: number, timeScale: TimeScale) => {
 };
 
 const PriceChart = ({
-  mint,
-  token,
+  asset,
   title,
   description,
   timeScale = "time",
@@ -89,23 +87,24 @@ const PriceChart = ({
   }, [data, timeScale]);
 
   const chartConfig = React.useMemo(() => {
-    if (!chartData.length) return null;
+    if (!chartData.length || !asset) return null;
 
     return {
       desktop: {
-        label: token,
+        label: asset.symbol,
         color: chartColor,
       },
       mobile: {
-        label: token,
+        label: asset.symbol,
         color: chartColor,
       },
     } satisfies ChartConfig;
-  }, [chartData, token, chartColor]);
+  }, [chartData, asset, chartColor]);
 
   const chartTitle = React.useMemo(() => {
-    return token ? `${token} Price` : title;
-  }, [token, title]);
+    if (!asset) return title || "Price Chart";
+    return asset.symbol ? `${asset.symbol} Price` : title;
+  }, [asset, title]);
 
   React.useEffect(() => {
     if (prevDateRange.current !== dateRange) {
@@ -139,7 +138,7 @@ const PriceChart = ({
     <Card className="w-full">
       <CardHeader className="relative gap-1.5">
         <CardTitle className="flex items-center gap-2 text-xl">
-          <TokenIcon token={mint} /> {chartTitle}
+          <TokenIcon asset={asset} /> {chartTitle}
         </CardTitle>
         {description && <CardDescription>{description}</CardDescription>}
         <ToggleGroup

@@ -2,22 +2,14 @@
 
 import React from "react";
 
-import { PublicKey } from "@solana/web3.js";
-
-import { Avatar } from "./avatar";
+import { SolAsset } from "@/lib/types";
 
 type IconProps = {
-  token: PublicKey;
-  image?: string;
+  asset: SolAsset | null;
   size?: number;
-  alt?: string;
 };
 
-const TokenIcon = ({ token, image, size = 24, alt }: IconProps) => {
-  if (!image) {
-    return <Avatar address={token} size={size} />;
-  }
-
+const TokenIcon = ({ asset, size = 24 }: IconProps) => {
   return (
     <div
       className="relative rounded-full border border-border bg-background p-0"
@@ -28,14 +20,14 @@ const TokenIcon = ({ token, image, size = 24, alt }: IconProps) => {
     >
       <img
         src="/token-icons/placeholder.jpg"
-        alt={alt ?? token.toBase58()}
+        alt={asset?.symbol ?? asset?.mint.toBase58() ?? ""}
         width={size}
         height={size}
         className="absolute inset-0 rounded-full"
       />
       <img
-        src={image}
-        alt={alt ?? token.toBase58()}
+        src={asset?.image ?? ""}
+        alt={asset?.symbol ?? asset?.mint.toBase58() ?? ""}
         width={size}
         height={size}
         className="absolute inset-0 rounded-full"

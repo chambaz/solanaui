@@ -12,7 +12,7 @@ type AvatarProps = {
 };
 
 const Avatar = ({ address, size = 48, className }: AvatarProps) => {
-  const pubkeyStr = address.toBase58();
+  const pubkeyStr = address ? address.toBase58() : "";
 
   const identicon = React.useMemo(() => {
     if (!pubkeyStr) return "";

@@ -56,13 +56,7 @@ export default function TokenIconPage() {
       preview: (
         <div className="flex flex-row gap-4">
           {assets.map((asset, index) => (
-            <TokenIcon
-              key={index}
-              token={asset.mint}
-              image={asset.image}
-              size={48}
-              alt={asset.symbol}
-            />
+            <TokenIcon key={index} asset={asset} size={48} />
           ))}
         </div>
       ),
@@ -106,10 +100,8 @@ export function TokenIconDemo() {
     {assets.map((asset, index) => (
       <TokenIcon
         key={index}
-        token={asset.mint}
-        image={asset.image}
+        asset={asset}
         size={48}
-        alt={asset.symbol}
       />
     ))}
   )

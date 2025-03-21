@@ -9,7 +9,8 @@ import {
 } from "@solana/web3.js";
 
 import { cn } from "@/lib/utils";
-import { SolAsset } from "@/lib/assets";
+import { WSOL_MINT } from "@/lib/constants";
+import { SolAsset } from "@/lib/types";
 import { fetchAssets } from "@/lib/assets/birdeye";
 import { fetchPriceHistoryBirdeye } from "@/lib/prices/birdeye";
 
@@ -27,7 +28,6 @@ enum DemoState {
 }
 
 const TOKENS = {
-  SOL: new PublicKey("So11111111111111111111111111111111111111112"),
   USDC: new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"),
   WIF: new PublicKey("EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm"),
   BONK: new PublicKey("DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263"),
@@ -39,15 +39,19 @@ type DemoWrapperProps = {
 };
 
 const DemoWrapper = ({ view = "dashboard" }: DemoWrapperProps) => {
-  const { connected, publicKey } = useWallet();
+  const { publicKey } = useWallet();
   const [demoState, setDemoState] = React.useState<DemoState>(
     view === "swap" ? DemoState.SWAP : DemoState.DASHBOARD,
   );
   const [dateRange, setDateRange] = React.useState<DateRangeKey>("1M");
   const prevDateRange = React.useRef(dateRange);
-  const [chartData, setChartData] = React.useState<
+  const [mainChartData, setMainChartData] = React.useState<
     { timestamp: number; price: number }[]
   >([]);
+  const [chartData, setChartData] = React.useState<
+    { timestamp: number; price: number }[][]
+  >([]);
+  const [mainAsset, setMainAsset] = React.useState<SolAsset | null>(null);
   const [assets, setAssets] = React.useState<SolAsset[]>([]);
   const [transactions, setTransactions] = React.useState<
     VersionedTransactionResponse[]
@@ -87,24 +91,22 @@ const DemoWrapper = ({ view = "dashboard" }: DemoWrapperProps) => {
   );
 
   const fetchChartData = React.useCallback(
-    async (start: number, end: number, interval: string) => {
-      const res = await fetchPriceHistoryBirdeye(
-        TOKENS.SOL,
-        start,
-        end,
-        interval,
-      );
+    async (token: PublicKey, start: number, end: number, interval: string) => {
+      const res = await fetchPriceHistoryBirdeye(token, start, end, interval);
       return res;
     },
     [],
   );
 
   const fetchData = React.useCallback(async () => {
+    const tokens = Object.values(TOKENS);
+    tokens.unshift(WSOL_MINT);
     const fetchedAssets = await fetchAssets({
-      addresses: Object.values(TOKENS),
+      addresses: tokens,
       owner: publicKey ?? undefined,
     });
-    setAssets(fetchedAssets);
+    setMainAsset(fetchedAssets[0]);
+    setAssets(fetchedAssets.slice(1));
   }, [publicKey]);
 
   const fetchTransactions = React.useCallback(async () => {
@@ -123,11 +125,12 @@ const DemoWrapper = ({ view = "dashboard" }: DemoWrapperProps) => {
   React.useEffect(() => {
     if (prevDateRange.current !== dateRange) {
       fetchChartData(
+        WSOL_MINT,
         timestamps[dateRange].start,
         timestamps[dateRange].end,
         timestamps[dateRange].interval,
       ).then((data) => {
-        setChartData(data ?? []);
+        setMainChartData(data ?? []);
       });
       prevDateRange.current = dateRange;
     }
@@ -135,11 +138,12 @@ const DemoWrapper = ({ view = "dashboard" }: DemoWrapperProps) => {
 
   React.useEffect(() => {
     fetchChartData(
+      WSOL_MINT,
       timestamps[dateRange].start,
       timestamps[dateRange].end,
       timestamps[dateRange].interval,
     ).then((data) => {
-      setChartData(data ?? []);
+      setMainChartData(data ?? []);
     });
   }, [dateRange, fetchChartData, timestamps]);
 
@@ -152,6 +156,24 @@ const DemoWrapper = ({ view = "dashboard" }: DemoWrapperProps) => {
     if (transactions.length) return;
     fetchTransactions();
   }, [fetchTransactions, transactions]);
+
+  React.useEffect(() => {
+    // Fetch chart data for each token in TOKENS
+    const tokenChartData = Object.values(TOKENS).map((tokenMint) =>
+      fetchChartData(
+        tokenMint,
+        timestamps["1W"].start,
+        timestamps["1W"].end,
+        timestamps["1W"].interval,
+      ),
+    );
+
+    Promise.all(tokenChartData).then((data) => {
+      // Handle null values by replacing them with empty arrays
+      const safeData = data.map((d) => d ?? []);
+      setChartData(safeData);
+    });
+  }, [fetchChartData, timestamps]);
 
   React.useEffect(() => {
     if (view) {
@@ -190,12 +212,12 @@ const DemoWrapper = ({ view = "dashboard" }: DemoWrapperProps) => {
             </li>
           </ul>
         </nav>
-        {connected && publicKey && (
-          <UserDropdown address={publicKey} assets={assets} />
-        )}
+        <UserDropdown address={publicKey} assets={assets} />
       </header>
       {demoState === DemoState.DASHBOARD && (
         <DemoDashboard
+          mainAsset={mainAsset}
+          mainChartData={mainChartData}
           chartData={chartData}
           timestamps={timestamps}
           dateRange={dateRange}

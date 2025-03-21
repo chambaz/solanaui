@@ -118,7 +118,7 @@ const UserDropdown = ({
                   key={asset.mint.toBase58()}
                   className="flex items-center gap-2"
                 >
-                  <TokenIcon token={asset.mint} image={asset.image} />
+                  <TokenIcon asset={asset} />
                   <span>{asset.symbol}</span>
                   <span className="ml-auto flex flex-col text-right">
                     {asset.userTokenAccount?.amount ? (

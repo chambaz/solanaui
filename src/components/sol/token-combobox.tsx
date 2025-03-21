@@ -108,10 +108,7 @@ const TokenCombobox = ({
           >
             {selectedAsset ? (
               <>
-                <TokenIcon
-                  token={selectedAsset.mint}
-                  image={selectedAsset.image}
-                />
+                <TokenIcon asset={selectedAsset} />
                 {selectedAsset.symbol}
               </>
             ) : (
@@ -146,7 +143,7 @@ const TokenCombobox = ({
                   }}
                   className="flex items-center gap-2"
                 >
-                  <TokenIcon token={asset.mint} image={asset.image} />
+                  <TokenIcon asset={asset} />
                   {asset.symbol}
 
                   <span className="ml-auto flex flex-col text-right">

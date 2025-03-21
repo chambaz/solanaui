@@ -72,7 +72,7 @@ const TokenList = ({
             >
               <TableCell>
                 <div className="flex items-center gap-2 font-medium">
-                  <TokenIcon token={asset.mint} image={asset.image} />
+                  <TokenIcon asset={asset} />
                   {asset.symbol}
                 </div>
               </TableCell>

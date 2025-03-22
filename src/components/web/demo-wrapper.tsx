@@ -15,7 +15,7 @@ import { fetchAssets } from "@/lib/assets/birdeye";
 import { fetchPriceHistoryBirdeye } from "@/lib/prices/birdeye";
 
 import { DemoDashboard } from "@/components/web/demo-dashboard";
-// import { DemoSwap } from "@/components/web/demo-swap";
+import { DemoSwap } from "@/components/web/demo-swap";
 import { UserDropdown } from "@/components/sol/user-dropdown";
 import { TimeScale } from "@/components/sol/price-chart";
 import { Button } from "@/components/ui/button";
@@ -226,7 +226,7 @@ const DemoWrapper = ({ view = "dashboard" }: DemoWrapperProps) => {
           transactions={transactions}
         />
       )}
-      {/* {demoState === DemoState.SWAP && <DemoSwap assets={assets} />} */}
+      {demoState === DemoState.SWAP && <DemoSwap assets={assets} />}
     </div>
   );
 };

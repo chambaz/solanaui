@@ -13,8 +13,10 @@ import { Button } from "@/components/ui/button";
 
 type TokenInputProps = {
   assets: SolAsset[];
+  disabled?: boolean;
   showWalletBalance?: boolean;
   showQuickAmountButtons?: boolean;
+  amount?: number;
   onTokenSelect?: (token: SolAsset) => void;
   onAmountChange?: (amount: number) => void;
   onSearch?: ({
@@ -30,15 +32,17 @@ export const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
   (
     {
       assets,
+      disabled = false,
       showWalletBalance = true,
       showQuickAmountButtons = true,
+      amount: initAmount = 0,
       onTokenSelect,
       onAmountChange,
       onSearch,
     },
     amountInputRef: React.ForwardedRef<HTMLInputElement>,
   ) => {
-    const [amount, setAmount] = React.useState<string>("");
+    const [amount, setAmount] = React.useState<string>(initAmount.toString());
     const [maxAmount, setMaxAmount] = React.useState<number>(0);
     const [selectedToken, setSelectedToken] = React.useState<SolAsset>();
 
@@ -87,6 +91,10 @@ export const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
       },
       [maxAmount, setAmount, selectedToken, onAmountChange],
     );
+
+    React.useEffect(() => {
+      setAmount(initAmount.toString());
+    }, [initAmount]);
 
     return (
       <div className="relative w-full space-y-4">
@@ -153,7 +161,7 @@ export const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
             className="h-12 text-right"
             inputMode="numeric"
             value={amount ?? undefined}
-            disabled={!selectedToken || !maxAmount}
+            disabled={disabled || !selectedToken}
             onChange={(e) => handleInputChange(e.target.value)}
           />
         </div>

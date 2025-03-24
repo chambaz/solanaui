@@ -7,12 +7,14 @@ import { PrismLight as SyntaxHighlighter } from "react-syntax-highlighter";
 import tsx from "react-syntax-highlighter/dist/esm/languages/prism/tsx";
 import shell from "react-syntax-highlighter/dist/esm/languages/prism/shell-session";
 import ColdDark from "react-syntax-highlighter/dist/esm/styles/prism/coldark-dark";
+import ColdLight from "react-syntax-highlighter/dist/esm/styles/prism/coldark-cold";
 import {
   IconCheck,
   IconCopy,
   IconMaximize,
   IconMinimize,
 } from "@tabler/icons-react";
+import { useTheme } from "next-themes";
 
 import { cn } from "@/lib/utils";
 
@@ -34,6 +36,7 @@ const Code = ({
   reveal = true,
   className,
 }: CodeProps) => {
+  const { theme } = useTheme();
   const [expanded, setExpanded] = React.useState(false);
   const [copied, setCopied] = React.useState(false);
 
@@ -69,7 +72,11 @@ const Code = ({
             )}
           ></div>
         )}
-        <SyntaxHighlighter language={language} style={ColdDark} wrapLines>
+        <SyntaxHighlighter
+          language={language}
+          style={theme === "dark" ? ColdDark : ColdLight}
+          wrapLines
+        >
           {code}
         </SyntaxHighlighter>
       </div>

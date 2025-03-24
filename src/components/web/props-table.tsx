@@ -1,7 +1,11 @@
+"use client";
+
 import { PrismLight as SyntaxHighlighter } from "react-syntax-highlighter";
 import jsx from "react-syntax-highlighter/dist/esm/languages/prism/jsx";
 import ts from "react-syntax-highlighter/dist/esm/languages/prism/typescript";
 import ColdDark from "react-syntax-highlighter/dist/esm/styles/prism/coldark-dark";
+import ColdLight from "react-syntax-highlighter/dist/esm/styles/prism/coldark-cold";
+import { useTheme } from "next-themes";
 
 import {
   Table,
@@ -25,6 +29,7 @@ type PropsTableProps = {
 };
 
 const PropsTable = ({ data }: PropsTableProps) => {
+  const { theme } = useTheme();
   const hasDefaults = data.some((item) => item.default);
   return (
     <Table>
@@ -51,7 +56,7 @@ const PropsTable = ({ data }: PropsTableProps) => {
             <TableCell>
               <SyntaxHighlighter
                 language="ts"
-                style={ColdDark}
+                style={theme === "dark" ? ColdDark : ColdLight}
                 customStyle={{
                   backgroundColor: "transparent",
                   margin: 0,
@@ -69,7 +74,7 @@ const PropsTable = ({ data }: PropsTableProps) => {
                 {item.default && (
                   <SyntaxHighlighter
                     language="jsx"
-                    style={ColdDark}
+                    style={theme === "dark" ? ColdDark : ColdLight}
                     customStyle={{
                       backgroundColor: "transparent",
                       margin: 0,

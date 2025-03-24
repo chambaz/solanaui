@@ -5,6 +5,8 @@ import React from "react";
 import { PrismLight as SyntaxHighlighter } from "react-syntax-highlighter";
 import tsx from "react-syntax-highlighter/dist/esm/languages/prism/tsx";
 import ColdDark from "react-syntax-highlighter/dist/esm/styles/prism/coldark-dark";
+import ColdLight from "react-syntax-highlighter/dist/esm/styles/prism/coldark-cold";
+import { useTheme } from "next-themes";
 
 import {
   Select,
@@ -31,6 +33,7 @@ type DocsTabsProps = {
 SyntaxHighlighter.registerLanguage("tsx", tsx);
 
 const DocsTabs = ({ variants }: DocsTabsProps) => {
+  const { theme } = useTheme();
   const [activeVariantIndex, setActiveVariantIndex] = React.useState<number>(0);
   const [activeVariant, setActiveVariant] = React.useState<DocsVariant>(
     variants[activeVariantIndex],
@@ -78,16 +81,20 @@ const DocsTabs = ({ variants }: DocsTabsProps) => {
                   </Select>
                 </div>
               )}
-              <div className="relative flex w-full items-center justify-center pb-32 pt-24">
+              <div className="relative flex w-full items-center justify-center bg-background pb-32 pt-24">
                 {activeVariant.preview && activeVariant.preview}
               </div>
             </div>
           </div>
         </TabsContent>
         <TabsContent value="code">
-          <div className="rounded-lg bg-[#131B26] text-sm">
+          <div className="rounded-lg bg-background text-sm">
             {activeVariant.code && (
-              <SyntaxHighlighter language="tsx" style={ColdDark} wrapLines>
+              <SyntaxHighlighter
+                language="tsx"
+                style={theme === "dark" ? ColdDark : ColdLight}
+                wrapLines
+              >
                 {activeVariant.code}
               </SyntaxHighlighter>
             )}

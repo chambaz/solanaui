@@ -4,16 +4,22 @@ import { IconSettings } from "@tabler/icons-react";
 
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 type TxnSettingsType = {
   priority: string;
   priorityFeeCap: "dynamic" | number;
+  slippageMode: "dynamic" | "fixed";
+  slippageValue: number;
 };
 
 type TxnSettingsContextType = {
@@ -34,6 +40,8 @@ const TxnSettingsProvider: React.FC<{
   const [settings, setSettings] = React.useState<TxnSettingsType>({
     priority: "normal",
     priorityFeeCap: "dynamic",
+    slippageMode: "dynamic",
+    slippageValue: 1.0,
   });
 
   const updateSettings = (newSettings: Partial<TxnSettingsType>) => {
@@ -66,6 +74,13 @@ const TxnSettings = ({ trigger }: TxnSettingsProps) => {
   const [tempSettings, setTempSettings] =
     React.useState<TxnSettingsType>(settings);
   const [manualFee, setManualFee] = React.useState("");
+  const [manualSlippage, setManualSlippage] = React.useState("");
+
+  React.useEffect(() => {
+    if (isOpen) {
+      setTempSettings(settings);
+    }
+  }, [isOpen, settings]);
 
   const handleSave = () => {
     updateSettings(tempSettings);
@@ -77,18 +92,34 @@ const TxnSettings = ({ trigger }: TxnSettingsProps) => {
     setIsOpen(false);
   };
 
+  const handleSlippagePresetChange = (value: string) => {
+    const slippageMap: Record<string, number> = {
+      low: 0.5,
+      normal: 1.0,
+      high: 1.5,
+    };
+
+    setTempSettings((prev) => ({
+      ...prev,
+      slippageValue: slippageMap[value] || prev.slippageValue,
+    }));
+  };
+
   return (
-    <Popover open={isOpen} onOpenChange={setIsOpen}>
-      <PopoverTrigger asChild>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
         {trigger || (
           <Button variant="outline" size="icon">
             <IconSettings size={16} />
           </Button>
         )}
-      </PopoverTrigger>
-      <PopoverContent side="bottom" className="p-6">
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Transaction Settings</DialogTitle>
+        </DialogHeader>
         <form
-          className="space-y-10"
+          className="space-y-10 py-4"
           onSubmit={(e) => {
             e.preventDefault();
             handleSave();
@@ -161,15 +192,113 @@ const TxnSettings = ({ trigger }: TxnSettingsProps) => {
               />
             )}
           </div>
-          <div className="flex flex-col gap-2">
-            <Button type="submit">Save</Button>
-            <Button variant="link" onClick={handleCancel}>
-              Cancel
-            </Button>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <h4 className="font-medium">Slippage mode</h4>
+              <p className="text-sm text-muted-foreground">
+                Set a fixed slippage or let us calculate optimal slippage for
+                you.
+              </p>
+            </div>
+            <ToggleGroup
+              type="single"
+              className="justify-start"
+              value={tempSettings.slippageMode}
+              onValueChange={(value) => {
+                if (value) {
+                  setTempSettings((prev) => ({
+                    ...prev,
+                    slippageMode: value as "dynamic" | "fixed",
+                  }));
+                }
+              }}
+            >
+              <ToggleGroupItem value="dynamic">Dynamic</ToggleGroupItem>
+              <ToggleGroupItem value="fixed">Fixed</ToggleGroupItem>
+            </ToggleGroup>
+
+            {tempSettings.slippageMode === "fixed" && (
+              <div className="mt-4 space-y-4">
+                <ToggleGroup
+                  type="single"
+                  className="justify-start"
+                  value={
+                    tempSettings.slippageValue === 0.5
+                      ? "low"
+                      : tempSettings.slippageValue === 1.0
+                        ? "normal"
+                        : tempSettings.slippageValue === 1.5
+                          ? "high"
+                          : "custom"
+                  }
+                  onValueChange={(value) => {
+                    if (value && value !== "custom") {
+                      handleSlippagePresetChange(value);
+                    }
+                  }}
+                >
+                  <ToggleGroupItem value="low" className="h-auto w-full py-1">
+                    <div className="flex w-full flex-col items-center">
+                      <span>Low</span>
+                      <span className="text-sm">0.5 %</span>
+                    </div>
+                  </ToggleGroupItem>
+                  <ToggleGroupItem
+                    value="normal"
+                    className="h-auto w-full py-1"
+                  >
+                    <div className="flex w-full flex-col items-center">
+                      <span>Normal</span>
+                      <span className="text-sm">1 %</span>
+                    </div>
+                  </ToggleGroupItem>
+                  <ToggleGroupItem value="high" className="h-auto w-full py-1">
+                    <div className="flex w-full flex-col items-center">
+                      <span>High</span>
+                      <span className="text-sm">1.5 %</span>
+                    </div>
+                  </ToggleGroupItem>
+                </ToggleGroup>
+
+                <div>
+                  <p className="mb-2 text-sm">Or set manually</p>
+                  <div className="relative">
+                    <Input
+                      type="number"
+                      placeholder="0"
+                      value={manualSlippage}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        setManualSlippage(value);
+                        const numValue = parseFloat(value);
+                        if (!isNaN(numValue)) {
+                          setTempSettings((prev) => ({
+                            ...prev,
+                            slippageValue: numValue,
+                          }));
+                        }
+                      }}
+                      className="pr-8"
+                    />
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 transform">
+                      %
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="outline" onClick={handleCancel}>
+                Cancel
+              </Button>
+            </DialogClose>
+            <Button type="submit">Save</Button>
+          </DialogFooter>
         </form>
-      </PopoverContent>
-    </Popover>
+      </DialogContent>
+    </Dialog>
   );
 };
 

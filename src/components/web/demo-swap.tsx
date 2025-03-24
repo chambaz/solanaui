@@ -4,15 +4,16 @@ import React from "react";
 
 import { useWallet, useConnection } from "@solana/wallet-adapter-react";
 import { VersionedTransaction } from "@solana/web3.js";
-import { IconArrowUp, IconArrowDown } from "@tabler/icons-react";
+import { IconArrowUp, IconArrowDown, IconSettings } from "@tabler/icons-react";
 
 import { SolAsset } from "@/lib/types";
-import { useTxnToast } from "@/components/sol/txn-toast";
+import { searchAssets } from "@/lib/assets/birdeye";
 
+import { useTxnToast } from "@/components/sol/txn-toast";
 import { TokenInput } from "@/components/sol/token-input";
+import { TxnSettings, useTxnSettings } from "@/components/sol/txn-settings";
 
 import { Button } from "@/components/ui/button";
-import { searchAssets } from "@/lib/assets/birdeye";
 
 type DemoSwapProps = {
   assets: SolAsset[];
@@ -29,6 +30,8 @@ const DemoSwap = ({ assets }: DemoSwapProps) => {
   const { publicKey, sendTransaction, wallet } = useWallet();
   const { connection } = useConnection();
   const { txnToast } = useTxnToast();
+  const { settings } = useTxnSettings();
+  const { slippageMode, slippageValue } = settings;
 
   const handleSwap = React.useCallback(async () => {
     if (isTransacting) {
@@ -137,9 +140,11 @@ const DemoSwap = ({ assets }: DemoSwapProps) => {
           amountFrom * Math.pow(10, tokenFrom.decimals),
         );
 
+        const slippage = slippageMode === "dynamic" ? 50 : slippageValue * 100;
+
         // Fetch the quote from Jupiter API using the updated endpoint
         const quoteResponse = await fetch(
-          `https://api.jup.ag/swap/v1/quote?inputMint=${inputMint}&outputMint=${outputMint}&amount=${amount}&slippageBps=50`,
+          `https://api.jup.ag/swap/v1/quote?inputMint=${inputMint}&outputMint=${outputMint}&amount=${amount}&slippageBps=${slippage}`,
         ).then((res) => res.json());
 
         console.log("Quote Response:", quoteResponse);
@@ -163,7 +168,7 @@ const DemoSwap = ({ assets }: DemoSwapProps) => {
     };
 
     fetchSwapQuote();
-  }, [tokenFrom, amountFrom, tokenTo]);
+  }, [tokenFrom, amountFrom, tokenTo, slippageValue, slippageMode]);
 
   return (
     <div>
@@ -193,6 +198,15 @@ const DemoSwap = ({ assets }: DemoSwapProps) => {
             onSearch={searchAssets}
             amount={amountTo}
             disabled={true}
+          />
+        </div>
+        <div className="mt-4 flex justify-end">
+          <TxnSettings
+            trigger={
+              <Button variant="ghost" size="icon">
+                <IconSettings size={16} />
+              </Button>
+            }
           />
         </div>
         <Button

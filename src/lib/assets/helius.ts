@@ -1,9 +1,11 @@
-import { PublicKey } from "@solana/web3.js";
+import { PublicKey, LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { SolAsset, FetchAssetsArgs } from "../types";
+import { WSOL_MINT } from "../constants";
 
 const fetchAssets = async ({
   addresses,
   owner,
+  connection,
 }: FetchAssetsArgs): Promise<SolAsset[]> => {
   const fetchedAssets: SolAsset[] = [];
 
@@ -34,6 +36,21 @@ const fetchAssets = async ({
     if (!metadataData || !metadataData.result || metadataData.error) {
       console.error("Error fetching assets:", metadataData.error);
       return [];
+    }
+
+    // If owner and connection are provided, fetch native SOL balance
+    let nativeSolBalance = 0;
+    if (
+      owner &&
+      connection &&
+      addresses.some((addr) => addr.equals(WSOL_MINT))
+    ) {
+      try {
+        nativeSolBalance = await connection.getBalance(owner);
+        nativeSolBalance = nativeSolBalance / LAMPORTS_PER_SOL;
+      } catch (error) {
+        console.error("Error fetching native SOL balance:", error);
+      }
     }
 
     // If owner is provided, fetch token balances individually
@@ -79,6 +96,12 @@ const fetchAssets = async ({
     }
 
     for (const asset of metadataData.result) {
+      const isWsol = asset.id === WSOL_MINT.toString();
+      const assetBalance = balances[asset.id] || 0;
+      
+      // Add native SOL balance to WSOL if applicable
+      const totalBalance = isWsol ? assetBalance + nativeSolBalance : assetBalance;
+      
       fetchedAssets.push({
         mint: new PublicKey(asset.id),
         name: asset.content.metadata.name,
@@ -89,7 +112,7 @@ const fetchAssets = async ({
         userTokenAccount: owner
           ? {
               address: new PublicKey(asset.id),
-              amount: balances[asset.id] || 0,
+              amount: totalBalance,
             }
           : undefined,
       });

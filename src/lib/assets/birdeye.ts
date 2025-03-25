@@ -1,9 +1,11 @@
-import { PublicKey } from "@solana/web3.js";
+import { PublicKey, LAMPORTS_PER_SOL, Connection } from "@solana/web3.js";
 import { SolAsset, FetchAssetsArgs } from "../types";
+import { WSOL_MINT } from "../constants";
 
 const fetchAssets = async ({
   addresses,
   owner,
+  connection,
 }: FetchAssetsArgs): Promise<SolAsset[]> => {
   const fetchedAssets: SolAsset[] = [];
   const addressList = addresses.map((a) => a.toString()).join(",");
@@ -49,6 +51,21 @@ const fetchAssets = async ({
     const metadata = metadataRes.data;
     const prices = pricesRes.data;
 
+    // If owner and connection are provided, fetch native SOL balance
+    let nativeSolBalance = 0;
+    if (
+      owner &&
+      connection &&
+      addresses.some((addr) => addr.equals(WSOL_MINT))
+    ) {
+      try {
+        nativeSolBalance = await connection.getBalance(owner);
+        nativeSolBalance = nativeSolBalance / LAMPORTS_PER_SOL;
+      } catch (error) {
+        console.error("Error fetching native SOL balance:", error);
+      }
+    }
+
     for (let i = 0; i < addresses.length; i++) {
       const addressStr = addresses[i].toString();
       const tokenData = metadata[addressStr];
@@ -56,7 +73,7 @@ const fetchAssets = async ({
       const balanceData = owner ? balanceResponses[i]?.data : undefined;
 
       if (tokenData) {
-        fetchedAssets.push({
+        const asset: SolAsset = {
           mint: new PublicKey(tokenData.address),
           name: tokenData.name,
           symbol: tokenData.symbol,
@@ -69,7 +86,21 @@ const fetchAssets = async ({
                 amount: balanceData.uiAmount,
               }
             : undefined,
-        });
+        };
+
+        // If this is WSOL and we have a native SOL balance, add it to the WSOL balance
+        if (addresses[i].equals(WSOL_MINT) && nativeSolBalance > 0) {
+          if (asset.userTokenAccount) {
+            asset.userTokenAccount.amount += nativeSolBalance;
+          } else {
+            asset.userTokenAccount = {
+              address: WSOL_MINT,
+              amount: nativeSolBalance,
+            };
+          }
+        }
+
+        fetchedAssets.push(asset);
       }
     }
   } catch (error) {
@@ -83,9 +114,11 @@ const fetchAssets = async ({
 const searchAssets = async ({
   query,
   owner,
+  connection,
 }: {
   query: string;
   owner?: PublicKey;
+  connection?: Connection;
 }): Promise<SolAsset[]> => {
   const headers = {
     "x-api-key": process.env.NEXT_PUBLIC_BIRDEYE_API_KEY!,
@@ -138,6 +171,21 @@ const searchAssets = async ({
       );
     }
 
+    // If owner and connection are provided, fetch native SOL balance
+    let nativeSolBalance = 0;
+    const wsolResult = results.find(
+      (result: { address: string }) => result.address === WSOL_MINT.toString(),
+    );
+
+    if (owner && connection && wsolResult) {
+      try {
+        nativeSolBalance = await connection.getBalance(owner);
+        nativeSolBalance = nativeSolBalance / LAMPORTS_PER_SOL;
+      } catch (error) {
+        console.error("Error fetching native SOL balance:", error);
+      }
+    }
+
     return results.map(
       (result: {
         address: string;
@@ -146,21 +194,37 @@ const searchAssets = async ({
         logo_uri: string;
         price: number;
         decimals: number;
-      }) => ({
-        mint: new PublicKey(result.address),
-        name: result.name,
-        symbol: result.symbol,
-        image: result.logo_uri,
-        price: result.price,
-        decimals: result.decimals,
-        userTokenAccount:
-          owner && balanceData[result.address]
-            ? {
-                address: new PublicKey(balanceData[result.address].address),
-                amount: balanceData[result.address].uiAmount,
-              }
-            : undefined,
-      }),
+      }) => {
+        const asset: SolAsset = {
+          mint: new PublicKey(result.address),
+          name: result.name,
+          symbol: result.symbol,
+          image: result.logo_uri,
+          price: result.price,
+          decimals: result.decimals,
+          userTokenAccount:
+            owner && balanceData[result.address]
+              ? {
+                  address: new PublicKey(balanceData[result.address].address),
+                  amount: balanceData[result.address].uiAmount,
+                }
+              : undefined,
+        };
+
+        // If this is WSOL and we have a native SOL balance, add it to the WSOL balance
+        if (result.address === WSOL_MINT.toString() && nativeSolBalance > 0) {
+          if (asset.userTokenAccount) {
+            asset.userTokenAccount.amount += nativeSolBalance;
+          } else {
+            asset.userTokenAccount = {
+              address: WSOL_MINT,
+              amount: nativeSolBalance,
+            };
+          }
+        }
+
+        return asset;
+      },
     );
   } catch (error) {
     console.error("Error searching assets:", error);

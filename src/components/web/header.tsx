@@ -4,7 +4,7 @@ import React from "react";
 
 import Link from "next/link";
 
-import { useWallet } from "@solana/wallet-adapter-react";
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import {
   IconBrandGithub,
   IconBrandX,
@@ -33,7 +33,7 @@ import { Button } from "@/components/ui/button";
 import { ThemeSelector } from "@/components/web/themes";
 
 import { SolAsset } from "@/lib/types";
-import { fetchAssets } from "@/lib/assets/birdeye";
+import { fetchAssets } from "@/lib/assets/umi";
 
 const userAssets = [WSOL_MINT, USDC_MINT];
 
@@ -43,6 +43,7 @@ type HeaderProps = {
 
 const Header = ({ showSidebarTrigger = false }: HeaderProps) => {
   const { connected, publicKey, connecting } = useWallet();
+  const { connection } = useConnection();
   const [demoDropdownOpen, setDemoDropdownOpen] = React.useState(false);
   const [isMounted, setIsMounted] = React.useState(false);
   const [assets, setAssets] = React.useState<SolAsset[]>([]);
@@ -51,9 +52,10 @@ const Header = ({ showSidebarTrigger = false }: HeaderProps) => {
     const fetchedAssets = await fetchAssets({
       addresses: userAssets,
       owner: publicKey ?? undefined,
+      connection,
     });
     setAssets(fetchedAssets);
-  }, [publicKey]);
+  }, [publicKey, connection]);
 
   React.useEffect(() => {
     setIsMounted(!connecting);

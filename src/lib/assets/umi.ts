@@ -59,6 +59,11 @@ const fetchAssets = async ({
         console.error("Error fetching token image:", error);
       }
 
+      // fall back to deprecated token list repo
+      if (!imageUrl) {
+        imageUrl = `https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/${address}/logo.png`;
+      }
+
       return {
         assetRes,
         imageUrl,

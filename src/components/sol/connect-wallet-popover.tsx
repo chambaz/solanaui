@@ -4,7 +4,7 @@ import React from "react";
 
 import { Wallet } from "@solana/wallet-adapter-react";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { IconLoader2, IconWallet } from "@tabler/icons-react";
+import { LoaderCircleIcon, WalletIcon } from "lucide-react";
 
 import {
   Popover,
@@ -33,7 +33,7 @@ const ConnectWalletPopover = ({
       <PopoverTrigger asChild>
         {trigger || (
           <Button size="icon">
-            <IconWallet size={18} />
+            <WalletIcon size={16} />
           </Button>
         )}
       </PopoverTrigger>
@@ -68,7 +68,7 @@ const ConnectWalletPopover = ({
                   {walletItem.adapter.name}
                   {connecting &&
                     wallet?.adapter.name === walletItem.adapter.name && (
-                      <IconLoader2 size={16} className="ml-auto animate-spin" />
+                      <LoaderCircleIcon size={16} className="animate-spin" />
                     )}
                 </Button>
               </li>

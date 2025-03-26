@@ -1,6 +1,6 @@
 import React from "react";
 
-import { IconSettings } from "@tabler/icons-react";
+import { SettingsIcon } from "lucide-react";
 
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import {
@@ -110,7 +110,7 @@ const TxnSettings = ({ trigger }: TxnSettingsProps) => {
       <DialogTrigger asChild>
         {trigger || (
           <Button variant="outline" size="icon">
-            <IconSettings size={16} />
+            <SettingsIcon size={16} />
           </Button>
         )}
       </DialogTrigger>

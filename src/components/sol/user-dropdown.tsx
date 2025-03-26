@@ -4,7 +4,7 @@ import React from "react";
 import { PublicKey } from "@solana/web3.js";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { getPrimaryDomain } from "@bonfida/spl-name-service";
-import { IconCopy, IconCheck } from "@tabler/icons-react";
+import { CopyIcon, CheckIcon } from "lucide-react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
 import { formatNumber, formatUsd, shortAddress } from "@/lib/utils";
@@ -90,12 +90,12 @@ const UserDropdown = ({
               >
                 {isCopied ? (
                   <div className="flex items-center justify-end gap-1 self-end">
-                    Copied <IconCheck size={14} />
+                    Copied <CheckIcon size={16} />
                   </div>
                 ) : (
                   <button className="flex items-center justify-end gap-1 self-end">
                     {shortAddress(address)}
-                    <IconCopy size={14} />
+                    <CopyIcon size={16} />
                   </button>
                 )}
               </CopyToClipboard>

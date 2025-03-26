@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { IconExternalLink } from "@tabler/icons-react";
+import { ExternalLinkIcon } from "lucide-react";
 
 import { formatUsd, shortAddress, cn } from "@/lib/utils";
 import { SolAsset } from "@/lib/types";
@@ -61,7 +61,7 @@ const TokenCard = ({ asset, chartData = [], size = "md" }: TokenCardProps) => {
               href={`https://solscan.io/token/${asset.mint.toBase58()}`}
               className="inline-flex items-center gap-1 text-xs font-normal text-muted-foreground"
             >
-              <IconExternalLink size={12} />
+              <ExternalLinkIcon size={16} />
               {shortAddress(asset.mint)}
             </Link>
           </div>

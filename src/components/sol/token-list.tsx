@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { IconExternalLink } from "@tabler/icons-react";
+import { ExternalLinkIcon } from "lucide-react";
 
 import { shortAddress, formatUsd, formatNumberShort, cn } from "@/lib/utils";
 import { SolAsset } from "@/lib/types";
@@ -87,7 +87,7 @@ const TokenList = ({
                   <span className="border-b border-transparent group-hover:border-border">
                     {shortAddress(asset.mint.toBase58())}
                   </span>
-                  <IconExternalLink size={14} />
+                  <ExternalLinkIcon size={16} />
                 </Link>
               </TableCell>
               <TableCell>{formatUsd(asset.price || 0)}</TableCell>

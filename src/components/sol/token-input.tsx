@@ -2,7 +2,7 @@
 
 import React from "react";
 import { PublicKey } from "@solana/web3.js";
-import { IconWallet } from "@tabler/icons-react";
+import { WalletIcon } from "lucide-react";
 
 import { formatNumberGrouped, formatNumberShort } from "@/lib/utils";
 import { SolAsset } from "@/lib/types";
@@ -107,7 +107,7 @@ export const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
                 setAmount(formatNumberGrouped(maxAmount));
               }}
             >
-              <IconWallet size={16} />
+              <WalletIcon size={16} />
               {formatNumberShort(maxAmount)}
             </Button>
           )}

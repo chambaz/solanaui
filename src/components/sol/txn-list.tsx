@@ -9,7 +9,7 @@ import {
 } from "@solana/web3.js";
 import { useConnection } from "@solana/wallet-adapter-react";
 import { formatDistanceToNow } from "date-fns";
-import { IconAlertCircle, IconExternalLink } from "@tabler/icons-react";
+import { AlertCircleIcon, ExternalLinkIcon } from "lucide-react";
 
 import { shortAddress, cn } from "@/lib/utils";
 
@@ -58,8 +58,9 @@ const TxnList = ({ transactions, onClick }: TxnListProps) => {
       }
     };
 
+    if (!connection) return;
     init();
-  }, []);
+  }, [connection]);
 
   const estimateTimestamp = (blockTime: number | null | undefined) => {
     if (blockTime === null || blockTime === undefined || currentSlot === null) {
@@ -115,12 +116,12 @@ const TxnList = ({ transactions, onClick }: TxnListProps) => {
                   className="group inline-flex items-center gap-1"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  <IconExternalLink size={14} />
+                  <ExternalLinkIcon size={16} />
                   <span className="border-b border-transparent group-hover:border-border">
                     {shortAddress(txn.transaction.signatures[0])}
                   </span>
                   {txn.meta?.err && (
-                    <IconAlertCircle size={14} className="text-destructive" />
+                    <AlertCircleIcon className="h-4 w-4 text-destructive" />
                   )}
                 </Link>
               </TableCell>
@@ -134,7 +135,7 @@ const TxnList = ({ transactions, onClick }: TxnListProps) => {
                   className="group inline-flex items-center gap-1"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  <IconExternalLink size={14} />
+                  <ExternalLinkIcon size={16} />
                   <span className="border-b border-transparent group-hover:border-border">
                     {shortAddress(txn.transaction.message.staticAccountKeys[0])}
                   </span>

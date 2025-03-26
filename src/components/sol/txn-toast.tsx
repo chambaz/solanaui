@@ -3,7 +3,7 @@
 import * as React from "react";
 
 import type { RpcResponseAndContext, SignatureResult } from "@solana/web3.js";
-import { IconLoader2 } from "@tabler/icons-react";
+import { LoaderCircleIcon } from "lucide-react";
 
 import {
   ToastAction,
@@ -36,7 +36,7 @@ const TxnToaster = () => {
               {title && (
                 <ToastTitle className="flex items-center gap-2">
                   {isLoading && (
-                    <IconLoader2 className="animate-spin" size={16} />
+                    <LoaderCircleIcon size={16} className="animate-spin" />
                   )}
                   {title}
                 </ToastTitle>

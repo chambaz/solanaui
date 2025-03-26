@@ -4,7 +4,7 @@ import React from "react";
 
 import { Wallet } from "@solana/wallet-adapter-react";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { IconX, IconLoader2 } from "@tabler/icons-react";
+import { XIcon, LoaderCircleIcon } from "lucide-react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 
 import { cn } from "@/lib/utils";
@@ -72,14 +72,14 @@ const ConnectWalletDialog = ({
                   {walletItem.adapter.name}
                   {connecting &&
                     wallet?.adapter.name === walletItem.adapter.name && (
-                      <IconLoader2 size={16} className="ml-auto animate-spin" />
+                      <LoaderCircleIcon size={16} className="animate-spin" />
                     )}
                 </Button>
               </li>
             ))}
           </ul>
           <DialogClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
-            <IconX size={18} />
+            <XIcon size={16} />
             <span className="sr-only">Close</span>
           </DialogClose>
         </DialogPrimitive.DialogContent>

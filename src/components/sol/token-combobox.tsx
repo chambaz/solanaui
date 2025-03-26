@@ -3,7 +3,7 @@
 import React from "react";
 
 import { PublicKey } from "@solana/web3.js";
-import { IconSelector } from "@tabler/icons-react";
+import { ChevronsUpDownIcon } from "lucide-react";
 
 import { formatUsd, formatNumber } from "@/lib/utils";
 import { SolAsset } from "@/lib/types";
@@ -93,7 +93,7 @@ const TokenCombobox = ({
         clearTimeout(searchTimeout.current);
       }
     };
-  }, [searchValue, initialAssets, onSearch]);
+  }, [searchValue, initialAssets, onSearch, address]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -114,7 +114,7 @@ const TokenCombobox = ({
             ) : (
               "Select token..."
             )}
-            <IconSelector className="ml-auto shrink-0 opacity-50" size={16} />
+            <ChevronsUpDownIcon size={16} className="opacity-50" />
           </Button>
         )}
       </PopoverTrigger>

@@ -7,9 +7,10 @@ import { WalletIcon } from "lucide-react";
 import { formatNumberGrouped, formatNumberShort } from "@/lib/utils";
 import { SolAsset } from "@/lib/types";
 
-import { TokenCombobox } from "@/components/sol/token-combobox";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+
+import { TokenCombobox } from "@/components/sol/token-combobox";
 
 type TokenInputProps = {
   assets: SolAsset[];

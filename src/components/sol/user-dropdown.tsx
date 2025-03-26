@@ -10,8 +10,6 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 import { formatNumber, formatUsd, shortAddress } from "@/lib/utils";
 import { SolAsset } from "@/lib/types";
 
-import { Avatar } from "@/components/sol/avatar";
-import { TokenIcon } from "@/components/sol/token-icon";
 import {
   Popover,
   PopoverContent,
@@ -19,6 +17,9 @@ import {
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+
+import { Avatar } from "@/components/sol/avatar";
+import { TokenIcon } from "@/components/sol/token-icon";
 
 type UserDropdownProps = {
   address: PublicKey | null;

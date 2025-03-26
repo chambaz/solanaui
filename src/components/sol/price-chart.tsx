@@ -4,6 +4,7 @@ import { Area, AreaChart, XAxis } from "recharts";
 import { format } from "date-fns";
 
 import { formatUsd } from "@/lib/utils";
+import { SolAsset } from "@/lib/types";
 
 import {
   Card,
@@ -21,7 +22,6 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import { TokenIcon } from "@/components/sol/token-icon";
-import { SolAsset } from "@/lib/types";
 
 export type TimeScale = "time" | "day" | "date" | "month";
 

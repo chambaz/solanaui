@@ -24,18 +24,19 @@ type ConnectWalletDialogProps = {
   trigger?: React.ReactNode;
   title?: string | React.ReactNode;
   description?: string | React.ReactNode;
-};
+} & Omit<React.ComponentPropsWithoutRef<typeof Dialog>, "children">;
 
 const ConnectWalletDialog = ({
   trigger,
   title,
   description,
+  ...dialogProps
 }: ConnectWalletDialogProps) => {
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
   const { wallets, select, connecting, wallet } = useWallet();
 
   return (
-    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen} {...dialogProps}>
       <DialogTrigger asChild>
         {trigger || <Button>Connect Wallet</Button>}
       </DialogTrigger>

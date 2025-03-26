@@ -29,7 +29,11 @@ const ConnectWalletPopover = ({
   const { wallets, select, connecting, wallet } = useWallet();
 
   return (
-    <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+    <Popover
+      open={isPopoverOpen}
+      onOpenChange={setIsPopoverOpen}
+      {...popoverProps}
+    >
       <PopoverTrigger asChild>
         {trigger || (
           <Button size="icon">

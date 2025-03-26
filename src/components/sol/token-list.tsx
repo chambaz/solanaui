@@ -16,6 +16,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
+
 import { TokenIcon } from "@/components/sol/token-icon";
 
 type TokenListProps = {

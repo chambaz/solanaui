@@ -2,9 +2,9 @@ import React from "react";
 
 import { LineChart, CartesianGrid, XAxis, YAxis, Line } from "recharts";
 
-import { PriceChange } from "@/components/sol/price-change";
-
 import { ChartConfig, ChartContainer } from "@/components/ui/chart";
+
+import { PriceChange } from "@/components/sol/price-change";
 
 type SparklineProps = {
   data: {

@@ -9,9 +9,10 @@ type AvatarProps = {
   address: PublicKey;
   size?: number;
   className?: string;
+  alt?: string;
 };
 
-const Avatar = ({ address, size = 48, className }: AvatarProps) => {
+const Avatar = ({ address, size = 48, className, alt }: AvatarProps) => {
   const pubkeyStr = address ? address.toBase58() : "";
 
   const identicon = React.useMemo(() => {
@@ -30,7 +31,12 @@ const Avatar = ({ address, size = 48, className }: AvatarProps) => {
       )}
       style={{ width: size, height: size }}
     >
-      <img src={identicon} alt={pubkeyStr || ""} width={size} height={size} />
+      <img
+        src={identicon}
+        alt={alt || pubkeyStr || ""}
+        width={size}
+        height={size}
+      />
     </div>
   );
 };

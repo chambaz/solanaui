@@ -6,6 +6,7 @@ import { ExternalLinkIcon } from "lucide-react";
 
 import { formatUsd, shortAddress, cn } from "@/lib/utils";
 import { SolAsset } from "@/lib/types";
+
 import {
   Card,
   CardContent,
@@ -14,6 +15,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+
 import { TokenIcon } from "@/components/sol/token-icon";
 import { Sparkline } from "@/components/sol/sparkline";
 

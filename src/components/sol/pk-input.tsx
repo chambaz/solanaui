@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Input } from "@/components/ui/input";
 import { validatePublicKey, cn } from "@/lib/utils";
+import { Input } from "@/components/ui/input";
 
 const PKInput = ({ ...props }: React.ComponentPropsWithoutRef<"input">) => {
   const [value, setValue] = React.useState("");
@@ -27,6 +27,7 @@ const PKInput = ({ ...props }: React.ComponentPropsWithoutRef<"input">) => {
     setHasBlurred(true);
     validateField();
   }, [validateField]);
+
   React.useEffect(() => {
     if (hasBlurred) {
       validateField();

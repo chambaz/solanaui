@@ -67,3 +67,12 @@ export const shortAddress = (address: PublicKey | string) => {
   const key = typeof address === "string" ? address : address.toBase58();
   return `${key.slice(0, 4)}...${key.slice(-4)}`;
 };
+
+export const validatePublicKey = (address: string) => {
+  try {
+    new PublicKey(address);
+    return true;
+  } catch (error) {
+    return false;
+  }
+};

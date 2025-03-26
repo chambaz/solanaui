@@ -38,7 +38,11 @@ const PKInput = ({ ...props }: React.ComponentPropsWithoutRef<"input">) => {
       ref={inputRef}
       type="text"
       {...props}
-      className={cn(props.className, isInvalid && "border-destructive")}
+      className={cn(
+        "outline-none",
+        props.className,
+        isInvalid && "border-destructive focus-visible:ring-destructive",
+      )}
       value={value}
       onChange={(e) => setValue(e.target.value)}
       onBlur={handleBlur}

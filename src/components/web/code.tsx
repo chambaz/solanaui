@@ -19,6 +19,7 @@ import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 
 SyntaxHighlighter.registerLanguage("tsx", tsx);
 SyntaxHighlighter.registerLanguage("shell", shell);
@@ -36,14 +37,32 @@ const Code = ({
   reveal = true,
   className,
 }: CodeProps) => {
-  const { theme } = useTheme();
+  const { resolvedTheme } = useTheme();
   const [expanded, setExpanded] = React.useState(false);
   const [copied, setCopied] = React.useState(false);
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleCopy = () => {
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
+
+  // Don't render the syntax highlighter until mounted to prevent hydration mismatch
+  const syntaxHighlighter = mounted ? (
+    <SyntaxHighlighter
+      language={language}
+      style={resolvedTheme === "dark" ? ColdDark : ColdLight}
+      wrapLines
+    >
+      {code}
+    </SyntaxHighlighter>
+  ) : (
+    <Skeleton className="mb-2 h-[49px] w-full rounded-md" />
+  );
 
   return (
     <div
@@ -72,13 +91,7 @@ const Code = ({
             )}
           ></div>
         )}
-        <SyntaxHighlighter
-          language={language}
-          style={theme === "dark" ? ColdDark : ColdLight}
-          wrapLines
-        >
-          {code}
-        </SyntaxHighlighter>
+        {syntaxHighlighter}
       </div>
       {!reveal && (
         <Button

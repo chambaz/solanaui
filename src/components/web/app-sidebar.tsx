@@ -111,7 +111,7 @@ const navItems = [
     children: [
       { label: "Assets", href: "/docs/utils/assets" },
       { label: "Prices", href: "/docs/utils/prices" },
-      { label: "Formatters", href: "/docs/utils/formatters" },
+      { label: "Helpers", href: "/docs/utils/helpers" },
     ],
   },
 ];

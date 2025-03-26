@@ -2,6 +2,21 @@ import { PublicKey, LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { SolAsset, FetchAssetsArgs } from "../types";
 import { WSOL_MINT } from "../constants";
 
+/**
+ * Fetches token asset data from Helius API for a list of token addresses
+ * Includes metadata, balances (if owner provided), and native SOL balance for WSOL
+ * @param args - Object containing fetch parameters
+ * @param args.addresses - Array of token mint addresses to fetch data for
+ * @param args.owner - Optional wallet address to fetch token balances for
+ * @param args.connection - Optional web3 connection (required if fetching SOL balance)
+ * @returns Array of SolAsset objects containing token data
+ * @example
+ * const assets = await fetchAssets({
+ *   addresses: [new PublicKey("So11111111111111111111111111111111111111112")],
+ *   owner: new PublicKey("..."),
+ *   connection: new Connection("...")
+ * });
+ */
 const fetchAssets = async ({
   addresses,
   owner,

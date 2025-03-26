@@ -2,6 +2,20 @@ import { PublicKey, LAMPORTS_PER_SOL, Connection } from "@solana/web3.js";
 import { SolAsset, FetchAssetsArgs } from "../types";
 import { WSOL_MINT } from "../constants";
 
+/**
+ * Fetches token asset data from Birdeye API for a list of token addresses
+ * @param args - Object containing fetch parameters
+ * @param args.addresses - Array of token mint addresses to fetch data for
+ * @param args.owner - Optional wallet address to fetch token balances for
+ * @param args.connection - Optional web3 connection (required if fetching SOL balance)
+ * @returns Array of SolAsset objects containing token data
+ * @example
+ * const assets = await fetchAssets({
+ *   addresses: [new PublicKey("So11111111111111111111111111111111111111112")],
+ *   owner: new PublicKey("..."),
+ *   connection: new Connection("...")
+ * });
+ */
 const fetchAssets = async ({
   addresses,
   owner,
@@ -111,6 +125,20 @@ const fetchAssets = async ({
   return fetchedAssets;
 };
 
+/**
+ * Searches for token assets using Birdeye API
+ * @param params - Search parameters
+ * @param params.query - Search query string
+ * @param params.owner - Optional wallet address to fetch token balances for
+ * @param params.connection - Optional web3 connection (required if fetching SOL balance)
+ * @returns Array of SolAsset objects matching the search query
+ * @example
+ * const searchResults = await searchAssets({
+ *   query: "SOL",
+ *   owner: new PublicKey("..."),
+ *   connection: new Connection("...")
+ * });
+ */
 const searchAssets = async ({
   query,
   owner,

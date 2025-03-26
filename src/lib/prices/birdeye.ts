@@ -1,5 +1,20 @@
 import { PublicKey } from "@solana/web3.js";
 
+/**
+ * Fetches historical price data for a token from Birdeye API
+ * @param mint - Token mint address to fetch price history for
+ * @param start - Start timestamp in seconds
+ * @param end - End timestamp in seconds
+ * @param interval - Time interval for price data points (default: "1H")
+ * @returns Array of price data points with timestamps, or null if fetch fails
+ * @example
+ * const history = await fetchPriceHistoryBirdeye(
+ *   new PublicKey("So11111111111111111111111111111111111111112"),
+ *   1672531200, // Jan 1, 2023
+ *   1704067200, // Jan 1, 2024
+ *   "1H"
+ * );
+ */
 export async function fetchPriceHistoryBirdeye(
   mint: PublicKey,
   start: number,

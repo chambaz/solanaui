@@ -6,7 +6,7 @@ import { PublicKey } from "@solana/web3.js";
 
 import { getComponentSource } from "@/actions/get-component-source";
 import { SolAsset } from "@/lib/types";
-import { fetchAssets } from "@/lib/assets/birdeye";
+import { fetchAssets } from "@/lib/assets/birdeye/fetch";
 
 import { DocsWrapper } from "@/components/web/docs-wrapper";
 import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
@@ -65,7 +65,7 @@ export default function TokenIconPage() {
 import { useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey } from "@solana/web3.js";
 
-import { fetchAssets } from "@/lib/assets/birdeye"
+import { fetchAssets } from "@/lib/assets"
 import { WSOL_MINT, USDC_MINT } from "@/lib/constants";
 
 import { TokenIcon } from "@/components/sol/token-icon"

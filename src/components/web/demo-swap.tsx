@@ -7,7 +7,7 @@ import { VersionedTransaction } from "@solana/web3.js";
 import { IconArrowUp, IconArrowDown, IconSettings } from "@tabler/icons-react";
 
 import { SolAsset } from "@/lib/types";
-import { searchAssets } from "@/lib/assets/birdeye";
+import { searchAssets } from "@/lib/assets/birdeye/search";
 
 import { useTxnToast } from "@/components/sol/txn-toast";
 import { TokenInput } from "@/components/sol/token-input";

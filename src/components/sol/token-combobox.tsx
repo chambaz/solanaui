@@ -114,7 +114,7 @@ const TokenCombobox = ({
             ) : (
               "Select token..."
             )}
-            <ChevronsUpDownIcon size={16} className="opacity-50" />
+            <ChevronsUpDownIcon size={16} className="ml-auto opacity-50" />
           </Button>
         )}
       </PopoverTrigger>

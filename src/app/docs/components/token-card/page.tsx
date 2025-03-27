@@ -9,7 +9,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 
 import { getComponentSource } from "@/actions/get-component-source";
 import { SolAsset } from "@/lib/types";
-import { fetchAssets } from "@/lib/assets/birdeye";
+import { fetchAssets } from "@/lib/assets/birdeye/fetch";
 import { fetchPriceHistoryBirdeye } from "@/lib/prices/birdeye";
 
 import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
@@ -94,7 +94,7 @@ export default function TokenCardPage() {
 import { useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey } from "@solana/web3.js";
 
-import { fetchAssets } from "@/lib/assets/birdeye"
+import { fetchAssets } from "@/lib/assets"
 import { fetchPriceHistoryBirdeye } from "@/lib/price"
 
 import { TokenCard } from "@/components/sol/token-card"

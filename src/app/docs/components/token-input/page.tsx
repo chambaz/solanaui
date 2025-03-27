@@ -9,7 +9,8 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { getComponentSource } from "@/actions/get-component-source";
 import { WSOL_MINT, USDC_MINT } from "@/lib/constants";
 import { SolAsset } from "@/lib/types";
-import { fetchAssets, searchAssets } from "@/lib/assets/birdeye";
+import { fetchAssets } from "@/lib/assets/birdeye/fetch";
+import { searchAssets } from "@/lib/assets/birdeye/search";
 
 import { DocsWrapper } from "@/components/web/docs-wrapper";
 import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
@@ -85,7 +86,7 @@ export default function TokenInputPage() {
 import { useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey } from "@solana/web3.js";
 
-import { fetchAssets, searchAssets } from "@/lib/assets/birdeye"
+import { fetchAssets, searchAssets } from "@/lib/assets"
 import { WSOL_MINT, USDC_MINT } from "@/lib/constants";
 
 import { TokenInput } from "@/components/sol/token-input";

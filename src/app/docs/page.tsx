@@ -80,6 +80,10 @@ export default function IntroductionPage() {
             </a>
           </li>
         </ul>
+        <p>
+          Set your RPC url in your enviroment file as{" "}
+          <code>NEXT_PUBLIC_RPC_URL</code>
+        </p>
       </div>
       <div id="themes">
         <DocsH2 href="/docs#themes">Themes</DocsH2>

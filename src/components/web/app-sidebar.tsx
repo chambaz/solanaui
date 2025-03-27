@@ -110,7 +110,7 @@ const navItems = [
     icon: <IconTools />,
     children: [
       { label: "Assets", href: "/docs/utils/assets" },
-      { label: "Prices", href: "/docs/utils/prices" },
+      { label: "Price History", href: "/docs/utils/price-history" },
       { label: "Helpers", href: "/docs/utils/helpers" },
     ],
   },

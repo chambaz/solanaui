@@ -116,15 +116,21 @@ export const shortAddress = (address: PublicKey | string) => {
 
 /**
  * Validates if a string is a valid Solana public key
- * @param address - String to validate as a public key
+ * @param address - PublicKey object or base58 string to validate
  * @returns Boolean indicating if the string is a valid public key
  * @example
  * validatePublicKey("invalid") // false
  * validatePublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v") // true
+ * validatePublicKey(new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v")) // true
  */
-export const validatePublicKey = (address: string) => {
+export const validatePublicKey = (address: PublicKey | string) => {
   try {
-    new PublicKey(address);
+    if (typeof address === "string") {
+      new PublicKey(address);
+    } else {
+      // Verify the PublicKey is valid by accessing its public methods
+      address.toBase58();
+    }
     return true;
   } catch (error) {
     return false;

@@ -7,6 +7,8 @@ import Link from "next/link";
 import { PublicKey } from "@solana/web3.js";
 
 import { fetchPriceHistoryBirdeye } from "@/lib/prices/birdeye";
+import { fetchAssets } from "@/lib/assets/birdeye/fetch";
+import { SolAsset } from "@/lib/types";
 import { getComponentSource } from "@/actions/get-component-source";
 
 import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
@@ -63,6 +65,7 @@ export default function PriceChartPage() {
       price: number;
     }[]
   >([]);
+  const [assetData, setAssetData] = React.useState<SolAsset | null>(null);
   const [componentSource, setComponentSource] = React.useState<string>("");
   const [tokenIconSource, setTokenIconSource] = React.useState<string>("");
 
@@ -80,6 +83,15 @@ export default function PriceChartPage() {
     [],
   );
 
+  const fetchAssetData = React.useCallback(async () => {
+    const assets = await fetchAssets({
+      addresses: [WIF_MINT],
+    });
+    if (assets.length > 0) {
+      setAssetData(assets[0]);
+    }
+  }, []);
+
   React.useEffect(() => {
     if (prevDateRange.current !== dateRange) {
       fetchChartData(
@@ -92,13 +104,25 @@ export default function PriceChartPage() {
   }, [dateRange, fetchChartData, timestamps]);
 
   React.useEffect(() => {
-    if (chartData.length > 0) return;
-    fetchChartData(
-      timestamps[dateRange].start,
-      timestamps[dateRange].end,
-      timestamps[dateRange].interval,
-    );
-  }, [fetchChartData, dateRange, timestamps, chartData]);
+    if (chartData.length === 0) {
+      fetchChartData(
+        timestamps[dateRange].start,
+        timestamps[dateRange].end,
+        timestamps[dateRange].interval,
+      );
+    }
+
+    if (!assetData) {
+      fetchAssetData();
+    }
+  }, [
+    fetchChartData,
+    fetchAssetData,
+    dateRange,
+    timestamps,
+    chartData,
+    assetData,
+  ]);
 
   React.useEffect(() => {
     getComponentSource("src/components/sol/price-chart.tsx").then(
@@ -116,113 +140,56 @@ export default function PriceChartPage() {
       preview: (
         <div className="w-full max-w-3xl">
           <PriceChart
-            mint={WIF_MINT}
-            token="$WIF"
+            asset={assetData}
             description="$WIF price over time"
             data={chartData}
             timeScale={timestamps[dateRange].timeScale}
-            dateRangeOptions={Object.keys(timestamps)}
-            defaultDateRange={"1D"}
-            onDateRangeChange={(value) => {
-              setDateRange(value as DateRangeKey);
-            }}
+            onDateRangeChange={(value) => setDateRange(value as DateRangeKey)}
+            dateRangeOptions={["1D", "1W", "1M", "1Y"]}
+            defaultDateRange={dateRange}
           />
         </div>
       ),
-      code: `import { PriceChart } from "@/components/sol/price-chart"
+      code: `import React from "react";
+import { PublicKey } from "@solana/web3.js";
 
-export function AvatarDemo() {
-  const timestamps: Record<
-    DateRangeKey,
-    { start: number; end: number; interval: string; timeScale: TimeScale }
-  > = React.useMemo(
-    () => ({
-      "1D": {
-        start: 1733029200,
-        end: 1733115600,
-        interval: "1m",
-        timeScale: "time",
-      },
-      "1W": {
-        start: 1733029200,
-        end: 1733547600,
-        interval: "30m",
-        timeScale: "day",
-      },
-      "1M": {
-        start: 1730520000,
-        end: 1733029200,
-        interval: "1H",
-        timeScale: "date",
-      },
-      "1Y": {
-        start: 1701406800,
-        end: 1733029200,
-        interval: "1D",
-        timeScale: "month",
-      },
-    }),
-    [],
-  );
-  const [dateRange, setDateRange] = React.useState<DateRangeKey>("1D");
-  const prevDateRange = React.useRef(dateRange);
-  const [chartData, setChartData] = React.useState<
-    {
-      timestamp: number;
-      price: number;
-    }[]
-  >([]);
-  const [componentSource, setComponentSource] = React.useState<string>("");
-  const [tokenIconSource, setTokenIconSource] = React.useState<string>("");
+import { fetchAssets } from "@/lib/assets";
+import { fetchPriceHistory } from "@/lib/prices/birdeye";
+import { SolAsset } from "@/lib/types";
 
-  const fetchChartData = React.useCallback(
-    async (start: number, end: number, interval: string) => {
-      const data = await fetchPriceHistoryBirdeye(
-        WIF_MINT,
-        start,
-        end,
-        interval,
-      );
-      if (!data) return;
-      setChartData(data);
-    },
-    [],
-  );
+import { PriceChart } from "@/components/sol/price-chart";
+
+export function PriceChartDemo() {
+  const WIF_MINT = new PublicKey("EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm");
+  const [dateRange, setDateRange] = React.useState("1D");
+  const [chartData, setChartData] = React.useState([]);
+  const [wifAsset, setWifAsset] = React.useState(null);
 
   React.useEffect(() => {
-    if (prevDateRange.current !== dateRange) {
-      fetchChartData(
-        timestamps[dateRange].start,
-        timestamps[dateRange].end,
-        timestamps[dateRange].interval,
-      );
-      prevDateRange.current = dateRange;
-    }
-  }, [dateRange, fetchChartData, timestamps]);
-
-  React.useEffect(() => {
-    if (chartData.length > 0) return;
-    fetchChartData(
-      timestamps[dateRange].start,
-      timestamps[dateRange].end,
-      timestamps[dateRange].interval,
-    );
-  }, [fetchChartData, dateRange, timestamps, chartData]);
+    // Fetch price history data
+    fetchPriceHistory(WIF_MINT, startTimestamp, endTimestamp, interval)
+      .then(data => setChartData(data));
+      
+    // Fetch asset data
+    fetchAssets({ addresses: [WIF_MINT] })
+      .then(assets => {
+        if (assets.length > 0) {
+          setWifAsset(assets[0]);
+        }
+      });
+  }, [dateRange]);
 
   return (
     <PriceChart
-      mint={WIF_MINT}
-      token="$WIF"
+      asset={wifAsset}
       description="$WIF price over time"
       data={chartData}
-      timeScale={timestamps[dateRange].timeScale}
-      dateRangeOptions={Object.keys(timestamps)}
-      defaultDateRange={"1D"}
-      onDateRangeChange={(value) => {
-        setDateRange(value as DateRangeKey);
-      }}
+      timeScale="time"
+      onDateRangeChange={setDateRange}
+      dateRangeOptions={["1D", "1W", "1M", "1Y"]}
+      defaultDateRange={dateRange}
     />
-  )
+  );
 }`,
     },
   ];
@@ -307,16 +274,13 @@ export function AvatarDemo() {
           <Code
             reveal={true}
             code={`<PriceChart
-  mint={WIF_MINT}
-  token="$WIF"
+  asset={wifAsset}
   description="$WIF price over time"
   data={chartData}
   timeScale={timestamps[dateRange].timeScale}
-  dateRangeOptions={Object.keys(timestamps)}
-  defaultDateRange={"1D"}
-  onDateRangeChange={(value) => {
-    setDateRange(value as DateRangeKey);
-  }}
+  onDateRangeChange={(value) => setDateRange(value as DateRangeKey)}
+  dateRangeOptions={["1D", "1W", "1M", "1Y"]}
+  defaultDateRange={dateRange}
 />`}
           />
 
@@ -330,14 +294,13 @@ export function AvatarDemo() {
             <PropsTable
               data={[
                 {
-                  name: "mint",
-                  type: "PublicKey",
+                  name: "asset",
+                  type: "SolAsset",
                   default: `undefined`,
                 },
                 {
-                  name: "token",
+                  name: "description",
                   type: "string",
-                  default: `undefined`,
                 },
                 {
                   name: "data",
@@ -354,10 +317,6 @@ export function AvatarDemo() {
                 },
                 {
                   name: "title",
-                  type: "string",
-                },
-                {
-                  name: "description",
                   type: "string",
                 },
                 {

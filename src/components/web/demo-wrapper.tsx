@@ -11,7 +11,7 @@ import {
 import { cn } from "@/lib/utils";
 import { WSOL_MINT } from "@/lib/constants";
 import { SolAsset } from "@/lib/types";
-import { fetchAssets } from "@/lib/assets/birdeye";
+import { fetchAssets } from "@/lib/assets/birdeye/fetch";
 import { fetchPriceHistoryBirdeye } from "@/lib/prices/birdeye";
 
 import { DemoDashboard } from "@/components/web/demo-dashboard";

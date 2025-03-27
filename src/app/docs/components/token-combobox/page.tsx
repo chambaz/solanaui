@@ -8,7 +8,8 @@ import { useWallet } from "@solana/wallet-adapter-react";
 
 import { getComponentSource } from "@/actions/get-component-source";
 import { SolAsset } from "@/lib/types";
-import { fetchAssets, searchAssets } from "@/lib/assets/birdeye";
+import { fetchAssets } from "@/lib/assets/birdeye/fetch";
+import { searchAssets } from "@/lib/assets/birdeye/search";
 import { WSOL_MINT, USDC_MINT } from "@/lib/constants";
 
 import { DocsWrapper } from "@/components/web/docs-wrapper";
@@ -78,7 +79,7 @@ export default function TokenDropdownPage() {
 import { PublicKey } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
 
-import { fetchAssets } from "@/lib/assets/birdeye";
+import { fetchAssets } from "@/lib/assets";
 import { WSOL_MINT, USDC_MINT } from "@/lib/constants";
 
 import { TokenCombobox } from "@/components/sol/token-combobox"

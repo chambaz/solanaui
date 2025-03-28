@@ -50,7 +50,7 @@ const CodeShowcase = () => {
   return (
     <div className="mx-auto w-full max-w-5xl px-4 py-24">
       <motion.h2
-        className="mb-6 text-center text-3xl font-bold xl:text-4xl"
+        className="mb-4 text-center text-3xl font-bold xl:text-4xl"
         initial={{ opacity: 0, y: -20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.05 }}
@@ -59,14 +59,17 @@ const CodeShowcase = () => {
         Simple, Copy & Paste Components
       </motion.h2>
       <motion.p
-        className="mx-auto mb-12 max-w-4xl text-center text-muted-foreground xl:text-lg"
+        className="mx-auto mb-12 max-w-4xl text-center leading-loose text-muted-foreground xl:text-lg xl:leading-loose"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true, amount: 0.05 }}
         transition={{ duration: 0.5, delay: 0.1 }}
       >
-        No complex installation or configuration. Just copy the components you
-        need directly into your project.
+        No dependencies and complex customizations. Simply copy and paste
+        components directly into your project.
+        <br />
+        Use the built-in asset fetching utilities, or swap out for your own data
+        sources.
       </motion.p>
 
       <motion.div

@@ -59,7 +59,7 @@ const DemoDashboard = ({
             }}
           />
         </div>
-        <div className="grid w-1/2 grid-cols-2 gap-8">
+        <div className="grid w-1/2 grid-cols-2 gap-4">
           {assets.length === 0 ? (
             <>
               {[...new Array(4)].map((_, index) => (

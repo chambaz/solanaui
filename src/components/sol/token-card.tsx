@@ -29,7 +29,7 @@ const TokenCard = ({ asset, chartData = [], size = "md" }: TokenCardProps) => {
   if (!asset) {
     return (
       <Card className="w-full">
-        <CardHeader className={cn("p-5", size === "md" && "p-6")}>
+        <CardHeader className={cn("p-4", size === "md" && "p-6")}>
           <CardTitle className="flex items-center gap-3">
             <span className="sr-only">Loading...</span>
             <Skeleton className="h-[48px] w-[48px] shrink-0 rounded-full" />
@@ -48,11 +48,11 @@ const TokenCard = ({ asset, chartData = [], size = "md" }: TokenCardProps) => {
   }
 
   return (
-    <Card className="min-h-[218px] w-full">
-      <CardHeader className={cn("p-5 pb-2", size === "md" && "p-6")}>
+    <Card className="w-full">
+      <CardHeader className={cn("p-4 pb-2", size === "md" && "p-6")}>
         <CardTitle
           className={cn(
-            "flex items-center gap-2 text-base",
+            "flex items-center gap-2 text-sm",
             size === "md" && "text-lg",
           )}
         >
@@ -69,9 +69,9 @@ const TokenCard = ({ asset, chartData = [], size = "md" }: TokenCardProps) => {
           </div>
         </CardTitle>
       </CardHeader>
-      <CardContent className={cn("space-y-4 p-5 pb-0", size === "md" && "p-6")}>
+      <CardContent className={cn("space-y-4 p-4 pb-0", size === "md" && "p-6")}>
         {asset.price && (
-          <p className={cn("text-2xl", size === "md" && "text-4xl")}>
+          <p className={cn("text-xl", size === "md" && "text-4xl")}>
             {formatUsd(asset.price)}
           </p>
         )}

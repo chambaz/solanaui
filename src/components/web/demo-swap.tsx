@@ -171,12 +171,11 @@ const DemoSwap = ({ assets }: DemoSwapProps) => {
   }, [tokenFrom, amountFrom, tokenTo, slippageValue, slippageMode]);
 
   return (
-    <div>
-      <div className="mb-12 space-y-3 text-center">
+    <div className="mb-12 mt-4 flex w-full flex-col items-center justify-center gap-8">
+      <div className="space-y-3 text-center">
         <h1 className="text-3xl">Swap Demo</h1>
         <p className="text-muted-foreground">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam,
-          quos.
+          Search and swap for any token with SolanaUI.
         </p>
       </div>
       <div className="rounded-lg border p-4">

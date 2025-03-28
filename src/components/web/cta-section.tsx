@@ -26,8 +26,7 @@ const CtaSection = () => {
           viewport={{ once: true, amount: 0.05 }}
           transition={{ duration: 0.5, delay: 0.1 }}
         >
-          Start building beautiful Solana applications today with
-          SolanaUI&apos;s powerful components and utilities.
+          Start building today with SolanaUI&apos;s components and utilities.
         </motion.p>
         <motion.div
           className="flex flex-col items-center justify-center gap-4 sm:flex-row"

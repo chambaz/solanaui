@@ -5,9 +5,7 @@ import {
   IconCopy,
   IconCurrencySolana,
   IconDatabase,
-  IconCode,
   IconPalette,
-  IconRocket,
   IconWallet,
 } from "@tabler/icons-react";
 import { motion } from "motion/react";
@@ -66,10 +64,17 @@ const FeatureCard = ({
 const FeaturesGrid = () => {
   const features = [
     {
-      title: "Solana-Ready Components",
+      title: "Solana Components",
       description:
-        "Pre-built UI components specifically designed for Solana applications, including wallet connection, token displays, and transaction interfaces.",
+        "UI components built for Solana apps. Wallet connect dialogs, token comboboxes, price charts, and more.",
       icon: <IconCurrencySolana size={24} />,
+      className: "md:col-span-2",
+    },
+    {
+      title: "Asset Fetching",
+      description:
+        "Built-in utilities for fetching assets and prices, including Birdeye, Helius, and Umi.",
+      icon: <IconDatabase size={24} />,
       className: "md:col-span-2",
     },
     {
@@ -81,21 +86,8 @@ const FeaturesGrid = () => {
     {
       title: "Copy & Paste",
       description:
-        "No complex installation or dependencies. Just copy the components you need directly into your project.",
+        "No dependencies and complex customizations. Copy and paste components directly into your project.",
       icon: <IconCopy size={24} />,
-    },
-    {
-      title: "Asset Fetching",
-      description:
-        "Built-in utilities for fetching token data, prices, and metadata from Solana's ecosystem.",
-      icon: <IconDatabase size={24} />,
-      className: "md:col-span-2",
-    },
-    {
-      title: "Wallet Adapters",
-      description:
-        "Seamlessly connect to popular Solana wallets with pre-built components and hooks.",
-      icon: <IconWallet size={24} />,
     },
     {
       title: "Customizable",
@@ -104,17 +96,10 @@ const FeaturesGrid = () => {
       icon: <IconPalette size={24} />,
     },
     {
-      title: "Developer Experience",
+      title: "Scalable",
       description:
-        "TypeScript support, comprehensive documentation, and intuitive APIs for a smooth development experience.",
-      icon: <IconCode size={24} />,
-    },
-    {
-      title: "Production Ready",
-      description:
-        "Optimized for performance and ready for production applications with minimal configuration.",
-      icon: <IconRocket size={24} />,
-      className: "md:col-span-2",
+        "Prototype to production. Start with built-in utilities and swap in your own data sources and pipelines.",
+      icon: <IconWallet size={24} />,
     },
   ];
 

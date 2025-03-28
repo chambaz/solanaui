@@ -17,8 +17,7 @@ const codeExamples = {
 
 const assets = await fetchAssets({
   addresses: [
-    WSOL_MINT,
-    USDC_MINT,
+    new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"),
     new PublicKey("EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm"),
     new PublicKey("DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263"),
   ],
@@ -29,8 +28,7 @@ const assets = await fetchAssets({
 
 const assets = await fetchAssets({
   addresses: [
-    WSOL_MINT,
-    USDC_MINT,
+    new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"),
     new PublicKey("EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm"),
     new PublicKey("DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263"),
   ],

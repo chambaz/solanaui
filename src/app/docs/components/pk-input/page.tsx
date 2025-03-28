@@ -26,7 +26,7 @@ export default function TokenInputPage() {
       label: "Default",
       value: "default",
       preview: (
-        <div className="max-w-lg">
+        <div className="w-full max-w-lg">
           <PKInput placeholder="Enter a public key" />
         </div>
       ),

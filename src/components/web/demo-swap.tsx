@@ -12,6 +12,7 @@ import { searchAssets } from "@/lib/assets/birdeye/search";
 import { useTxnToast } from "@/components/sol/txn-toast";
 import { TokenInput } from "@/components/sol/token-input";
 import { TxnSettings, useTxnSettings } from "@/components/sol/txn-settings";
+import { ConnectWalletDialog } from "@/components/sol/connect-wallet-dialog";
 
 import { Button } from "@/components/ui/button";
 
@@ -178,50 +179,54 @@ const DemoSwap = ({ assets }: DemoSwapProps) => {
           Search and swap for any token with SolanaUI.
         </p>
       </div>
-      <div className="rounded-lg border p-4">
-        <div className="flex flex-col items-center justify-center gap-4">
-          <TokenInput
-            assets={assets}
-            onTokenSelect={setTokenFrom}
-            onAmountChange={setAmountFrom}
-          />
-          <div className="flex gap-2">
-            <IconArrowUp size={18} />
-            <IconArrowDown size={18} />
+      {!publicKey ? (
+        <ConnectWalletDialog />
+      ) : (
+        <div className="rounded-lg border p-4">
+          <div className="flex flex-col items-center justify-center gap-4">
+            <TokenInput
+              assets={assets}
+              onTokenSelect={setTokenFrom}
+              onAmountChange={setAmountFrom}
+            />
+            <div className="flex gap-2">
+              <IconArrowUp size={18} />
+              <IconArrowDown size={18} />
+            </div>
+            <TokenInput
+              assets={assets}
+              showWalletBalance={false}
+              showQuickAmountButtons={false}
+              onTokenSelect={setTokenTo}
+              onSearch={searchAssets}
+              amount={amountTo}
+              disabled={true}
+            />
           </div>
-          <TokenInput
-            assets={assets}
-            showWalletBalance={false}
-            showQuickAmountButtons={false}
-            onTokenSelect={setTokenTo}
-            onSearch={searchAssets}
-            amount={amountTo}
-            disabled={true}
-          />
+          <div className="mt-4 flex justify-end">
+            <TxnSettings
+              trigger={
+                <Button variant="ghost" size="icon">
+                  <IconSettings size={16} />
+                </Button>
+              }
+            />
+          </div>
+          <Button
+            className="mt-4 w-full"
+            onClick={handleSwap}
+            disabled={isTransacting || !swapQuote || isLoadingQuote}
+          >
+            {isTransacting
+              ? "Swapping..."
+              : isLoadingQuote
+                ? "Loading Quote..."
+                : swapQuote
+                  ? "Swap"
+                  : "Enter Amount"}
+          </Button>
         </div>
-        <div className="mt-4 flex justify-end">
-          <TxnSettings
-            trigger={
-              <Button variant="ghost" size="icon">
-                <IconSettings size={16} />
-              </Button>
-            }
-          />
-        </div>
-        <Button
-          className="mt-4 w-full"
-          onClick={handleSwap}
-          disabled={isTransacting || !swapQuote || isLoadingQuote}
-        >
-          {isTransacting
-            ? "Swapping..."
-            : isLoadingQuote
-              ? "Loading Quote..."
-              : swapQuote
-                ? "Swap"
-                : "Enter Amount"}
-        </Button>
-      </div>
+      )}
     </div>
   );
 };

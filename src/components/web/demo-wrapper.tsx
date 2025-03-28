@@ -18,6 +18,7 @@ import { DemoDashboard } from "@/components/web/demo-dashboard";
 import { DemoSwap } from "@/components/web/demo-swap";
 import { UserDropdown } from "@/components/sol/user-dropdown";
 import { TimeScale } from "@/components/sol/price-chart";
+import { ConnectWalletDialog } from "@/components/sol/connect-wallet-dialog";
 import { Button } from "@/components/ui/button";
 
 type DateRangeKey = "1D" | "1W" | "1M" | "1Y";
@@ -39,7 +40,7 @@ type DemoWrapperProps = {
 };
 
 const DemoWrapper = ({ view = "dashboard" }: DemoWrapperProps) => {
-  const { publicKey } = useWallet();
+  const { publicKey, connecting } = useWallet();
   const [demoState, setDemoState] = React.useState<DemoState>(
     view === "swap" ? DemoState.SWAP : DemoState.DASHBOARD,
   );
@@ -209,7 +210,16 @@ const DemoWrapper = ({ view = "dashboard" }: DemoWrapperProps) => {
             </li>
           </ul>
         </nav>
-        <UserDropdown address={publicKey} assets={assets} />
+        {!connecting && publicKey === null && (
+          <ConnectWalletDialog
+            trigger={<Button>Connect Wallet</Button>}
+            title="Connect Wallet"
+            description="Connect your wallet to continue"
+          />
+        )}
+        {(connecting || publicKey) && (
+          <UserDropdown address={publicKey} assets={assets} />
+        )}
       </header>
       {demoState === DemoState.DASHBOARD && (
         <DemoDashboard

@@ -182,7 +182,7 @@ const DemoWrapper = ({ view = "dashboard" }: DemoWrapperProps) => {
   }, [view]);
 
   return (
-    <div className="flex min-h-[calc(100vh-140px)] w-full flex-col items-center bg-muted/25 p-8">
+    <div className="flex min-h-[calc(100vh-140px)] w-full flex-col items-center p-8">
       <header className="mb-8 flex w-full items-center justify-between gap-8 px-2">
         <nav className="ml-auto">
           <ul className="flex items-center gap-4">

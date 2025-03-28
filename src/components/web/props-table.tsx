@@ -3,8 +3,8 @@
 import { PrismLight as SyntaxHighlighter } from "react-syntax-highlighter";
 import jsx from "react-syntax-highlighter/dist/esm/languages/prism/jsx";
 import ts from "react-syntax-highlighter/dist/esm/languages/prism/typescript";
-import ColdDark from "react-syntax-highlighter/dist/esm/styles/prism/coldark-dark";
-import ColdLight from "react-syntax-highlighter/dist/esm/styles/prism/coldark-cold";
+import Dark from "react-syntax-highlighter/dist/esm/styles/prism/vsc-dark-plus";
+import Light from "react-syntax-highlighter/dist/esm/styles/prism/base16-ateliersulphurpool.light";
 import { useTheme } from "next-themes";
 
 import {
@@ -56,7 +56,7 @@ const PropsTable = ({ data }: PropsTableProps) => {
             <TableCell>
               <SyntaxHighlighter
                 language="ts"
-                style={theme === "dark" ? ColdDark : ColdLight}
+                style={theme === "dark" ? Dark : Light}
                 customStyle={{
                   backgroundColor: "transparent",
                   margin: 0,
@@ -74,7 +74,7 @@ const PropsTable = ({ data }: PropsTableProps) => {
                 {item.default && (
                   <SyntaxHighlighter
                     language="jsx"
-                    style={theme === "dark" ? ColdDark : ColdLight}
+                    style={theme === "dark" ? Dark : Light}
                     customStyle={{
                       backgroundColor: "transparent",
                       margin: 0,

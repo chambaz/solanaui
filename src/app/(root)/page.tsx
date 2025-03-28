@@ -1,15 +1,38 @@
+"use client";
+
 import { Hero } from "@/components/web/hero";
+import { FeaturesGrid } from "@/components/web/features-grid";
+import { CodeShowcase } from "@/components/web/code-showcase";
+import { CtaSection } from "@/components/web/cta-section";
 import { DemoLinks } from "@/components/web/demo-links";
-import { Sponsored } from "@/components/web/sponsored";
 
 export default function HomePage() {
   return (
-    <div className="flex min-h-[calc(100vh-135px)] w-full flex-col items-center justify-center">
-      <div className="flex w-full flex-col items-center gap-8 pb-8 pt-16 text-center">
+    <div className="flex w-full flex-col items-center">
+      {/* Hero Section */}
+      <section>
         <Hero />
+      </section>
+
+      {/* Features Grid */}
+      <section className="w-full bg-muted/25">
+        <FeaturesGrid />
+      </section>
+
+      {/* Code Showcase */}
+      <section>
+        <CodeShowcase />
+      </section>
+
+      {/* Demo Links */}
+      <section className="w-full bg-muted/25">
         <DemoLinks />
-        <Sponsored />
-      </div>
+      </section>
+
+      {/* CTA Section */}
+      <section>
+        <CtaSection />
+      </section>
     </div>
   );
 }

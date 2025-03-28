@@ -135,7 +135,7 @@ const AppSidebar = () => {
 
   return (
     <Sidebar>
-      <SidebarContent className="pb-8 pt-2">
+      <SidebarContent className="bg-background pb-8 pt-2">
         {navItems.map((item) => (
           <SidebarGroup key={item.section}>
             <SidebarGroupLabel>

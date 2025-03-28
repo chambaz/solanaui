@@ -6,8 +6,8 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 import { PrismLight as SyntaxHighlighter } from "react-syntax-highlighter";
 import tsx from "react-syntax-highlighter/dist/esm/languages/prism/tsx";
 import shell from "react-syntax-highlighter/dist/esm/languages/prism/shell-session";
-import ColdDark from "react-syntax-highlighter/dist/esm/styles/prism/coldark-dark";
-import ColdLight from "react-syntax-highlighter/dist/esm/styles/prism/coldark-cold";
+import Dark from "react-syntax-highlighter/dist/esm/styles/prism/vsc-dark-plus";
+import Light from "react-syntax-highlighter/dist/esm/styles/prism/base16-ateliersulphurpool.light";
 import {
   IconCheck,
   IconCopy,
@@ -29,12 +29,14 @@ type CodeProps = {
   language?: "tsx" | "shell";
   reveal?: boolean;
   className?: string;
+  showControls?: boolean;
 };
 
 const Code = ({
   code,
   language = "tsx",
   reveal = true,
+  showControls = true,
   className,
 }: CodeProps) => {
   const { resolvedTheme } = useTheme();
@@ -55,7 +57,7 @@ const Code = ({
   const syntaxHighlighter = mounted ? (
     <SyntaxHighlighter
       language={language}
-      style={resolvedTheme === "dark" ? ColdDark : ColdLight}
+      style={resolvedTheme === "dark" ? Dark : Light}
       wrapLines
     >
       {code}
@@ -73,15 +75,17 @@ const Code = ({
         !reveal && expanded && "h-auto pb-16",
       )}
     >
-      <CodeControls
-        code={code}
-        copied={copied}
-        reveal={reveal}
-        expanded={expanded}
-        handleCopy={handleCopy}
-        setExpanded={setExpanded}
-        className={cn("absolute right-2 top-4 z-30", reveal && "top-2")}
-      />
+      {showControls && (
+        <CodeControls
+          code={code}
+          copied={copied}
+          reveal={reveal}
+          expanded={expanded}
+          handleCopy={handleCopy}
+          setExpanded={setExpanded}
+          className={cn("absolute right-2 top-4 z-30", reveal && "top-2")}
+        />
+      )}
       <div className="relative">
         {!reveal && (
           <div

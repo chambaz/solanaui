@@ -4,8 +4,8 @@ import React from "react";
 
 import { PrismLight as SyntaxHighlighter } from "react-syntax-highlighter";
 import tsx from "react-syntax-highlighter/dist/esm/languages/prism/tsx";
-import ColdDark from "react-syntax-highlighter/dist/esm/styles/prism/coldark-dark";
-import ColdLight from "react-syntax-highlighter/dist/esm/styles/prism/coldark-cold";
+import Dark from "react-syntax-highlighter/dist/esm/styles/prism/vsc-dark-plus";
+import Light from "react-syntax-highlighter/dist/esm/styles/prism/base16-ateliersulphurpool.light";
 import { useTheme } from "next-themes";
 
 import {
@@ -88,11 +88,11 @@ const DocsTabs = ({ variants }: DocsTabsProps) => {
           </div>
         </TabsContent>
         <TabsContent value="code">
-          <div className="rounded-lg bg-background text-sm">
+          <div>
             {activeVariant.code && (
               <SyntaxHighlighter
                 language="tsx"
-                style={theme === "dark" ? ColdDark : ColdLight}
+                style={theme === "dark" ? Dark : Light}
                 wrapLines
               >
                 {activeVariant.code}

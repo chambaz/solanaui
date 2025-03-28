@@ -46,6 +46,7 @@
     "lucide-react": "^0.453.0",
     "millify": "^6.1.0",
     "minidenticons": "^4.2.1",
+    "motion": "^12.6.2",
     "next": "14.2.11",
     "next-themes": "^0.3.0",
     "pino-pretty": "^11.2.2",

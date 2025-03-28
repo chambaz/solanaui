@@ -35,7 +35,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={cn(inter.variable, roboto_mono.variable, `theme-blue`)}
+      className={cn(inter.variable, roboto_mono.variable, ``)}
       suppressHydrationWarning
     >
       <body>

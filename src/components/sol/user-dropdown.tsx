@@ -149,7 +149,7 @@ const UserDropdown = ({
 
           {connected && (
             <Button
-              variant="outline"
+              variant="secondary"
               size="sm"
               className="w-full"
               onClick={() => {

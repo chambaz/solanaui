@@ -3,7 +3,7 @@
 import React from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import {
-  Connection,
+  // Connection,
   PublicKey,
   VersionedTransactionResponse,
 } from "@solana/web3.js";
@@ -53,9 +53,7 @@ const DemoWrapper = ({ view = "dashboard" }: DemoWrapperProps) => {
   >([]);
   const [mainAsset, setMainAsset] = React.useState<SolAsset | null>(null);
   const [assets, setAssets] = React.useState<SolAsset[]>([]);
-  const [transactions, setTransactions] = React.useState<
-    VersionedTransactionResponse[]
-  >([]);
+  const [transactions] = React.useState<VersionedTransactionResponse[]>([]);
 
   const timestamps: Record<
     DateRangeKey,
@@ -110,16 +108,15 @@ const DemoWrapper = ({ view = "dashboard" }: DemoWrapperProps) => {
   }, [publicKey]);
 
   const fetchTransactions = React.useCallback(async () => {
-    const connection = new Connection(process.env.NEXT_PUBLIC_RPC_URL ?? "");
-    const signatures = [
-      "2EaBnbW5nranKYGguV7roVYRfHBQtKDDFutsDJCpVdggE2aMRgnv8R29KLAWWu9SMmhnGB4q6jbrA5AM4VLznVYT",
-      "4uWXpZQk5ESz67uMFPfRo1X9eegpKUCrCJ1dsxktqVGbLh5fGRXsGGSq63n9AdjLp1mSxC8WCHig6Cd1wdpY38sQ",
-    ];
-
-    const fetchedTxns = await connection.getTransactions(signatures, {
-      maxSupportedTransactionVersion: 0,
-    });
-    setTransactions(fetchedTxns.filter((txn) => txn !== null));
+    // const connection = new Connection("https://api.mainnet-beta.solana.com");
+    // const signatures = [
+    //   "2EaBnbW5nranKYGguV7roVYRfHBQtKDDFutsDJCpVdggE2aMRgnv8R29KLAWWu9SMmhnGB4q6jbrA5AM4VLznVYT",
+    //   "4uWXpZQk5ESz67uMFPfRo1X9eegpKUCrCJ1dsxktqVGbLh5fGRXsGGSq63n9AdjLp1mSxC8WCHig6Cd1wdpY38sQ",
+    // ];
+    // const fetchedTxns = await connection.getTransactions(signatures, {
+    //   maxSupportedTransactionVersion: 0,
+    // });
+    // setTransactions(fetchedTxns.filter((txn) => txn !== null));
   }, []);
 
   React.useEffect(() => {

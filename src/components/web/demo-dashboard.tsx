@@ -46,8 +46,8 @@ const DemoDashboard = ({
 }: DemoDashboardProps) => {
   return (
     <>
-      <div className="mb-8 flex w-full gap-8">
-        <div className="w-1/2">
+      <div className="mb-8 flex w-full flex-col gap-8 lg:flex-row">
+        <div className="lg:w-1/2">
           <PriceChart
             asset={mainAsset ?? null}
             data={mainChartData}
@@ -59,7 +59,7 @@ const DemoDashboard = ({
             }}
           />
         </div>
-        <div className="grid w-1/2 grid-cols-2 gap-4">
+        <div className="grid gap-4 lg:w-1/2 lg:grid-cols-2">
           {assets.length === 0 ? (
             <>
               {[...new Array(4)].map((_, index) => (

@@ -4,6 +4,7 @@ import React from "react";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useSidebar } from "@/components/ui/sidebar"; // Import the useSidebar hook
 
 import { IconComponents, IconHome, IconTools } from "@tabler/icons-react";
 
@@ -119,6 +120,7 @@ const navItems = [
 const AppSidebar = () => {
   const pathname = usePathname();
   const [hash, setHash] = React.useState("");
+  const { setOpenMobile } = useSidebar(); // Get the setOpenMobile function from the useSidebar hook
 
   const isLinkActive = React.useCallback(
     (href: string) => {
@@ -163,6 +165,7 @@ const AppSidebar = () => {
                             } else {
                               setHash("");
                             }
+                            setOpenMobile(false); // Close mobile sidebar when item is clicked
                           }}
                           asChild
                         >
@@ -174,12 +177,20 @@ const AppSidebar = () => {
                           <SidebarMenuSub>
                             <SidebarMenuSubItem>
                               <SidebarMenuSubButton asChild>
-                                <Link href={`${child.href}#demo`}>Demo</Link>
+                                <Link
+                                  href={`${child.href}#demo`}
+                                  onClick={() => setOpenMobile(false)} // Close mobile sidebar when sub-item is clicked
+                                >
+                                  Demo
+                                </Link>
                               </SidebarMenuSubButton>
                             </SidebarMenuSubItem>
                             <SidebarMenuSubItem>
                               <SidebarMenuSubButton asChild>
-                                <Link href={`${child.href}#installation`}>
+                                <Link
+                                  href={`${child.href}#installation`}
+                                  onClick={() => setOpenMobile(false)} // Close mobile sidebar when sub-item is clicked
+                                >
                                   Installation
                                 </Link>
                               </SidebarMenuSubButton>
@@ -187,13 +198,21 @@ const AppSidebar = () => {
                             {child.hasAPI ? (
                               <SidebarMenuSubItem>
                                 <SidebarMenuSubButton asChild>
-                                  <Link href={`${child.href}#api`}>API</Link>
+                                  <Link
+                                    href={`${child.href}#api`}
+                                    onClick={() => setOpenMobile(false)} // Close mobile sidebar when sub-item is clicked
+                                  >
+                                    API
+                                  </Link>
                                 </SidebarMenuSubButton>
                               </SidebarMenuSubItem>
                             ) : (
                               <SidebarMenuSubItem>
                                 <SidebarMenuSubButton asChild>
-                                  <Link href={`${child.href}#props`}>
+                                  <Link
+                                    href={`${child.href}#props`}
+                                    onClick={() => setOpenMobile(false)} // Close mobile sidebar when sub-item is clicked
+                                  >
                                     Props
                                   </Link>
                                 </SidebarMenuSubButton>

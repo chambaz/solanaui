@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 
 const Hero = () => {
   return (
-    <div className="flex min-h-[calc(100vh-65px)] w-full flex-col items-center justify-center gap-8 pb-8 pt-16 text-center">
+    <div className="flex min-h-[calc(100vh-65px)] w-full flex-col items-center justify-center gap-8 px-6 pb-8 pt-16 text-center lg:px-0">
       <h1 className="text-5xl font-bold md:text-7xl xl:text-8xl">
         Build{" "}
         <span className="bg-gradient-to-r from-emerald-300 to-violet-500 bg-clip-text text-transparent">

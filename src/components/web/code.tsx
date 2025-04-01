@@ -69,7 +69,7 @@ const Code = ({
   return (
     <div
       className={cn(
-        "relative",
+        "relative overflow-x-auto",
         className,
         !reveal && "h-24 overflow-hidden",
         !reveal && expanded && "h-auto pb-16",
@@ -86,7 +86,7 @@ const Code = ({
           className={cn("absolute right-2 top-4 z-30", reveal && "top-2")}
         />
       )}
-      <div className="relative">
+      <div className="relative w-full">
         {!reveal && (
           <div
             className={cn(

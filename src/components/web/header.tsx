@@ -8,7 +8,6 @@ import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import {
   IconBrandGithub,
   IconBrandX,
-  IconMenu,
   IconLayoutDashboard,
   IconRefresh,
   IconCode,
@@ -29,7 +28,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Button } from "@/components/ui/button";
 
 import { ThemeSelector } from "@/components/web/themes";
 
@@ -185,9 +183,6 @@ const Header = ({ showSidebarTrigger = false }: HeaderProps) => {
               <ModeToggle />
             </li>
           </ul>
-          <Button variant="ghost" size="icon" className="lg:hidden">
-            <IconMenu size={18} />
-          </Button>
         </nav>
       </div>
     </header>

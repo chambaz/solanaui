@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { IconLink, IconInfoCircle } from "@tabler/icons-react";
+import { IconLink } from "@tabler/icons-react";
 
 import { cn } from "@/lib/utils";
 
@@ -26,12 +26,6 @@ const DocsH2 = ({ children, href, className }: DocsHeadingProps) => {
       <h2 className={cn("flex items-baseline gap-2", className)}>
         <IconLink size={20} className="text-muted-foreground" />
         {children}
-        {children === "Installation" && (
-          <p className="ml-2 flex items-center gap-1.5 text-sm font-normal text-muted-foreground">
-            <IconInfoCircle size={16} />
-            CLI coming soon!
-          </p>
-        )}
       </h2>
     </Link>
   );

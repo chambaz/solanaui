@@ -14,8 +14,9 @@ import { WSOL_MINT, USDC_MINT } from "@/lib/constants";
 import { DocsWrapper } from "@/components/web/docs-wrapper";
 import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
 import { DocsH1, DocsH2 } from "@/components/web/docs-heading";
-import { PropsTable } from "@/components/web/props-table";
 import { Code } from "@/components/web/code";
+import { PropsTable } from "@/components/web/props-table";
+import { DocsInstallTabs } from "@/components/web/docs-install-tabs";
 
 import { TokenList } from "@/components/sol/token-list";
 
@@ -142,9 +143,11 @@ export function TokenListDemo() {
         <DocsTabs variants={variants} />
       </div>
       <div className="w-full max-w-none" id="installation">
-        <DocsH2 href="/docs/components/connect-wallet-dialog#installation">
+        <DocsH2 href="/docs/components/token-list#installation">
           Installation
         </DocsH2>
+
+        <DocsInstallTabs />
 
         <h3 className="text-lg">1. Install shadcn/ui table component</h3>
         <p>

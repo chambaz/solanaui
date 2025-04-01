@@ -14,6 +14,7 @@ import { DocsWrapper } from "@/components/web/docs-wrapper";
 import { DocsH1, DocsH2 } from "@/components/web/docs-heading";
 import { PropsTable } from "@/components/web/props-table";
 import { Code } from "@/components/web/code";
+import { DocsInstallTabs } from "@/components/web/docs-install-tabs";
 
 export default function PriceChangePage() {
   const [chartData, setChartData] = React.useState<
@@ -114,7 +115,9 @@ export function PriceChangeDemo() {
             Installation
           </DocsH2>
 
-          <h3 className="text-lg">1. Install SolanaUI PriceChange</h3>
+          <DocsInstallTabs />
+
+          <h3 className="text-lg">1. Install SolanaUI Price Change</h3>
           <p>
             Copy the <code>PriceChange</code> component to
             <code>src/components/sol/price-change.tsx</code>.

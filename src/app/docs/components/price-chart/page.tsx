@@ -17,6 +17,7 @@ import { DocsH2 } from "@/components/web/docs-heading";
 import { DocsWrapper } from "@/components/web/docs-wrapper";
 import { Code } from "@/components/web/code";
 import { PropsTable } from "@/components/web/props-table";
+import { DocsInstallTabs } from "@/components/web/docs-install-tabs";
 
 import { PriceChart, TimeScale } from "@/components/sol/price-chart";
 
@@ -204,14 +205,13 @@ export function PriceChartDemo() {
         </p>
         <DocsTabs variants={variants} />
         <div className="w-full max-w-none" id="installation">
-          <DocsH2 href="/docs/components/connect-wallet-dialog#installation">
+          <DocsH2 href="/docs/components/price-chart#installation">
             Installation
           </DocsH2>
 
-          <h3 className="text-lg">
-            1. Install shadcn/ui card, chart, toggle group, and skeleton
-            components
-          </h3>
+          <DocsInstallTabs />
+
+          <h3 className="text-lg">1. Install shadcn/ui card, chart, toggle group, and skeleton components</h3>
           <p>
             Use shadcn/ui CLI or manually install the{" "}
             <Link
@@ -286,7 +286,7 @@ export function PriceChartDemo() {
 
           <div className="!space-y-0" id="props">
             <DocsH2
-              href="/docs/components/connect-wallet-dialog#props"
+              href="/docs/components/price-chart#props"
               className="!mb-0"
             >
               Props

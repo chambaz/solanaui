@@ -12,6 +12,7 @@ import { PropsTable } from "@/components/web/props-table";
 import { DocsWrapper } from "@/components/web/docs-wrapper";
 import { DocsH1, DocsH2 } from "@/components/web/docs-heading";
 import { Code } from "@/components/web/code";
+import { DocsInstallTabs } from "@/components/web/docs-install-tabs";
 
 export default function TokenCardPage() {
   const { settings } = useTxnSettings();
@@ -69,6 +70,8 @@ export function TxnSettingsDemo() {
           <DocsH2 href="/docs/components/txn-settings#installation">
             Installation
           </DocsH2>
+
+          <DocsInstallTabs />
 
           <h3 className="text-lg">
             1. Install shadcn/ui popover, toggle group, input, and button

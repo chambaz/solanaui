@@ -15,6 +15,7 @@ import { DocsWrapper } from "@/components/web/docs-wrapper";
 import { DocsH1, DocsH2 } from "@/components/web/docs-heading";
 import { PropsTable } from "@/components/web/props-table";
 import { Code } from "@/components/web/code";
+import { DocsInstallTabs } from "@/components/web/docs-install-tabs";
 
 export default function SparklinePage() {
   const [chartData, setChartData] = React.useState<
@@ -88,22 +89,18 @@ export function SparklineDemo() {
         </p>
         <DocsTabs variants={variants} />
         <div className="w-full max-w-none" id="installation">
-          <DocsH2 href="/docs/components/connect-wallet-dialog#installation">
+          <DocsH2 href="/docs/components/sparkline#installation">
             Installation
           </DocsH2>
 
-          <h3 className="text-lg">1. Install shadcn/ui chart component</h3>
+          <DocsInstallTabs />
+
+          <h3 className="text-lg">1. Install SolanaUI Sparkline</h3>
           <p>
-            Use shadcn/ui CLI or manually install the{" "}
-            <Link
-              href="https://ui.shadcn.com/docs/components/chart"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              chart
-            </Link>
+            Copy the code below to <code>src/components/sol/sparkline.tsx</code>
+            .
           </p>
-          <Code language="shell" code={"npx shadcn@latest add chart"} />
+          <Code reveal={false} code={componentSource} />
 
           <h3 className="text-lg">2. Install SolanaUI PriceChange</h3>
           <p>
@@ -113,14 +110,7 @@ export function SparklineDemo() {
           </p>
           <Code reveal={false} code={priceChangeSource} />
 
-          <h3 className="text-lg">2. Install SolanaUI Sparkline</h3>
-          <p>
-            Copy the code below to <code>src/components/sol/sparkline.tsx</code>
-            .
-          </p>
-          <Code reveal={false} code={componentSource} />
-
-          <h3 className="text-lg">4. Use Sparkline</h3>
+          <h3 className="text-lg">3. Use Sparkline</h3>
           <p>
             Import the <code>Sparkline</code> component and use it in your app.
           </p>

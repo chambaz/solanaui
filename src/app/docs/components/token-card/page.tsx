@@ -17,6 +17,7 @@ import { DocsWrapper } from "@/components/web/docs-wrapper";
 import { DocsH1, DocsH2 } from "@/components/web/docs-heading";
 import { PropsTable } from "@/components/web/props-table";
 import { Code } from "@/components/web/code";
+import { DocsInstallTabs } from "@/components/web/docs-install-tabs";
 
 import { TokenCard } from "@/components/sol/token-card";
 
@@ -155,9 +156,17 @@ export function TokenCardDemo() {
         </p>
         <DocsTabs variants={variants} />
         <div className="w-full max-w-none" id="installation">
-          <DocsH2 href="/docs/components/connect-wallet-dialog#installation">
+          <DocsH2 href="/docs/components/token-card#installation">
             Installation
           </DocsH2>
+
+          <DocsInstallTabs />
+
+          <h3 className="text-lg">1. Install Dependencies</h3>
+          <p>
+            Use npm or yarn to install the required dependencies.
+          </p>
+          <Code language="shell" code={"npm install @solana/wallet-adapter-react @solana/web3.js"} />
 
           <h3 className="text-lg">2. Install shadcn/ui card component</h3>
           <p>

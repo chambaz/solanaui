@@ -11,6 +11,7 @@ import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
 import { DocsH1, DocsH2 } from "@/components/web/docs-heading";
 import { Code } from "@/components/web/code";
 import { PropsTable } from "@/components/web/props-table";
+import { DocsInstallTabs } from "@/components/web/docs-install-tabs";
 
 export const metadata: Metadata = {
   title: "Avatar - SolanaUI",
@@ -55,6 +56,8 @@ export function AvatarDemo() {
           <DocsH2 href="/docs/components/avatar#installation">
             Installation
           </DocsH2>
+
+          <DocsInstallTabs />
 
           <h3 className="text-lg">1. Install Dependencies</h3>
           <p>Avatar requires minidenticons.</p>

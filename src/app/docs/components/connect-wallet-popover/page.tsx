@@ -10,6 +10,7 @@ import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
 import { DocsH1, DocsH2 } from "@/components/web/docs-heading";
 import { Code } from "@/components/web/code";
 import { PropsTable } from "@/components/web/props-table";
+import { DocsInstallTabs } from "@/components/web/docs-install-tabs";
 
 import { Button } from "@/components/ui/button";
 
@@ -80,6 +81,8 @@ export function ConnectWalletPopoverDemo() {
           <DocsH2 href="/docs/components/connect-wallet-popover#installation">
             Installation
           </DocsH2>
+
+          <DocsInstallTabs />
 
           <h3 className="text-lg">1. Install Dependencies</h3>
           <p>

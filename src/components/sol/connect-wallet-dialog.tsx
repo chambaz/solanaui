@@ -41,7 +41,7 @@ const ConnectWalletDialog = ({
         {trigger || <Button>Connect Wallet</Button>}
       </DialogTrigger>
       <DialogPortal>
-        <DialogOverlay className="fixed inset-0 z-50 bg-background/50 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
+        <DialogOverlay className="fixed inset-0 z-50 bg-background/90 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0" />
         <DialogPrimitive.DialogContent className="fixed bottom-0 left-0 right-0 top-0 z-50 m-auto flex h-screen w-screen flex-col items-center justify-center gap-4 border bg-background/75 px-8 pb-10 pt-8 shadow-lg outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 sm:rounded-lg md:h-fit md:max-w-md">
           <DialogHeader className={cn("sm:text-center", !title && "sr-only")}>
             <DialogTitle className="text-2xl">

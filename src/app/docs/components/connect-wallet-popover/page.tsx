@@ -1,9 +1,14 @@
-import type { Metadata } from "next";
+"use client";
+
+import React from "react";
 import Link from "next/link";
 
 import { IconWallet } from "@tabler/icons-react";
+import { useWallet } from "@solana/wallet-adapter-react";
 
 import { getComponentSource } from "@/actions/get-component-source";
+
+import { shortAddress } from "@/lib/utils";
 
 import { DocsWrapper } from "@/components/web/docs-wrapper";
 import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
@@ -16,29 +21,34 @@ import { Button } from "@/components/ui/button";
 
 import { ConnectWalletPopover } from "@/components/sol/connect-wallet-popover";
 
-export const metadata: Metadata = {
-  title: "Connect Wallet Popover - SolanaUI",
-};
-
-export default async function ConnectWalletPopoverPage() {
-  const componentSource = await getComponentSource(
-    "src/components/sol/connect-wallet-popover.tsx",
-  );
+export default function ConnectWalletPopoverPage() {
+  const [componentSource, setComponentSource] = React.useState("");
+  const { publicKey, disconnect } = useWallet();
 
   const variants: DocsVariant[] = [
     {
       label: "Default",
       value: "default",
       preview: (
-        <ConnectWalletPopover
-          trigger={
-            <Button size="icon">
-              <IconWallet size={18} />
-            </Button>
-          }
-          title="Connect Wallet"
-          description="Connect your wallet to continue"
-        />
+        <div className="flex flex-col items-center justify-center gap-4">
+          <ConnectWalletPopover
+            trigger={
+              <Button size="icon">
+                <IconWallet size={18} />
+              </Button>
+            }
+            title="Connect Wallet"
+            description="Connect your wallet to continue"
+          />
+          {publicKey && (
+            <div className="text-center">
+              <p>Connected: {shortAddress(publicKey.toBase58())}</p>
+              <button className="border-b text-xs" onClick={disconnect}>
+                Disconnect
+              </button>
+            </div>
+          )}
+        </div>
       ),
       code: `import { ConnectWalletPopover } from "@/components/sol/connect-wallet-popover"
 
@@ -58,6 +68,12 @@ export function ConnectWalletPopoverDemo() {
     },
   ];
 
+  React.useEffect(() => {
+    getComponentSource("src/components/sol/connect-wallet-popover.tsx").then(
+      setComponentSource,
+    );
+  }, []);
+
   return (
     <DocsWrapper>
       <div id="demo">
@@ -65,8 +81,8 @@ export function ConnectWalletPopoverDemo() {
           Connect Wallet Popover
         </DocsH1>
         <p className="text-muted-foreground">
-          The Connect Wallet Dialog component is a dialog window that allows
-          users to connect their wallet via{" "}
+          The Connect Wallet Popover component is a popover that allows users to
+          connect their wallet via{" "}
           <Link
             href="https://github.com/anza-xyz/wallet-adapter"
             target="_blank"

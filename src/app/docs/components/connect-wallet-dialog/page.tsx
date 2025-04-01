@@ -1,7 +1,13 @@
-import type { Metadata } from "next";
+"use client";
+
+import React from "react";
 import Link from "next/link";
 
+import { useWallet } from "@solana/wallet-adapter-react";
+
 import { getComponentSource } from "@/actions/get-component-source";
+
+import { shortAddress } from "@/lib/utils";
 
 import { DocsWrapper } from "@/components/web/docs-wrapper";
 import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
@@ -14,27 +20,33 @@ import { Button } from "@/components/ui/button";
 
 import { ConnectWalletDialog } from "@/components/sol/connect-wallet-dialog";
 
-export const metadata: Metadata = {
-  title: "Connect Wallet Dialog - SolanaUI",
-};
-
-export default async function ConnectWalletDialogPage() {
-  const componentSource = await getComponentSource(
-    "src/components/sol/connect-wallet-dialog.tsx",
-  );
+export default function ConnectWalletDialogPage() {
+  const [componentSource, setComponentSource] = React.useState("");
+  const { publicKey, disconnect } = useWallet();
 
   const variants: DocsVariant[] = [
     {
       label: "Default",
       value: "default",
       preview: (
-        <ConnectWalletDialog
-          trigger={<Button>Connect Wallet</Button>}
-          title="Connect Wallet"
-          description="Connect your wallet to continue"
-        />
+        <div className="flex flex-col items-center justify-center gap-4">
+          <ConnectWalletDialog
+            trigger={<Button>Connect Wallet</Button>}
+            title="Connect Wallet"
+            description="Connect your wallet to continue"
+          />
+          {publicKey && (
+            <div className="text-center">
+              <p>Connected: {shortAddress(publicKey.toBase58())}</p>
+              <button className="border-b text-xs" onClick={disconnect}>
+                Disconnect
+              </button>
+            </div>
+          )}
+        </div>
       ),
       code: `import { ConnectWalletDialog } from "@/components/sol/connect-wallet-dialog"
+import { Button } from "@/components/ui/button"
 
 export function ConnectWalletDialogDemo() {
   return (
@@ -47,6 +59,12 @@ export function ConnectWalletDialogDemo() {
 }`,
     },
   ];
+
+  React.useEffect(() => {
+    getComponentSource("src/components/sol/connect-wallet-dialog.tsx").then(
+      setComponentSource,
+    );
+  }, []);
 
   return (
     <DocsWrapper>

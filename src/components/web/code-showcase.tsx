@@ -13,7 +13,10 @@ const codeExamples = {
   title="Connect Wallet" 
   description="Connect your wallet to continue" 
 />`,
-  fetchAssets: `import { fetchAssets } from "@/lib/assets"
+  fetchAssets: `import { useConnection } from "@solana/wallet-adapter-react"
+import { fetchAssets } from "@/lib/assets"
+
+const { publicKey } = useConnection();
 
 const assets = await fetchAssets({
   addresses: [
@@ -21,7 +24,7 @@ const assets = await fetchAssets({
     new PublicKey("EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm"),
     new PublicKey("DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263"),
   ],
-  owner: publicKey ?? undefined,
+  owner: publicKey,
 });
 `,
   tokenCombobox: `import { fetchAssets, searchAssets } from "@/lib/assets"
@@ -32,7 +35,7 @@ const assets = await fetchAssets({
     new PublicKey("EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm"),
     new PublicKey("DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263"),
   ],
-  owner: publicKey ?? undefined,
+  owner: publicKey,
 });
 
 return (

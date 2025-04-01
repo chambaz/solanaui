@@ -11,6 +11,7 @@ import {
   IconMenu,
   IconLayoutDashboard,
   IconRefresh,
+  IconCode,
 } from "@tabler/icons-react";
 
 import { WSOL_MINT, USDC_MINT } from "@/lib/constants";
@@ -72,7 +73,12 @@ const Header = ({ showSidebarTrigger = false }: HeaderProps) => {
         <div className="flex items-center gap-3">
           {showSidebarTrigger && <SidebarTrigger />}
           <Link href="/" className="mr-auto">
-            <h1 className="text-3xl font-semibold">SolanaUI</h1>
+            <h1 className="flex items-center gap-2 text-3xl font-semibold">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-r from-emerald-300/90 to-violet-500/90">
+                <IconCode size={22} className="text-white" />
+              </div>
+              <span>SolanaUI</span>
+            </h1>
           </Link>
         </div>
         <nav className="flex items-center gap-4 font-mono lg:gap-10">

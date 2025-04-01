@@ -2,7 +2,10 @@
 
 import React from "react";
 
+import Link from "next/link";
+
 import { PublicKey } from "@solana/web3.js";
+import { IconInfoCircle } from "@tabler/icons-react";
 
 import { getComponentSource } from "@/actions/get-component-source";
 import { SolAsset } from "@/lib/types";
@@ -14,6 +17,8 @@ import { DocsH1, DocsH2 } from "@/components/web/docs-heading";
 import { PropsTable } from "@/components/web/props-table";
 import { Code } from "@/components/web/code";
 import { DocsInstallTabs } from "@/components/web/docs-install-tabs";
+
+import { Alert, AlertTitle } from "@/components/ui/alert";
 
 import { TokenIcon } from "@/components/sol/token-icon";
 
@@ -137,6 +142,13 @@ export function TokenIconDemo() {
           <p>
             Import the <code>TokenIcon</code> component and use it in your app.
           </p>
+          <Alert className="mb-4">
+            <IconInfoCircle size={16} />
+            <AlertTitle>
+              SolanaUI provides utilities to help with fetching assets.{" "}
+              <Link href="/docs/utils/assets">Learn more</Link>.
+            </AlertTitle>
+          </Alert>
           <Code
             reveal={true}
             code={`<TokenIcon
@@ -148,10 +160,7 @@ export function TokenIconDemo() {
           />
 
           <div className="!space-y-0" id="props">
-            <DocsH2
-              href="/docs/components/token-icon#props"
-              className="!mb-0"
-            >
+            <DocsH2 href="/docs/components/token-icon#props" className="!mb-0">
               Props
             </DocsH2>
             <PropsTable

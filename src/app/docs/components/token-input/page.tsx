@@ -5,6 +5,7 @@ import Link from "next/link";
 
 import { PublicKey } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
+import { IconInfoCircle } from "@tabler/icons-react";
 
 import { getComponentSource } from "@/actions/get-component-source";
 import { WSOL_MINT, USDC_MINT } from "@/lib/constants";
@@ -18,6 +19,8 @@ import { DocsH1, DocsH2 } from "@/components/web/docs-heading";
 import { PropsTable } from "@/components/web/props-table";
 import { Code } from "@/components/web/code";
 import { DocsInstallTabs } from "@/components/web/docs-install-tabs";
+
+import { Alert, AlertTitle } from "@/components/ui/alert";
 
 import { TokenInput } from "@/components/sol/token-input";
 
@@ -156,7 +159,9 @@ export function TokenInputDemo() {
 
           <DocsInstallTabs />
 
-          <h3 className="text-lg">1. Install shadcn/ui input and button components</h3>
+          <h3 className="text-lg">
+            1. Install shadcn/ui input and button components
+          </h3>
           <p>
             Use shadcn/ui CLI or manually install the{" "}
             <Link
@@ -197,6 +202,13 @@ export function TokenInputDemo() {
           <p>
             Import the <code>TokenInput</code> component and use it in your app.
           </p>
+          <Alert className="mb-4">
+            <IconInfoCircle size={16} />
+            <AlertTitle>
+              SolanaUI provides utilities to help with fetching assets.{" "}
+              <Link href="/docs/utils/assets">Learn more</Link>.
+            </AlertTitle>
+          </Alert>
           <Code
             reveal={true}
             code={`<TokenInput

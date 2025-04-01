@@ -5,17 +5,21 @@ import React from "react";
 import Link from "next/link";
 
 import { PublicKey } from "@solana/web3.js";
+import { IconInfoCircle } from "@tabler/icons-react";
 
 import { fetchPriceHistoryBirdeye } from "@/lib/prices/birdeye";
 import { getComponentSource } from "@/actions/get-component-source";
 
-import { Sparkline } from "@/components/sol/sparkline";
 import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
 import { DocsWrapper } from "@/components/web/docs-wrapper";
 import { DocsH1, DocsH2 } from "@/components/web/docs-heading";
 import { PropsTable } from "@/components/web/props-table";
 import { Code } from "@/components/web/code";
 import { DocsInstallTabs } from "@/components/web/docs-install-tabs";
+
+import { Alert, AlertTitle } from "@/components/ui/alert";
+
+import { Sparkline } from "@/components/sol/sparkline";
 
 export default function SparklinePage() {
   const [chartData, setChartData] = React.useState<
@@ -114,6 +118,13 @@ export function SparklineDemo() {
           <p>
             Import the <code>Sparkline</code> component and use it in your app.
           </p>
+          <Alert className="mb-4">
+            <IconInfoCircle size={16} />
+            <AlertTitle>
+              SolanaUI provides utilities to help with fetching historic price
+              data. <Link href="/docs/utils/price-history">Learn more</Link>.
+            </AlertTitle>
+          </Alert>
           <Code reveal={true} code={`<Sparkline data={chartData} />`} />
 
           <div className="!space-y-0" id="props">

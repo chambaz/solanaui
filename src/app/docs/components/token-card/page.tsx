@@ -6,6 +6,7 @@ import Link from "next/link";
 
 import { PublicKey } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
+import { IconInfoCircle } from "@tabler/icons-react";
 
 import { getComponentSource } from "@/actions/get-component-source";
 import { SolAsset } from "@/lib/types";
@@ -18,6 +19,8 @@ import { DocsH1, DocsH2 } from "@/components/web/docs-heading";
 import { PropsTable } from "@/components/web/props-table";
 import { Code } from "@/components/web/code";
 import { DocsInstallTabs } from "@/components/web/docs-install-tabs";
+
+import { Alert, AlertTitle } from "@/components/ui/alert";
 
 import { TokenCard } from "@/components/sol/token-card";
 
@@ -163,10 +166,11 @@ export function TokenCardDemo() {
           <DocsInstallTabs />
 
           <h3 className="text-lg">1. Install Dependencies</h3>
-          <p>
-            Use npm or yarn to install the required dependencies.
-          </p>
-          <Code language="shell" code={"npm install @solana/wallet-adapter-react @solana/web3.js"} />
+          <p>Use npm or yarn to install the required dependencies.</p>
+          <Code
+            language="shell"
+            code={"npm install @solana/wallet-adapter-react @solana/web3.js"}
+          />
 
           <h3 className="text-lg">2. Install shadcn/ui card component</h3>
           <p>
@@ -207,6 +211,13 @@ export function TokenCardDemo() {
           <p>
             Import the <code>TokenCard</code> component and use it in your app.
           </p>
+          <Alert className="mb-4">
+            <IconInfoCircle size={16} />
+            <AlertTitle>
+              SolanaUI provides utilities to help with fetching assets.{" "}
+              <Link href="/docs/utils/assets">Learn more</Link>.
+            </AlertTitle>
+          </Alert>
           <Code
             reveal={true}
             code={`<TokenCard

@@ -2,12 +2,14 @@
 
 import React from "react";
 
+import Link from "next/link";
+
 import { PublicKey } from "@solana/web3.js";
+import { IconInfoCircle } from "@tabler/icons-react";
 
 import { getComponentSource } from "@/actions/get-component-source";
 
 import { fetchPriceHistoryBirdeye } from "@/lib/prices/birdeye";
-import { PriceChange } from "@/components/sol/price-change";
 
 import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
 import { DocsWrapper } from "@/components/web/docs-wrapper";
@@ -15,6 +17,10 @@ import { DocsH1, DocsH2 } from "@/components/web/docs-heading";
 import { PropsTable } from "@/components/web/props-table";
 import { Code } from "@/components/web/code";
 import { DocsInstallTabs } from "@/components/web/docs-install-tabs";
+
+import { Alert, AlertTitle } from "@/components/ui/alert";
+
+import { PriceChange } from "@/components/sol/price-change";
 
 export default function PriceChangePage() {
   const [chartData, setChartData] = React.useState<
@@ -129,6 +135,13 @@ export function PriceChangeDemo() {
             Import the <code>PriceChange</code> component and use it in your
             app.
           </p>
+          <Alert className="mb-4">
+            <IconInfoCircle size={16} />
+            <AlertTitle>
+              SolanaUI provides utilities to help with fetching historic price
+              data. <Link href="/docs/utils/price-history">Learn more</Link>.
+            </AlertTitle>
+          </Alert>
           <Code reveal={true} code={`<PriceChange data={chartData} />`} />
 
           <div className="!space-y-0" id="props">

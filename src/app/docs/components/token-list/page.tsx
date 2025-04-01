@@ -5,6 +5,7 @@ import Link from "next/link";
 
 import { PublicKey } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
+import { IconInfoCircle } from "@tabler/icons-react";
 
 import { getComponentSource } from "@/actions/get-component-source";
 import { SolAsset } from "@/lib/types";
@@ -17,6 +18,8 @@ import { DocsH1, DocsH2 } from "@/components/web/docs-heading";
 import { Code } from "@/components/web/code";
 import { PropsTable } from "@/components/web/props-table";
 import { DocsInstallTabs } from "@/components/web/docs-install-tabs";
+
+import { Alert, AlertTitle } from "@/components/ui/alert";
 
 import { TokenList } from "@/components/sol/token-list";
 
@@ -180,6 +183,13 @@ export function TokenListDemo() {
         <p>
           Import the <code>TokenList</code> component and use it in your app.
         </p>
+        <Alert className="mb-4">
+          <IconInfoCircle size={16} />
+          <AlertTitle>
+            SolanaUI provides utilities to help with fetching assets.{" "}
+            <Link href="/docs/utils/assets">Learn more</Link>.
+          </AlertTitle>
+        </Alert>
         <Code
           reveal={true}
           code={`<TokenList

@@ -18,7 +18,10 @@ import { PropsTable } from "@/components/web/props-table";
 import { Code } from "@/components/web/code";
 import { DocsInstallTabs } from "@/components/web/docs-install-tabs";
 
+import { Alert, AlertTitle } from "@/components/ui/alert";
+
 import { UserDropdown } from "@/components/sol/user-dropdown";
+import { IconInfoCircle } from "@tabler/icons-react";
 
 export default function UserDropdownPage() {
   const { publicKey } = useWallet();
@@ -222,6 +225,13 @@ export function UserDropdownDemo() {
             Import the <code>UserDropdown</code> component and use it in your
             app.
           </p>
+          <Alert className="mb-4">
+            <IconInfoCircle size={16} />
+            <AlertTitle>
+              SolanaUI provides utilities to help with fetching assets.{" "}
+              <Link href="/docs/utils/assets">Learn more</Link>.
+            </AlertTitle>
+          </Alert>
           <Code
             reveal={true}
             code={`<UserDropdown

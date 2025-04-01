@@ -164,12 +164,20 @@ const Header = ({ showSidebarTrigger = false }: HeaderProps) => {
           )}
           <ul className="hidden items-center gap-4 lg:flex">
             <li>
-              <Link href="">
+              <Link
+                href="https://github.com/chambaz/solanaui"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <IconBrandGithub size={18} />
               </Link>
             </li>
             <li>
-              <Link href="">
+              <Link
+                href="https://x.com/chambaz"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <IconBrandX size={18} />
               </Link>
             </li>

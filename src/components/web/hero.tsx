@@ -16,18 +16,14 @@ const Hero = () => {
       </h1>
       <h2 className="space-y-1 font-mono text-muted-foreground md:text-lg xl:text-2xl xl:leading-relaxed">
         Beautifully designed UI components, built for Solana.
-        <br className="hidden sm:block" /> Extending{" "}
+        <br className="hidden sm:block" /> Extending the{" "}
         <Link
-          href="http://twitter.com/shadcn"
-          className="border-b border-dashed border-muted-foreground/30 transition-colors hover:border-transparent"
+          href="https://ui.shadcn.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="border-b border-dashed border-muted-foreground/80 transition-colors hover:border-transparent"
         >
-          @shadcn&apos;s
-        </Link>{" "}
-        <Link
-          href=""
-          className="border-b border-dashed border-muted-foreground/30 transition-colors hover:border-transparent"
-        >
-          powerful ui library
+          @shadcn/ui library
         </Link>
       </h2>
       <div className="flex items-center gap-2 text-muted-foreground">
@@ -37,12 +33,17 @@ const Hero = () => {
             href="https://twitter.com/chambaz"
             target="_blank"
             rel="noopener noreferrer"
-            className="border-b border-foreground/75 text-foreground transition-colors hover:border-transparent"
+            className="text-foreground transition-colors hover:border-transparent"
           >
             @chambaz
           </Link>
         </p>
-        <Link href="https://solana.com" className="flex items-center gap-2">
+        <Link
+          href="https://app.marginfi.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-2"
+        >
           <svg
             width="20"
             viewBox="0 0 36 32"
@@ -67,15 +68,23 @@ const Hero = () => {
         </Link>
       </div>
       <div className="mt-6 flex items-center gap-4 xl:gap-8">
-        <Button className="xl:h-auto xl:gap-2 xl:px-6 xl:text-lg">
-          <IconRocket size={18} /> Get Started
-        </Button>
-        <Button
-          variant="secondary"
-          className="xl:h-auto xl:gap-2 xl:px-6 xl:text-lg"
+        <Link href="/docs">
+          <Button className="xl:h-auto xl:gap-2 xl:px-6 xl:text-lg">
+            <IconRocket size={18} /> Get Started
+          </Button>
+        </Link>
+        <Link
+          href="https://github.com/chambaz/solanaui"
+          target="_blank"
+          rel="noopener noreferrer"
         >
-          <IconBrandGithub size={18} /> GitHub
-        </Button>
+          <Button
+            variant="secondary"
+            className="xl:h-auto xl:gap-2 xl:px-6 xl:text-lg"
+          >
+            <IconBrandGithub size={18} /> GitHub
+          </Button>
+        </Link>
       </div>
     </div>
   );

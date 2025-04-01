@@ -31,7 +31,17 @@ const Hero = () => {
         </Link>
       </h2>
       <div className="flex items-center gap-2 text-muted-foreground">
-        <p>Built by</p>
+        <p>
+          Built by{" "}
+          <Link
+            href="https://twitter.com/chambaz"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="border-b border-foreground/75 text-foreground transition-colors hover:border-transparent"
+          >
+            @chambaz
+          </Link>
+        </p>
         <Link href="https://solana.com" className="flex items-center gap-2">
           <svg
             width="20"

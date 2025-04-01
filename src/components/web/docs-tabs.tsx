@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
+import { Skeleton } from "@/components/ui/skeleton";
 
 type DocsVariant = {
   value: string;
@@ -33,11 +34,16 @@ type DocsTabsProps = {
 SyntaxHighlighter.registerLanguage("tsx", tsx);
 
 const DocsTabs = ({ variants }: DocsTabsProps) => {
-  const { theme } = useTheme();
+  const { resolvedTheme } = useTheme();
   const [activeVariantIndex, setActiveVariantIndex] = React.useState<number>(0);
   const [activeVariant, setActiveVariant] = React.useState<DocsVariant>(
     variants[activeVariantIndex],
   );
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   React.useEffect(() => {
     setActiveVariant(variants[activeVariantIndex]);
@@ -89,14 +95,16 @@ const DocsTabs = ({ variants }: DocsTabsProps) => {
         </TabsContent>
         <TabsContent value="code">
           <div>
-            {activeVariant.code && (
+            {activeVariant.code && mounted ? (
               <SyntaxHighlighter
                 language="tsx"
-                style={theme === "dark" ? Dark : Light}
+                style={resolvedTheme === "dark" ? Dark : Light}
                 wrapLines
               >
                 {activeVariant.code}
               </SyntaxHighlighter>
+            ) : (
+              <Skeleton className="mb-2 h-[49px] w-full rounded-md" />
             )}
           </div>
         </TabsContent>

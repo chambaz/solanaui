@@ -9,7 +9,6 @@ import { DocsWrapper } from "@/components/web/docs-wrapper";
 import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
 import { DocsH1, DocsH2 } from "@/components/web/docs-heading";
 import { Code } from "@/components/web/code";
-import { PropsTable } from "@/components/web/props-table";
 import { DocsInstallTabs } from "@/components/web/docs-install-tabs";
 
 import { PKInput } from "@/components/sol/pk-input";

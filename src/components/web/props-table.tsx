@@ -29,7 +29,7 @@ type PropsTableProps = {
 };
 
 const PropsTable = ({ data }: PropsTableProps) => {
-  const { theme } = useTheme();
+  const { resolvedTheme } = useTheme();
   const hasDefaults = data.some((item) => item.default);
   return (
     <Table>
@@ -56,7 +56,7 @@ const PropsTable = ({ data }: PropsTableProps) => {
             <TableCell>
               <SyntaxHighlighter
                 language="ts"
-                style={theme === "dark" ? Dark : Light}
+                style={resolvedTheme === "dark" ? Dark : Light}
                 customStyle={{
                   backgroundColor: "transparent",
                   margin: 0,
@@ -74,7 +74,7 @@ const PropsTable = ({ data }: PropsTableProps) => {
                 {item.default && (
                   <SyntaxHighlighter
                     language="jsx"
-                    style={theme === "dark" ? Dark : Light}
+                    style={resolvedTheme === "dark" ? Dark : Light}
                     customStyle={{
                       backgroundColor: "transparent",
                       margin: 0,

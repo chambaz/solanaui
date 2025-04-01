@@ -10,8 +10,11 @@ export async function getComponentSource(componentPath: string) {
 
     let fullPath;
     if (isVercel) {
-      // In Vercel serverless functions, the code is in /var/task
-      fullPath = path.join("/var/task", componentPath);
+      // In Vercel, the code is at /var/task/src
+      fullPath = path.join(
+        "/var/task/src",
+        componentPath.replace(/^src\//, ""),
+      );
     } else {
       // Local development - use process.cwd() as before
       fullPath = path.join(process.cwd(), componentPath);

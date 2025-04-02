@@ -20,7 +20,7 @@ export default function HomePage() {
       </section>
 
       {/* Code Showcase */}
-      <section>
+      <section className="hidden lg:block">
         <CodeShowcase />
       </section>
 

@@ -9,7 +9,7 @@ const Hero = () => {
     <div className="flex min-h-[calc(100vh-65px)] w-full flex-col items-center justify-center gap-8 px-6 pb-8 pt-16 text-center lg:px-0">
       <h1 className="text-5xl font-bold md:text-7xl xl:text-8xl">
         Build{" "}
-        <span className="bg-gradient-to-r from-emerald-300 to-violet-500 bg-clip-text text-transparent">
+        <span className="from-solana-green to-solana-purple bg-gradient-to-r bg-clip-text text-transparent">
           Solana
         </span>{" "}
         apps faster.
@@ -33,7 +33,6 @@ const Hero = () => {
             href="https://twitter.com/chambaz"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-foreground transition-colors hover:border-transparent"
           >
             @chambaz
           </Link>
@@ -42,7 +41,7 @@ const Hero = () => {
           href="https://app.marginfi.com"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-2"
+          className="flex items-center gap-1.5"
         >
           <svg
             width="20"

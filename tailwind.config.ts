@@ -60,6 +60,10 @@ const config: Config = {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        solana: {
+          green: "#14F195",
+          purple: "#9945FF",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

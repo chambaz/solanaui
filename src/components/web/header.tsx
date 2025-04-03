@@ -72,7 +72,7 @@ const Header = ({ showSidebarTrigger = false }: HeaderProps) => {
           {showSidebarTrigger && <SidebarTrigger />}
           <Link href="/" className="mr-auto">
             <h1 className="flex items-center gap-2 text-3xl font-semibold">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-r from-emerald-300/90 to-violet-500/90">
+              <div className="from-solana-green to-solana-purple flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-r">
                 <IconCode size={22} className="text-white" />
               </div>
               <span>SolanaUI</span>

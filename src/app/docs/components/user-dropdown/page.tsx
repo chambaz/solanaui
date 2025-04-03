@@ -60,15 +60,15 @@ export default function UserDropdownPage() {
   }, [fetchData, assets.length, isFetching]);
 
   React.useEffect(() => {
-    getComponentSource("src/generated/component-sources/user-dropdown.tsx.txt").then(
-      setComponentSource,
-    );
-    getComponentSource("src/generated/component-sources/avatar.tsx.txt").then(
-      setAvatarComponentSource,
-    );
-    getComponentSource("src/generated/component-sources/token-icon.tsx.txt").then(
-      setTokenIconSource,
-    );
+    getComponentSource(
+      "public/generated/component-sources/user-dropdown.tsx.txt",
+    ).then(setComponentSource);
+    getComponentSource(
+      "public/generated/component-sources/avatar.tsx.txt",
+    ).then(setAvatarComponentSource);
+    getComponentSource(
+      "public/generated/component-sources/token-icon.tsx.txt",
+    ).then(setTokenIconSource);
   }, []);
 
   const variants: DocsVariant[] = [

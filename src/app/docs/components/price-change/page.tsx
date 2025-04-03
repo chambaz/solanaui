@@ -53,9 +53,9 @@ export default function PriceChangePage() {
   }, [fetchChartData, chartData.length, isFetching]);
 
   React.useEffect(() => {
-    getComponentSource("src/generated/component-sources/price-change.tsx.txt").then(
-      setComponentSource,
-    );
+    getComponentSource(
+      "public/generated/component-sources/price-change.tsx.txt",
+    ).then(setComponentSource);
   }, []);
 
   const variants: DocsVariant[] = [

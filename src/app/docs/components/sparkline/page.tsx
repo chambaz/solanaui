@@ -56,12 +56,12 @@ export default function SparklinePage() {
   }, [fetchChartData, chartData.length, isFetching]);
 
   React.useEffect(() => {
-    getComponentSource("src/generated/component-sources/sparkline.tsx.txt").then(
-      setComponentSource,
-    );
-    getComponentSource("src/generated/component-sources/price-change.tsx.txt").then(
-      setPriceChangeSource,
-    );
+    getComponentSource(
+      "public/generated/component-sources/sparkline.tsx.txt",
+    ).then(setComponentSource);
+    getComponentSource(
+      "public/generated/component-sources/price-change.tsx.txt",
+    ).then(setPriceChangeSource);
   }, []);
 
   const variants: DocsVariant[] = [

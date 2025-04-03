@@ -19,9 +19,9 @@ export default function TokenCardPage() {
   const [componentSource, setComponentSource] = React.useState("");
 
   React.useEffect(() => {
-    getComponentSource("src/generated/component-sources/txn-settings.tsx.txt").then(
-      setComponentSource,
-    );
+    getComponentSource(
+      "public/generated/component-sources/txn-settings.tsx.txt",
+    ).then(setComponentSource);
   }, []);
 
   const variants: DocsVariant[] = [

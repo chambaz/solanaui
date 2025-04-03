@@ -62,7 +62,7 @@ export function ConnectWalletDialogDemo() {
 
   React.useEffect(() => {
     getComponentSource(
-      "src/generated/component-sources/connect-wallet-dialog.tsx.txt",
+      "/public/generated/component-sources/connect-wallet-dialog.tsx.txt",
     ).then(setComponentSource);
   }, []);
 

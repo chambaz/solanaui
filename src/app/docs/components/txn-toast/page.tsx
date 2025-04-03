@@ -72,9 +72,9 @@ export default function UserDropdownPage() {
   };
 
   React.useEffect(() => {
-    getComponentSource("src/generated/component-sources/txn-toast.tsx.txt").then(
-      setComponentSource,
-    );
+    getComponentSource(
+      "public/generated/component-sources/txn-toast.tsx.txt",
+    ).then(setComponentSource);
   }, []);
 
   const variants: DocsVariant[] = [

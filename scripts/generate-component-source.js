@@ -3,7 +3,7 @@ const path = require("path");
 const glob = require("glob");
 
 const SOURCE_DIR = "./src/components/sol";
-const OUTPUT_DIR = "./src/generated/component-sources";
+const OUTPUT_DIR = "./public/generated/component-sources";
 
 const files = glob.sync(`${SOURCE_DIR}/**/*.tsx`);
 

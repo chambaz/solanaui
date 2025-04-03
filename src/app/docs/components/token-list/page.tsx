@@ -59,12 +59,12 @@ export default function TokenListPage() {
   }, [fetchData, assets.length, isFetching, publicKey]);
 
   React.useEffect(() => {
-    getComponentSource("src/generated/component-sources/token-list.tsx.txt").then(
-      setComponentSource,
-    );
-    getComponentSource("src/generated/component-sources/token-icon.tsx.txt").then(
-      setTokenIconSource,
-    );
+    getComponentSource(
+      "public/generated/component-sources/token-list.tsx.txt",
+    ).then(setComponentSource);
+    getComponentSource(
+      "public/generated/component-sources/token-icon.tsx.txt",
+    ).then(setTokenIconSource);
   }, []);
 
   const variants: DocsVariant[] = [

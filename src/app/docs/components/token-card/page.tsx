@@ -73,15 +73,15 @@ export default function TokenCardPage() {
   }, [fetchData, asset, isFetching]);
 
   React.useEffect(() => {
-    getComponentSource("src/generated/component-sources/token-card.tsx.txt").then(
-      setComponentSource,
-    );
-    getComponentSource("src/generated/component-sources/token-icon.tsx.txt").then(
-      setTokenIconSource,
-    );
-    getComponentSource("src/generated/component-sources/sparkline.tsx.txt").then(
-      setSparklineSource,
-    );
+    getComponentSource(
+      "public/generated/component-sources/token-card.tsx.txt",
+    ).then(setComponentSource);
+    getComponentSource(
+      "public/generated/component-sources/token-icon.tsx.txt",
+    ).then(setTokenIconSource);
+    getComponentSource(
+      "public/generated/component-sources/sparkline.tsx.txt",
+    ).then(setSparklineSource);
   }, []);
 
   const variants: DocsVariant[] = [

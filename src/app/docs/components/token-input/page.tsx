@@ -59,12 +59,12 @@ export default function TokenInputPage() {
   }, [fetchData, assets.length, isFetching]);
 
   React.useEffect(() => {
-    getComponentSource("src/generated/component-sources/token-input.tsx.txt").then(
-      setComponentSource,
-    );
-    getComponentSource("src/generated/component-sources/token-combobox.tsx.txt").then(
-      setTokenComboboxSource,
-    );
+    getComponentSource(
+      "public/generated/component-sources/token-input.tsx.txt",
+    ).then(setComponentSource);
+    getComponentSource(
+      "public/generated/component-sources/token-combobox.tsx.txt",
+    ).then(setTokenComboboxSource);
   }, []);
 
   const variants: DocsVariant[] = [

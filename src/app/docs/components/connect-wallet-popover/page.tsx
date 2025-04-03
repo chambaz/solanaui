@@ -69,9 +69,9 @@ export function ConnectWalletPopoverDemo() {
   ];
 
   React.useEffect(() => {
-    getComponentSource("src/generated/component-sources/connect-wallet-popover.tsx.txt").then(
-      setComponentSource,
-    );
+    getComponentSource(
+      "public/generated/component-sources/connect-wallet-popover.tsx.txt",
+    ).then(setComponentSource);
   }, []);
 
   return (

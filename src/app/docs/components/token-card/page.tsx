@@ -73,13 +73,13 @@ export default function TokenCardPage() {
   }, [fetchData, asset, isFetching]);
 
   React.useEffect(() => {
-    getComponentSource("src/components/sol/token-card.tsx").then(
+    getComponentSource("src/generated/component-sources/token-card.tsx.txt").then(
       setComponentSource,
     );
-    getComponentSource("src/components/sol/token-icon.tsx").then(
+    getComponentSource("src/generated/component-sources/token-icon.tsx.txt").then(
       setTokenIconSource,
     );
-    getComponentSource("src/components/sol/sparkline.tsx").then(
+    getComponentSource("src/generated/component-sources/sparkline.tsx.txt").then(
       setSparklineSource,
     );
   }, []);

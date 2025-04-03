@@ -60,13 +60,13 @@ export default function UserDropdownPage() {
   }, [fetchData, assets.length, isFetching]);
 
   React.useEffect(() => {
-    getComponentSource("src/components/sol/user-dropdown.tsx").then(
+    getComponentSource("src/generated/component-sources/user-dropdown.tsx.txt").then(
       setComponentSource,
     );
-    getComponentSource("src/components/sol/avatar.tsx").then(
+    getComponentSource("src/generated/component-sources/avatar.tsx.txt").then(
       setAvatarComponentSource,
     );
-    getComponentSource("src/components/sol/token-icon.tsx").then(
+    getComponentSource("src/generated/component-sources/token-icon.tsx.txt").then(
       setTokenIconSource,
     );
   }, []);

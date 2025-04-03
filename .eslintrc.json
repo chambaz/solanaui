@@ -1,5 +1,6 @@
 {
   "extends": ["next/core-web-vitals", "next/typescript"],
+  "ignorePatterns": ["node_modules", "build", "scripts"],
   "rules": {
     "@next/next/no-img-element": "off"
   }

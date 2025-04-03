@@ -53,7 +53,7 @@ export default function PriceChangePage() {
   }, [fetchChartData, chartData.length, isFetching]);
 
   React.useEffect(() => {
-    getComponentSource("src/components/sol/price-change.tsx").then(
+    getComponentSource("src/generated/component-sources/price-change.tsx.txt").then(
       setComponentSource,
     );
   }, []);

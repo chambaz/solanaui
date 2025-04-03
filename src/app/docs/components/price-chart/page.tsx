@@ -129,10 +129,10 @@ export default function PriceChartPage() {
   ]);
 
   React.useEffect(() => {
-    getComponentSource("src/components/sol/price-chart.tsx").then(
+    getComponentSource("src/generated/component-sources/price-chart.tsx.txt").then(
       setComponentSource,
     );
-    getComponentSource("src/components/sol/token-icon.tsx").then(
+    getComponentSource("src/generated/component-sources/token-icon.tsx.txt").then(
       setTokenIconSource,
     );
   }, []);

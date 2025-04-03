@@ -17,7 +17,7 @@ export default function TokenInputPage() {
   const [componentSource, setComponentSource] = React.useState("");
 
   React.useEffect(() => {
-    getComponentSource("src/components/sol/pk-input.tsx").then(
+    getComponentSource("src/generated/component-sources/pk-input.tsx.txt").then(
       setComponentSource,
     );
   }, []);

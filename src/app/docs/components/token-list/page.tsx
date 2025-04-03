@@ -59,10 +59,10 @@ export default function TokenListPage() {
   }, [fetchData, assets.length, isFetching, publicKey]);
 
   React.useEffect(() => {
-    getComponentSource("src/components/sol/token-list.tsx").then(
+    getComponentSource("src/generated/component-sources/token-list.tsx.txt").then(
       setComponentSource,
     );
-    getComponentSource("src/components/sol/token-icon.tsx").then(
+    getComponentSource("src/generated/component-sources/token-icon.tsx.txt").then(
       setTokenIconSource,
     );
   }, []);

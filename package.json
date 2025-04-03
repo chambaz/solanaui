@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "node scripts/get-component-source.js && next build",
     "start": "next start",
     "lint": "next lint"
   },
@@ -42,6 +42,7 @@
     "clsx": "^2.1.1",
     "cmdk": "1.0.0",
     "date-fns": "^4.1.0",
+    "glob": "^11.0.1",
     "lodash": "^4.17.21",
     "lucide-react": "^0.453.0",
     "millify": "^6.1.0",

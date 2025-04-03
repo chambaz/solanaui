@@ -50,7 +50,7 @@ export default function TokenIconPage() {
   }, [fetchData, assets.length, isFetching]);
 
   React.useEffect(() => {
-    getComponentSource("src/components/sol/token-icon.tsx").then(
+    getComponentSource("src/generated/component-sources/token-icon.tsx.txt").then(
       setComponentSource,
     );
   }, []);

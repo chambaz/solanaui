@@ -6,7 +6,7 @@ import Link from "next/link";
 import { IconWallet } from "@tabler/icons-react";
 import { useWallet } from "@solana/wallet-adapter-react";
 
-import { getComponentSource } from "@/actions/get-component-source";
+
 
 import { shortAddress } from "@/lib/utils";
 
@@ -69,9 +69,9 @@ export function ConnectWalletPopoverDemo() {
   ];
 
   React.useEffect(() => {
-    getComponentSource(
-      "public/generated/component-sources/connect-wallet-popover.tsx.txt",
-    ).then(setComponentSource);
+    fetch("/generated/component-sources/connect-wallet-popover.tsx.txt")
+      .then((res) => res.text())
+      .then(setComponentSource);
   }, []);
 
   return (

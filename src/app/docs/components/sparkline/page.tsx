@@ -8,7 +8,7 @@ import { PublicKey } from "@solana/web3.js";
 import { IconInfoCircle } from "@tabler/icons-react";
 
 import { fetchPriceHistoryBirdeye } from "@/lib/prices/birdeye";
-import { getComponentSource } from "@/actions/get-component-source";
+
 
 import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
 import { DocsWrapper } from "@/components/web/docs-wrapper";
@@ -56,12 +56,12 @@ export default function SparklinePage() {
   }, [fetchChartData, chartData.length, isFetching]);
 
   React.useEffect(() => {
-    getComponentSource(
-      "public/generated/component-sources/sparkline.tsx.txt",
-    ).then(setComponentSource);
-    getComponentSource(
-      "public/generated/component-sources/price-change.tsx.txt",
-    ).then(setPriceChangeSource);
+    fetch("/generated/component-sources/sparkline.tsx.txt")
+      .then((res) => res.text())
+      .then(setComponentSource);
+    fetch("/generated/component-sources/price-change.tsx.txt")
+      .then((res) => res.text())
+      .then(setPriceChangeSource);
   }, []);
 
   const variants: DocsVariant[] = [

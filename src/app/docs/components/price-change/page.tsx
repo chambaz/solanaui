@@ -7,7 +7,7 @@ import Link from "next/link";
 import { PublicKey } from "@solana/web3.js";
 import { IconInfoCircle } from "@tabler/icons-react";
 
-import { getComponentSource } from "@/actions/get-component-source";
+
 
 import { fetchPriceHistoryBirdeye } from "@/lib/prices/birdeye";
 
@@ -53,9 +53,9 @@ export default function PriceChangePage() {
   }, [fetchChartData, chartData.length, isFetching]);
 
   React.useEffect(() => {
-    getComponentSource(
-      "public/generated/component-sources/price-change.tsx.txt",
-    ).then(setComponentSource);
+    fetch("/generated/component-sources/price-change.tsx.txt")
+      .then((res) => res.text())
+      .then(setComponentSource);
   }, []);
 
   const variants: DocsVariant[] = [

@@ -8,7 +8,7 @@ import { PublicKey } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { IconInfoCircle } from "@tabler/icons-react";
 
-import { getComponentSource } from "@/actions/get-component-source";
+
 import { SolAsset } from "@/lib/types";
 import { fetchAssets } from "@/lib/assets/birdeye/fetch";
 import { fetchPriceHistoryBirdeye } from "@/lib/prices/birdeye";
@@ -73,15 +73,15 @@ export default function TokenCardPage() {
   }, [fetchData, asset, isFetching]);
 
   React.useEffect(() => {
-    getComponentSource(
-      "public/generated/component-sources/token-card.tsx.txt",
-    ).then(setComponentSource);
-    getComponentSource(
-      "public/generated/component-sources/token-icon.tsx.txt",
-    ).then(setTokenIconSource);
-    getComponentSource(
-      "public/generated/component-sources/sparkline.tsx.txt",
-    ).then(setSparklineSource);
+    fetch("/generated/component-sources/token-card.tsx.txt")
+      .then((res) => res.text())
+      .then(setComponentSource);
+    fetch("/generated/component-sources/token-icon.tsx.txt")
+      .then((res) => res.text())
+      .then(setTokenIconSource);
+    fetch("/generated/component-sources/sparkline.tsx.txt")
+      .then((res) => res.text())
+      .then(setSparklineSource);
   }, []);
 
   const variants: DocsVariant[] = [

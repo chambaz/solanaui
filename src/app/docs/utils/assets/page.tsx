@@ -1,26 +1,34 @@
+"use client";
+
 import React from "react";
-import { Metadata } from "next";
 
 import { Code } from "@/components/web/code";
 import { DocsWrapper } from "@/components/web/docs-wrapper";
 import { DocsH1, DocsH2 } from "@/components/web/docs-heading";
-import { getComponentSource } from "@/actions/get-component-source";
 
-export const metadata: Metadata = {
-  title: "Fetching Assets - SolanaUI",
-  description:
-    "Helper functions for fetching token assets from various data sources.",
-};
+export default function AssetsPage() {
+  const [birdeyeFetchSource, setBirdeyeFetchSource] = React.useState("");
+  const [birdeyeSearchSource, setBirdeyeSearchSource] = React.useState("");
+  const [heliusSource, setHeliusSource] = React.useState("");
+  const [umiSource, setUmiSource] = React.useState("");
 
-export default async function AssetsPage() {
-  const birdeyeFetchSource = await getComponentSource(
-    "src/lib/assets/birdeye/fetch.ts",
-  );
-  const birdeyeSearchSource = await getComponentSource(
-    "src/lib/assets/birdeye/search.ts",
-  );
-  const heliusSource = await getComponentSource("src/lib/assets/helius.ts");
-  const umiSource = await getComponentSource("src/lib/assets/umi.ts");
+  React.useEffect(() => {
+    fetch("/generated/component-sources/assets_birdeye_fetch.ts.txt")
+      .then((res) => res.text())
+      .then(setBirdeyeFetchSource);
+
+    fetch("/generated/component-sources/assets_birdeye_search.ts.txt")
+      .then((res) => res.text())
+      .then(setBirdeyeSearchSource);
+
+    fetch("/generated/component-sources/assets_helius.ts.txt")
+      .then((res) => res.text())
+      .then(setHeliusSource);
+
+    fetch("/generated/component-sources/assets_umi.ts.txt")
+      .then((res) => res.text())
+      .then(setUmiSource);
+  }, []);
 
   return (
     <DocsWrapper>

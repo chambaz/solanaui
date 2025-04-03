@@ -10,7 +10,7 @@ import { IconInfoCircle } from "@tabler/icons-react";
 import { fetchPriceHistoryBirdeye } from "@/lib/prices/birdeye";
 import { fetchAssets } from "@/lib/assets/birdeye/fetch";
 import { SolAsset } from "@/lib/types";
-import { getComponentSource } from "@/actions/get-component-source";
+
 
 import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
 import { DocsH1 } from "@/components/web/docs-heading";
@@ -129,12 +129,12 @@ export default function PriceChartPage() {
   ]);
 
   React.useEffect(() => {
-    getComponentSource(
-      "public/generated/component-sources/price-chart.tsx.txt",
-    ).then(setComponentSource);
-    getComponentSource(
-      "public/generated/component-sources/token-icon.tsx.txt",
-    ).then(setTokenIconSource);
+    fetch("/generated/component-sources/price-chart.tsx.txt")
+      .then((res) => res.text())
+      .then(setComponentSource);
+    fetch("/generated/component-sources/token-icon.tsx.txt")
+      .then((res) => res.text())
+      .then(setTokenIconSource);
   }, []);
 
   const variants: DocsVariant[] = [

@@ -4,7 +4,7 @@ import React from "react";
 
 import Link from "next/link";
 
-import { getComponentSource } from "@/actions/get-component-source";
+
 
 import { TxnSettings, useTxnSettings } from "@/components/sol/txn-settings";
 import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
@@ -19,9 +19,9 @@ export default function TokenCardPage() {
   const [componentSource, setComponentSource] = React.useState("");
 
   React.useEffect(() => {
-    getComponentSource(
-      "public/generated/component-sources/txn-settings.tsx.txt",
-    ).then(setComponentSource);
+    fetch("/generated/component-sources/txn-settings.tsx.txt")
+      .then((res) => res.text())
+      .then(setComponentSource);
   }, []);
 
   const variants: DocsVariant[] = [

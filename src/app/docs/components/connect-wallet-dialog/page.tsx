@@ -5,8 +5,6 @@ import Link from "next/link";
 
 import { useWallet } from "@solana/wallet-adapter-react";
 
-import { getComponentSource } from "@/actions/get-component-source";
-
 import { shortAddress } from "@/lib/utils";
 
 import { DocsWrapper } from "@/components/web/docs-wrapper";
@@ -61,9 +59,9 @@ export function ConnectWalletDialogDemo() {
   ];
 
   React.useEffect(() => {
-    getComponentSource(
-      "/public/generated/component-sources/connect-wallet-dialog.tsx.txt",
-    ).then(setComponentSource);
+    fetch("/generated/component-sources/connect-wallet-dialog.tsx.txt")
+      .then((res) => res.text())
+      .then(setComponentSource);
   }, []);
 
   return (

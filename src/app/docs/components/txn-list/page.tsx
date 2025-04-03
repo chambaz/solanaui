@@ -6,7 +6,7 @@ import Link from "next/link";
 import { VersionedTransactionResponse } from "@solana/web3.js";
 import { useConnection } from "@solana/wallet-adapter-react";
 
-import { getComponentSource } from "@/actions/get-component-source";
+
 
 import { DocsWrapper } from "@/components/web/docs-wrapper";
 import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
@@ -51,9 +51,9 @@ export default function TxnListPage() {
   }, [fetchTransactions, transactions.length, isFetching]);
 
   React.useEffect(() => {
-    getComponentSource("src/components/sol/txn-list.tsx").then(
-      setComponentSource,
-    );
+    fetch("/generated/component-sources/txn-list.tsx.txt")
+      .then((res) => res.text())
+      .then(setComponentSource);
   }, []);
 
   const variants: DocsVariant[] = [

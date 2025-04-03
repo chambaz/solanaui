@@ -7,7 +7,7 @@ import { PublicKey } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { IconInfoCircle } from "@tabler/icons-react";
 
-import { getComponentSource } from "@/actions/get-component-source";
+
 import { WSOL_MINT, USDC_MINT } from "@/lib/constants";
 import { SolAsset } from "@/lib/types";
 import { fetchAssets } from "@/lib/assets/birdeye/fetch";
@@ -59,12 +59,12 @@ export default function TokenInputPage() {
   }, [fetchData, assets.length, isFetching]);
 
   React.useEffect(() => {
-    getComponentSource(
-      "public/generated/component-sources/token-input.tsx.txt",
-    ).then(setComponentSource);
-    getComponentSource(
-      "public/generated/component-sources/token-combobox.tsx.txt",
-    ).then(setTokenComboboxSource);
+    fetch("/generated/component-sources/token-input.tsx.txt")
+      .then((res) => res.text())
+      .then(setComponentSource);
+    fetch("/generated/component-sources/token-combobox.tsx.txt")
+      .then((res) => res.text())
+      .then(setTokenComboboxSource);
   }, []);
 
   const variants: DocsVariant[] = [

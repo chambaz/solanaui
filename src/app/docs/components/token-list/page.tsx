@@ -7,7 +7,7 @@ import { PublicKey } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { IconInfoCircle } from "@tabler/icons-react";
 
-import { getComponentSource } from "@/actions/get-component-source";
+
 import { SolAsset } from "@/lib/types";
 import { fetchAssets } from "@/lib/assets/birdeye/fetch";
 import { WSOL_MINT, USDC_MINT } from "@/lib/constants";
@@ -59,12 +59,12 @@ export default function TokenListPage() {
   }, [fetchData, assets.length, isFetching, publicKey]);
 
   React.useEffect(() => {
-    getComponentSource(
-      "public/generated/component-sources/token-list.tsx.txt",
-    ).then(setComponentSource);
-    getComponentSource(
-      "public/generated/component-sources/token-icon.tsx.txt",
-    ).then(setTokenIconSource);
+    fetch("/generated/component-sources/token-list.tsx.txt")
+      .then((res) => res.text())
+      .then(setComponentSource);
+    fetch("/generated/component-sources/token-icon.tsx.txt")
+      .then((res) => res.text())
+      .then(setTokenIconSource);
   }, []);
 
   const variants: DocsVariant[] = [

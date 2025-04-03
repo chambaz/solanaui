@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 
-import { getComponentSource } from "@/actions/get-component-source";
+
 
 import { DocsWrapper } from "@/components/web/docs-wrapper";
 import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
@@ -17,9 +17,9 @@ export default function TokenInputPage() {
   const [componentSource, setComponentSource] = React.useState("");
 
   React.useEffect(() => {
-    getComponentSource(
-      "public/generated/component-sources/pk-input.tsx.txt",
-    ).then(setComponentSource);
+    fetch("/generated/component-sources/pk-input.tsx.txt")
+      .then((res) => res.text())
+      .then(setComponentSource);
   }, []);
 
   const variants: DocsVariant[] = [

@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey } from "@solana/web3.js";
 
-import { getComponentSource } from "@/actions/get-component-source";
+
 import { WSOL_MINT, USDC_MINT } from "@/lib/constants";
 import { SolAsset } from "@/lib/types";
 import { fetchAssets } from "@/lib/assets/birdeye/fetch";
@@ -60,15 +60,15 @@ export default function UserDropdownPage() {
   }, [fetchData, assets.length, isFetching]);
 
   React.useEffect(() => {
-    getComponentSource(
-      "public/generated/component-sources/user-dropdown.tsx.txt",
-    ).then(setComponentSource);
-    getComponentSource(
-      "public/generated/component-sources/avatar.tsx.txt",
-    ).then(setAvatarComponentSource);
-    getComponentSource(
-      "public/generated/component-sources/token-icon.tsx.txt",
-    ).then(setTokenIconSource);
+    fetch("/generated/component-sources/user-dropdown.tsx.txt")
+      .then((res) => res.text())
+      .then(setComponentSource);
+    fetch("/generated/component-sources/avatar.tsx.txt")
+      .then((res) => res.text())
+      .then(setAvatarComponentSource);
+    fetch("/generated/component-sources/token-icon.tsx.txt")
+      .then((res) => res.text())
+      .then(setTokenIconSource);
   }, []);
 
   const variants: DocsVariant[] = [

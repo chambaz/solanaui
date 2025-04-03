@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Transaction, SystemProgram, PublicKey } from "@solana/web3.js";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 
-import { getComponentSource } from "@/actions/get-component-source";
+
 
 import { DocsWrapper } from "@/components/web/docs-wrapper";
 import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
@@ -72,9 +72,9 @@ export default function UserDropdownPage() {
   };
 
   React.useEffect(() => {
-    getComponentSource(
-      "public/generated/component-sources/txn-toast.tsx.txt",
-    ).then(setComponentSource);
+    fetch("/generated/component-sources/txn-toast.tsx.txt")
+      .then((res) => res.text())
+      .then(setComponentSource);
   }, []);
 
   const variants: DocsVariant[] = [

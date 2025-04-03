@@ -1,19 +1,19 @@
+"use client";
+
 import React from "react";
-import { Metadata } from "next";
 
 import { Code } from "@/components/web/code";
 import { DocsWrapper } from "@/components/web/docs-wrapper";
 import { DocsH1, DocsH2 } from "@/components/web/docs-heading";
-import { getComponentSource } from "@/actions/get-component-source";
 
-export const metadata: Metadata = {
-  title: "Helper Utilities - SolanaUI",
-  description:
-    "Utility functions for formatting, validation, and common operations.",
-};
-
-export default async function HelpersPage() {
-  const utilsSource = await getComponentSource("src/lib/utils.ts");
+export default function HelpersPage() {
+  const [utilsSource, setUtilsSource] = React.useState("");
+  
+  React.useEffect(() => {
+    fetch("/generated/component-sources/utils.ts.txt")
+      .then((res) => res.text())
+      .then(setUtilsSource);
+  }, []);
   return (
     <DocsWrapper>
       <div className="space-y-4">

@@ -1,19 +1,19 @@
+"use client";
+
 import React from "react";
-import { Metadata } from "next";
 
 import { Code } from "@/components/web/code";
 import { DocsWrapper } from "@/components/web/docs-wrapper";
 import { DocsH1, DocsH2 } from "@/components/web/docs-heading";
-import { getComponentSource } from "@/actions/get-component-source";
 
-export const metadata: Metadata = {
-  title: "Price Utilities - SolanaUI",
-  description:
-    "Utility functions for fetching historical and real-time token prices.",
-};
-
-export default async function PricesPage() {
-  const birdeyeSource = await getComponentSource("src/lib/prices/birdeye.ts");
+export default function PricesPage() {
+  const [birdeyeSource, setBirdeyeSource] = React.useState("");
+  
+  React.useEffect(() => {
+    fetch("/generated/component-sources/prices_birdeye.ts.txt")
+      .then((res) => res.text())
+      .then(setBirdeyeSource);
+  }, []);
 
   return (
     <DocsWrapper>

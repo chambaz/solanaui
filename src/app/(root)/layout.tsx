@@ -24,9 +24,9 @@ const roboto_mono = Roboto_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "SolanaUI",
+  title: "SolanaUI - Build Solana apps faster",
   description:
-    "Beautifully designed UI components, built for Solana. Extending @shadcn's powerful ui library",
+    "Beautifully designed UI components and utilities, built for Solana. Extending the powerful @shadcn/ui library.",
 };
 
 export default function RootLayout({

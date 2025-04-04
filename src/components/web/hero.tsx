@@ -9,14 +9,14 @@ const Hero = () => {
     <div className="flex min-h-[calc(100vh-65px)] w-full flex-col items-center justify-center gap-8 px-6 pb-8 pt-16 text-center lg:px-0">
       <h1 className="text-5xl font-bold md:text-7xl xl:text-8xl">
         Build{" "}
-        <span className="from-solana-green to-solana-purple bg-gradient-to-r bg-clip-text text-transparent">
+        <span className="bg-gradient-to-r from-solana-green to-solana-purple bg-clip-text text-transparent">
           Solana
         </span>{" "}
         apps faster.
       </h1>
       <h2 className="space-y-1 font-mono text-muted-foreground md:text-lg xl:text-2xl xl:leading-relaxed">
-        Beautifully designed UI components, built for Solana.
-        <br className="hidden sm:block" /> Extending the{" "}
+        Beautifully designed UI components and utilities, built for Solana.
+        <br className="hidden sm:block" /> Extending the powerful{" "}
         <Link
           href="https://ui.shadcn.com/"
           target="_blank"
@@ -25,6 +25,7 @@ const Hero = () => {
         >
           @shadcn/ui library
         </Link>
+        .
       </h2>
       <div className="flex items-center gap-2 text-muted-foreground">
         <p>

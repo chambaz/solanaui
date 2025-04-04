@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ThemeSelector } from "@/components/web/themes";
 import { DocsWrapper } from "@/components/web/docs-wrapper";
 import { DocsH1, DocsH2 } from "@/components/web/docs-heading";
+import { Code } from "@/components/web/code";
 
 export default function IntroductionPage() {
   return (
@@ -12,8 +13,8 @@ export default function IntroductionPage() {
       <div id="getting-started">
         <DocsH1 href="/docs#getting-started">Getting Started</DocsH1>
         <p>
-          SolanaUI is a library of UI components for crafting frontends for
-          Solana apps. It is built on top of{" "}
+          SolanaUI is a collection of beautifully designed UI components and
+          utility functions, built for Solana. It extends the powerful{" "}
           <Link
             href="https://ui.shadcn.com/"
             target="_blank"
@@ -21,16 +22,17 @@ export default function IntroductionPage() {
           >
             shadcn/ui
           </Link>{" "}
-          and extends its functionality to provide UI primitives for building
-          Solana apps.
+          library with Solana-specific components along with asset / price
+          fetching utilites, making it easier to get started with Solana UI
+          development. The project is fully open source and it is intended for
+          components and utilities to be copy and pasted into your project
         </p>
 
         <p>
-          The library is open source and it is intended for components to be
-          copied into your project codebase and extended as needed. Building
-          Solana apps at scale is notoriously complex and often requires custom
-          indexing and data storage / retrieval. SolanaUI is designed to be a
-          starting point for your project and can be extended as needed.
+          Building Solana apps at scale is notoriously complex and often
+          requires custom indexing and data storage / retrieval. SolanaUI is
+          designed to be a starting point for your project and can be extended
+          as needed.
         </p>
       </div>
       <div id="installation">
@@ -60,7 +62,8 @@ export default function IntroductionPage() {
           >
             Solana web3.js
           </Link>
-          . If you have an existing project then skip this step.
+          . If you have an existing project then skip this step, otherwise you
+          can follow the steps below.
         </p>
 
         <ul>
@@ -81,28 +84,32 @@ export default function IntroductionPage() {
           </li>
         </ul>
         <p>
-          Set your RPC url in your enviroment file as{" "}
-          <code>NEXT_PUBLIC_RPC_URL</code>
+          Set your RPC url in your <code>.env.local</code> file as{" "}
+          <code>NEXT_PUBLIC_RPC_URL</code>. In production we recommend proxying
+          your RPC requests via a server side route to avoid exposing your API
+          key.
         </p>
+        <Code code={`NEXT_PUBLIC_RPC_URL"=https://your-rpc-url.com"`} />
       </div>
       <div id="themes">
         <DocsH2 href="/docs#themes">Themes</DocsH2>
         <p>
-          SolanaUI inherits the{" "}
+          SolanaUI extends @shadcn/ui and therefore inherits the{" "}
           <Link
             href="https://ui.shadcn.com/docs/themes"
             target="_blank"
             rel="noopener noreferrer"
           >
-            shadcn/ui theming system
+            theming system
           </Link>
-          , and components will adapt according to your theme.
+          . Copy and paste components into your project and they will adapt
+          according to your theme.
         </p>
         <p>Try changing the theme to see the components adapt.</p>
         <div>
           <ThemeSelector
             label="Change theme"
-            className="mb-4 rounded-md bg-secondary px-4 py-2"
+            className="mb-4 rounded-md bg-secondary px-4 py-2 text-secondary-foreground hover:bg-secondary/80"
           />
         </div>
       </div>
@@ -116,9 +123,32 @@ export default function IntroductionPage() {
         </p>
         <p>
           SolanaUI provides a few utilities to help you get started with
-          fetching assets and prices. The examples in our documentation use
-          these utilities.{" "}
-          <Link href="/docs/asset-price-fetching">
+          fetching assets and prices from{" "}
+          <Link
+            href="https://docs.birdeye.so/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Birdeye
+          </Link>
+          ,{" "}
+          <Link
+            href="https://docs.helius.dev/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Helius
+          </Link>
+          , and{" "}
+          <Link
+            href="hthttps://developers.metaplex.com/umi/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Metaplex UMI
+          </Link>
+          . The examples in our documentation all use these utilities.{" "}
+          <Link href="/docs/utils/assets">
             Read more about the asset / price fetching utilities.
           </Link>
         </p>

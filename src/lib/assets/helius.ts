@@ -1,6 +1,6 @@
 import { PublicKey, LAMPORTS_PER_SOL } from "@solana/web3.js";
-import { SolAsset, FetchAssetsArgs } from "../types";
-import { WSOL_MINT } from "../constants";
+import { SolAsset, FetchAssetsArgs } from "@/lib/types";
+import { WSOL_MINT } from "@/lib/consts";
 
 /**
  * Fetches token asset data from Helius API for a list of token addresses
@@ -113,10 +113,12 @@ const fetchAssets = async ({
     for (const asset of metadataData.result) {
       const isWsol = asset.id === WSOL_MINT.toString();
       const assetBalance = balances[asset.id] || 0;
-      
+
       // Add native SOL balance to WSOL if applicable
-      const totalBalance = isWsol ? assetBalance + nativeSolBalance : assetBalance;
-      
+      const totalBalance = isWsol
+        ? assetBalance + nativeSolBalance
+        : assetBalance;
+
       fetchedAssets.push({
         mint: new PublicKey(asset.id),
         name: asset.content.metadata.name,

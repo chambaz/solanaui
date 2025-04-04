@@ -14,7 +14,7 @@ import {
   getPythProgramKeyForCluster,
 } from "@pythnetwork/client";
 
-import { WSOL_MINT } from "@/lib/constants";
+import { WSOL_MINT } from "@/lib/consts";
 import { SolAsset, FetchAssetsArgs } from "@/lib/types";
 
 /**

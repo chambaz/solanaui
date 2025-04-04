@@ -1,6 +1,6 @@
 import { PublicKey, LAMPORTS_PER_SOL, Connection } from "@solana/web3.js";
-import { SolAsset } from "../../types";
-import { WSOL_MINT } from "../../constants";
+import { SolAsset } from "@/lib/types";
+import { WSOL_MINT } from "@/lib/consts";
 
 /**
  * Searches for token assets using Birdeye API

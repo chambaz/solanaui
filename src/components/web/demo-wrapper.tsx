@@ -9,7 +9,7 @@ import {
 } from "@solana/web3.js";
 
 import { cn } from "@/lib/utils";
-import { WSOL_MINT } from "@/lib/constants";
+import { WSOL_MINT } from "@/lib/consts";
 import { SolAsset } from "@/lib/types";
 import { fetchAssets } from "@/lib/assets/birdeye/fetch";
 import { fetchPriceHistoryBirdeye } from "@/lib/prices/birdeye";

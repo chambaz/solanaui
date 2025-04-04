@@ -7,7 +7,6 @@ import Link from "next/link";
 import { PublicKey } from "@solana/web3.js";
 import { IconInfoCircle } from "@tabler/icons-react";
 
-
 import { SolAsset } from "@/lib/types";
 import { fetchAssets } from "@/lib/assets/birdeye/fetch";
 
@@ -72,7 +71,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey } from "@solana/web3.js";
 
 import { fetchAssets } from "@/lib/assets"
-import { WSOL_MINT, USDC_MINT } from "@/lib/constants";
+import { WSOL_MINT, USDC_MINT } from "@/lib/consts";
 
 import { TokenIcon } from "@/components/sol/token-icon"
 

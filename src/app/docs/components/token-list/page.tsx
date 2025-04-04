@@ -7,10 +7,9 @@ import { PublicKey } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { IconInfoCircle } from "@tabler/icons-react";
 
-
 import { SolAsset } from "@/lib/types";
 import { fetchAssets } from "@/lib/assets/birdeye/fetch";
-import { WSOL_MINT, USDC_MINT } from "@/lib/constants";
+import { WSOL_MINT, USDC_MINT } from "@/lib/consts";
 
 import { DocsWrapper } from "@/components/web/docs-wrapper";
 import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
@@ -86,7 +85,7 @@ import { PublicKey } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
 
 import { fetchAssets } from "@/lib/assets";
-import { WSOL_MINT, USDC_MINT } from "@/lib/constants";
+import { WSOL_MINT, USDC_MINT } from "@/lib/consts";
 
 import { TokenList } from "@/components/sol/token-list";
 

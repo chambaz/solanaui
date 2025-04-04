@@ -1,6 +1,6 @@
 import { PublicKey, LAMPORTS_PER_SOL } from "@solana/web3.js";
-import { SolAsset, FetchAssetsArgs } from "../../types";
-import { WSOL_MINT } from "../../constants";
+import { SolAsset, FetchAssetsArgs } from "@/lib/types";
+import { WSOL_MINT } from "@/lib/consts";
 
 /**
  * Fetches token asset data from Birdeye API for a list of token addresses

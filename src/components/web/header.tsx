@@ -13,7 +13,7 @@ import {
   IconCode,
 } from "@tabler/icons-react";
 
-import { WSOL_MINT, USDC_MINT } from "@/lib/constants";
+import { WSOL_MINT, USDC_MINT } from "@/lib/consts";
 
 import { ModeToggle } from "@/components/web/themes";
 
@@ -72,7 +72,7 @@ const Header = ({ showSidebarTrigger = false }: HeaderProps) => {
           {showSidebarTrigger && <SidebarTrigger />}
           <Link href="/" className="mr-auto">
             <h1 className="flex items-center gap-2 text-3xl font-semibold">
-              <div className="from-solana-green to-solana-purple flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-r">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-r from-solana-green to-solana-purple">
                 <IconCode size={22} className="text-white" />
               </div>
               <span>SolanaUI</span>

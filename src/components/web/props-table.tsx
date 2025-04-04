@@ -6,6 +6,7 @@ import ts from "react-syntax-highlighter/dist/esm/languages/prism/typescript";
 import Dark from "react-syntax-highlighter/dist/esm/styles/prism/vsc-dark-plus";
 import Light from "react-syntax-highlighter/dist/esm/styles/prism/base16-ateliersulphurpool.light";
 import { useTheme } from "next-themes";
+import React from "react";
 
 import {
   Table,
@@ -16,6 +17,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
+import { Skeleton } from "@/components/ui/skeleton";
 
 SyntaxHighlighter.registerLanguage("jsx", jsx);
 SyntaxHighlighter.registerLanguage("ts", ts);
@@ -30,7 +32,23 @@ type PropsTableProps = {
 
 const PropsTable = ({ data }: PropsTableProps) => {
   const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = React.useState(false);
   const hasDefaults = data.some((item) => item.default);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <div className="space-y-2">
+        <Skeleton className="h-10 w-full" />
+        <Skeleton className="h-10 w-full" />
+        <Skeleton className="h-10 w-full" />
+      </div>
+    );
+  }
+
   return (
     <Table>
       <TableHeader>

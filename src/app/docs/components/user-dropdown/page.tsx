@@ -5,10 +5,11 @@ import Link from "next/link";
 
 import { useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey } from "@solana/web3.js";
-
+import { IconInfoCircle } from "@tabler/icons-react";
 
 import { WSOL_MINT, USDC_MINT } from "@/lib/constants";
 import { SolAsset } from "@/lib/types";
+import { shortAddress } from "@/lib/utils";
 import { fetchAssets } from "@/lib/assets/birdeye/fetch";
 
 import { DocsWrapper } from "@/components/web/docs-wrapper";
@@ -17,14 +18,13 @@ import { DocsH1, DocsH2 } from "@/components/web/docs-heading";
 import { PropsTable } from "@/components/web/props-table";
 import { Code } from "@/components/web/code";
 import { DocsInstallTabs } from "@/components/web/docs-install-tabs";
-
 import { Alert, AlertTitle } from "@/components/ui/alert";
 
 import { UserDropdown } from "@/components/sol/user-dropdown";
-import { IconInfoCircle } from "@tabler/icons-react";
+import { ConnectWalletPopover } from "@/components/sol/connect-wallet-popover";
 
 export default function UserDropdownPage() {
-  const { publicKey } = useWallet();
+  const { publicKey, disconnect } = useWallet();
   const [assets, setAssets] = React.useState<SolAsset[]>([]);
   const [isFetching, setIsFetching] = React.useState(false);
   const [componentSource, setComponentSource] = React.useState("");
@@ -75,7 +75,37 @@ export default function UserDropdownPage() {
     {
       label: "Default",
       value: "default",
-      preview: <UserDropdown address={publicKey} assets={assets} />,
+      preview: (
+        <div className="flex flex-col items-center justify-center gap-4 text-center">
+          <UserDropdown address={publicKey} assets={assets} />
+          {publicKey ? (
+            <div className="flex flex-col items-center justify-center gap-2 text-sm text-muted-foreground">
+              <p>
+                <span className="font-bold">Address:</span>{" "}
+                {shortAddress(publicKey)}
+              </p>
+              <button className="border-b text-xs" onClick={disconnect}>
+                Disconnect
+              </button>
+            </div>
+          ) : (
+            <div className="text-sm text-muted-foreground">
+              <p>
+                <ConnectWalletPopover
+                  title="Connect your wallet"
+                  description="Connect your wallet to see the UserDropdown component"
+                  trigger={
+                    <button className="border-b px-1 font-normal text-muted-foreground hover:border-transparent hover:no-underline">
+                      Connect your wallet
+                    </button>
+                  }
+                />
+                to see the UserDropdown component
+              </p>
+            </div>
+          )}
+        </div>
+      ),
       code: `import React from "react";
 
 import { useWallet } from "@solana/wallet-adapter-react";

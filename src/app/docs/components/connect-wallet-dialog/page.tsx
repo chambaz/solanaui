@@ -34,7 +34,7 @@ export default function ConnectWalletDialogPage() {
             description="Connect your wallet to continue"
           />
           {publicKey && (
-            <div className="text-center">
+            <div className="text-center text-sm text-muted-foreground">
               <p>Connected: {shortAddress(publicKey.toBase58())}</p>
               <button className="border-b text-xs" onClick={disconnect}>
                 Disconnect

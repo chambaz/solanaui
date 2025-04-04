@@ -6,8 +6,6 @@ import Link from "next/link";
 import { IconWallet } from "@tabler/icons-react";
 import { useWallet } from "@solana/wallet-adapter-react";
 
-
-
 import { shortAddress } from "@/lib/utils";
 
 import { DocsWrapper } from "@/components/web/docs-wrapper";
@@ -41,7 +39,7 @@ export default function ConnectWalletPopoverPage() {
             description="Connect your wallet to continue"
           />
           {publicKey && (
-            <div className="text-center">
+            <div className="text-center text-sm text-muted-foreground">
               <p>Connected: {shortAddress(publicKey.toBase58())}</p>
               <button className="border-b text-xs" onClick={disconnect}>
                 Disconnect

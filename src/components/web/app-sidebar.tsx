@@ -113,7 +113,7 @@ const navItems = [
     icon: <IconTools />,
     children: [
       { label: "Assets", href: "/docs/utils/assets" },
-      { label: "Price History", href: "/docs/utils/price-history" },
+      { label: "Prices", href: "/docs/utils/prices" },
       { label: "Helpers", href: "/docs/utils/helpers" },
     ],
   },
@@ -227,6 +227,53 @@ const AppSidebar = () => {
                                 </SidebarMenuSubButton>
                               </SidebarMenuSubItem>
                             )}
+                          </SidebarMenuSub>
+                        </CollapsibleContent>
+                      )}
+
+                      {item.section === "Utils" && child.label === "Assets" && (
+                        <CollapsibleContent>
+                          <SidebarMenuSub>
+                            <SidebarMenuSubItem>
+                              <SidebarMenuSubButton asChild>
+                                <Link
+                                  href={`${child.href}#types`}
+                                  onClick={() => setOpenMobile(false)} // Close mobile sidebar when sub-item is clicked
+                                >
+                                  Setup
+                                </Link>
+                              </SidebarMenuSubButton>
+                            </SidebarMenuSubItem>
+                            <SidebarMenuSubItem>
+                              <SidebarMenuSubButton asChild>
+                                <Link
+                                  href={`${child.href}#fetchassets`}
+                                  onClick={() => setOpenMobile(false)} // Close mobile sidebar when sub-item is clicked
+                                >
+                                  fetchAssets
+                                </Link>
+                              </SidebarMenuSubButton>
+                            </SidebarMenuSubItem>
+                            <SidebarMenuSubItem>
+                              <SidebarMenuSubButton asChild>
+                                <Link
+                                  href={`${child.href}#fetchwalletassets`}
+                                  onClick={() => setOpenMobile(false)} // Close mobile sidebar when sub-item is clicked
+                                >
+                                  fetchWalletAssets
+                                </Link>
+                              </SidebarMenuSubButton>
+                            </SidebarMenuSubItem>
+                            <SidebarMenuSubItem>
+                              <SidebarMenuSubButton asChild>
+                                <Link
+                                  href={`${child.href}#searchassets`}
+                                  onClick={() => setOpenMobile(false)} // Close mobile sidebar when sub-item is clicked
+                                >
+                                  searchAssets
+                                </Link>
+                              </SidebarMenuSubButton>
+                            </SidebarMenuSubItem>
                           </SidebarMenuSub>
                         </CollapsibleContent>
                       )}

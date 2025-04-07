@@ -10,13 +10,19 @@ import Link from "next/link";
 export default function AssetsPage() {
   const [birdeyeFetchSource, setBirdeyeFetchSource] = React.useState("");
   const [birdeyeSearchSource, setBirdeyeSearchSource] = React.useState("");
+  const [birdeyeWalletSource, setBirdeyeWalletSource] = React.useState("");
   const [heliusSource, setHeliusSource] = React.useState("");
+  const [heliusWalletSource, setHeliusWalletSource] = React.useState("");
   const [umiSource, setUmiSource] = React.useState("");
 
   React.useEffect(() => {
     fetch("/generated/component-sources/assets_birdeye_fetch.ts.txt")
       .then((res) => res.text())
       .then(setBirdeyeFetchSource);
+
+    fetch("/generated/component-sources/assets_birdeye_wallet.ts.txt")
+      .then((res) => res.text())
+      .then(setBirdeyeWalletSource);
 
     fetch("/generated/component-sources/assets_birdeye_search.ts.txt")
       .then((res) => res.text())
@@ -25,6 +31,10 @@ export default function AssetsPage() {
     fetch("/generated/component-sources/assets_helius.ts.txt")
       .then((res) => res.text())
       .then(setHeliusSource);
+
+    fetch("/generated/component-sources/assets_helius_wallet.ts.txt")
+      .then((res) => res.text())
+      .then(setHeliusWalletSource);
 
     fetch("/generated/component-sources/assets_umi.ts.txt")
       .then((res) => res.text())
@@ -68,14 +78,15 @@ export default function AssetsPage() {
         </p>
       </div>
 
-      <div className="space-y-4" id="solasset">
-        <DocsH2 href="/docs/utils/assets#solasset" className="font-bold">
-          SolAsset
+      <div className="space-y-4" id="types">
+        <DocsH2 href="/docs/utils/assets#types" className="font-bold">
+          Types
         </DocsH2>
         <p>
-          All asset fetching functions have <code>FetchAssetsArgs</code>{" "}
-          arguments and return <code>SolAsset</code>, and all token based
-          components have <code>SolAsset</code> props. Copy the types below to{" "}
+          Asset fetching functions have <code>FetchAssetsArgs</code> or{" "}
+          <code>FetchWalletAssetArgs</code> arguments and return{" "}
+          <code>SolAsset</code>, and all token based components have{" "}
+          <code>SolAsset</code> props. Copy the types below to{" "}
           <code>src/lib/types.ts</code> or wherever is convenient.
         </p>
 
@@ -98,6 +109,10 @@ export type FetchAssetsArgs = {
   addresses: PublicKey[];
   owner?: PublicKey;
   connection?: Connection;
+};
+
+export type FetchWalletArgs = {
+  owner: PublicKey;
 };
 `}
         />
@@ -236,6 +251,56 @@ const assets = await fetchAssets({
   addresses: [new PublicKey("So11111111111111111111111111111111111111112")],
   owner: new PublicKey("..."),
   connection,
+});`}
+          />
+        </div>
+      </div>
+
+      <div className="space-y-4" id="fetchwalletassets">
+        <DocsH2 href="/docs/utils/assets#fetchwalletassets">
+          fetchWalletAssets
+        </DocsH2>
+        <p>
+          The <code>fetchWalletAssets</code> function takes a wallet address and
+          returns an array of <code>SolAsset</code> objects. SolanaUI comes with
+          <code>fetchWalletAssets</code> examples using Birdeye and Helius, but
+          you can easily hook up your own data feed.
+        </p>
+
+        <div className="space-y-4">
+          <h3 className="font-bold">Birdeye</h3>
+
+          <p>
+            Copy the code below to <code>lib/assets.ts</code>, or wherever is
+            convenient, just be sure to update the component imports.
+          </p>
+          <Code reveal={false} code={birdeyeWalletSource} />
+
+          <p>Use the fetchWalletAssets function in your codebase like so.</p>
+          <Code
+            code={`import { fetchWalletAssets } from "@/lib/assets";
+
+const assets = await fetchWalletAssets({
+  owner: new PublicKey("..."),
+});`}
+          />
+        </div>
+
+        <div className="space-y-4">
+          <h3 className="font-bold">Helius</h3>
+
+          <p>
+            Copy the code below to <code>lib/assets.ts</code>, or wherever is
+            convenient, just be sure to update the component imports.
+          </p>
+          <Code reveal={false} code={heliusWalletSource} />
+
+          <p>Use the fetchWalletAssets function in your codebase like so.</p>
+          <Code
+            code={`import { fetchWalletAssets } from "@/lib/assets";
+
+const assets = await fetchWalletAssets({
+  owner: new PublicKey("..."),
 });`}
           />
         </div>

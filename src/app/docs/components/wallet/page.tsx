@@ -4,13 +4,11 @@ import React from "react";
 import Link from "next/link";
 
 import { useWallet } from "@solana/wallet-adapter-react";
-import { PublicKey } from "@solana/web3.js";
 import { IconInfoCircle } from "@tabler/icons-react";
 
-import { WSOL_MINT, USDC_MINT } from "@/lib/consts";
 import { SolAsset } from "@/lib/types";
 import { shortAddress } from "@/lib/utils";
-import { fetchAssets } from "@/lib/assets/birdeye/fetch";
+import { fetchWallet } from "@/lib/assets/birdeye/wallet";
 
 import { DocsWrapper } from "@/components/web/docs-wrapper";
 import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
@@ -32,20 +30,12 @@ export default function UserDropdownPage() {
   const [tokenIconSource, setTokenIconSource] = React.useState("");
 
   const fetchData = React.useCallback(async () => {
-    if (isFetching) return;
+    if (isFetching || !publicKey) return;
 
     try {
       setIsFetching(true);
-      const tokens = [
-        WSOL_MINT,
-        USDC_MINT,
-        new PublicKey("EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm"),
-        new PublicKey("DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263"),
-      ];
-
-      const fetchedAssets = await fetchAssets({
-        addresses: tokens,
-        owner: publicKey ?? PublicKey.default,
+      const fetchedAssets = await fetchWallet({
+        address: publicKey,
       });
       setAssets(fetchedAssets);
     } finally {

@@ -27,10 +27,11 @@ import { TokenIcon } from "@/components/sol/token-icon";
 type WalletProps = {
   address: PublicKey | null;
   assets?: SolAsset[];
+  trigger?: React.ReactNode;
   onAssetClick?: (asset: SolAsset) => void;
 };
 
-const Wallet = ({ address, assets, onAssetClick }: WalletProps) => {
+const Wallet = ({ address, assets, trigger, onAssetClick }: WalletProps) => {
   const [search, setSearch] = React.useState("");
   const { connection } = useConnection();
   const [domain, setDomain] = React.useState<string | null>(null);
@@ -77,10 +78,12 @@ const Wallet = ({ address, assets, onAssetClick }: WalletProps) => {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="secondary" className="gap-2 pr-6">
-          <Avatar address={address} size={32} />
-          <p>{shortAddress(address)}</p>
-        </Button>
+        {trigger || (
+          <Button variant="secondary" className="gap-2 pr-6">
+            <Avatar address={address} size={32} />
+            <p>{shortAddress(address)}</p>
+          </Button>
+        )}
       </SheetTrigger>
       <SheetContent className="flex flex-col px-0 pb-0">
         <SheetHeader className="relative flex flex-col items-center justify-center">

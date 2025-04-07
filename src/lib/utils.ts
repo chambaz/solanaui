@@ -23,7 +23,7 @@ export const formatNumber = (
   num: number,
   options: Intl.NumberFormatOptions = {},
 ): string => {
-  if (!num) return "0";
+  if (num === null || num === undefined) return "0";
 
   const absNum = Math.abs(num);
   let decimals = 2;

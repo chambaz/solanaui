@@ -1,12 +1,13 @@
 "use client";
 
 import React from "react";
-
 import { PublicKey } from "@solana/web3.js";
+import { useConnection } from "@solana/wallet-adapter-react";
+import { getPrimaryDomain } from "@bonfida/spl-name-service";
 import { SearchIcon } from "lucide-react";
 
 import { SolAsset } from "@/lib/types";
-import { formatUsd, shortAddress } from "@/lib/utils";
+import { formatUsd, formatNumber, shortAddress } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,6 +31,8 @@ type WalletProps = {
 
 const Wallet = ({ address, assets }: WalletProps) => {
   const [search, setSearch] = React.useState("");
+  const { connection } = useConnection();
+  const [domain, setDomain] = React.useState<string | null>(null);
 
   const totalBalanceUsd = React.useMemo(
     () =>
@@ -42,10 +45,29 @@ const Wallet = ({ address, assets }: WalletProps) => {
   );
 
   const filteredAssets = React.useMemo(() => {
-    return assets?.filter((asset) =>
-      asset.symbol.toLowerCase().includes(search.toLowerCase()),
-    );
+    return assets && assets.length > 0
+      ? assets?.filter(
+          (asset) =>
+            asset.symbol &&
+            asset.symbol.toLowerCase().includes(search.toLowerCase()),
+        )
+      : [];
   }, [assets, search]);
+
+  const fetchDomain = React.useCallback(async () => {
+    if (!connection || !address) return;
+    try {
+      const { reverse } = await getPrimaryDomain(connection, address);
+      setDomain(`${reverse}.sol`);
+    } catch (error) {
+      setDomain(null);
+    }
+  }, [connection, address]);
+
+  React.useEffect(() => {
+    if (domain) return;
+    fetchDomain();
+  }, [fetchDomain, domain]);
 
   if (!address) {
     return <Skeleton className="h-full w-full rounded-full" />;
@@ -54,16 +76,25 @@ const Wallet = ({ address, assets }: WalletProps) => {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="secondary" className="gap-2 pr-5">
+        <Button variant="secondary" className="gap-2 pr-6">
           <Avatar address={address} size={32} />
           <p>{shortAddress(address)}</p>
         </Button>
       </SheetTrigger>
       <SheetContent className="flex flex-col px-0">
         <SheetHeader className="relative flex flex-col items-center justify-center">
-          <SheetTitle className="absolute inset-y-0 left-4 flex items-center justify-center gap-2 text-sm font-normal text-muted-foreground">
-            <Avatar address={address} size={28} />
-            {shortAddress(address)}
+          <SheetTitle className="absolute inset-y-0 left-4 flex flex-col items-start justify-center gap-0.5 text-sm font-normal text-muted-foreground">
+            <div className="flex items-center gap-2">
+              <Avatar address={address} size={28} />
+              {domain ? (
+                <div className="flex flex-col leading-tight">
+                  <span>{domain}</span>
+                  <span className="text-[11px]">{shortAddress(address)}</span>
+                </div>
+              ) : (
+                shortAddress(address)
+              )}
+            </div>
           </SheetTitle>
           <SheetDescription className="sr-only">
             {shortAddress(address)} wallet
@@ -105,7 +136,7 @@ const Wallet = ({ address, assets }: WalletProps) => {
                   <h3 className="font-medium">{asset.symbol}</h3>
                   <div className="flex w-full flex-col items-end text-sm">
                     <span>
-                      {formatUsd(asset.userTokenAccount?.amount || 0)}
+                      {formatNumber(asset.userTokenAccount?.amount || 0)}
                     </span>
                     <span className="text-muted-foreground">
                       {formatUsd(

@@ -64,6 +64,7 @@ const navItems = [
       },
       { label: "Avatar", href: "/docs/components/avatar" },
       { label: "User Dropdown", href: "/docs/components/user-dropdown" },
+      { label: "Wallet", href: "/docs/components/wallet" },
       {
         label: "Token Card",
         href: "/docs/components/token-card",

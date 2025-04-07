@@ -12,10 +12,10 @@ type IconProps = {
 const TokenIcon = ({ asset, size = 24 }: IconProps) => {
   return (
     <div
-      className="relative rounded-full border border-border bg-background p-0"
+      className="relative shrink-0 rounded-full border border-border bg-background p-0"
       style={{
-        width: size,
-        height: size,
+        width: size + 2,
+        height: size + 2,
       }}
     >
       <img

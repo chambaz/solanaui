@@ -239,6 +239,7 @@ export function WalletDemo() {
             code={`<Wallet
   address={address}
   assets={assets}
+  trigger={<Button>Show Wallet</Button>}
 />`}
           />
 
@@ -251,12 +252,16 @@ export function WalletDemo() {
                 {
                   name: "address",
                   type: "PublicKey | null",
-                  default: `null`,
                 },
                 {
                   name: "assets",
                   type: "SolAsset[]",
                   default: `[]`,
+                },
+                {
+                  name: "trigger",
+                  type: "React.ReactNode",
+                  default: `undefined`,
                 },
               ]}
             />

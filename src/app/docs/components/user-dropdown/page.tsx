@@ -170,7 +170,7 @@ export function UserDropdownDemo() {
         </p>
         <DocsTabs variants={variants} />
         <div className="w-full max-w-none" id="installation">
-          <DocsH2 href="/docs/components/connect-wallet-dialog#installation">
+          <DocsH2 href="/docs/components/user-dropdown#installation">
             Installation
           </DocsH2>
 

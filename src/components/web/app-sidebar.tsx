@@ -26,6 +26,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import { Badge } from "@/components/ui/badge";
 
 const navItems = [
   {
@@ -64,7 +65,7 @@ const navItems = [
       },
       { label: "Avatar", href: "/docs/components/avatar" },
       { label: "User Dropdown", href: "/docs/components/user-dropdown" },
-      { label: "Wallet", href: "/docs/components/wallet" },
+      { label: "Wallet", href: "/docs/components/wallet", new: true },
       {
         label: "Token Card",
         href: "/docs/components/token-card",
@@ -170,7 +171,14 @@ const AppSidebar = () => {
                           }}
                           asChild
                         >
-                          <Link href={child.href}>{child.label}</Link>
+                          <Link href={child.href}>
+                            {child.label}
+                            {child.new && (
+                              <Badge className="bg-lime-300 px-1.5 py-px text-xs text-neutral-900 hover:bg-lime-300 hover:text-neutral-900">
+                                new
+                              </Badge>
+                            )}
+                          </Link>
                         </SidebarMenuButton>
                       </CollapsibleTrigger>
                       {item.section === "Components" && (

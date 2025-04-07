@@ -21,7 +21,7 @@ import { Alert, AlertTitle } from "@/components/ui/alert";
 import { ConnectWalletPopover } from "@/components/sol/connect-wallet-popover";
 import { Wallet } from "@/components/sol/wallet";
 
-export default function UserDropdownPage() {
+export default function WalletPage() {
   const { publicKey, disconnect } = useWallet();
   const [assets, setAssets] = React.useState<SolAsset[]>([]);
   const [isFetching, setIsFetching] = React.useState(false);
@@ -50,7 +50,7 @@ export default function UserDropdownPage() {
   }, [fetchData, assets.length, isFetching]);
 
   React.useEffect(() => {
-    fetch("/generated/component-sources/user-dropdown.tsx.txt")
+    fetch("/generated/component-sources/wallet.tsx.txt")
       .then((res) => res.text())
       .then(setComponentSource);
     fetch("/generated/component-sources/avatar.tsx.txt")
@@ -101,31 +101,22 @@ export default function UserDropdownPage() {
 import { useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey } from "@solana/web3.js";
 
-import { fetchAssets } from "@/lib/assets"
-import { WSOL_MINT, USDC_MINT } from "@/lib/consts";
+import { fetchWallet } from "@/lib/assets";
 
-import { UserDropdown } from "@/components/sol/user-dropdown"
+import { Wallet } from "@/components/sol/wallet"
 
-export function UserDropdownDemo() {
+export function WalletDemo() {
   const { publicKey } = useWallet();
   const [assets, setAssets] = React.useState([]);
   const [isFetching, setIsFetching] = React.useState(false);
 
   const fetchData = React.useCallback(async () => {
-    if (isFetching) return;
+    if (isFetching || !publicKey) return;
 
     try {
       setIsFetching(true);
-      const tokens = [
-        WSOL_MINT,
-        USDC_MINT,
-        new PublicKey("EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm"),
-        new PublicKey("DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263"),
-      ];
-
-      const fetchedAssets = await fetchAssets({
-        addresses: tokens,
-        owner: publicKey ?? PublicKey.default,
+      const fetchedAssets = await fetchWallet({
+        address: publicKey,
       });
       setAssets(fetchedAssets);
     } finally {
@@ -140,11 +131,7 @@ export function UserDropdownDemo() {
   }, [fetchData, assets.length, isFetching]);
 
   return (
-    <UserDropdown
-      address={address}
-      assets={assets}
-      size={42}
-    />
+    <Wallet address={publicKey} assets={assets} />
   )
 }`,
     },
@@ -153,14 +140,14 @@ export function UserDropdownDemo() {
   return (
     <DocsWrapper>
       <div id="demo">
-        <DocsH1 href="/docs/components/user-dropdown#demo">UserDropdown</DocsH1>
+        <DocsH1 href="/docs/components/wallet#demo">Wallet</DocsH1>
         <p className="text-muted-foreground">
-          The UserDropdown component is a dropdown menu that shows a user&apos;s
-          wallet address and balances.
+          The Wallet component is an embedded wallet that shows a user&apos;s
+          balance and token holdings.
         </p>
         <DocsTabs variants={variants} />
         <div className="w-full max-w-none" id="installation">
-          <DocsH2 href="/docs/components/connect-wallet-dialog#installation">
+          <DocsH2 href="/docs/components/wallet#installation">
             Installation
           </DocsH2>
 
@@ -168,7 +155,7 @@ export function UserDropdownDemo() {
 
           <h3 className="text-lg">1. Install Dependencies</h3>
           <p>
-            UserDropdown requires{" "}
+            Wallet requires{" "}
             <Link
               href="https://github.com/anza-xyz/wallet-adapter"
               target="_blank"
@@ -201,49 +188,44 @@ export function UserDropdownDemo() {
 </ConnectionProvider>`}
           />
 
-          <h3 className="text-lg">
-            2. Install shadcn/ui dropdown-menu component
-          </h3>
+          <h3 className="text-lg">2. Install shadcn/ui sheet component</h3>
           <p>
             Use shadcn/ui CLI or manually install the{" "}
             <Link
-              href="https://ui.shadcn.com/docs/components/dropdown-menu"
+              href="https://ui.shadcn.com/docs/components/sheet"
               target="_blank"
               rel="noopener noreferrer"
             >
-              shadcn/ui dropdown-menu
+              shadcn/ui sheet
             </Link>{" "}
             component.
           </p>
-          <Code language="shell" code={"npx shadcn@latest add dropdown-menu"} />
+          <Code language="shell" code={"npx shadcn@latest add sheet"} />
 
           <h3 className="text-lg">3. Install SolanaUI Avatar</h3>
           <p>
-            The UserDropdown component requires the <code>Avatar</code>{" "}
-            component. Copy the code below to{" "}
-            <code>src/components/sol/avatar.tsx</code>.
+            The Wallet component requires the <code>Avatar</code> component.
+            Copy the code below to <code>src/components/sol/avatar.tsx</code>.
           </p>
           <Code reveal={false} code={avatarComponentSource} />
 
           <h3 className="text-lg">4. Install SolanaUI TokenIcon</h3>
           <p>
-            The UserDropdown component requires the <code>TokenIcon</code>{" "}
-            component. Copy the code below to{" "}
+            The Wallet component requires the <code>TokenIcon</code> component.
+            Copy the code below to{" "}
             <code>src/components/sol/token-icon.tsx</code>.
           </p>
           <Code reveal={false} code={tokenIconSource} />
 
-          <h3 className="text-lg">4. Install SolanaUI UserDropdown</h3>
+          <h3 className="text-lg">4. Install SolanaUI Wallet</h3>
           <p>
-            Copy the code below to{" "}
-            <code>src/components/sol/user-dropdown.tsx</code>.
+            Copy the code below to <code>src/components/sol/wallet.tsx</code>.
           </p>
           <Code reveal={false} code={componentSource} />
 
-          <h3 className="text-lg">5. Use UserDropdown</h3>
+          <h3 className="text-lg">5. Use Wallet</h3>
           <p>
-            Import the <code>UserDropdown</code> component and use it in your
-            app.
+            Import the <code>Wallet</code> component and use it in your app.
           </p>
           <Alert className="mb-4">
             <IconInfoCircle size={16} />
@@ -254,18 +236,14 @@ export function UserDropdownDemo() {
           </Alert>
           <Code
             reveal={true}
-            code={`<UserDropdown
+            code={`<Wallet
   address={address}
   assets={assets}
-  size={42}
 />`}
           />
 
           <div className="!space-y-0" id="props">
-            <DocsH2
-              href="/docs/components/connect-wallet-dialog#props"
-              className="!mb-0"
-            >
+            <DocsH2 href="/docs/components/wallet#props" className="!mb-0">
               Props
             </DocsH2>
             <PropsTable
@@ -279,11 +257,6 @@ export function UserDropdownDemo() {
                   name: "assets",
                   type: "SolAsset[]",
                   default: `[]`,
-                },
-                {
-                  name: "size",
-                  type: "number",
-                  default: `42`,
                 },
               ]}
             />

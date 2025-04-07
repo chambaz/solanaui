@@ -32,7 +32,7 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { ThemeSelector } from "@/components/web/themes";
 
 import { SolAsset } from "@/lib/types";
-import { fetchAssets } from "@/lib/assets/umi";
+import { fetchAssets } from "@/lib/assets/birdeye/fetch";
 
 const userAssets = [WSOL_MINT, USDC_MINT];
 

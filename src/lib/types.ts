@@ -18,3 +18,7 @@ export type FetchAssetsArgs = {
   owner?: PublicKey;
   connection?: Connection;
 };
+
+export type FetchWalletArgs = {
+  address: PublicKey;
+};

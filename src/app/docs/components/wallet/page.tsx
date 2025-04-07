@@ -8,7 +8,7 @@ import { IconInfoCircle } from "@tabler/icons-react";
 
 import { SolAsset } from "@/lib/types";
 import { shortAddress } from "@/lib/utils";
-import { fetchWallet } from "@/lib/assets/birdeye/wallet";
+import { fetchWalletAssets } from "@/lib/assets/birdeye/wallet";
 
 import { DocsWrapper } from "@/components/web/docs-wrapper";
 import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
@@ -34,8 +34,8 @@ export default function WalletPage() {
 
     try {
       setIsFetching(true);
-      const fetchedAssets = await fetchWallet({
-        address: publicKey,
+      const fetchedAssets = await fetchWalletAssets({
+        owner: publicKey,
       });
       setAssets(fetchedAssets);
     } finally {

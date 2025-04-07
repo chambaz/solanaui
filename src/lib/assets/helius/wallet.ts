@@ -6,15 +6,15 @@ import { WSOL_MINT } from "@/lib/consts";
  * Fetches all token assets for a wallet address from Helius API
  * Includes metadata, balances, and native SOL balance
  * @param args - Object containing fetch parameters
- * @param args.address - Wallet address to fetch token list for
+ * @param args.owner - Wallet address to fetch token list for
  * @returns Array of SolAsset objects containing token data
  * @example
- * const assets = await fetchWallet({
- *   address: new PublicKey("...")
+ * const assets = await fetchWalletAssets({
+ *   owner: new PublicKey("...")
  * });
  */
-const fetchWallet = async ({
-  address,
+const fetchWalletAssets = async ({
+  owner,
 }: FetchWalletArgs): Promise<SolAsset[]> => {
   const fetchedAssets: SolAsset[] = [];
 
@@ -31,7 +31,7 @@ const fetchWallet = async ({
           id: "text",
           method: "getAssetsByOwner",
           params: {
-            ownerAddress: address.toString(),
+            ownerAddress: owner.toString(),
             page: 1,
             limit: 1000,
             options: {
@@ -116,4 +116,4 @@ const fetchWallet = async ({
   }
 };
 
-export { fetchWallet };
+export { fetchWalletAssets };

@@ -4,15 +4,15 @@ import { SolAsset, FetchWalletArgs } from "@/lib/types";
 /**
  * Fetches all token assets for a wallet address from Birdeye API
  * @param args - Object containing fetch parameters
- * @param args.address - Wallet address to fetch token list for
+ * @param args.owner - Wallet address to fetch token list for
  * @returns Array of SolAsset objects containing token data
  * @example
- * const assets = await fetchWallet({
- *   address: new PublicKey("...")
+ * const assets = await fetchWalletAssets({
+ *   owner: new PublicKey("...")
  * });
  */
-const fetchWallet = async ({
-  address,
+const fetchWalletAssets = async ({
+  owner,
 }: FetchWalletArgs): Promise<SolAsset[]> => {
   const headers = {
     "x-api-key": process.env.NEXT_PUBLIC_BIRDEYE_API_KEY!,
@@ -22,7 +22,7 @@ const fetchWallet = async ({
 
   try {
     const response = await fetch(
-      `https://public-api.birdeye.so/v1/wallet/token_list?wallet=${address.toString()}`,
+      `https://public-api.birdeye.so/v1/wallet/token_list?wallet=${owner.toString()}`,
       { headers },
     );
 
@@ -50,7 +50,7 @@ const fetchWallet = async ({
         price: item.priceUsd,
         decimals: item.decimals,
         userTokenAccount: {
-          address: address,
+          address: owner,
           amount: item.uiAmount,
         },
       }),
@@ -61,4 +61,4 @@ const fetchWallet = async ({
   }
 };
 
-export { fetchWallet };
+export { fetchWalletAssets };

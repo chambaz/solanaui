@@ -20,5 +20,5 @@ export type FetchAssetsArgs = {
 };
 
 export type FetchWalletArgs = {
-  address: PublicKey;
+  owner: PublicKey;
 };

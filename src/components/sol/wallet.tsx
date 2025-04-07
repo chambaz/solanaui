@@ -27,9 +27,10 @@ import { TokenIcon } from "@/components/sol/token-icon";
 type WalletProps = {
   address: PublicKey | null;
   assets?: SolAsset[];
+  onAssetClick?: (asset: SolAsset) => void;
 };
 
-const Wallet = ({ address, assets }: WalletProps) => {
+const Wallet = ({ address, assets, onAssetClick }: WalletProps) => {
   const [search, setSearch] = React.useState("");
   const { connection } = useConnection();
   const [domain, setDomain] = React.useState<string | null>(null);
@@ -81,7 +82,7 @@ const Wallet = ({ address, assets }: WalletProps) => {
           <p>{shortAddress(address)}</p>
         </Button>
       </SheetTrigger>
-      <SheetContent className="flex flex-col px-0">
+      <SheetContent className="flex flex-col px-0 pb-0">
         <SheetHeader className="relative flex flex-col items-center justify-center">
           <SheetTitle className="absolute inset-y-0 left-4 flex flex-col items-start justify-center gap-0.5 text-sm font-normal text-muted-foreground">
             <div className="flex items-center gap-2">
@@ -110,7 +111,13 @@ const Wallet = ({ address, assets }: WalletProps) => {
         </div>
         {filteredAssets && (
           <div className="mt-10 flex min-h-0 flex-1 flex-col gap-4">
-            <form className="relative px-3.5">
+            <form
+              className="relative px-3.5"
+              onSubmit={(e) => {
+                e.preventDefault();
+                setSearch(search);
+              }}
+            >
               <Input
                 placeholder="Search"
                 autoFocus
@@ -128,8 +135,9 @@ const Wallet = ({ address, assets }: WalletProps) => {
             </form>
             <div className="flex flex-col gap-4 overflow-y-auto">
               {filteredAssets.map((asset) => (
-                <div
+                <button
                   key={asset.mint.toBase58()}
+                  onClick={() => onAssetClick?.(asset)}
                   className="flex items-center gap-2 rounded-md px-4 py-2 text-sm even:bg-muted/50"
                 >
                   <TokenIcon asset={asset} />
@@ -145,7 +153,7 @@ const Wallet = ({ address, assets }: WalletProps) => {
                       )}
                     </span>
                   </div>
-                </div>
+                </button>
               ))}
             </div>
           </div>

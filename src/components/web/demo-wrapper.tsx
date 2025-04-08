@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 import { WSOL_MINT } from "@/lib/consts";
 import { SolAsset } from "@/lib/types";
 import { fetchAssets } from "@/lib/assets/birdeye/fetch";
+import { fetchWalletAssets } from "@/lib/assets/helius/wallet";
 import { fetchPriceHistoryBirdeye } from "@/lib/prices/birdeye";
 
 import { DemoDashboard } from "@/components/web/demo-dashboard";
@@ -54,6 +55,7 @@ const DemoWrapper = ({ view = "dashboard" }: DemoWrapperProps) => {
   >([]);
   const [mainAsset, setMainAsset] = React.useState<SolAsset | null>(null);
   const [assets, setAssets] = React.useState<SolAsset[]>([]);
+  const [walletAssets, setWalletAssets] = React.useState<SolAsset[]>([]);
   const [transactions] = React.useState<VersionedTransactionResponse[]>([]);
 
   const timestamps: Record<
@@ -104,8 +106,16 @@ const DemoWrapper = ({ view = "dashboard" }: DemoWrapperProps) => {
       addresses: tokens,
       owner: publicKey ?? undefined,
     });
+
     setMainAsset(fetchedAssets[0]);
     setAssets(fetchedAssets.slice(1));
+
+    if (publicKey) {
+      const walletAssets = await fetchWalletAssets({
+        owner: publicKey,
+      });
+      setWalletAssets(walletAssets);
+    }
   }, [publicKey]);
 
   const fetchTransactions = React.useCallback(async () => {
@@ -233,7 +243,7 @@ const DemoWrapper = ({ view = "dashboard" }: DemoWrapperProps) => {
           transactions={transactions}
         />
       )}
-      {demoState === DemoState.SWAP && <DemoSwap assets={assets} />}
+      {demoState === DemoState.SWAP && <DemoSwap assets={walletAssets} />}
     </div>
   );
 };

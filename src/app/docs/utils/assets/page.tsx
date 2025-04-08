@@ -113,6 +113,7 @@ export type FetchAssetsArgs = {
 
 export type FetchWalletArgs = {
   owner: PublicKey;
+  limit?: number;
 };
 `}
         />

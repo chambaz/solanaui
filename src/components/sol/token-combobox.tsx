@@ -66,7 +66,7 @@ const TokenCombobox = ({
         return;
       }
 
-      if (onSearch) {
+      if (onSearch && searchValue.length) {
         if (searchTimeout.current) {
           clearTimeout(searchTimeout.current);
         }

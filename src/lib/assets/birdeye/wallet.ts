@@ -13,6 +13,7 @@ import { SolAsset, FetchWalletArgs } from "@/lib/types";
  */
 const fetchWalletAssets = async ({
   owner,
+  limit = 20,
 }: FetchWalletArgs): Promise<SolAsset[]> => {
   const headers = {
     "x-api-key": process.env.NEXT_PUBLIC_BIRDEYE_API_KEY!,
@@ -32,29 +33,39 @@ const fetchWalletAssets = async ({
       return [];
     }
 
-    return data.items.map(
-      (item: {
-        address: string;
-        name: string;
-        symbol: string;
-        icon: string;
-        logoURI: string;
-        priceUsd: number;
-        decimals: number;
-        uiAmount: number;
-      }) => ({
-        mint: new PublicKey(item.address),
-        name: item.name,
-        symbol: item.symbol,
-        image: item.icon || item.logoURI,
-        price: item.priceUsd,
-        decimals: item.decimals,
-        userTokenAccount: {
-          address: owner,
-          amount: item.uiAmount,
-        },
-      }),
-    );
+    const items = data.items
+      .filter((item: { symbol: string }) => item.symbol)
+      .map(
+        (item: {
+          address: string;
+          name: string;
+          symbol: string;
+          icon: string;
+          logoURI: string;
+          priceUsd: number;
+          decimals: number;
+          uiAmount: number;
+        }) => ({
+          mint: new PublicKey(item.address),
+          name: item.name,
+          symbol: item.symbol,
+          image: item.icon || item.logoURI,
+          price: item.priceUsd,
+          decimals: item.decimals,
+          userTokenAccount: {
+            address: owner,
+            amount: item.uiAmount,
+          },
+        }),
+      );
+
+    return items
+      .sort((a: SolAsset, b: SolAsset) => {
+        const aValue = (a.userTokenAccount?.amount || 0) * (a.price || 0);
+        const bValue = (b.userTokenAccount?.amount || 0) * (b.price || 0);
+        return bValue - aValue;
+      })
+      .slice(0, limit);
   } catch (error) {
     console.error("Error fetching wallet assets:", error);
     return [];

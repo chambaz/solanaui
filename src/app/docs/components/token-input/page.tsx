@@ -3,14 +3,11 @@
 import React from "react";
 import Link from "next/link";
 
-import { PublicKey } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { IconInfoCircle } from "@tabler/icons-react";
 
-import { WSOL_MINT, USDC_MINT } from "@/lib/consts";
 import { SolAsset } from "@/lib/types";
-import { fetchAssets } from "@/lib/assets/birdeye/fetch";
-import { searchAssets } from "@/lib/assets/birdeye/search";
+import { fetchWalletAssets } from "@/lib/assets/birdeye/wallet";
 
 import { DocsWrapper } from "@/components/web/docs-wrapper";
 import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
@@ -31,20 +28,14 @@ export default function TokenInputPage() {
   const [tokenComboboxSource, setTokenComboboxSource] = React.useState("");
 
   const fetchData = React.useCallback(async () => {
-    if (isFetching) return;
+    if (isFetching || !publicKey) return;
 
     try {
       setIsFetching(true);
-      const tokens = [
-        WSOL_MINT,
-        USDC_MINT,
-        new PublicKey("EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm"),
-        new PublicKey("DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263"),
-      ];
-      const fetchedAssets = await fetchAssets({
-        addresses: tokens,
-        owner: publicKey ?? PublicKey.default,
+      const fetchedAssets = await fetchWalletAssets({
+        owner: publicKey,
       });
+      console.log("fetchedAssets", fetchedAssets);
       setAssets(fetchedAssets);
     } finally {
       setIsFetching(false);
@@ -74,7 +65,6 @@ export default function TokenInputPage() {
         <div className="max-w-lg">
           <TokenInput
             assets={assets}
-            onSearch={searchAssets}
             onTokenSelect={(token) => {
               console.log("Selected token:", token);
             }}
@@ -89,7 +79,7 @@ export default function TokenInputPage() {
 import { useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey } from "@solana/web3.js";
 
-import { fetchAssets, searchAssets } from "@/lib/assets"
+import { fetchWalletAssets, searchAssets } from "@/lib/assets"
 import { WSOL_MINT, USDC_MINT } from "@/lib/consts";
 
 import { TokenInput } from "@/components/sol/token-input";
@@ -104,14 +94,7 @@ export function TokenInputDemo() {
 
     try {
       setIsFetching(true);
-      const tokens = [
-        WSOL_MINT,
-        USDC_MINT,
-        new PublicKey("EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm"),
-        new PublicKey("DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263"),
-      ];
-      const fetchedAssets = await fetchAssets({
-        addresses: tokens,
+      const fetchedAssets = await fetchWalletAssets({
         owner: publicKey ?? PublicKey.default,
       });
       setAssets(fetchedAssets);

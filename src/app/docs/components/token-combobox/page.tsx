@@ -3,14 +3,12 @@
 import React from "react";
 import Link from "next/link";
 
-import { PublicKey } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { IconInfoCircle } from "@tabler/icons-react";
 
 import { SolAsset } from "@/lib/types";
-import { fetchAssets } from "@/lib/assets/birdeye/fetch";
+import { fetchWalletAssets } from "@/lib/assets/birdeye/wallet";
 import { searchAssets } from "@/lib/assets/birdeye/search";
-import { WSOL_MINT, USDC_MINT } from "@/lib/consts";
 
 import { DocsWrapper } from "@/components/web/docs-wrapper";
 import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
@@ -31,19 +29,13 @@ export default function TokenDropdownPage() {
   const [tokenIconSource, setTokenIconSource] = React.useState("");
 
   const fetchData = React.useCallback(async () => {
-    if (isFetching) return;
+    if (isFetching || !publicKey) return;
 
     try {
       setIsFetching(true);
-      const tokens = [
-        WSOL_MINT,
-        USDC_MINT,
-        new PublicKey("EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm"),
-        new PublicKey("DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263"),
-      ];
-      const fetchedAssets = await fetchAssets({
-        addresses: tokens,
-        owner: publicKey ?? undefined,
+
+      const fetchedAssets = await fetchWalletAssets({
+        owner: publicKey,
       });
       setAssets(fetchedAssets);
     } finally {
@@ -75,6 +67,7 @@ export default function TokenDropdownPage() {
           assets={assets}
           address={publicKey}
           showBalances={!!publicKey}
+          onSearch={searchAssets}
         />
       ),
       code: `import React from "react";
@@ -82,8 +75,7 @@ export default function TokenDropdownPage() {
 import { PublicKey } from "@solana/web3.js";
 import { useWallet } from "@solana/wallet-adapter-react";
 
-import { fetchAssets } from "@/lib/assets";
-import { WSOL_MINT, USDC_MINT } from "@/lib/consts";
+import { fetchWalletAssets, searchAssets } from "@/lib/assets";
 
 import { TokenCombobox } from "@/components/sol/token-combobox"
 
@@ -93,19 +85,13 @@ export function TokenComboboxDemo() {
   const [isFetching, setIsFetching] = React.useState(false);
 
   const fetchData = React.useCallback(async () => {
-    if (isFetching) return;
+    if (isFetching || !publicKey) return;
 
     try {
       setIsFetching(true);
-      const tokens = [
-        WSOL_MINT,
-        USDC_MINT,
-        new PublicKey("EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm"),
-        new PublicKey("DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263"),
-      ];
-      const fetchedAssets = await fetchAssets({
-        addresses: tokens,
-        owner: publicKey ?? undefined,
+
+      const fetchedAssets = await fetchWalletAssets({
+        owner: publicKey,
       });
       setAssets(fetchedAssets);
     } finally {
@@ -122,7 +108,9 @@ export function TokenComboboxDemo() {
   return (
     <TokenCombobox
       assets={assets}
-      showBalances
+      address={publicKey}
+      showBalances={!!publicKey}
+      onSearch={searchAssets}
     />
   )
 }`,
@@ -254,15 +242,17 @@ export function TokenComboboxDemo() {
         <Alert className="mb-4">
           <IconInfoCircle size={16} />
           <AlertTitle>
-            SolanaUI provides utilities to help with fetching assets.{" "}
-            <Link href="/docs/utils/assets">Learn more</Link>.
+            SolanaUI provides utilities to help with fetching and searching
+            assets. <Link href="/docs/utils/assets">Learn more</Link>.
           </AlertTitle>
         </Alert>
         <Code
           reveal={true}
           code={`<TokenCombobox
   assets={assets}
-  showBalances
+  address={publicKey}
+  showBalances={!!publicKey}
+  onSearch={searchAssets}
 />`}
         />
 

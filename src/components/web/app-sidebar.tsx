@@ -80,6 +80,7 @@ const navItems = [
         href: "/docs/components/token-icon",
       },
       { label: "Token Input", href: "/docs/components/token-input" },
+      { label: "Swap", href: "/docs/components/swap", new: true },
       { label: "PK Input", href: "/docs/components/pk-input" },
       {
         label: "Txn List",

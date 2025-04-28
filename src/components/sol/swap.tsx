@@ -6,7 +6,7 @@ import { useWallet, useConnection } from "@solana/wallet-adapter-react";
 import { VersionedTransaction } from "@solana/web3.js";
 import { IconArrowUp, IconArrowDown, IconSettings } from "@tabler/icons-react";
 
-import { SolAsset } from "@/lib/types";
+import { SearchAssetsArgs, SolAsset } from "@/lib/types";
 import { searchAssets } from "@/lib/assets/birdeye/search";
 
 import { useTxnToast } from "@/components/sol/txn-toast";
@@ -34,6 +34,21 @@ const Swap = ({ inAssets, outAssets }: SwapProps) => {
   const { txnToast } = useTxnToast();
   const { settings } = useTxnSettings();
   const { slippageMode, slippageValue } = settings;
+
+  const onSearch = React.useCallback(
+    async (args: SearchAssetsArgs) => {
+      if (!publicKey || !connection) return [];
+
+      const searchResults = await searchAssets({
+        ...args,
+        owner: publicKey,
+        connection,
+      });
+
+      return searchResults;
+    },
+    [publicKey, connection],
+  );
 
   const handleSwap = React.useCallback(async () => {
     if (isTransacting) {
@@ -197,7 +212,7 @@ const Swap = ({ inAssets, outAssets }: SwapProps) => {
               showWalletBalance={false}
               showQuickAmountButtons={false}
               onTokenSelect={setTokenTo}
-              onSearch={searchAssets}
+              onSearch={onSearch}
               amount={amountTo}
               disabled={true}
             />

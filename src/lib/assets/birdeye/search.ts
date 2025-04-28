@@ -1,5 +1,5 @@
-import { PublicKey, LAMPORTS_PER_SOL, Connection } from "@solana/web3.js";
-import { SolAsset } from "@/lib/types";
+import { PublicKey, LAMPORTS_PER_SOL } from "@solana/web3.js";
+import { SolAsset, SearchAssetsArgs } from "@/lib/types";
 import { WSOL_MINT } from "@/lib/consts";
 
 /**
@@ -8,6 +8,7 @@ import { WSOL_MINT } from "@/lib/consts";
  * @param params.query - Search query string
  * @param params.owner - Optional wallet address to fetch token balances for
  * @param params.connection - Optional web3 connection (required if fetching SOL balance)
+ * @param params.combineNativeBalance - Optional boolean to combine native SOL balance with WSOL balance
  * @returns Array of SolAsset objects matching the search query
  * @example
  * const searchResults = await searchAssets({
@@ -20,11 +21,8 @@ const searchAssets = async ({
   query,
   owner,
   connection,
-}: {
-  query: string;
-  owner?: PublicKey;
-  connection?: Connection;
-}): Promise<SolAsset[]> => {
+  combineNativeBalance = true,
+}: SearchAssetsArgs): Promise<SolAsset[]> => {
   const headers = {
     "x-api-key": process.env.NEXT_PUBLIC_BIRDEYE_API_KEY!,
   };
@@ -56,7 +54,7 @@ const searchAssets = async ({
         }
 
         // Filter out native SOL and exact SOL symbol matches
-        if (result.symbol === "SOL") {
+        if (result.symbol === "SOL" && combineNativeBalance) {
           return false;
         }
 
@@ -97,7 +95,7 @@ const searchAssets = async ({
       (result: { address: string }) => result.address === WSOL_MINT.toString(),
     );
 
-    if (owner && connection && wsolResult) {
+    if (owner && connection && wsolResult && combineNativeBalance) {
       try {
         nativeSolBalance = await connection.getBalance(owner);
         nativeSolBalance = nativeSolBalance / LAMPORTS_PER_SOL;
@@ -132,7 +130,11 @@ const searchAssets = async ({
         };
 
         // If this is WSOL and we have a native SOL balance, add it to the WSOL balance
-        if (result.address === WSOL_MINT.toString() && nativeSolBalance > 0) {
+        if (
+          result.address === WSOL_MINT.toString() &&
+          nativeSolBalance > 0 &&
+          combineNativeBalance
+        ) {
           if (asset.userTokenAccount) {
             asset.userTokenAccount.amount += nativeSolBalance;
           } else {

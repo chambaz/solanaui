@@ -6,7 +6,7 @@ import { PublicKey } from "@solana/web3.js";
 import { ChevronsUpDownIcon } from "lucide-react";
 
 import { formatUsd, formatNumber } from "@/lib/utils";
-import { SolAsset } from "@/lib/types";
+import { SearchAssetsArgs, SolAsset } from "@/lib/types";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -31,13 +31,7 @@ type TokenComboboxProps = {
   address?: PublicKey | null;
   showBalances?: boolean;
   onSelect?: (token: SolAsset) => void;
-  onSearch?: ({
-    query,
-    owner,
-  }: {
-    query: string;
-    owner?: PublicKey;
-  }) => Promise<SolAsset[]>;
+  onSearch?: (args: SearchAssetsArgs) => Promise<SolAsset[]>;
 };
 
 const TokenCombobox = ({

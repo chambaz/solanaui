@@ -109,11 +109,14 @@ export type FetchAssetsArgs = {
   addresses: PublicKey[];
   owner?: PublicKey;
   connection?: Connection;
+  combineNativeBalance?: boolean;
 };
 
 export type FetchWalletArgs = {
   owner: PublicKey;
   limit?: number;
+  connection?: Connection;
+  combineNativeBalance?: boolean;
 };
 `}
         />
@@ -218,7 +221,8 @@ const assets = await fetchAssets({
 const assets = await fetchAssets({
   addresses: [new PublicKey("So11111111111111111111111111111111111111112")],
   owner: new PublicKey("..."),
-  connection
+  connection, // connection is required to fetch native SOL balance
+  combineNativeBalance: true, // combines WSOL and native SOL, defaults to true
 });`}
           />
         </div>
@@ -250,8 +254,9 @@ const assets = await fetchAssets({
 
 const assets = await fetchAssets({
   addresses: [new PublicKey("So11111111111111111111111111111111111111112")],
-  owner: new PublicKey("..."),
-  connection,
+  owner: new PublicKey("..."), // owner is required to show wallet balance
+  connection, // connection is required to fetch native SOL balance
+  combineNativeBalance: true, // combines WSOL and native SOL, defaults to true
 });`}
           />
         </div>
@@ -282,7 +287,9 @@ const assets = await fetchAssets({
             code={`import { fetchWalletAssets } from "@/lib/assets";
 
 const assets = await fetchWalletAssets({
-  owner: new PublicKey("..."),
+  owner: new PublicKey("..."), // owner is required to show wallet balance
+  connection, // connection is required to fetch native SOL balance
+  combineNativeBalance: true, // combines WSOL and native SOL, defaults to true
 });`}
           />
         </div>
@@ -301,7 +308,9 @@ const assets = await fetchWalletAssets({
             code={`import { fetchWalletAssets } from "@/lib/assets";
 
 const assets = await fetchWalletAssets({
-  owner: new PublicKey("..."),
+  owner: new PublicKey("..."), // owner is required to show wallet balance
+  connection, // connection is required to fetch native SOL balance
+  combineNativeBalance: true, // combines WSOL and native SOL, defaults to true
 });`}
           />
         </div>
@@ -328,8 +337,9 @@ const assets = await fetchWalletAssets({
 
 const searchResults = await searchAssets({
   query: "SOL",
-  owner: new PublicKey("..."),
-  connection,
+  owner: new PublicKey("..."), // owner is required to show wallet balance
+  connection, // connection is required to fetch native SOL balance
+  combineNativeBalance: true, // combines WSOL and native SOL, defaults to true
 });`}
         />
       </div>

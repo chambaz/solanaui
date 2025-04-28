@@ -8,6 +8,7 @@ import { WSOL_MINT } from "@/lib/consts";
  * @param args.addresses - Array of token mint addresses to fetch data for
  * @param args.owner - Optional wallet address to fetch token balances for
  * @param args.connection - Optional web3 connection (required if fetching SOL balance)
+ * @param args.combineNativeBalance - Optional boolean to combine WSOL and native SOL
  * @returns Array of SolAsset objects containing token data
  * @example
  * const assets = await fetchAssets({
@@ -20,6 +21,7 @@ const fetchAssets = async ({
   addresses,
   owner,
   connection,
+  combineNativeBalance = true, // Default to combining WSOL and native SOL
 }: FetchAssetsArgs): Promise<SolAsset[]> => {
   const fetchedAssets: SolAsset[] = [];
   const addressList = addresses.map((a) => a.toString()).join(",");
@@ -70,7 +72,8 @@ const fetchAssets = async ({
     if (
       owner &&
       connection &&
-      addresses.some((addr) => addr.equals(WSOL_MINT))
+      addresses.some((addr) => addr.equals(WSOL_MINT)) &&
+      combineNativeBalance
     ) {
       try {
         nativeSolBalance = await connection.getBalance(owner);
@@ -103,7 +106,11 @@ const fetchAssets = async ({
         };
 
         // If this is WSOL and we have a native SOL balance, add it to the WSOL balance
-        if (addresses[i].equals(WSOL_MINT) && nativeSolBalance > 0) {
+        if (
+          addresses[i].equals(WSOL_MINT) &&
+          nativeSolBalance > 0 &&
+          combineNativeBalance
+        ) {
           if (asset.userTokenAccount) {
             asset.userTokenAccount.amount += nativeSolBalance;
           } else {

@@ -1,20 +1,24 @@
-import { PublicKey } from "@solana/web3.js";
+import { PublicKey, Connection, LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { SolAsset, FetchWalletArgs } from "@/lib/types";
+import { WSOL_MINT } from "@/lib/consts";
 
 /**
  * Fetches all token assets for a wallet address from Birdeye API
  * @param args - Object containing fetch parameters
  * @param args.owner - Wallet address to fetch token list for
+ * @param args.connection - Optional web3 connection (required if fetching SOL balance)
  * @returns Array of SolAsset objects containing token data
  * @example
  * const assets = await fetchWalletAssets({
- *   owner: new PublicKey("...")
+ *   owner: new PublicKey("..."),
+ *   connection: Connection
  * });
  */
 const fetchWalletAssets = async ({
   owner,
+  connection,
   limit = 20,
-}: FetchWalletArgs): Promise<SolAsset[]> => {
+}: FetchWalletArgs & { connection?: Connection }): Promise<SolAsset[]> => {
   const headers = {
     "x-api-key": process.env.NEXT_PUBLIC_BIRDEYE_API_KEY!,
     accept: "application/json",
@@ -33,8 +37,24 @@ const fetchWalletAssets = async ({
       return [];
     }
 
+    // If connection is provided, fetch native SOL balance
+    let nativeSolBalance = 0;
+    if (connection) {
+      try {
+        nativeSolBalance = await connection.getBalance(owner);
+        nativeSolBalance = nativeSolBalance / LAMPORTS_PER_SOL;
+      } catch (error) {
+        console.error("Error fetching native SOL balance:", error);
+      }
+    }
+
     const items = data.items
-      .filter((item: { symbol: string }) => item.symbol)
+      .filter(
+        (item: { symbol: string; address: string }) =>
+          // Filter out entries without symbol and the native SOL entry (which has a different address than WSOL)
+          item.symbol &&
+          !(item.symbol === "SOL" && item.address !== WSOL_MINT.toString()),
+      )
       .map(
         (item: {
           address: string;
@@ -45,18 +65,23 @@ const fetchWalletAssets = async ({
           priceUsd: number;
           decimals: number;
           uiAmount: number;
-        }) => ({
-          mint: new PublicKey(item.address),
-          name: item.name,
-          symbol: item.symbol,
-          image: item.icon || item.logoURI,
-          price: item.priceUsd,
-          decimals: item.decimals,
-          userTokenAccount: {
-            address: owner,
-            amount: item.uiAmount,
-          },
-        }),
+        }) => {
+          const isWsol = item.address === WSOL_MINT.toString();
+          const asset: SolAsset = {
+            mint: new PublicKey(item.address),
+            name: item.name,
+            symbol: item.symbol,
+            image: item.icon || item.logoURI,
+            price: item.priceUsd,
+            decimals: item.decimals,
+            userTokenAccount: {
+              address: owner,
+              amount: isWsol ? item.uiAmount + nativeSolBalance : item.uiAmount,
+            },
+          };
+
+          return asset;
+        },
       );
 
     return items

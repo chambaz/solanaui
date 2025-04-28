@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 
-import { useWallet } from "@solana/wallet-adapter-react";
+import { useWallet, useConnection } from "@solana/wallet-adapter-react";
 import { IconInfoCircle } from "@tabler/icons-react";
 
 import { SolAsset } from "@/lib/types";
@@ -22,6 +22,7 @@ import { TokenInput } from "@/components/sol/token-input";
 
 export default function TokenInputPage() {
   const { publicKey } = useWallet();
+  const { connection } = useConnection();
   const [assets, setAssets] = React.useState<SolAsset[]>([]);
   const [isFetching, setIsFetching] = React.useState(false);
   const [componentSource, setComponentSource] = React.useState("");
@@ -34,13 +35,14 @@ export default function TokenInputPage() {
       setIsFetching(true);
       const fetchedAssets = await fetchWalletAssets({
         owner: publicKey,
+        connection,
       });
       console.log("fetchedAssets", fetchedAssets);
       setAssets(fetchedAssets);
     } finally {
       setIsFetching(false);
     }
-  }, [publicKey, isFetching]);
+  }, [publicKey, isFetching, connection]);
 
   React.useEffect(() => {
     if (assets.length === 0 && !isFetching) {

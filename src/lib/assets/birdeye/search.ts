@@ -48,7 +48,22 @@ const searchAssets = async ({
     );
 
     const searchResults = await searchResponse.json();
-    const results = searchResults.data.items[0].result;
+    const results = searchResults.data.items[0].result.filter(
+      (result: { symbol: string; address: string }) => {
+        // Keep WSOL
+        if (result.address === WSOL_MINT.toString()) {
+          return true;
+        }
+
+        // Filter out native SOL and exact SOL symbol matches
+        if (result.symbol === "SOL") {
+          return false;
+        }
+
+        // Keep all other tokens
+        return result.symbol;
+      },
+    );
 
     // If owner is provided, fetch balances for each token
     let balanceData: Record<string, { address: string; uiAmount: number }> = {};

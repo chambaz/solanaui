@@ -17,9 +17,11 @@ export type FetchAssetsArgs = {
   addresses: PublicKey[];
   owner?: PublicKey;
   connection?: Connection;
+  combineNativeBalance?: boolean;
 };
 
 export type FetchWalletArgs = {
   owner: PublicKey;
   limit?: number;
+  connection?: Connection;
 };

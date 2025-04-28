@@ -9,6 +9,7 @@ import { WSOL_MINT } from "@/lib/consts";
  * @param args.addresses - Array of token mint addresses to fetch data for
  * @param args.owner - Optional wallet address to fetch token balances for
  * @param args.connection - Optional web3 connection (required if fetching SOL balance)
+ * @param args.combineNativeBalance - Optional boolean to combine WSOL and native SOL
  * @returns Array of SolAsset objects containing token data
  * @example
  * const assets = await fetchAssets({
@@ -21,6 +22,7 @@ const fetchAssets = async ({
   addresses,
   owner,
   connection,
+  combineNativeBalance = true, // Default to combining WSOL and native SOL
 }: FetchAssetsArgs): Promise<SolAsset[]> => {
   const fetchedAssets: SolAsset[] = [];
 
@@ -58,7 +60,8 @@ const fetchAssets = async ({
     if (
       owner &&
       connection &&
-      addresses.some((addr) => addr.equals(WSOL_MINT))
+      addresses.some((addr) => addr.equals(WSOL_MINT)) &&
+      combineNativeBalance
     ) {
       try {
         nativeSolBalance = await connection.getBalance(owner);
@@ -115,9 +118,10 @@ const fetchAssets = async ({
       const assetBalance = balances[asset.id] || 0;
 
       // Add native SOL balance to WSOL if applicable
-      const totalBalance = isWsol
-        ? assetBalance + nativeSolBalance
-        : assetBalance;
+      const totalBalance =
+        isWsol && combineNativeBalance
+          ? assetBalance + nativeSolBalance
+          : assetBalance;
 
       fetchedAssets.push({
         mint: new PublicKey(asset.id),

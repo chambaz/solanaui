@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 
-import { useWallet } from "@solana/wallet-adapter-react";
+import { useWallet, useConnection } from "@solana/wallet-adapter-react";
 import { PublicKey } from "@solana/web3.js";
 import { IconInfoCircle } from "@tabler/icons-react";
 
@@ -25,6 +25,7 @@ import { ConnectWalletPopover } from "@/components/sol/connect-wallet-popover";
 
 export default function UserDropdownPage() {
   const { publicKey, disconnect } = useWallet();
+  const { connection } = useConnection();
   const [assets, setAssets] = React.useState<SolAsset[]>([]);
   const [isFetching, setIsFetching] = React.useState(false);
   const [componentSource, setComponentSource] = React.useState("");
@@ -46,12 +47,13 @@ export default function UserDropdownPage() {
       const fetchedAssets = await fetchAssets({
         addresses: tokens,
         owner: publicKey ?? PublicKey.default,
+        connection,
       });
       setAssets(fetchedAssets);
     } finally {
       setIsFetching(false);
     }
-  }, [publicKey, isFetching]);
+  }, [publicKey, isFetching, connection]);
 
   React.useEffect(() => {
     if (assets.length === 0 && !isFetching) {

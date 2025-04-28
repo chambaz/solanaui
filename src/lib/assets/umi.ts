@@ -32,6 +32,7 @@ const umi = createUmi(process.env.NEXT_PUBLIC_RPC_URL as string).use(
  * @param args.addresses - Array of token mint addresses to fetch data for
  * @param args.owner - Optional wallet address to fetch token balances for
  * @param args.connection - Optional web3 connection (required if fetching SOL balance)
+ * @param args.combineNativeBalance - Optional boolean to combine WSOL and native SOL
  * @returns Array of SolAsset objects containing token data
  * @example
  * const assets = await fetchAssets({
@@ -44,6 +45,7 @@ const fetchAssets = async ({
   addresses,
   owner,
   connection,
+  combineNativeBalance = true, // Default to combining WSOL and native SOL
 }: FetchAssetsArgs): Promise<SolAsset[]> => {
   const fetchedAssets: SolAsset[] = [];
 
@@ -119,7 +121,12 @@ const fetchAssets = async ({
         } as SolAsset;
 
         // Handle WSOL balance
-        if (addresses[index].equals(WSOL_MINT) && owner && connection) {
+        if (
+          addresses[index].equals(WSOL_MINT) &&
+          owner &&
+          connection &&
+          combineNativeBalance
+        ) {
           const balance = await connection.getBalance(owner);
 
           if (item.userTokenAccount) {

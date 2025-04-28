@@ -24,4 +24,12 @@ export type FetchWalletArgs = {
   owner: PublicKey;
   limit?: number;
   connection?: Connection;
+  combineNativeBalance?: boolean;
+};
+
+export type SearchAssetsArgs = {
+  query: string;
+  owner?: PublicKey;
+  connection?: Connection;
+  combineNativeBalance?: boolean;
 };

@@ -36,6 +36,7 @@ import { Button } from "@/components/ui/button";
 type SwapProps = {
   inAssets: SolAsset[];
   outAssets: SolAsset[];
+  onSwapComplete?: () => void;
 };
 
 type JupiterAccountMeta = {
@@ -86,7 +87,7 @@ type JupiterQuoteResponse = {
   timeTaken: number;
 };
 
-const Swap = ({ inAssets, outAssets }: SwapProps) => {
+const Swap = ({ inAssets, outAssets, onSwapComplete }: SwapProps) => {
   const [tokenFrom, setTokenFrom] = React.useState<SolAsset | null>(null);
   const [tokenTo, setTokenTo] = React.useState<SolAsset | null>(null);
   const [amountFrom, setAmountFrom] = React.useState<number>(0);
@@ -323,12 +324,10 @@ const Swap = ({ inAssets, outAssets }: SwapProps) => {
       signingToast.confirm(signature, confirmation);
 
       confirmation.then(() => {
-        console.log(
-          `Transaction confirmed: https://solscan.io/tx/${signature}`,
-        );
         setSwapQuote(null);
         setAmountTo(0);
         setAmountFrom(0);
+        onSwapComplete?.();
       });
     } catch (error) {
       console.error("Error during swap:", error);
@@ -353,6 +352,7 @@ const Swap = ({ inAssets, outAssets }: SwapProps) => {
     slippageValue,
     priority,
     priorityFeeCap,
+    onSwapComplete,
   ]);
 
   // Fetch swap quote when tokenFrom, amountFrom, and tokenTo are set
@@ -369,7 +369,9 @@ const Swap = ({ inAssets, outAssets }: SwapProps) => {
       const inputMint = tokenFrom.mint.equals(SOL_MINT)
         ? WSOL_MINT.toBase58()
         : tokenFrom.mint.toBase58();
-      const outputMint = tokenTo.mint.toBase58();
+      const outputMint = tokenTo.mint.equals(SOL_MINT)
+        ? WSOL_MINT.toBase58()
+        : tokenTo.mint.toBase58();
 
       // Convert amountFrom to the smallest unit (e.g., lamports for SOL)
       const amount = Math.floor(amountFrom * Math.pow(10, tokenFrom.decimals));

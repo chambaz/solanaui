@@ -62,7 +62,13 @@ export default function SwapPage() {
       value: "default",
       preview: (
         <div className="max-w-lg">
-          <Swap inAssets={inAssets} outAssets={outAssets} />
+          <Swap
+            inAssets={inAssets}
+            outAssets={outAssets}
+            onSwapComplete={() => {
+              fetchData();
+            }}
+          />
         </div>
       ),
       code: `import React from "react";

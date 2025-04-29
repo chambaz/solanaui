@@ -3,11 +3,22 @@
 import React from "react";
 
 import { useWallet, useConnection } from "@solana/wallet-adapter-react";
-import { VersionedTransaction } from "@solana/web3.js";
-import { IconArrowUp, IconArrowDown, IconSettings } from "@tabler/icons-react";
+import {
+  VersionedTransaction,
+  TransactionMessage,
+  TransactionInstruction,
+  SystemProgram,
+  LAMPORTS_PER_SOL,
+  PublicKey,
+  Connection,
+  AddressLookupTableAccount,
+} from "@solana/web3.js";
+import { ArrowUpIcon, ArrowDownIcon, SettingsIcon } from "lucide-react";
+import { getAssociatedTokenAddress } from "@solana/spl-token";
 
 import { SearchAssetsArgs, SolAsset } from "@/lib/types";
 import { searchAssets } from "@/lib/assets/birdeye/search";
+import { SOL_MINT, WSOL_MINT } from "@/lib/consts";
 
 import { useTxnToast } from "@/components/sol/txn-toast";
 import { TokenInput } from "@/components/sol/token-input";
@@ -19,6 +30,26 @@ import { Button } from "@/components/ui/button";
 type SwapProps = {
   inAssets: SolAsset[];
   outAssets: SolAsset[];
+};
+
+type JupiterAccountMeta = {
+  pubkey: string;
+  isSigner: boolean;
+  isWritable: boolean;
+};
+
+type JupiterInstruction = {
+  programId: string;
+  accounts: JupiterAccountMeta[];
+  data: string;
+};
+
+type JupiterInstructionsResponse = {
+  computeBudgetInstructions?: JupiterInstruction[];
+  setupInstructions?: JupiterInstruction[];
+  swapInstruction: JupiterInstruction;
+  cleanupInstruction?: JupiterInstruction;
+  addressLookupTableAddresses: string[];
 };
 
 const Swap = ({ inAssets, outAssets }: SwapProps) => {
@@ -33,7 +64,53 @@ const Swap = ({ inAssets, outAssets }: SwapProps) => {
   const { connection } = useConnection();
   const { txnToast } = useTxnToast();
   const { settings } = useTxnSettings();
-  const { slippageMode, slippageValue } = settings;
+  const { slippageMode, slippageValue, priority, priorityFeeCap } = settings;
+
+  // Map our priority levels to Jupiter's
+  const getJupiterPriorityLevel = (priority: "normal" | "medium" | "turbo") => {
+    switch (priority) {
+      case "turbo":
+        return "veryHigh";
+      case "medium":
+        return "high";
+      default:
+        return "normal";
+    }
+  };
+
+  const deserializeInstruction = (instruction: JupiterInstruction) => {
+    return new TransactionInstruction({
+      programId: new PublicKey(instruction.programId),
+      keys: instruction.accounts.map((key: JupiterAccountMeta) => ({
+        pubkey: new PublicKey(key.pubkey),
+        isSigner: key.isSigner,
+        isWritable: key.isWritable,
+      })),
+      data: Buffer.from(instruction.data, "base64"),
+    });
+  };
+
+  const getAddressLookupTableAccounts = async (
+    keys: string[],
+    connection: Connection,
+  ): Promise<AddressLookupTableAccount[]> => {
+    const addressLookupTableAccountInfos =
+      await connection.getMultipleAccountsInfo(
+        keys.map((key) => new PublicKey(key)),
+      );
+
+    return addressLookupTableAccountInfos.reduce((acc, accountInfo, index) => {
+      const addressLookupTableAddress = keys[index];
+      if (accountInfo) {
+        const addressLookupTableAccount = new AddressLookupTableAccount({
+          key: new PublicKey(addressLookupTableAddress),
+          state: AddressLookupTableAccount.deserialize(accountInfo.data),
+        });
+        acc.push(addressLookupTableAccount);
+      }
+      return acc;
+    }, new Array<AddressLookupTableAccount>());
+  };
 
   const onSearch = React.useCallback(
     async (args: SearchAssetsArgs) => {
@@ -70,40 +147,125 @@ const Swap = ({ inAssets, outAssets }: SwapProps) => {
     try {
       setIsTransacting(true);
 
-      // Use the stored swap quote to execute the swap
-      const { swapTransaction } = await fetch(
-        "https://api.jup.ag/swap/v1/swap",
+      // Get swap instructions from Jupiter
+      const response = await fetch(
+        "https://lite-api.jup.ag/swap/v1/swap-instructions",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             quoteResponse: swapQuote,
             userPublicKey: publicKey.toString(),
-            wrapAndUnwrapSol: true,
+            // Always use dynamic compute units
+            dynamicComputeUnitLimit: true,
+            // Use slippage settings
+            dynamicSlippage: slippageMode === "dynamic",
+            slippageBps:
+              slippageMode === "fixed"
+                ? Math.floor(slippageValue * 100)
+                : undefined,
+            // Use priority fee settings
+            prioritizationFeeLamports:
+              priorityFeeCap !== "dynamic"
+                ? priorityFeeCap * LAMPORTS_PER_SOL
+                : undefined,
+            priorityLevel: getJupiterPriorityLevel(priority),
           }),
         },
-      ).then((res) => res.json());
+      );
 
-      // Deserialize the transaction
-      const transactionBuffer = Buffer.from(swapTransaction, "base64");
-      const transaction = VersionedTransaction.deserialize(transactionBuffer);
+      const instructions: JupiterInstructionsResponse = await response.json();
 
-      // Fetch latest blockhash for transaction
-      const latestBlockhash = await connection.getLatestBlockhash();
-      transaction.message.recentBlockhash = latestBlockhash.blockhash;
+      if ("error" in instructions) {
+        throw new Error(
+          "Failed to get swap instructions: " + instructions.error,
+        );
+      }
 
-      // Sign and send the transaction using wallet adapter
+      const {
+        computeBudgetInstructions,
+        setupInstructions,
+        swapInstruction: swapInstructionPayload,
+        cleanupInstruction,
+        addressLookupTableAddresses,
+      } = instructions;
+
+      // Get the latest blockhash
+      const { blockhash, lastValidBlockHeight } =
+        await connection.getLatestBlockhash();
+
+      // Prepare all instructions
+      const transactionInstructions: TransactionInstruction[] = [];
+
+      // Add compute budget instructions if present
+      if (computeBudgetInstructions?.length) {
+        transactionInstructions.push(
+          ...computeBudgetInstructions.map(deserializeInstruction),
+        );
+      }
+
+      // Add setup instructions if present
+      if (setupInstructions?.length) {
+        transactionInstructions.push(
+          ...setupInstructions.map(deserializeInstruction),
+        );
+      }
+
+      // If swapping SOL and amount > WSOL balance, add wrap instruction
+      if (
+        tokenFrom.mint.toBase58() === WSOL_MINT.toBase58() &&
+        amountFrom > (tokenFrom.userTokenAccount?.amount ?? 0)
+      ) {
+        const wsolAta = await getAssociatedTokenAddress(WSOL_MINT, publicKey);
+        const additionalWsolNeeded =
+          amountFrom - (tokenFrom.userTokenAccount?.amount ?? 0);
+
+        // Transfer SOL and sync native instruction
+        transactionInstructions.push(
+          SystemProgram.transfer({
+            fromPubkey: publicKey,
+            toPubkey: wsolAta,
+            lamports: additionalWsolNeeded * Math.pow(10, tokenFrom.decimals),
+          }),
+        );
+      }
+
+      // Add the main swap instruction
+      transactionInstructions.push(
+        deserializeInstruction(swapInstructionPayload),
+      );
+
+      // Add cleanup instruction if present
+      if (cleanupInstruction) {
+        transactionInstructions.push(
+          deserializeInstruction(cleanupInstruction),
+        );
+      }
+
+      // Get address lookup table accounts
+      const addressLookupTableAccounts = await getAddressLookupTableAccounts(
+        addressLookupTableAddresses,
+        connection,
+      );
+
+      // Create v0 transaction
+      const messageV0 = new TransactionMessage({
+        payerKey: publicKey,
+        recentBlockhash: blockhash,
+        instructions: transactionInstructions,
+      }).compileToV0Message(addressLookupTableAccounts);
+
+      const transaction = new VersionedTransaction(messageV0);
+
+      // Sign and send the transaction
       const signature = await sendTransaction(transaction, connection);
 
-      // Confirm the transaction using the updated confirmation method
-      const confirmation = connection.confirmTransaction(
-        {
-          signature,
-          blockhash: latestBlockhash.blockhash,
-          lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
-        },
-        "finalized",
-      );
+      // Wait for confirmation
+      const confirmation = connection.confirmTransaction({
+        signature,
+        blockhash,
+        lastValidBlockHeight,
+      });
 
       signingToast.confirm(signature, confirmation);
 
@@ -111,7 +273,6 @@ const Swap = ({ inAssets, outAssets }: SwapProps) => {
         console.log(
           `Transaction confirmed: https://solscan.io/tx/${signature}`,
         );
-        // Reset the swap quote after successful swap
         setSwapQuote(null);
         setAmountTo(0);
         setAmountFrom(0);
@@ -135,6 +296,10 @@ const Swap = ({ inAssets, outAssets }: SwapProps) => {
     isTransacting,
     txnToast,
     swapQuote,
+    slippageMode,
+    slippageValue,
+    priority,
+    priorityFeeCap,
   ]);
 
   // Fetch swap quote when tokenFrom, amountFrom, and tokenTo are set
@@ -149,7 +314,9 @@ const Swap = ({ inAssets, outAssets }: SwapProps) => {
       try {
         setIsLoadingQuote(true);
         // Define the input and output mint addresses
-        const inputMint = tokenFrom.mint.toBase58();
+        const inputMint = tokenFrom.mint.equals(SOL_MINT)
+          ? WSOL_MINT.toBase58()
+          : tokenFrom.mint.toBase58();
         const outputMint = tokenTo.mint.toBase58();
 
         // Convert amountFrom to the smallest unit (e.g., lamports for SOL)
@@ -157,11 +324,15 @@ const Swap = ({ inAssets, outAssets }: SwapProps) => {
           amountFrom * Math.pow(10, tokenFrom.decimals),
         );
 
-        const slippage = slippageMode === "dynamic" ? 50 : slippageValue * 100;
+        // Use slippage settings from TxnSettings
+        const slippageBps =
+          slippageMode === "dynamic"
+            ? 50 // Jupiter's default for dynamic
+            : Math.floor(slippageValue * 100); // Convert percentage to bps
 
         // Fetch the quote from Jupiter API using the updated endpoint
         const quoteResponse = await fetch(
-          `https://api.jup.ag/swap/v1/quote?inputMint=${inputMint}&outputMint=${outputMint}&amount=${amount}&slippageBps=${slippage}`,
+          `https://lite-api.jup.ag/swap/v1/quote?inputMint=${inputMint}&outputMint=${outputMint}&amount=${amount}&slippageBps=${slippageBps}`,
         ).then((res) => res.json());
 
         // Store the quote in state
@@ -204,8 +375,8 @@ const Swap = ({ inAssets, outAssets }: SwapProps) => {
               onAmountChange={setAmountFrom}
             />
             <div className="flex gap-2">
-              <IconArrowUp size={18} />
-              <IconArrowDown size={18} />
+              <ArrowUpIcon size={18} />
+              <ArrowDownIcon size={18} />
             </div>
             <TokenInput
               assets={outAssets}
@@ -221,7 +392,7 @@ const Swap = ({ inAssets, outAssets }: SwapProps) => {
             <TxnSettings
               trigger={
                 <Button variant="ghost" size="icon">
-                  <IconSettings size={16} />
+                  <SettingsIcon size={16} />
                 </Button>
               }
             />

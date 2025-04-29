@@ -1,11 +1,13 @@
 "use client";
 
 import React from "react";
-import { PublicKey } from "@solana/web3.js";
+import { PublicKey, LAMPORTS_PER_SOL } from "@solana/web3.js";
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { WalletIcon } from "lucide-react";
 
 import { formatNumberGrouped, formatNumberShort } from "@/lib/utils";
 import { SolAsset } from "@/lib/types";
+import { SOL_MINT, WSOL_MINT } from "@/lib/consts";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -43,9 +45,22 @@ export const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
     },
     amountInputRef: React.ForwardedRef<HTMLInputElement>,
   ) => {
+    const { connection } = useConnection();
+    const { publicKey } = useWallet();
     const [amount, setAmount] = React.useState<string>(initAmount.toString());
-    const [maxAmount, setMaxAmount] = React.useState<number>(0);
     const [selectedToken, setSelectedToken] = React.useState<SolAsset>();
+    const [nativeSolBalance, setNativeSolBalance] = React.useState<number>(0);
+
+    const ESTIMATED_SOL_FEE = 0.001;
+    const isSol =
+      selectedToken?.mint.toBase58() === WSOL_MINT.toBase58() ||
+      selectedToken?.mint.toBase58() === SOL_MINT.toBase58();
+
+    const wsolAmount = selectedToken?.userTokenAccount?.amount ?? 0;
+
+    const safeMaxAmount = isSol
+      ? Math.max(0, nativeSolBalance - ESTIMATED_SOL_FEE)
+      : wsolAmount;
 
     const handleInputChange = React.useCallback(
       (newAmount: string) => {
@@ -61,7 +76,7 @@ export const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
           amount = isNaN(Number.parseFloat(newAmountWithoutCommas))
             ? 0
             : Number.parseFloat(newAmountWithoutCommas);
-          formattedAmount = formatNumberGrouped(amount).concat(".");
+          formattedAmount = formatNumberGrouped(amount, 3).concat(".");
         } else if (selectedToken) {
           const mintDecimals = selectedToken?.decimals;
           const isDecimalPartInvalid = isNaN(Number.parseFloat(decimalPart));
@@ -77,21 +92,37 @@ export const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
           amount = isNaN(Number.parseFloat(newAmountWithoutCommas))
             ? 0
             : Number.parseFloat(newAmountWithoutCommas);
-          formattedAmount = formatNumberGrouped(amount)
+          formattedAmount = formatNumberGrouped(amount, 3)
             .split(".")[0]
             .concat(decimalPart);
         }
 
-        if (amount > maxAmount) {
-          setAmount(formatNumberGrouped(maxAmount));
-          if (onAmountChange) onAmountChange(maxAmount);
+        if (amount > safeMaxAmount) {
+          setAmount(formatNumberGrouped(safeMaxAmount, 3));
+          if (onAmountChange) onAmountChange(safeMaxAmount);
         } else {
           setAmount(formattedAmount);
           if (onAmountChange) onAmountChange(amount);
         }
       },
-      [maxAmount, setAmount, selectedToken, onAmountChange],
+      [safeMaxAmount, setAmount, selectedToken, onAmountChange],
     );
+
+    // Fetch native SOL balance when needed
+    React.useEffect(() => {
+      const fetchNativeSolBalance = async () => {
+        if (!connection || !publicKey || !isSol) return;
+        try {
+          const balance = await connection.getBalance(publicKey);
+          setNativeSolBalance(balance / LAMPORTS_PER_SOL);
+        } catch (error) {
+          console.error("Error fetching native SOL balance:", error);
+          setNativeSolBalance(0);
+        }
+      };
+
+      fetchNativeSolBalance();
+    }, [connection, publicKey, selectedToken, isSol]);
 
     React.useEffect(() => {
       setAmount(initAmount.toString());
@@ -105,11 +136,14 @@ export const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
               variant="ghost"
               size="sm"
               onClick={() => {
-                setAmount(formatNumberGrouped(maxAmount));
+                setAmount(formatNumberGrouped(safeMaxAmount, 4));
+                if (onAmountChange) onAmountChange(safeMaxAmount);
               }}
             >
               <WalletIcon size={16} />
-              {formatNumberShort(maxAmount)}
+              <div className="flex flex-col items-end text-xs">
+                <span>{formatNumberShort(safeMaxAmount)}</span>
+              </div>
             </Button>
           )}
           {showQuickAmountButtons && (
@@ -118,8 +152,9 @@ export const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
                 variant="secondary"
                 size="sm"
                 onClick={() => {
-                  setAmount(formatNumberGrouped(maxAmount / 2));
-                  onAmountChange && onAmountChange(maxAmount / 2);
+                  const halfAmount = safeMaxAmount / 2;
+                  setAmount(formatNumberGrouped(halfAmount, 4));
+                  if (onAmountChange) onAmountChange(halfAmount);
                 }}
               >
                 Half
@@ -128,8 +163,8 @@ export const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
                 variant="secondary"
                 size="sm"
                 onClick={() => {
-                  setAmount(formatNumberGrouped(maxAmount));
-                  onAmountChange && onAmountChange(maxAmount);
+                  setAmount(formatNumberGrouped(safeMaxAmount, 4));
+                  if (onAmountChange) onAmountChange(safeMaxAmount);
                 }}
               >
                 Max
@@ -142,7 +177,6 @@ export const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
             assets={assets}
             onSelect={(token) => {
               setSelectedToken(token);
-              setMaxAmount(token?.userTokenAccount?.amount ?? 0);
               setAmount("");
               if (
                 amountInputRef &&

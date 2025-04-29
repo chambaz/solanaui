@@ -16,8 +16,11 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 type TxnSettingsType = {
-  priority: string;
+  // Priority fee settings
+  priority: "normal" | "medium" | "turbo";
   priorityFeeCap: "dynamic" | number;
+
+  // Slippage settings
   slippageMode: "dynamic" | "fixed";
   slippageValue: number;
 };
@@ -137,7 +140,10 @@ const TxnSettings = ({ trigger }: TxnSettingsProps) => {
               className="justify-start"
               value={tempSettings.priority}
               onValueChange={(value) =>
-                setTempSettings((prev) => ({ ...prev, priority: value }))
+                setTempSettings((prev) => ({
+                  ...prev,
+                  priority: value as "normal" | "medium" | "turbo",
+                }))
               }
             >
               <ToggleGroupItem value="normal">Normal</ToggleGroupItem>
@@ -172,6 +178,7 @@ const TxnSettings = ({ trigger }: TxnSettingsProps) => {
               <ToggleGroupItem value="manual">Manual</ToggleGroupItem>
               <ToggleGroupItem value="dynamic">Dynamic</ToggleGroupItem>
             </ToggleGroup>
+
             {tempSettings.priorityFeeCap !== "dynamic" && (
               <Input
                 type="number"
@@ -196,7 +203,7 @@ const TxnSettings = ({ trigger }: TxnSettingsProps) => {
             <div className="space-y-2">
               <h4 className="font-medium">Slippage mode</h4>
               <p className="text-sm text-muted-foreground">
-                Set a fixed slippage or let us calculate optimal slippage for
+                Set a manual slippage or let us calculate optimal slippage for
                 you.
               </p>
             </div>
@@ -214,7 +221,7 @@ const TxnSettings = ({ trigger }: TxnSettingsProps) => {
               }}
             >
               <ToggleGroupItem value="dynamic">Dynamic</ToggleGroupItem>
-              <ToggleGroupItem value="fixed">Fixed</ToggleGroupItem>
+              <ToggleGroupItem value="fixed">Manual</ToggleGroupItem>
             </ToggleGroup>
 
             {tempSettings.slippageMode === "fixed" && (
@@ -261,7 +268,7 @@ const TxnSettings = ({ trigger }: TxnSettingsProps) => {
                 </ToggleGroup>
 
                 <div>
-                  <p className="mb-2 text-sm">Or set manually</p>
+                  <p className="mb-2 text-sm">Or set custom value</p>
                   <div className="relative">
                     <Input
                       type="number"

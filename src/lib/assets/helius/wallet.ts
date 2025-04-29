@@ -1,12 +1,14 @@
-import { PublicKey, LAMPORTS_PER_SOL } from "@solana/web3.js";
+import { PublicKey, Connection, LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { SolAsset, FetchWalletArgs } from "@/lib/types";
-import { WSOL_MINT } from "@/lib/consts";
+import { SOL_MINT, WSOL_MINT } from "@/lib/consts";
 
 /**
  * Fetches all token assets for a wallet address from Helius API
  * Includes metadata, balances, and native SOL balance
  * @param args - Object containing fetch parameters
  * @param args.owner - Wallet address to fetch token list for
+ * @param args.connection - Optional web3 connection (required if fetching SOL balance)
+ * @param args.combineNativeBalance - Optional boolean to combine WSOL and native SOL
  * @returns Array of SolAsset objects containing token data
  * @example
  * const assets = await fetchWalletAssets({
@@ -15,8 +17,10 @@ import { WSOL_MINT } from "@/lib/consts";
  */
 const fetchWalletAssets = async ({
   owner,
+  connection,
   limit = 20,
-}: FetchWalletArgs): Promise<SolAsset[]> => {
+  combineNativeBalance = true,
+}: FetchWalletArgs & { connection?: Connection }): Promise<SolAsset[]> => {
   const fetchedAssets: SolAsset[] = [];
 
   try {
@@ -51,22 +55,49 @@ const fetchWalletAssets = async ({
       return [];
     }
 
-    let solAmount = 0;
+    let nativeSolBalance = 0;
+    let wsolBalance = 0;
+    let solPrice = 0;
 
+    // Get native SOL balance from connection if provided
+    if (connection) {
+      try {
+        nativeSolBalance = await connection.getBalance(owner);
+        nativeSolBalance = nativeSolBalance / LAMPORTS_PER_SOL;
+      } catch (error) {
+        console.error("Error fetching native SOL balance:", error);
+      }
+    }
+
+    // Get SOL price from Helius response
     if (data.result.nativeBalance) {
-      solAmount = Number(data.result.nativeBalance.lamports) / LAMPORTS_PER_SOL;
+      solPrice = data.result.nativeBalance.price_per_sol;
     }
 
     for (const asset of data.result.items) {
       if (!asset.token_info) continue;
 
-      // combine WSOL with native SOL
+      // Handle WSOL separately
       if (asset.id === WSOL_MINT.toBase58()) {
-        const wsolBalance =
+        wsolBalance =
           Number(asset.token_info.balance || 0) /
           Math.pow(10, asset.token_info.decimals);
-        solAmount += wsolBalance;
-
+        // Only include WSOL if not combining with native SOL
+        if (!combineNativeBalance) {
+          fetchedAssets.push({
+            mint: WSOL_MINT,
+            name: "Wrapped SOL",
+            symbol: "WSOL",
+            image:
+              "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+            price: asset.token_info.price_info?.price_per_token,
+            decimals: asset.token_info.decimals,
+            userTokenAccount: {
+              address: WSOL_MINT,
+              amount: wsolBalance,
+            },
+          });
+        }
         continue;
       }
 
@@ -88,24 +119,26 @@ const fetchWalletAssets = async ({
       });
     }
 
-    // add combined SOL asset if there's any balance
-    if (solAmount > 0) {
-      fetchedAssets.push({
-        mint: WSOL_MINT,
-        name: "Solana",
-        symbol: "SOL",
-        image:
-          "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
-        price: data.result.nativeBalance.price_per_sol,
-        decimals: 9,
-        userTokenAccount: {
-          address: WSOL_MINT,
-          amount: solAmount,
-        },
-      });
-    }
+    // Always add native SOL, combine with WSOL if specified
+    const totalSolBalance = combineNativeBalance
+      ? nativeSolBalance + wsolBalance
+      : nativeSolBalance;
 
-    // sort assets by USD value
+    fetchedAssets.push({
+      mint: SOL_MINT,
+      name: "Solana",
+      symbol: "SOL",
+      image:
+        "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+      price: solPrice,
+      decimals: 9,
+      userTokenAccount: {
+        address: SOL_MINT,
+        amount: totalSolBalance,
+      },
+    });
+
+    // Sort assets by USD value
     return fetchedAssets
       .sort((a, b) => {
         const aValue = (a.userTokenAccount?.amount || 0) * (a.price || 0);

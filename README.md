@@ -13,6 +13,11 @@ To get started read the [docs](https://www.solanaui.dev/) or install the docs lo
 pnpm install
 ```
 
+### Set your RPC url in your .env.local
+```
+NEXT_PUBLIC_RPC_URL="https://your-rpc-url.com"
+```
+
 ### Development
 
 ```bash

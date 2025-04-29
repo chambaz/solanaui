@@ -13,7 +13,12 @@ import {
   Connection,
   AddressLookupTableAccount,
 } from "@solana/web3.js";
-import { ArrowUpIcon, ArrowDownIcon, SettingsIcon } from "lucide-react";
+import {
+  ArrowUpIcon,
+  ArrowDownIcon,
+  SettingsIcon,
+  RefreshCwIcon,
+} from "lucide-react";
 import { getAssociatedTokenAddress } from "@solana/spl-token";
 
 import { SearchAssetsArgs, SolAsset } from "@/lib/types";
@@ -351,59 +356,58 @@ const Swap = ({ inAssets, outAssets }: SwapProps) => {
   ]);
 
   // Fetch swap quote when tokenFrom, amountFrom, and tokenTo are set
-  React.useEffect(() => {
-    const fetchSwapQuote = async () => {
-      if (!tokenFrom || !amountFrom || !tokenTo || amountFrom <= 0) {
-        setSwapQuote(null);
-        setAmountTo(0);
-        return;
+  const fetchSwapQuote = React.useCallback(async () => {
+    if (!tokenFrom || !amountFrom || !tokenTo || amountFrom <= 0) {
+      setSwapQuote(null);
+      setAmountTo(0);
+      return;
+    }
+
+    try {
+      setIsLoadingQuote(true);
+      // Define the input and output mint addresses
+      const inputMint = tokenFrom.mint.equals(SOL_MINT)
+        ? WSOL_MINT.toBase58()
+        : tokenFrom.mint.toBase58();
+      const outputMint = tokenTo.mint.toBase58();
+
+      // Convert amountFrom to the smallest unit (e.g., lamports for SOL)
+      const amount = Math.floor(amountFrom * Math.pow(10, tokenFrom.decimals));
+
+      // Use slippage settings from TxnSettings
+      const slippageBps =
+        slippageMode === "dynamic"
+          ? 50 // Jupiter's default for dynamic
+          : Math.floor(slippageValue * 100); // Convert percentage to bps
+
+      // Fetch the quote from Jupiter API using the updated endpoint
+      const quoteResponse = await fetch(
+        `https://lite-api.jup.ag/swap/v1/quote?inputMint=${inputMint}&outputMint=${outputMint}&amount=${amount}&slippageBps=${slippageBps}`,
+      ).then((res) => res.json());
+
+      console.log(quoteResponse);
+      // Store the quote in state
+      setSwapQuote(quoteResponse);
+
+      // Update amountTo based on the quote's outAmount
+      if (quoteResponse && quoteResponse.outAmount && tokenTo) {
+        const calculatedAmountTo =
+          Number(quoteResponse.outAmount) / Math.pow(10, tokenTo.decimals);
+        setAmountTo(calculatedAmountTo);
       }
-
-      try {
-        setIsLoadingQuote(true);
-        // Define the input and output mint addresses
-        const inputMint = tokenFrom.mint.equals(SOL_MINT)
-          ? WSOL_MINT.toBase58()
-          : tokenFrom.mint.toBase58();
-        const outputMint = tokenTo.mint.toBase58();
-
-        // Convert amountFrom to the smallest unit (e.g., lamports for SOL)
-        const amount = Math.floor(
-          amountFrom * Math.pow(10, tokenFrom.decimals),
-        );
-
-        // Use slippage settings from TxnSettings
-        const slippageBps =
-          slippageMode === "dynamic"
-            ? 50 // Jupiter's default for dynamic
-            : Math.floor(slippageValue * 100); // Convert percentage to bps
-
-        // Fetch the quote from Jupiter API using the updated endpoint
-        const quoteResponse = await fetch(
-          `https://lite-api.jup.ag/swap/v1/quote?inputMint=${inputMint}&outputMint=${outputMint}&amount=${amount}&slippageBps=${slippageBps}`,
-        ).then((res) => res.json());
-
-        console.log(quoteResponse);
-        // Store the quote in state
-        setSwapQuote(quoteResponse);
-
-        // Update amountTo based on the quote's outAmount
-        if (quoteResponse && quoteResponse.outAmount && tokenTo) {
-          const calculatedAmountTo =
-            Number(quoteResponse.outAmount) / Math.pow(10, tokenTo.decimals);
-          setAmountTo(calculatedAmountTo);
-        }
-      } catch (error) {
-        console.error("Error fetching swap quote:", error);
-        setSwapQuote(null);
-        setAmountTo(0);
-      } finally {
-        setIsLoadingQuote(false);
-      }
-    };
-
-    fetchSwapQuote();
+    } catch (error) {
+      console.error("Error fetching swap quote:", error);
+      setSwapQuote(null);
+      setAmountTo(0);
+    } finally {
+      setIsLoadingQuote(false);
+    }
   }, [tokenFrom, amountFrom, tokenTo, slippageValue, slippageMode]);
+
+  // Effect to fetch quote when inputs change
+  React.useEffect(() => {
+    fetchSwapQuote();
+  }, [fetchSwapQuote]);
 
   return (
     <div className="mb-12 mt-4 flex w-full flex-col items-center justify-center gap-8">
@@ -437,7 +441,26 @@ const Swap = ({ inAssets, outAssets }: SwapProps) => {
               disabled={true}
             />
           </div>
-          <div className="mt-4 flex justify-end">
+          <div className="mt-4 flex justify-between">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="gap-1.5 font-normal"
+              onClick={fetchSwapQuote}
+              disabled={
+                isLoadingQuote ||
+                !tokenFrom ||
+                !tokenTo ||
+                !amountFrom ||
+                amountFrom <= 0
+              }
+            >
+              <RefreshCwIcon
+                size={13}
+                className={isLoadingQuote ? "animate-spin" : ""}
+              />{" "}
+              Refresh
+            </Button>
             <TxnSettings
               trigger={
                 <Button
@@ -451,7 +474,7 @@ const Swap = ({ inAssets, outAssets }: SwapProps) => {
             />
           </div>
           {swapQuote && !isLoadingQuote && (
-            <div className="mt-4 space-y-2 border-t pt-4 text-xs">
+            <div className="mt-3 space-y-2 border-t pt-4 text-xs">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Priority</span>
                 <span className="capitalize">

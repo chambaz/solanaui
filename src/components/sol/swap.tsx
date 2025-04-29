@@ -19,6 +19,7 @@ import { getAssociatedTokenAddress } from "@solana/spl-token";
 import { SearchAssetsArgs, SolAsset } from "@/lib/types";
 import { searchAssets } from "@/lib/assets/birdeye/search";
 import { SOL_MINT, WSOL_MINT } from "@/lib/consts";
+import { formatNumberGrouped } from "@/lib/utils";
 
 import { useTxnToast } from "@/components/sol/txn-toast";
 import { TokenInput } from "@/components/sol/token-input";
@@ -52,19 +53,66 @@ type JupiterInstructionsResponse = {
   addressLookupTableAddresses: string[];
 };
 
+type JupiterRoutePlan = {
+  swapInfo: {
+    ammKey: string;
+    label: string;
+    inputMint: string;
+    outputMint: string;
+    inAmount: string;
+    outAmount: string;
+    feeAmount: string;
+    feeMint: string;
+  };
+  percent: number;
+};
+
+type JupiterQuoteResponse = {
+  inputMint: string;
+  inAmount: string;
+  outputMint: string;
+  outAmount: string;
+  otherAmountThreshold: string;
+  swapMode: string;
+  slippageBps: number;
+  priceImpactPct: string;
+  routePlan: JupiterRoutePlan[];
+  contextSlot: number;
+  timeTaken: number;
+};
+
 const Swap = ({ inAssets, outAssets }: SwapProps) => {
   const [tokenFrom, setTokenFrom] = React.useState<SolAsset | null>(null);
   const [tokenTo, setTokenTo] = React.useState<SolAsset | null>(null);
   const [amountFrom, setAmountFrom] = React.useState<number>(0);
   const [amountTo, setAmountTo] = React.useState<number>(0);
   const [isTransacting, setIsTransacting] = React.useState<boolean>(false);
-  const [swapQuote, setSwapQuote] = React.useState<unknown>(null);
+  const [swapQuote, setSwapQuote] = React.useState<JupiterQuoteResponse | null>(
+    null,
+  );
   const [isLoadingQuote, setIsLoadingQuote] = React.useState<boolean>(false);
   const { publicKey, sendTransaction, wallet } = useWallet();
   const { connection } = useConnection();
   const { txnToast } = useTxnToast();
   const { settings } = useTxnSettings();
   const { slippageMode, slippageValue, priority, priorityFeeCap } = settings;
+
+  // Calculate total fee across all routes
+  const totalFee = React.useMemo(() => {
+    if (!swapQuote?.routePlan) return 0;
+    return swapQuote.routePlan.reduce((total, route) => {
+      const feeAmount = route.swapInfo.feeAmount
+        ? Number(route.swapInfo.feeAmount)
+        : 0;
+      return total + feeAmount * (route.percent / 100);
+    }, 0);
+  }, [swapQuote?.routePlan]);
+
+  const priceImpact = React.useMemo(() => {
+    if (!swapQuote?.priceImpactPct) return 0;
+    const formattedPriceImpact = Number(swapQuote.priceImpactPct).toFixed(4);
+    return Number(formattedPriceImpact) > 0 ? formattedPriceImpact : 0;
+  }, [swapQuote?.priceImpactPct]);
 
   // Map our priority levels to Jupiter's
   const getJupiterPriorityLevel = (priority: "normal" | "medium" | "turbo") => {
@@ -335,6 +383,7 @@ const Swap = ({ inAssets, outAssets }: SwapProps) => {
           `https://lite-api.jup.ag/swap/v1/quote?inputMint=${inputMint}&outputMint=${outputMint}&amount=${amount}&slippageBps=${slippageBps}`,
         ).then((res) => res.json());
 
+        console.log(quoteResponse);
         // Store the quote in state
         setSwapQuote(quoteResponse);
 
@@ -391,12 +440,59 @@ const Swap = ({ inAssets, outAssets }: SwapProps) => {
           <div className="mt-4 flex justify-end">
             <TxnSettings
               trigger={
-                <Button variant="ghost" size="icon">
-                  <SettingsIcon size={16} />
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="gap-1.5 font-normal"
+                >
+                  <SettingsIcon size={13} /> Settings
                 </Button>
               }
             />
           </div>
+          {swapQuote && !isLoadingQuote && (
+            <div className="mt-4 space-y-2 border-t pt-4 text-xs">
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Priority</span>
+                <span className="capitalize">
+                  {getJupiterPriorityLevel(priority)}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Slippage</span>
+                <span>{(swapQuote.slippageBps / 100).toFixed(2)}%</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Price Impact</span>
+                <span
+                  className={
+                    Number(swapQuote.priceImpactPct) > 1
+                      ? "text-destructive"
+                      : ""
+                  }
+                >
+                  {priceImpact}%
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Minimum Output</span>
+                <span>
+                  {formatNumberGrouped(
+                    Number(swapQuote.otherAmountThreshold) /
+                      Math.pow(10, tokenTo?.decimals || 9),
+                    4,
+                  )}{" "}
+                  {tokenTo?.symbol}
+                </span>
+              </div>
+              {totalFee > 0 && (
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Fee</span>
+                  <span>{(totalFee / LAMPORTS_PER_SOL).toFixed(8)} SOL</span>
+                </div>
+              )}
+            </div>
+          )}
           <Button
             className="mt-4 w-full"
             onClick={handleSwap}

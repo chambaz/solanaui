@@ -103,68 +103,163 @@ const Swap = ({ inAssets, outAssets, onSwapComplete }: SwapProps) => {
   const { settings } = useTxnSettings();
   const { slippageMode, slippageValue, priority, priorityFeeCap } = settings;
 
-  // Calculate total fee across all routes
-  const totalFee = React.useMemo(() => {
-    if (!swapQuote?.routePlan) return 0;
-    return swapQuote.routePlan.reduce((total, route) => {
+  // Memoize quote calculations
+  const quoteDetails = React.useMemo(() => {
+    if (!swapQuote?.routePlan) {
+      return { totalFee: 0, priceImpact: 0 };
+    }
+
+    const fee = swapQuote.routePlan.reduce((total, route) => {
       const feeAmount = route.swapInfo.feeAmount
         ? Number(route.swapInfo.feeAmount)
         : 0;
       return total + feeAmount * (route.percent / 100);
     }, 0);
-  }, [swapQuote?.routePlan]);
 
-  const priceImpact = React.useMemo(() => {
-    if (!swapQuote?.priceImpactPct) return 0;
-    const formattedPriceImpact = Number(swapQuote.priceImpactPct).toFixed(4);
-    return Number(formattedPriceImpact) > 0 ? formattedPriceImpact : 0;
-  }, [swapQuote?.priceImpactPct]);
+    const impact = Number(swapQuote.priceImpactPct).toFixed(4);
+    return {
+      totalFee: fee,
+      priceImpact: Number(impact) > 0 ? impact : 0,
+    };
+  }, [swapQuote?.routePlan, swapQuote?.priceImpactPct]);
 
-  // Map our priority levels to Jupiter's
-  const getJupiterPriorityLevel = (priority: "normal" | "medium" | "turbo") => {
-    switch (priority) {
-      case "turbo":
-        return "veryHigh";
-      case "medium":
-        return "high";
-      default:
-        return "normal";
-    }
-  };
+  const { totalFee, priceImpact } = quoteDetails;
 
-  const deserializeInstruction = (instruction: JupiterInstruction) => {
-    return new TransactionInstruction({
-      programId: new PublicKey(instruction.programId),
-      keys: instruction.accounts.map((key: JupiterAccountMeta) => ({
-        pubkey: new PublicKey(key.pubkey),
-        isSigner: key.isSigner,
-        isWritable: key.isWritable,
-      })),
-      data: Buffer.from(instruction.data, "base64"),
-    });
-  };
-
-  const getAddressLookupTableAccounts = async (
-    keys: string[],
-    connection: Connection,
-  ): Promise<AddressLookupTableAccount[]> => {
-    const addressLookupTableAccountInfos =
-      await connection.getMultipleAccountsInfo(
-        keys.map((key) => new PublicKey(key)),
-      );
-
-    return addressLookupTableAccountInfos.reduce((acc, accountInfo, index) => {
-      const addressLookupTableAddress = keys[index];
-      if (accountInfo) {
-        const addressLookupTableAccount = new AddressLookupTableAccount({
-          key: new PublicKey(addressLookupTableAddress),
-          state: AddressLookupTableAccount.deserialize(accountInfo.data),
-        });
-        acc.push(addressLookupTableAccount);
+  // Memoize Jupiter priority level mapping
+  const getJupiterPriorityLevel = React.useCallback(
+    (priority: "normal" | "medium" | "turbo") => {
+      switch (priority) {
+        case "turbo":
+          return "veryHigh";
+        case "medium":
+          return "high";
+        default:
+          return "normal";
       }
-      return acc;
-    }, new Array<AddressLookupTableAccount>());
-  };
+    },
+    [],
+  );
+
+  // Memoize instruction deserialization
+  const deserializeInstruction = React.useCallback(
+    (instruction: JupiterInstruction) => {
+      return new TransactionInstruction({
+        programId: new PublicKey(instruction.programId),
+        keys: instruction.accounts.map((key: JupiterAccountMeta) => ({
+          pubkey: new PublicKey(key.pubkey),
+          isSigner: key.isSigner,
+          isWritable: key.isWritable,
+        })),
+        data: Buffer.from(instruction.data, "base64"),
+      });
+    },
+    [],
+  );
+
+  // Memoize lookup table account fetching
+  const getAddressLookupTableAccounts = React.useCallback(
+    async (
+      keys: string[],
+      connection: Connection,
+    ): Promise<AddressLookupTableAccount[]> => {
+      const addressLookupTableAccountInfos =
+        await connection.getMultipleAccountsInfo(
+          keys.map((key) => new PublicKey(key)),
+        );
+
+      return addressLookupTableAccountInfos.reduce(
+        (acc, accountInfo, index) => {
+          const addressLookupTableAddress = keys[index];
+          if (accountInfo) {
+            const addressLookupTableAccount = new AddressLookupTableAccount({
+              key: new PublicKey(addressLookupTableAddress),
+              state: AddressLookupTableAccount.deserialize(accountInfo.data),
+            });
+            acc.push(addressLookupTableAccount);
+          }
+          return acc;
+        },
+        new Array<AddressLookupTableAccount>(),
+      );
+    },
+    [],
+  );
+
+  // Memoize quote fetching parameters
+  const quoteParams = React.useMemo(() => {
+    if (!tokenFrom || !amountFrom || !tokenTo || amountFrom <= 0) {
+      return null;
+    }
+
+    const inputMint = tokenFrom.mint.equals(SOL_MINT)
+      ? WSOL_MINT.toBase58()
+      : tokenFrom.mint.toBase58();
+    const outputMint = tokenTo.mint.equals(SOL_MINT)
+      ? WSOL_MINT.toBase58()
+      : tokenTo.mint.toBase58();
+    const amount = Math.floor(amountFrom * Math.pow(10, tokenFrom.decimals));
+    const slippageBps =
+      slippageMode === "dynamic"
+        ? 50 // Jupiter's default for dynamic
+        : Math.floor(slippageValue * 100); // Convert percentage to bps
+
+    return { inputMint, outputMint, amount, slippageBps };
+  }, [tokenFrom, tokenTo, amountFrom, slippageMode, slippageValue]);
+
+  // Memoize swap quote details display
+  const swapQuoteDetails = React.useMemo(() => {
+    if (!swapQuote || isLoadingQuote) return null;
+
+    return (
+      <div className="mt-3 space-y-2 border-t pt-4 text-xs">
+        <div className="flex justify-between">
+          <span className="text-muted-foreground">Priority</span>
+          <span className="capitalize">
+            {getJupiterPriorityLevel(priority)}
+          </span>
+        </div>
+        <div className="flex justify-between">
+          <span className="text-muted-foreground">Slippage</span>
+          <span>{(swapQuote.slippageBps / 100).toFixed(2)}%</span>
+        </div>
+        <div className="flex justify-between">
+          <span className="text-muted-foreground">Price Impact</span>
+          <span
+            className={
+              Number(swapQuote.priceImpactPct) > 1 ? "text-destructive" : ""
+            }
+          >
+            {priceImpact}%
+          </span>
+        </div>
+        <div className="flex justify-between">
+          <span className="text-muted-foreground">Minimum Output</span>
+          <span>
+            {formatNumberGrouped(
+              Number(swapQuote.otherAmountThreshold) /
+                Math.pow(10, tokenTo?.decimals || 9),
+              4,
+            )}{" "}
+            {tokenTo?.symbol}
+          </span>
+        </div>
+        {totalFee > 0 && (
+          <div className="flex justify-between">
+            <span className="text-muted-foreground">Fee</span>
+            <span>{(totalFee / LAMPORTS_PER_SOL).toFixed(8)} SOL</span>
+          </div>
+        )}
+      </div>
+    );
+  }, [
+    swapQuote,
+    isLoadingQuote,
+    priority,
+    priceImpact,
+    totalFee,
+    tokenTo,
+    getJupiterPriorityLevel,
+  ]);
 
   const reset = React.useCallback(() => {
     setTokenFrom(null);
@@ -361,11 +456,15 @@ const Swap = ({ inAssets, outAssets, onSwapComplete }: SwapProps) => {
     priority,
     priorityFeeCap,
     onSwapComplete,
+    deserializeInstruction,
+    getAddressLookupTableAccounts,
+    getJupiterPriorityLevel,
   ]);
 
   // Fetch swap quote when tokenFrom, amountFrom, and tokenTo are set
   const fetchSwapQuote = React.useCallback(async () => {
-    if (!tokenFrom || !amountFrom || !tokenTo || amountFrom <= 0) {
+    const params = quoteParams;
+    if (!params) {
       setSwapQuote(null);
       setAmountTo(0);
       return;
@@ -373,26 +472,10 @@ const Swap = ({ inAssets, outAssets, onSwapComplete }: SwapProps) => {
 
     try {
       setIsLoadingQuote(true);
-      // Define the input and output mint addresses
-      const inputMint = tokenFrom.mint.equals(SOL_MINT)
-        ? WSOL_MINT.toBase58()
-        : tokenFrom.mint.toBase58();
-      const outputMint = tokenTo.mint.equals(SOL_MINT)
-        ? WSOL_MINT.toBase58()
-        : tokenTo.mint.toBase58();
-
-      // Convert amountFrom to the smallest unit (e.g., lamports for SOL)
-      const amount = Math.floor(amountFrom * Math.pow(10, tokenFrom.decimals));
-
-      // Use slippage settings from TxnSettings
-      const slippageBps =
-        slippageMode === "dynamic"
-          ? 50 // Jupiter's default for dynamic
-          : Math.floor(slippageValue * 100); // Convert percentage to bps
 
       // Fetch the quote from Jupiter API using the updated endpoint
       const quoteResponse = await fetch(
-        `https://lite-api.jup.ag/swap/v1/quote?inputMint=${inputMint}&outputMint=${outputMint}&amount=${amount}&slippageBps=${slippageBps}`,
+        `https://lite-api.jup.ag/swap/v1/quote?inputMint=${params.inputMint}&outputMint=${params.outputMint}&amount=${params.amount}&slippageBps=${params.slippageBps}`,
       ).then((res) => res.json());
 
       console.log(quoteResponse);
@@ -412,7 +495,7 @@ const Swap = ({ inAssets, outAssets, onSwapComplete }: SwapProps) => {
     } finally {
       setIsLoadingQuote(false);
     }
-  }, [tokenFrom, amountFrom, tokenTo, slippageValue, slippageMode]);
+  }, [quoteParams, tokenTo?.decimals]);
 
   // Effect to fetch quote when inputs change
   React.useEffect(() => {
@@ -489,49 +572,7 @@ const Swap = ({ inAssets, outAssets, onSwapComplete }: SwapProps) => {
               }
             />
           </div>
-          {swapQuote && !isLoadingQuote && (
-            <div className="mt-3 space-y-2 border-t pt-4 text-xs">
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Priority</span>
-                <span className="capitalize">
-                  {getJupiterPriorityLevel(priority)}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Slippage</span>
-                <span>{(swapQuote.slippageBps / 100).toFixed(2)}%</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Price Impact</span>
-                <span
-                  className={
-                    Number(swapQuote.priceImpactPct) > 1
-                      ? "text-destructive"
-                      : ""
-                  }
-                >
-                  {priceImpact}%
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Minimum Output</span>
-                <span>
-                  {formatNumberGrouped(
-                    Number(swapQuote.otherAmountThreshold) /
-                      Math.pow(10, tokenTo?.decimals || 9),
-                    4,
-                  )}{" "}
-                  {tokenTo?.symbol}
-                </span>
-              </div>
-              {totalFee > 0 && (
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Fee</span>
-                  <span>{(totalFee / LAMPORTS_PER_SOL).toFixed(8)} SOL</span>
-                </div>
-              )}
-            </div>
-          )}
+          {swapQuoteDetails}
           <Button
             className="mt-4 w-full"
             onClick={handleSwap}

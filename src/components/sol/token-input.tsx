@@ -20,6 +20,7 @@ type TokenInputProps = {
   showWalletBalance?: boolean;
   showQuickAmountButtons?: boolean;
   amount?: number;
+  value?: SolAsset | null;
   onTokenSelect?: (token: SolAsset) => void;
   onAmountChange?: (amount: number) => void;
   onSearch?: ({
@@ -39,6 +40,7 @@ export const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
       showWalletBalance = true,
       showQuickAmountButtons = true,
       amount: initAmount = 0,
+      value,
       onTokenSelect,
       onAmountChange,
       onSearch,
@@ -50,6 +52,13 @@ export const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
     const [amount, setAmount] = React.useState<string>(initAmount.toString());
     const [selectedToken, setSelectedToken] = React.useState<SolAsset>();
     const [nativeSolBalance, setNativeSolBalance] = React.useState<number>(0);
+
+    // Update selectedToken when value prop changes
+    React.useEffect(() => {
+      if (value !== undefined) {
+        setSelectedToken(value || undefined);
+      }
+    }, [value]);
 
     const ESTIMATED_SOL_FEE = 0.001;
     const isSol =
@@ -175,9 +184,9 @@ export const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
         <div className="flex items-center gap-2">
           <TokenCombobox
             assets={assets}
+            value={value}
             onSelect={(token) => {
               setSelectedToken(token);
-              setAmount("");
               if (
                 amountInputRef &&
                 "current" in amountInputRef &&

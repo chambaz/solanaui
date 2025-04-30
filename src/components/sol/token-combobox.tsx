@@ -30,6 +30,7 @@ type TokenComboboxProps = {
   trigger?: React.ReactNode;
   address?: PublicKey | null;
   showBalances?: boolean;
+  value?: SolAsset | null;
   onSelect?: (token: SolAsset) => void;
   onSearch?: (args: SearchAssetsArgs) => Promise<SolAsset[]>;
 };
@@ -39,19 +40,20 @@ const TokenCombobox = ({
   trigger,
   address,
   showBalances = true,
+  value,
   onSelect,
   onSearch,
 }: TokenComboboxProps) => {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("");
   const [searchValue, setSearchValue] = React.useState("");
+  const [internalValue, setInternalValue] = React.useState<SolAsset | null>(
+    null,
+  );
   const [assets, setAssets] = React.useState<SolAsset[]>(initialAssets);
   const searchTimeout = React.useRef<NodeJS.Timeout>();
 
-  const selectedAsset = React.useMemo(
-    () => assets.find((asset) => asset.mint.toBase58().toLowerCase() === value),
-    [assets, value],
-  );
+  // Use value prop if provided (controlled) or internal state if not (uncontrolled)
+  const selectedAsset = value !== undefined ? value : internalValue;
 
   React.useEffect(() => {
     const handleSearch = async () => {
@@ -130,9 +132,12 @@ const TokenCombobox = ({
                 <CommandItem
                   key={asset.mint.toBase58()}
                   value={asset.mint.toBase58().toLowerCase()}
-                  onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue);
+                  onSelect={() => {
                     setOpen(false);
+                    // Only update internal state if uncontrolled
+                    if (value === undefined) {
+                      setInternalValue(asset);
+                    }
                     if (onSelect) onSelect(asset);
                   }}
                   className="flex items-center gap-2"

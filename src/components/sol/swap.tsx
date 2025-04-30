@@ -166,6 +166,14 @@ const Swap = ({ inAssets, outAssets, onSwapComplete }: SwapProps) => {
     }, new Array<AddressLookupTableAccount>());
   };
 
+  const reset = React.useCallback(() => {
+    setTokenFrom(null);
+    setTokenTo(null);
+    setAmountFrom(0);
+    setAmountTo(0);
+    setSwapQuote(null);
+  }, []);
+
   const onSearch = React.useCallback(
     async (args: SearchAssetsArgs) => {
       if (!publicKey || !connection) return [];
@@ -426,7 +434,11 @@ const Swap = ({ inAssets, outAssets, onSwapComplete }: SwapProps) => {
           <div className="flex flex-col items-center justify-center gap-4">
             <TokenInput
               assets={inAssets}
-              onTokenSelect={setTokenFrom}
+              value={tokenFrom}
+              onTokenSelect={(token) => {
+                reset();
+                setTokenFrom(token);
+              }}
               onAmountChange={setAmountFrom}
             />
             <div className="flex gap-2">
@@ -435,6 +447,7 @@ const Swap = ({ inAssets, outAssets, onSwapComplete }: SwapProps) => {
             </div>
             <TokenInput
               assets={outAssets}
+              value={tokenTo}
               showWalletBalance={false}
               showQuickAmountButtons={false}
               onTokenSelect={setTokenTo}

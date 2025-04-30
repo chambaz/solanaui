@@ -435,6 +435,7 @@ const Swap = ({ inAssets, outAssets, onSwapComplete }: SwapProps) => {
             <TokenInput
               assets={inAssets}
               value={tokenFrom}
+              amount={amountFrom}
               onTokenSelect={(token) => {
                 reset();
                 setTokenFrom(token);
@@ -448,11 +449,11 @@ const Swap = ({ inAssets, outAssets, onSwapComplete }: SwapProps) => {
             <TokenInput
               assets={outAssets}
               value={tokenTo}
+              amount={amountTo}
               showWalletBalance={false}
               showQuickAmountButtons={false}
               onTokenSelect={setTokenTo}
               onSearch={onSearch}
-              amount={amountTo}
               disabled={true}
             />
           </div>

@@ -39,7 +39,7 @@ export const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
       disabled = false,
       showWalletBalance = true,
       showQuickAmountButtons = true,
-      amount: initAmount = 0,
+      amount: externalAmount,
       value,
       onTokenSelect,
       onAmountChange,
@@ -49,9 +49,13 @@ export const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
   ) => {
     const { connection } = useConnection();
     const { publicKey } = useWallet();
-    const [amount, setAmount] = React.useState<string>(initAmount.toString());
+    const [internalAmount, setInternalAmount] = React.useState<string>("0");
     const [selectedToken, setSelectedToken] = React.useState<SolAsset>();
     const [nativeSolBalance, setNativeSolBalance] = React.useState<number>(0);
+
+    // Use external amount if provided (controlled) or internal amount if not (uncontrolled)
+    const amount =
+      externalAmount !== undefined ? externalAmount.toString() : internalAmount;
 
     // Update selectedToken when value prop changes
     React.useEffect(() => {
@@ -74,7 +78,7 @@ export const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
     const handleInputChange = React.useCallback(
       (newAmount: string) => {
         let formattedAmount: string = "",
-          amount: number = 0;
+          parsedAmount: number = 0;
         const newAmountWithoutCommas = newAmount.replace(/,/g, "");
         let decimalPart = newAmountWithoutCommas.split(".")[1];
 
@@ -82,10 +86,10 @@ export const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
           (newAmount.endsWith(",") || newAmount.endsWith(".")) &&
           !newAmount.substring(0, newAmount.length - 1).includes(".")
         ) {
-          amount = isNaN(Number.parseFloat(newAmountWithoutCommas))
+          parsedAmount = isNaN(Number.parseFloat(newAmountWithoutCommas))
             ? 0
             : Number.parseFloat(newAmountWithoutCommas);
-          formattedAmount = formatNumberGrouped(amount, 3).concat(".");
+          formattedAmount = formatNumberGrouped(parsedAmount, 3).concat(".");
         } else if (selectedToken) {
           const mintDecimals = selectedToken?.decimals;
           const isDecimalPartInvalid = isNaN(Number.parseFloat(decimalPart));
@@ -98,23 +102,30 @@ export const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
                   .toString()
                   .substring(1),
               );
-          amount = isNaN(Number.parseFloat(newAmountWithoutCommas))
+          parsedAmount = isNaN(Number.parseFloat(newAmountWithoutCommas))
             ? 0
             : Number.parseFloat(newAmountWithoutCommas);
-          formattedAmount = formatNumberGrouped(amount, 3)
+          formattedAmount = formatNumberGrouped(parsedAmount, 3)
             .split(".")[0]
             .concat(decimalPart);
         }
 
-        if (amount > safeMaxAmount) {
-          setAmount(formatNumberGrouped(safeMaxAmount, 3));
+        if (parsedAmount > safeMaxAmount) {
+          const finalAmount = formatNumberGrouped(safeMaxAmount, 3);
+          // Only update internal state if uncontrolled
+          if (externalAmount === undefined) {
+            setInternalAmount(finalAmount);
+          }
           if (onAmountChange) onAmountChange(safeMaxAmount);
         } else {
-          setAmount(formattedAmount);
-          if (onAmountChange) onAmountChange(amount);
+          // Only update internal state if uncontrolled
+          if (externalAmount === undefined) {
+            setInternalAmount(formattedAmount);
+          }
+          if (onAmountChange) onAmountChange(parsedAmount);
         }
       },
-      [safeMaxAmount, setAmount, selectedToken, onAmountChange],
+      [safeMaxAmount, selectedToken, onAmountChange, externalAmount],
     );
 
     // Fetch native SOL balance when needed
@@ -133,10 +144,6 @@ export const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
       fetchNativeSolBalance();
     }, [connection, publicKey, selectedToken, isSol]);
 
-    React.useEffect(() => {
-      setAmount(initAmount.toString());
-    }, [initAmount]);
-
     return (
       <div className="relative w-full space-y-4">
         <div className="flex items-center justify-end gap-2">
@@ -145,7 +152,11 @@ export const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
               variant="ghost"
               size="sm"
               onClick={() => {
-                setAmount(formatNumberGrouped(safeMaxAmount, 4));
+                const maxAmount = formatNumberGrouped(safeMaxAmount, 4);
+                // Only update internal state if uncontrolled
+                if (externalAmount === undefined) {
+                  setInternalAmount(maxAmount);
+                }
                 if (onAmountChange) onAmountChange(safeMaxAmount);
               }}
             >
@@ -162,7 +173,11 @@ export const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
                 size="sm"
                 onClick={() => {
                   const halfAmount = safeMaxAmount / 2;
-                  setAmount(formatNumberGrouped(halfAmount, 4));
+                  const formattedHalf = formatNumberGrouped(halfAmount, 4);
+                  // Only update internal state if uncontrolled
+                  if (externalAmount === undefined) {
+                    setInternalAmount(formattedHalf);
+                  }
                   if (onAmountChange) onAmountChange(halfAmount);
                 }}
               >
@@ -172,7 +187,11 @@ export const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
                 variant="secondary"
                 size="sm"
                 onClick={() => {
-                  setAmount(formatNumberGrouped(safeMaxAmount, 4));
+                  const maxAmount = formatNumberGrouped(safeMaxAmount, 4);
+                  // Only update internal state if uncontrolled
+                  if (externalAmount === undefined) {
+                    setInternalAmount(maxAmount);
+                  }
                   if (onAmountChange) onAmountChange(safeMaxAmount);
                 }}
               >
@@ -204,7 +223,7 @@ export const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
             placeholder="0"
             className="h-12 text-right"
             inputMode="numeric"
-            value={amount ?? undefined}
+            value={amount}
             disabled={disabled || !selectedToken}
             onChange={(e) => handleInputChange(e.target.value)}
           />

@@ -18,6 +18,7 @@ type TokenInputProps = {
   assets: SolAsset[];
   disabled?: boolean;
   showWalletBalance?: boolean;
+  capMaxAmount?: boolean;
   showQuickAmountButtons?: boolean;
   amount?: number;
   value?: SolAsset | null;
@@ -39,6 +40,7 @@ export const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
       disabled = false,
       showWalletBalance = true,
       showQuickAmountButtons = true,
+      capMaxAmount = true,
       amount: externalAmount,
       value,
       onTokenSelect,
@@ -120,14 +122,14 @@ export const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
         }
 
         // Handle max amount validation
-        if (parsedAmount > safeMaxAmount) {
+        if (parsedAmount > safeMaxAmount && capMaxAmount) {
           parsedAmount = safeMaxAmount;
           formattedAmount = formatNumberGrouped(safeMaxAmount, 3);
         }
 
         return { formattedAmount, parsedAmount };
       },
-      [selectedToken, safeMaxAmount],
+      [selectedToken, safeMaxAmount, capMaxAmount],
     );
 
     // Use external amount if provided (controlled) or internal amount if not (uncontrolled)

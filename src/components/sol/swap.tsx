@@ -495,7 +495,7 @@ const Swap = ({ inAssets, outAssets, onSwapComplete }: SwapProps) => {
     } finally {
       setIsLoadingQuote(false);
     }
-  }, [quoteParams, tokenTo?.decimals]);
+  }, [quoteParams, tokenTo]);
 
   // Effect to fetch quote when inputs change
   React.useEffect(() => {
@@ -533,6 +533,7 @@ const Swap = ({ inAssets, outAssets, onSwapComplete }: SwapProps) => {
               assets={outAssets}
               value={tokenTo}
               amount={amountTo}
+              capMaxAmount={false}
               showWalletBalance={false}
               showQuickAmountButtons={false}
               onTokenSelect={setTokenTo}

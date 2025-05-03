@@ -4,6 +4,7 @@ import React from "react";
 import { PublicKey, LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { WalletIcon } from "lucide-react";
+import { NumericFormat } from "react-number-format";
 
 import { formatNumberGrouped, formatNumberShort } from "@/lib/utils";
 import { SolAsset } from "@/lib/types";
@@ -40,7 +41,6 @@ export const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
       disabled = false,
       showWalletBalance = true,
       showQuickAmountButtons = true,
-      capMaxAmount = true,
       amount: externalAmount,
       value,
       onTokenSelect,
@@ -74,85 +74,9 @@ export const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
 
     const { isSol, safeMaxAmount } = tokenDetails;
 
-    // Enhanced formatAmount with all formatting functionality
-    const formatAmount = React.useCallback(
-      (
-        input: string | number,
-      ): { formattedAmount: string; parsedAmount: number } => {
-        if (!selectedToken)
-          return { formattedAmount: input.toString(), parsedAmount: 0 };
-
-        // Convert input to string and handle commas
-        const inputStr = input.toString().replace(/,/g, "");
-        let parsedAmount = 0;
-        let formattedAmount = "";
-
-        // Handle trailing decimal point
-        if (
-          (inputStr.endsWith(",") || inputStr.endsWith(".")) &&
-          !inputStr.substring(0, inputStr.length - 1).includes(".")
-        ) {
-          parsedAmount = isNaN(Number.parseFloat(inputStr))
-            ? 0
-            : Number.parseFloat(inputStr);
-          formattedAmount = formatNumberGrouped(parsedAmount, 3).concat(".");
-        } else {
-          // Handle decimal places based on token decimals
-          let decimalPart = inputStr.split(".")[1];
-          const isDecimalPartInvalid = isNaN(Number.parseFloat(decimalPart));
-
-          if (!isDecimalPartInvalid) {
-            decimalPart = decimalPart?.substring(0, selectedToken.decimals);
-          }
-
-          decimalPart = isDecimalPartInvalid
-            ? ""
-            : ".".concat(
-                Number.parseFloat("1".concat(decimalPart))
-                  .toString()
-                  .substring(1),
-              );
-
-          parsedAmount = isNaN(Number.parseFloat(inputStr))
-            ? 0
-            : Number.parseFloat(inputStr);
-          formattedAmount = formatNumberGrouped(parsedAmount, 3)
-            .split(".")[0]
-            .concat(decimalPart);
-        }
-
-        // Handle max amount validation
-        if (parsedAmount > safeMaxAmount && capMaxAmount) {
-          parsedAmount = safeMaxAmount;
-          formattedAmount = formatNumberGrouped(safeMaxAmount, 3);
-        }
-
-        return { formattedAmount, parsedAmount };
-      },
-      [selectedToken, safeMaxAmount, capMaxAmount],
-    );
-
     // Use external amount if provided (controlled) or internal amount if not (uncontrolled)
     const amount =
-      externalAmount !== undefined
-        ? formatAmount(externalAmount).formattedAmount
-        : internalAmount;
-
-    const handleInputChange = React.useCallback(
-      (newAmount: string) => {
-        const { formattedAmount, parsedAmount } = formatAmount(newAmount);
-
-        // Only update internal state if uncontrolled
-        if (externalAmount === undefined) {
-          setInternalAmount(formattedAmount);
-        }
-
-        if (onAmountChange) {
-          onAmountChange(parsedAmount);
-        }
-      },
-      [formatAmount, externalAmount, onAmountChange],
-    );
+      externalAmount !== undefined ? externalAmount.toString() : internalAmount;
 
     // Memoize quick amount buttons
     const quickAmountButtons = React.useMemo(() => {
@@ -264,15 +188,33 @@ export const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
             }}
             onSearch={onSearch}
           />
-          <Input
-            ref={amountInputRef}
-            type="text"
+          <NumericFormat
+            getInputRef={amountInputRef}
+            value={amount}
+            onValueChange={({
+              floatValue,
+              value,
+            }: {
+              floatValue?: number;
+              value: string;
+            }) => {
+              // Only update internal state if uncontrolled
+              if (externalAmount === undefined) {
+                setInternalAmount(value);
+              }
+              if (onAmountChange) {
+                onAmountChange(floatValue ?? 0);
+              }
+            }}
+            thousandSeparator
+            decimalScale={selectedToken?.decimals}
+            allowNegative={false}
+            allowLeadingZeros
+            customInput={Input}
             placeholder="0"
             className="h-12 text-right"
             inputMode="numeric"
-            value={amount}
             disabled={disabled || !selectedToken}
-            onChange={(e) => handleInputChange(e.target.value)}
           />
         </div>
       </div>

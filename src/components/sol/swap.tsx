@@ -13,13 +13,13 @@ import {
   Connection,
   AddressLookupTableAccount,
 } from "@solana/web3.js";
+import { getAssociatedTokenAddress } from "@solana/spl-token";
 import {
   ArrowUpIcon,
   ArrowDownIcon,
   SettingsIcon,
   RefreshCwIcon,
 } from "lucide-react";
-import { getAssociatedTokenAddress } from "@solana/spl-token";
 
 import { SearchAssetsArgs, SolAsset } from "@/lib/types";
 import { searchAssets } from "@/lib/assets/birdeye/search";
@@ -29,7 +29,6 @@ import { cn, formatNumberGrouped } from "@/lib/utils";
 import { useTxnToast } from "@/components/sol/txn-toast";
 import { TokenInput } from "@/components/sol/token-input";
 import { TxnSettings, useTxnSettings } from "@/components/sol/txn-settings";
-import { ConnectWalletDialog } from "@/components/sol/connect-wallet-dialog";
 
 import { Button } from "@/components/ui/button";
 
@@ -458,133 +457,117 @@ const Swap = ({ inAssets, outAssets, onSwapComplete }: SwapProps) => {
 
   return (
     <div className="mb-12 mt-4 flex w-full flex-col items-center justify-center gap-8">
-      <div className="space-y-3 text-center">
-        <h1 className="text-3xl">Swap</h1>
-        <p className="text-muted-foreground">
-          Search and swap for any token with SolanaUI.
-        </p>
-      </div>
-      {!publicKey ? (
-        <ConnectWalletDialog />
-      ) : (
-        <div className="rounded-lg border p-4">
-          <div className="flex flex-col items-center justify-center gap-4">
-            <TokenInput
-              assets={inAssets}
-              selectedAsset={tokenFrom}
-              amount={amountFrom}
-              disabled={isLoadingQuote}
-              onTokenSelect={(token) => {
-                reset();
-                setTokenFrom(token);
-              }}
-              onAmountChange={setAmountFrom}
-            />
-            <div className="flex gap-2">
-              <ArrowUpIcon size={18} />
-              <ArrowDownIcon size={18} />
-            </div>
-            <TokenInput
-              assets={outAssets}
-              selectedAsset={tokenTo}
-              amount={amountTo}
-              capMaxAmount={false}
-              showWalletBalance={false}
-              showQuickAmountButtons={false}
-              onTokenSelect={setTokenTo}
-              onSearch={onSearch}
-              disabled={true}
-            />
+      <div className="rounded-lg border p-4">
+        <div className="flex flex-col items-center justify-center gap-4">
+          <TokenInput
+            assets={inAssets}
+            selectedAsset={tokenFrom}
+            amount={amountFrom}
+            disabled={isLoadingQuote}
+            onTokenSelect={(token) => {
+              reset();
+              setTokenFrom(token);
+            }}
+            onAmountChange={setAmountFrom}
+          />
+          <div className="flex gap-2">
+            <ArrowUpIcon size={18} />
+            <ArrowDownIcon size={18} />
           </div>
-          <div className="mt-4 flex justify-between">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="gap-1.5 font-normal"
-              onClick={fetchSwapQuote}
-              disabled={
-                isLoadingQuote ||
-                !tokenFrom ||
-                !tokenTo ||
-                !amountFrom ||
-                amountFrom <= 0
-              }
-            >
-              <RefreshCwIcon
-                size={13}
-                className={isLoadingQuote ? "animate-spin" : ""}
-              />{" "}
-              Refresh
-            </Button>
-            <TxnSettings
-              trigger={
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="gap-1.5 font-normal"
-                >
-                  <SettingsIcon size={13} /> Settings
-                </Button>
-              }
-            />
-          </div>
-          {swapQuote && (
-            <div
-              className={cn(
-                "mt-3 space-y-2 border-t pt-4 text-xs",
-                isLoadingQuote && "animate-pulse",
-              )}
-            >
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Priority</span>
-                <span className="capitalize">
-                  {getJupiterPriorityLevel(priority)}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Slippage</span>
-                <span>{(swapQuote.slippageBps / 100).toFixed(2)}%</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Price Impact</span>
-                <span
-                  className={
-                    Number(swapQuote.priceImpactPct) > 1
-                      ? "text-destructive"
-                      : ""
-                  }
-                >
-                  {priceImpact}%
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Minimum Output</span>
-                <span>
-                  {formatNumberGrouped(
-                    Number(swapQuote.otherAmountThreshold) /
-                      Math.pow(10, tokenTo?.decimals || 9),
-                    4,
-                  )}{" "}
-                  {tokenTo?.symbol}
-                </span>
-              </div>
-              {totalFee > 0 && (
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Fee</span>
-                  <span>{(totalFee / LAMPORTS_PER_SOL).toFixed(8)} SOL</span>
-                </div>
-              )}
-            </div>
-          )}
-          <Button
-            className="mt-4 w-full"
-            onClick={handleSwap}
-            disabled={isTransacting || !swapQuote || isLoadingQuote}
-          >
-            {isTransacting ? "Swapping..." : "Swap"}
-          </Button>
+          <TokenInput
+            assets={outAssets}
+            selectedAsset={tokenTo}
+            amount={amountTo}
+            capMaxAmount={false}
+            showWalletBalance={false}
+            showQuickAmountButtons={false}
+            onTokenSelect={setTokenTo}
+            onSearch={onSearch}
+            disabled={true}
+          />
         </div>
-      )}
+        <div className="mt-4 flex justify-between">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="gap-1.5 font-normal"
+            onClick={fetchSwapQuote}
+            disabled={
+              isLoadingQuote ||
+              !tokenFrom ||
+              !tokenTo ||
+              !amountFrom ||
+              amountFrom <= 0
+            }
+          >
+            <RefreshCwIcon
+              size={13}
+              className={isLoadingQuote ? "animate-spin" : ""}
+            />{" "}
+            Refresh
+          </Button>
+          <TxnSettings
+            trigger={
+              <Button variant="ghost" size="sm" className="gap-1.5 font-normal">
+                <SettingsIcon size={13} /> Settings
+              </Button>
+            }
+          />
+        </div>
+        {swapQuote && (
+          <div
+            className={cn(
+              "mt-3 space-y-2 border-t pt-4 text-xs",
+              isLoadingQuote && "animate-pulse",
+            )}
+          >
+            <div className="flex justify-between">
+              <span className="text-muted-foreground">Priority</span>
+              <span className="capitalize">
+                {getJupiterPriorityLevel(priority)}
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-muted-foreground">Slippage</span>
+              <span>{(swapQuote.slippageBps / 100).toFixed(2)}%</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-muted-foreground">Price Impact</span>
+              <span
+                className={
+                  Number(swapQuote.priceImpactPct) > 1 ? "text-destructive" : ""
+                }
+              >
+                {priceImpact}%
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-muted-foreground">Minimum Output</span>
+              <span>
+                {formatNumberGrouped(
+                  Number(swapQuote.otherAmountThreshold) /
+                    Math.pow(10, tokenTo?.decimals || 9),
+                  4,
+                )}{" "}
+                {tokenTo?.symbol}
+              </span>
+            </div>
+            {totalFee > 0 && (
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Fee</span>
+                <span>{(totalFee / LAMPORTS_PER_SOL).toFixed(8)} SOL</span>
+              </div>
+            )}
+          </div>
+        )}
+        <Button
+          className="mt-4 w-full"
+          onClick={handleSwap}
+          disabled={isTransacting || !swapQuote || isLoadingQuote}
+        >
+          {isTransacting ? "Swapping..." : "Swap"}
+        </Button>
+      </div>
     </div>
   );
 };

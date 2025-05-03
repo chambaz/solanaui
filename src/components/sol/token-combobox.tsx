@@ -30,7 +30,7 @@ type TokenComboboxProps = {
   trigger?: React.ReactNode;
   address?: PublicKey | null;
   showBalances?: boolean;
-  value?: SolAsset | null;
+  selectedAsset?: SolAsset | null;
   onSelect?: (token: SolAsset) => void;
   onSearch?: (args: SearchAssetsArgs) => Promise<SolAsset[]>;
 };
@@ -40,20 +40,22 @@ const TokenCombobox = ({
   trigger,
   address,
   showBalances = true,
-  value,
+  selectedAsset: externalSelectedAsset,
   onSelect,
   onSearch,
 }: TokenComboboxProps) => {
   const [open, setOpen] = React.useState(false);
   const [searchValue, setSearchValue] = React.useState("");
-  const [internalValue, setInternalValue] = React.useState<SolAsset | null>(
-    null,
-  );
+  const [internalSelectedAsset, setInternalSelectedAsset] =
+    React.useState<SolAsset | null>(null);
   const [assets, setAssets] = React.useState<SolAsset[]>(initialAssets);
   const searchTimeout = React.useRef<NodeJS.Timeout>();
 
   // Use value prop if provided (controlled) or internal state if not (uncontrolled)
-  const selectedAsset = value !== undefined ? value : internalValue;
+  const selectedAsset =
+    externalSelectedAsset !== undefined
+      ? externalSelectedAsset
+      : internalSelectedAsset;
 
   // Memoize the search handler
   const handleSearch = React.useCallback(async () => {
@@ -82,54 +84,6 @@ const TokenCombobox = ({
     }
   }, [searchValue, initialAssets, onSearch, address]);
 
-  // Memoize filtered assets list rendering
-  const renderedAssetsList = React.useMemo(
-    () =>
-      assets.map((asset) => (
-        <CommandItem
-          key={asset.mint.toBase58()}
-          value={asset.mint.toBase58().toLowerCase()}
-          onSelect={() => {
-            setOpen(false);
-            // Only update internal state if uncontrolled
-            if (value === undefined) {
-              setInternalValue(asset);
-            }
-            if (onSelect) onSelect(asset);
-          }}
-          className="flex items-center gap-2"
-        >
-          <TokenIcon asset={asset} />
-          {asset.symbol}
-
-          <span className="ml-auto flex flex-col text-right">
-            {!showBalances ? (
-              formatUsd(asset.price ?? 0)
-            ) : (
-              <>
-                {asset.userTokenAccount &&
-                asset.userTokenAccount.amount &&
-                asset.userTokenAccount.amount > 0
-                  ? formatNumber(asset.userTokenAccount.amount)
-                  : 0}
-
-                {asset.price && (
-                  <span className="text-xs text-muted-foreground">
-                    {formatUsd(
-                      ((asset.userTokenAccount &&
-                        asset.userTokenAccount.amount) ||
-                        1) * asset.price,
-                    )}
-                  </span>
-                )}
-              </>
-            )}
-          </span>
-        </CommandItem>
-      )),
-    [assets, value, onSelect, showBalances, setOpen, setInternalValue],
-  );
-
   React.useEffect(() => {
     handleSearch();
 
@@ -140,34 +94,29 @@ const TokenCombobox = ({
     };
   }, [handleSearch]);
 
-  // Memoize trigger button content
-  const triggerContent = React.useMemo(
-    () =>
-      trigger || (
-        <Button
-          variant="outline"
-          role="combobox"
-          size="lg"
-          aria-expanded={open}
-          className="h-12 w-[300px] justify-start gap-2.5 px-3 font-medium"
-        >
-          {selectedAsset ? (
-            <>
-              <TokenIcon asset={selectedAsset} />
-              {selectedAsset.symbol}
-            </>
-          ) : (
-            "Select token..."
-          )}
-          <ChevronsUpDownIcon size={16} className="ml-auto opacity-50" />
-        </Button>
-      ),
-    [trigger, open, selectedAsset],
-  );
-
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>{triggerContent}</PopoverTrigger>
+      <PopoverTrigger asChild>
+        {trigger || (
+          <Button
+            variant="outline"
+            role="combobox"
+            size="lg"
+            aria-expanded={open}
+            className="h-12 w-[300px] justify-start gap-2.5 px-3 font-medium"
+          >
+            {selectedAsset ? (
+              <>
+                <TokenIcon asset={selectedAsset} />
+                {selectedAsset.symbol}
+              </>
+            ) : (
+              "Select token..."
+            )}
+            <ChevronsUpDownIcon size={16} className="ml-auto opacity-50" />
+          </Button>
+        )}
+      </PopoverTrigger>
       <PopoverContent className="w-[300px] p-0">
         <Command shouldFilter={false}>
           <CommandInput
@@ -181,7 +130,50 @@ const TokenCombobox = ({
                 {searchValue ? "No tokens found." : "Loading..."}
               </CommandEmpty>
             )}
-            <CommandGroup>{renderedAssetsList}</CommandGroup>
+            <CommandGroup>
+              {assets.map((asset) => (
+                <CommandItem
+                  key={asset.mint.toBase58()}
+                  value={asset.mint.toBase58().toLowerCase()}
+                  onSelect={() => {
+                    setOpen(false);
+                    // Only update internal state if uncontrolled
+                    if (externalSelectedAsset === undefined) {
+                      setInternalSelectedAsset(asset);
+                    }
+                    if (onSelect) onSelect(asset);
+                  }}
+                  className="flex items-center gap-2"
+                >
+                  <TokenIcon asset={asset} />
+                  {asset.symbol}
+
+                  <span className="ml-auto flex flex-col text-right">
+                    {!showBalances ? (
+                      formatUsd(asset.price ?? 0)
+                    ) : (
+                      <>
+                        {asset.userTokenAccount &&
+                        asset.userTokenAccount.amount &&
+                        asset.userTokenAccount.amount > 0
+                          ? formatNumber(asset.userTokenAccount.amount)
+                          : 0}
+
+                        {asset.price && (
+                          <span className="text-xs text-muted-foreground">
+                            {formatUsd(
+                              ((asset.userTokenAccount &&
+                                asset.userTokenAccount.amount) ||
+                                1) * asset.price,
+                            )}
+                          </span>
+                        )}
+                      </>
+                    )}
+                  </span>
+                </CommandItem>
+              ))}
+            </CommandGroup>
           </CommandList>
         </Command>
       </PopoverContent>

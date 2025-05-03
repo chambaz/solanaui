@@ -17,26 +17,27 @@ const fetchTrendingAssets = async ({
   };
 
   try {
-    // 1. Fetch trending tokens
     const trendingRes = await fetch(
       `https://public-api.birdeye.so/defi/token_trending?sort_by=rank&sort_type=asc&offset=0&limit=${limit}`,
       { headers },
     );
     const { success, data } = await trendingRes.json();
+
     if (!success || !data?.tokens) {
       return [];
     }
+
     const tokens = data.tokens;
     const addresses = tokens.map((t: { address: string }) => t.address);
 
-    // 2. Fetch prices for all trending tokens
+    // fetch prices for all trending tokens
     const priceRes = await fetch(
       `https://public-api.birdeye.so/defi/multi_price?list_address=${addresses.join(",")}`,
       { headers },
     );
     const priceData = (await priceRes.json()).data;
 
-    // 3. Fetch balances for owner if provided
+    // fetch balances for owner if provided
     let balanceData: Record<string, { address: string; uiAmount: number }> = {};
     if (owner) {
       const balancePromises = addresses.map((address: string) =>
@@ -57,7 +58,7 @@ const fetchTrendingAssets = async ({
       );
     }
 
-    // 4. Map to SolAsset
+    // map to SolAsset
     return tokens.map(
       (token: {
         address: string;

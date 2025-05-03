@@ -22,7 +22,7 @@ type TokenInputProps = {
   capMaxAmount?: boolean;
   showQuickAmountButtons?: boolean;
   amount?: number;
-  value?: SolAsset | null;
+  selectedAsset?: SolAsset | null;
   onTokenSelect?: (token: SolAsset) => void;
   onAmountChange?: (amount: number) => void;
   onSearch?: ({
@@ -34,7 +34,7 @@ type TokenInputProps = {
   }) => Promise<SolAsset[]>;
 };
 
-export const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
+const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
   (
     {
       assets,
@@ -42,7 +42,7 @@ export const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
       showWalletBalance = true,
       showQuickAmountButtons = true,
       amount: externalAmount,
-      value,
+      selectedAsset,
       onTokenSelect,
       onAmountChange,
       onSearch,
@@ -57,99 +57,28 @@ export const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
 
     const ESTIMATED_SOL_FEE = 0.001;
 
-    // Memoize token type checks and amounts
-    const tokenDetails = React.useMemo(() => {
-      const isSol =
-        selectedToken?.mint.toBase58() === WSOL_MINT.toBase58() ||
-        selectedToken?.mint.toBase58() === SOL_MINT.toBase58();
+    const isSol =
+      selectedToken?.mint.toBase58() === WSOL_MINT.toBase58() ||
+      selectedToken?.mint.toBase58() === SOL_MINT.toBase58();
 
-      const wsolAmount = selectedToken?.userTokenAccount?.amount ?? 0;
+    const wsolAmount = selectedToken?.userTokenAccount?.amount ?? 0;
 
-      const safeMaxAmount = isSol
-        ? Math.max(0, nativeSolBalance - ESTIMATED_SOL_FEE)
-        : wsolAmount;
+    const safeMaxAmount = isSol
+      ? Math.max(0, nativeSolBalance - ESTIMATED_SOL_FEE)
+      : wsolAmount;
 
-      return { isSol, wsolAmount, safeMaxAmount };
-    }, [selectedToken, nativeSolBalance]);
-
-    const { isSol, safeMaxAmount } = tokenDetails;
-
-    // Use external amount if provided (controlled) or internal amount if not (uncontrolled)
+    // use external amount if provided (controlled) or internal amount if not (uncontrolled)
     const amount =
       externalAmount !== undefined ? externalAmount.toString() : internalAmount;
 
-    // Memoize quick amount buttons
-    const quickAmountButtons = React.useMemo(() => {
-      if (!showQuickAmountButtons) return null;
-
-      return (
-        <>
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => {
-              const halfAmount = safeMaxAmount / 2;
-              const formattedHalf = formatNumberGrouped(halfAmount, 4);
-              // Only update internal state if uncontrolled
-              if (externalAmount === undefined) {
-                setInternalAmount(formattedHalf);
-              }
-              if (onAmountChange) onAmountChange(halfAmount);
-            }}
-          >
-            Half
-          </Button>
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={() => {
-              const maxAmount = formatNumberGrouped(safeMaxAmount, 4);
-              // Only update internal state if uncontrolled
-              if (externalAmount === undefined) {
-                setInternalAmount(maxAmount);
-              }
-              if (onAmountChange) onAmountChange(safeMaxAmount);
-            }}
-          >
-            Max
-          </Button>
-        </>
-      );
-    }, [showQuickAmountButtons, safeMaxAmount, externalAmount, onAmountChange]);
-
-    // Memoize wallet balance button
-    const walletBalanceButton = React.useMemo(() => {
-      if (!showWalletBalance) return null;
-
-      return (
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => {
-            const maxAmount = formatNumberGrouped(safeMaxAmount, 4);
-            // Only update internal state if uncontrolled
-            if (externalAmount === undefined) {
-              setInternalAmount(maxAmount);
-            }
-            if (onAmountChange) onAmountChange(safeMaxAmount);
-          }}
-        >
-          <WalletIcon size={16} />
-          <div className="flex flex-col items-end text-xs">
-            <span>{formatNumberShort(safeMaxAmount)}</span>
-          </div>
-        </Button>
-      );
-    }, [showWalletBalance, safeMaxAmount, externalAmount, onAmountChange]);
-
-    // Update selectedToken when value prop changes
+    // update selectedToken when value prop changes
     React.useEffect(() => {
-      if (value !== undefined) {
-        setSelectedToken(value || undefined);
+      if (selectedAsset !== undefined) {
+        setSelectedToken(selectedAsset || undefined);
       }
-    }, [value]);
+    }, [selectedAsset]);
 
-    // Fetch native SOL balance when needed
+    // fetch native SOL balance when needed
     React.useEffect(() => {
       const fetchNativeSolBalance = async () => {
         if (!connection || !publicKey || !isSol) return;
@@ -167,14 +96,66 @@ export const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
 
     return (
       <div className="relative w-full space-y-4">
-        <div className="flex items-center justify-end gap-2">
-          {walletBalanceButton}
-          {quickAmountButtons}
-        </div>
+        {(showWalletBalance || showQuickAmountButtons) && (
+          <div className="flex items-center justify-end gap-2">
+            {showWalletBalance && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => {
+                  const maxAmount = formatNumberGrouped(safeMaxAmount, 4);
+                  // Only update internal state if uncontrolled
+                  if (externalAmount === undefined) {
+                    setInternalAmount(maxAmount);
+                  }
+                  if (onAmountChange) onAmountChange(safeMaxAmount);
+                }}
+              >
+                <WalletIcon size={16} />
+                <div className="flex flex-col items-end text-xs">
+                  <span>{formatNumberShort(safeMaxAmount)}</span>
+                </div>
+              </Button>
+            )}
+            {showQuickAmountButtons && (
+              <>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => {
+                    const halfAmount = safeMaxAmount / 2;
+                    const formattedHalf = formatNumberGrouped(halfAmount, 4);
+                    // Only update internal state if uncontrolled
+                    if (externalAmount === undefined) {
+                      setInternalAmount(formattedHalf);
+                    }
+                    if (onAmountChange) onAmountChange(halfAmount);
+                  }}
+                >
+                  Half
+                </Button>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => {
+                    const maxAmount = formatNumberGrouped(safeMaxAmount, 4);
+                    // Only update internal state if uncontrolled
+                    if (externalAmount === undefined) {
+                      setInternalAmount(maxAmount);
+                    }
+                    if (onAmountChange) onAmountChange(safeMaxAmount);
+                  }}
+                >
+                  Max
+                </Button>
+              </>
+            )}
+          </div>
+        )}
         <div className="flex items-center gap-2">
           <TokenCombobox
             assets={assets}
-            value={value}
+            selectedAsset={selectedAsset}
             onSelect={(token) => {
               setSelectedToken(token);
               if (
@@ -223,3 +204,5 @@ export const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
 );
 
 TokenInput.displayName = "TokenInput";
+
+export { TokenInput };

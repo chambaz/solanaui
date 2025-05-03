@@ -103,7 +103,6 @@ const Swap = ({ inAssets, outAssets, onSwapComplete }: SwapProps) => {
   const { settings } = useTxnSettings();
   const { slippageMode, slippageValue, priority, priorityFeeCap } = settings;
 
-  // Memoize quote calculations
   const quoteDetails = React.useMemo(() => {
     if (!swapQuote?.routePlan) {
       return { totalFee: 0, priceImpact: 0 };
@@ -123,9 +122,30 @@ const Swap = ({ inAssets, outAssets, onSwapComplete }: SwapProps) => {
     };
   }, [swapQuote?.routePlan, swapQuote?.priceImpactPct]);
 
+  // get quote params
+  const quoteParams = React.useMemo(() => {
+    if (!tokenFrom || !amountFrom || !tokenTo || amountFrom <= 0) {
+      return null;
+    }
+
+    const inputMint = tokenFrom.mint.equals(SOL_MINT)
+      ? WSOL_MINT.toBase58()
+      : tokenFrom.mint.toBase58();
+    const outputMint = tokenTo.mint.equals(SOL_MINT)
+      ? WSOL_MINT.toBase58()
+      : tokenTo.mint.toBase58();
+    const amount = Math.floor(amountFrom * Math.pow(10, tokenFrom.decimals));
+    const slippageBps =
+      slippageMode === "dynamic"
+        ? 50 // Jupiter's default for dynamic
+        : Math.floor(slippageValue * 100); // Convert percentage to bps
+
+    return { inputMint, outputMint, amount, slippageBps };
+  }, [tokenFrom, tokenTo, amountFrom, slippageMode, slippageValue]);
+
   const { totalFee, priceImpact } = quoteDetails;
 
-  // Memoize Jupiter priority level mapping
+  // convert to Jupiter priority level
   const getJupiterPriorityLevel = React.useCallback(
     (priority: "normal" | "medium" | "turbo") => {
       switch (priority) {
@@ -140,7 +160,7 @@ const Swap = ({ inAssets, outAssets, onSwapComplete }: SwapProps) => {
     [],
   );
 
-  // Memoize instruction deserialization
+  // deserialize Jupiter instructions
   const deserializeInstruction = React.useCallback(
     (instruction: JupiterInstruction) => {
       return new TransactionInstruction({
@@ -156,7 +176,7 @@ const Swap = ({ inAssets, outAssets, onSwapComplete }: SwapProps) => {
     [],
   );
 
-  // Memoize lookup table account fetching
+  // get address lookup table accounts
   const getAddressLookupTableAccounts = React.useCallback(
     async (
       keys: string[],
@@ -185,87 +205,6 @@ const Swap = ({ inAssets, outAssets, onSwapComplete }: SwapProps) => {
     [],
   );
 
-  // Memoize quote fetching parameters
-  const quoteParams = React.useMemo(() => {
-    if (!tokenFrom || !amountFrom || !tokenTo || amountFrom <= 0) {
-      return null;
-    }
-
-    const inputMint = tokenFrom.mint.equals(SOL_MINT)
-      ? WSOL_MINT.toBase58()
-      : tokenFrom.mint.toBase58();
-    const outputMint = tokenTo.mint.equals(SOL_MINT)
-      ? WSOL_MINT.toBase58()
-      : tokenTo.mint.toBase58();
-    const amount = Math.floor(amountFrom * Math.pow(10, tokenFrom.decimals));
-    const slippageBps =
-      slippageMode === "dynamic"
-        ? 50 // Jupiter's default for dynamic
-        : Math.floor(slippageValue * 100); // Convert percentage to bps
-
-    return { inputMint, outputMint, amount, slippageBps };
-  }, [tokenFrom, tokenTo, amountFrom, slippageMode, slippageValue]);
-
-  // Memoize swap quote details display
-  const swapQuoteDetails = React.useMemo(() => {
-    if (!swapQuote) return null;
-
-    return (
-      <div
-        className={cn(
-          "mt-3 space-y-2 border-t pt-4 text-xs",
-          isLoadingQuote && "animate-pulse",
-        )}
-      >
-        <div className="flex justify-between">
-          <span className="text-muted-foreground">Priority</span>
-          <span className="capitalize">
-            {getJupiterPriorityLevel(priority)}
-          </span>
-        </div>
-        <div className="flex justify-between">
-          <span className="text-muted-foreground">Slippage</span>
-          <span>{(swapQuote.slippageBps / 100).toFixed(2)}%</span>
-        </div>
-        <div className="flex justify-between">
-          <span className="text-muted-foreground">Price Impact</span>
-          <span
-            className={
-              Number(swapQuote.priceImpactPct) > 1 ? "text-destructive" : ""
-            }
-          >
-            {priceImpact}%
-          </span>
-        </div>
-        <div className="flex justify-between">
-          <span className="text-muted-foreground">Minimum Output</span>
-          <span>
-            {formatNumberGrouped(
-              Number(swapQuote.otherAmountThreshold) /
-                Math.pow(10, tokenTo?.decimals || 9),
-              4,
-            )}{" "}
-            {tokenTo?.symbol}
-          </span>
-        </div>
-        {totalFee > 0 && (
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">Fee</span>
-            <span>{(totalFee / LAMPORTS_PER_SOL).toFixed(8)} SOL</span>
-          </div>
-        )}
-      </div>
-    );
-  }, [
-    swapQuote,
-    isLoadingQuote,
-    priority,
-    priceImpact,
-    totalFee,
-    tokenTo,
-    getJupiterPriorityLevel,
-  ]);
-
   const reset = React.useCallback(() => {
     setTokenFrom(null);
     setTokenTo(null);
@@ -289,6 +228,52 @@ const Swap = ({ inAssets, outAssets, onSwapComplete }: SwapProps) => {
     [publicKey, connection],
   );
 
+  // fetch swap quote from Jupiter API
+  const fetchSwapQuote = React.useCallback(async () => {
+    const params = quoteParams;
+    if (!params) {
+      setSwapQuote(null);
+      setAmountTo(0);
+      return;
+    }
+
+    try {
+      setIsLoadingQuote(true);
+      const startTime = Date.now();
+
+      // fetch the quote from Jupiter API using the updated endpoint
+      const quoteResponse = await fetch(
+        `https://lite-api.jup.ag/swap/v1/quote?inputMint=${params.inputMint}&outputMint=${params.outputMint}&amount=${params.amount}&slippageBps=${params.slippageBps}`,
+      ).then((res) => res.json());
+
+      // calculate elapsed time and remaining time to reach 1 second
+      const elapsedTime = Date.now() - startTime;
+      const remainingTime = Math.max(0, 1000 - elapsedTime);
+
+      // if we need to wait longer, do so
+      if (remainingTime > 0) {
+        await new Promise((resolve) => setTimeout(resolve, remainingTime));
+      }
+
+      // store the quote in state
+      setSwapQuote(quoteResponse);
+
+      // update amountTo based on the quote's outAmount
+      if (quoteResponse && quoteResponse.outAmount && tokenTo) {
+        const calculatedAmountTo =
+          Number(quoteResponse.outAmount) / Math.pow(10, tokenTo.decimals);
+        setAmountTo(calculatedAmountTo);
+      }
+    } catch (error) {
+      console.error("Error fetching swap quote:", error);
+      setSwapQuote(null);
+      setAmountTo(0);
+    } finally {
+      setIsLoadingQuote(false);
+    }
+  }, [quoteParams, tokenTo]);
+
+  // build and send jupiter swap transaction
   const handleSwap = React.useCallback(async () => {
     if (isTransacting) {
       return;
@@ -309,7 +294,7 @@ const Swap = ({ inAssets, outAssets, onSwapComplete }: SwapProps) => {
     try {
       setIsTransacting(true);
 
-      // Get swap instructions from Jupiter
+      // get swap instructions from Jupiter
       const response = await fetch(
         "https://lite-api.jup.ag/swap/v1/swap-instructions",
         {
@@ -352,28 +337,28 @@ const Swap = ({ inAssets, outAssets, onSwapComplete }: SwapProps) => {
         addressLookupTableAddresses,
       } = instructions;
 
-      // Get the latest blockhash
+      // get the latest blockhash
       const { blockhash, lastValidBlockHeight } =
         await connection.getLatestBlockhash();
 
-      // Prepare all instructions
+      // prepare all instructions
       const transactionInstructions: TransactionInstruction[] = [];
 
-      // Add compute budget instructions if present
+      // add compute budget instructions if present
       if (computeBudgetInstructions?.length) {
         transactionInstructions.push(
           ...computeBudgetInstructions.map(deserializeInstruction),
         );
       }
 
-      // Add setup instructions if present
+      // add setup instructions if present
       if (setupInstructions?.length) {
         transactionInstructions.push(
           ...setupInstructions.map(deserializeInstruction),
         );
       }
 
-      // If swapping SOL and amount > WSOL balance, add wrap instruction
+      // if swapping SOL and amount > WSOL balance, add wrap instruction
       if (
         tokenFrom.mint.toBase58() === WSOL_MINT.toBase58() &&
         amountFrom > (tokenFrom.userTokenAccount?.amount ?? 0)
@@ -382,7 +367,7 @@ const Swap = ({ inAssets, outAssets, onSwapComplete }: SwapProps) => {
         const additionalWsolNeeded =
           amountFrom - (tokenFrom.userTokenAccount?.amount ?? 0);
 
-        // Transfer SOL and sync native instruction
+        // transfer SOL and sync native instruction
         transactionInstructions.push(
           SystemProgram.transfer({
             fromPubkey: publicKey,
@@ -392,25 +377,25 @@ const Swap = ({ inAssets, outAssets, onSwapComplete }: SwapProps) => {
         );
       }
 
-      // Add the main swap instruction
+      // add the main swap instruction
       transactionInstructions.push(
         deserializeInstruction(swapInstructionPayload),
       );
 
-      // Add cleanup instruction if present
+      // add cleanup instruction if present
       if (cleanupInstruction) {
         transactionInstructions.push(
           deserializeInstruction(cleanupInstruction),
         );
       }
 
-      // Get address lookup table accounts
+      // get address lookup table accounts
       const addressLookupTableAccounts = await getAddressLookupTableAccounts(
         addressLookupTableAddresses,
         connection,
       );
 
-      // Create v0 transaction
+      // create v0 transaction
       const messageV0 = new TransactionMessage({
         payerKey: publicKey,
         recentBlockhash: blockhash,
@@ -419,10 +404,10 @@ const Swap = ({ inAssets, outAssets, onSwapComplete }: SwapProps) => {
 
       const transaction = new VersionedTransaction(messageV0);
 
-      // Sign and send the transaction
+      // sign and send the transaction
       const signature = await sendTransaction(transaction, connection);
 
-      // Wait for confirmation
+      // wait for confirmation
       const confirmation = connection.confirmTransaction({
         signature,
         blockhash,
@@ -466,52 +451,7 @@ const Swap = ({ inAssets, outAssets, onSwapComplete }: SwapProps) => {
     getJupiterPriorityLevel,
   ]);
 
-  // Fetch swap quote when tokenFrom, amountFrom, and tokenTo are set
-  const fetchSwapQuote = React.useCallback(async () => {
-    const params = quoteParams;
-    if (!params) {
-      setSwapQuote(null);
-      setAmountTo(0);
-      return;
-    }
-
-    try {
-      setIsLoadingQuote(true);
-      const startTime = Date.now();
-
-      // Fetch the quote from Jupiter API using the updated endpoint
-      const quoteResponse = await fetch(
-        `https://lite-api.jup.ag/swap/v1/quote?inputMint=${params.inputMint}&outputMint=${params.outputMint}&amount=${params.amount}&slippageBps=${params.slippageBps}`,
-      ).then((res) => res.json());
-
-      // Calculate elapsed time and remaining time to reach 1 second
-      const elapsedTime = Date.now() - startTime;
-      const remainingTime = Math.max(0, 1000 - elapsedTime);
-
-      // If we need to wait longer, do so
-      if (remainingTime > 0) {
-        await new Promise((resolve) => setTimeout(resolve, remainingTime));
-      }
-
-      // Store the quote in state
-      setSwapQuote(quoteResponse);
-
-      // Update amountTo based on the quote's outAmount
-      if (quoteResponse && quoteResponse.outAmount && tokenTo) {
-        const calculatedAmountTo =
-          Number(quoteResponse.outAmount) / Math.pow(10, tokenTo.decimals);
-        setAmountTo(calculatedAmountTo);
-      }
-    } catch (error) {
-      console.error("Error fetching swap quote:", error);
-      setSwapQuote(null);
-      setAmountTo(0);
-    } finally {
-      setIsLoadingQuote(false);
-    }
-  }, [quoteParams, tokenTo]);
-
-  // Effect to fetch quote when inputs change
+  // effect to fetch quote when inputs change
   React.useEffect(() => {
     fetchSwapQuote();
   }, [fetchSwapQuote]);
@@ -531,7 +471,7 @@ const Swap = ({ inAssets, outAssets, onSwapComplete }: SwapProps) => {
           <div className="flex flex-col items-center justify-center gap-4">
             <TokenInput
               assets={inAssets}
-              value={tokenFrom}
+              selectedAsset={tokenFrom}
               amount={amountFrom}
               disabled={isLoadingQuote}
               onTokenSelect={(token) => {
@@ -546,7 +486,7 @@ const Swap = ({ inAssets, outAssets, onSwapComplete }: SwapProps) => {
             </div>
             <TokenInput
               assets={outAssets}
-              value={tokenTo}
+              selectedAsset={tokenTo}
               amount={amountTo}
               capMaxAmount={false}
               showWalletBalance={false}
@@ -588,7 +528,54 @@ const Swap = ({ inAssets, outAssets, onSwapComplete }: SwapProps) => {
               }
             />
           </div>
-          {swapQuoteDetails}
+          {swapQuote && (
+            <div
+              className={cn(
+                "mt-3 space-y-2 border-t pt-4 text-xs",
+                isLoadingQuote && "animate-pulse",
+              )}
+            >
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Priority</span>
+                <span className="capitalize">
+                  {getJupiterPriorityLevel(priority)}
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Slippage</span>
+                <span>{(swapQuote.slippageBps / 100).toFixed(2)}%</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Price Impact</span>
+                <span
+                  className={
+                    Number(swapQuote.priceImpactPct) > 1
+                      ? "text-destructive"
+                      : ""
+                  }
+                >
+                  {priceImpact}%
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Minimum Output</span>
+                <span>
+                  {formatNumberGrouped(
+                    Number(swapQuote.otherAmountThreshold) /
+                      Math.pow(10, tokenTo?.decimals || 9),
+                    4,
+                  )}{" "}
+                  {tokenTo?.symbol}
+                </span>
+              </div>
+              {totalFee > 0 && (
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Fee</span>
+                  <span>{(totalFee / LAMPORTS_PER_SOL).toFixed(8)} SOL</span>
+                </div>
+              )}
+            </div>
+          )}
           <Button
             className="mt-4 w-full"
             onClick={handleSwap}

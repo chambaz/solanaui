@@ -24,7 +24,7 @@ import { getAssociatedTokenAddress } from "@solana/spl-token";
 import { SearchAssetsArgs, SolAsset } from "@/lib/types";
 import { searchAssets } from "@/lib/assets/birdeye/search";
 import { SOL_MINT, WSOL_MINT } from "@/lib/consts";
-import { formatNumberGrouped } from "@/lib/utils";
+import { cn, formatNumberGrouped } from "@/lib/utils";
 
 import { useTxnToast } from "@/components/sol/txn-toast";
 import { TokenInput } from "@/components/sol/token-input";
@@ -208,10 +208,15 @@ const Swap = ({ inAssets, outAssets, onSwapComplete }: SwapProps) => {
 
   // Memoize swap quote details display
   const swapQuoteDetails = React.useMemo(() => {
-    if (!swapQuote || isLoadingQuote) return null;
+    if (!swapQuote) return null;
 
     return (
-      <div className="mt-3 space-y-2 border-t pt-4 text-xs">
+      <div
+        className={cn(
+          "mt-3 space-y-2 border-t pt-4 text-xs",
+          isLoadingQuote && "animate-pulse",
+        )}
+      >
         <div className="flex justify-between">
           <span className="text-muted-foreground">Priority</span>
           <span className="capitalize">
@@ -472,13 +477,22 @@ const Swap = ({ inAssets, outAssets, onSwapComplete }: SwapProps) => {
 
     try {
       setIsLoadingQuote(true);
+      const startTime = Date.now();
 
       // Fetch the quote from Jupiter API using the updated endpoint
       const quoteResponse = await fetch(
         `https://lite-api.jup.ag/swap/v1/quote?inputMint=${params.inputMint}&outputMint=${params.outputMint}&amount=${params.amount}&slippageBps=${params.slippageBps}`,
       ).then((res) => res.json());
 
-      console.log(quoteResponse);
+      // Calculate elapsed time and remaining time to reach 1 second
+      const elapsedTime = Date.now() - startTime;
+      const remainingTime = Math.max(0, 1000 - elapsedTime);
+
+      // If we need to wait longer, do so
+      if (remainingTime > 0) {
+        await new Promise((resolve) => setTimeout(resolve, remainingTime));
+      }
+
       // Store the quote in state
       setSwapQuote(quoteResponse);
 
@@ -519,6 +533,7 @@ const Swap = ({ inAssets, outAssets, onSwapComplete }: SwapProps) => {
               assets={inAssets}
               value={tokenFrom}
               amount={amountFrom}
+              disabled={isLoadingQuote}
               onTokenSelect={(token) => {
                 reset();
                 setTokenFrom(token);
@@ -579,13 +594,7 @@ const Swap = ({ inAssets, outAssets, onSwapComplete }: SwapProps) => {
             onClick={handleSwap}
             disabled={isTransacting || !swapQuote || isLoadingQuote}
           >
-            {isTransacting
-              ? "Swapping..."
-              : isLoadingQuote
-                ? "Loading Quote..."
-                : swapQuote
-                  ? "Swap"
-                  : "Enter Amount"}
+            {isTransacting ? "Swapping..." : "Swap"}
           </Button>
         </div>
       )}

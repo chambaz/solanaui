@@ -8,6 +8,7 @@ import { IconInfoCircle } from "@tabler/icons-react";
 
 import { SolAsset } from "@/lib/types";
 import { fetchWalletAssets } from "@/lib/assets/birdeye/wallet";
+import { fetchTrendingAssets } from "@/lib/assets/birdeye/trending";
 
 import { DocsWrapper } from "@/components/web/docs-wrapper";
 import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
@@ -37,8 +38,17 @@ export default function SwapPage() {
         owner: publicKey,
         connection,
       });
+      const trendingAssets = await fetchTrendingAssets({
+        owner: publicKey,
+      });
+      const trendingSet = new Set(
+        trendingAssets.map((asset) => asset.mint.toString()),
+      );
+      const finalOutAssets = fetchedAssets.filter(
+        (asset) => !trendingSet.has(asset.mint.toString()),
+      );
       setInAssets(fetchedAssets);
-      setOutAssets(fetchedAssets);
+      setOutAssets([...trendingAssets, ...finalOutAssets]);
     } finally {
       setIsFetching(false);
     }
@@ -94,8 +104,15 @@ export function SwapDemo() {
       const fetchedAssets = await fetchWalletAssets({
         owner: publicKey ?? PublicKey.default,
       });
+      const trendingAssets = await fetchTrendingAssets({
+        owner: publicKey,
+      });
+      const trendingMints = new Set(trendingAssets.map(asset => asset.mint.toString()));
+      const uniqueFetchedAssets = fetchedAssets.filter(
+        asset => !trendingMints.has(asset.mint.toString())
+      );
       setInAssets(fetchedAssets);
-      setOutAssets(fetchedAssets);
+      setOutAssets([...trendingAssets, ...uniqueFetchedAssets]);
     } finally {
       setIsFetching(false);
     }

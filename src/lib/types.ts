@@ -33,3 +33,8 @@ export type SearchAssetsArgs = {
   connection?: Connection;
   combineNativeBalance?: boolean;
 };
+
+export type TrendingAssetsArgs = {
+  owner?: PublicKey;
+  limit?: number;
+};

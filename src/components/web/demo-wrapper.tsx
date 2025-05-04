@@ -12,7 +12,6 @@ import { cn } from "@/lib/utils";
 import { WSOL_MINT } from "@/lib/consts";
 import { SolAsset } from "@/lib/types";
 import { fetchAssets } from "@/lib/assets/birdeye/fetch";
-import { fetchWalletAssets } from "@/lib/assets/helius/wallet";
 import { fetchPriceHistoryBirdeye } from "@/lib/prices/birdeye";
 
 import { DemoDashboard } from "@/components/web/demo-dashboard";
@@ -55,7 +54,6 @@ const DemoWrapper = ({ view = "dashboard" }: DemoWrapperProps) => {
   >([]);
   const [mainAsset, setMainAsset] = React.useState<SolAsset | null>(null);
   const [assets, setAssets] = React.useState<SolAsset[]>([]);
-  const [walletAssets, setWalletAssets] = React.useState<SolAsset[]>([]);
   const [transactions] = React.useState<VersionedTransactionResponse[]>([]);
 
   const timestamps: Record<
@@ -109,13 +107,6 @@ const DemoWrapper = ({ view = "dashboard" }: DemoWrapperProps) => {
 
     setMainAsset(fetchedAssets[0]);
     setAssets(fetchedAssets.slice(1));
-
-    if (publicKey) {
-      const walletAssets = await fetchWalletAssets({
-        owner: publicKey,
-      });
-      setWalletAssets(walletAssets);
-    }
   }, [publicKey]);
 
   const fetchTransactions = React.useCallback(async () => {
@@ -192,7 +183,7 @@ const DemoWrapper = ({ view = "dashboard" }: DemoWrapperProps) => {
   return (
     <div className="mx-auto flex w-full max-w-[1440px] flex-col items-center p-8">
       <header className="mb-8 flex w-full items-center justify-between gap-8 px-2">
-        <nav className="ml-auto">
+        <nav className="mx-auto md:ml-auto md:mr-0">
           <ul className="flex items-center gap-4">
             <li>
               <Button
@@ -221,11 +212,13 @@ const DemoWrapper = ({ view = "dashboard" }: DemoWrapperProps) => {
           </ul>
         </nav>
         {!connecting && publicKey === null && (
-          <ConnectWalletDialog
-            trigger={<Button>Connect Wallet</Button>}
-            title="Connect Wallet"
-            description="Connect your wallet to continue"
-          />
+          <div className="hidden sm:block">
+            <ConnectWalletDialog
+              trigger={<Button>Connect Wallet</Button>}
+              title="Connect Wallet"
+              description="Connect your wallet to continue"
+            />
+          </div>
         )}
         {(connecting || publicKey) && (
           <UserDropdown address={publicKey} assets={assets} />
@@ -243,7 +236,7 @@ const DemoWrapper = ({ view = "dashboard" }: DemoWrapperProps) => {
           transactions={transactions}
         />
       )}
-      {demoState === DemoState.SWAP && <DemoSwap assets={walletAssets} />}
+      {demoState === DemoState.SWAP && <DemoSwap />}
     </div>
   );
 };

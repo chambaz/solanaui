@@ -119,12 +119,12 @@ const TxnSettings = ({ trigger }: TxnSettingsProps) => {
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
+      <DialogContent className="h-screen w-screen sm:max-w-[425px]">
+        <DialogHeader className="mt-auto">
           <DialogTitle>Transaction Settings</DialogTitle>
         </DialogHeader>
         <form
-          className="space-y-10 py-4"
+          className="space-y-6 py-4"
           onSubmit={(e) => {
             e.preventDefault();
             handleSave();
@@ -153,7 +153,7 @@ const TxnSettings = ({ trigger }: TxnSettingsProps) => {
               <ToggleGroupItem value="turbo">Turbo</ToggleGroupItem>
             </ToggleGroup>
           </div>
-          <div className="space-y-4">
+          <div className="space-y-4 border-t pt-6">
             <div className="space-y-2">
               <h4 className="font-medium">Priority fee cap</h4>
               <p className="text-sm text-muted-foreground">
@@ -201,7 +201,7 @@ const TxnSettings = ({ trigger }: TxnSettingsProps) => {
               />
             )}
           </div>
-          <div className="space-y-4">
+          <div className="space-y-4 border-t pt-6">
             <div className="space-y-2">
               <h4 className="font-medium">Slippage mode</h4>
               <p className="text-sm text-muted-foreground">
@@ -297,7 +297,7 @@ const TxnSettings = ({ trigger }: TxnSettingsProps) => {
               </div>
             )}
           </div>
-          <DialogFooter>
+          <DialogFooter className="gap-2">
             <DialogClose asChild>
               <Button variant="outline" onClick={handleCancel}>
                 Cancel

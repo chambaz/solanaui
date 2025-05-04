@@ -146,7 +146,7 @@ const PriceChart = ({
         <ToggleGroup
           type="single"
           value={dateRange}
-          className="absolute right-6 top-6"
+          className="absolute right-6 top-6 hidden sm:block"
           onValueChange={(value) => setDateRange(value)}
         >
           {dateRangeOptions?.map((value) => (

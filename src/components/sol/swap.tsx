@@ -523,9 +523,7 @@ const Swap = ({ inAssets, outAssets, onSwapComplete }: SwapProps) => {
           >
             <div className="flex justify-between">
               <span className="text-muted-foreground">Priority</span>
-              <span className="capitalize">
-                {getJupiterPriorityLevel(priority)}
-              </span>
+              <span className="capitalize">{priority}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">Slippage</span>

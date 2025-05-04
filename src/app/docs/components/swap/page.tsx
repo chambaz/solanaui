@@ -229,34 +229,34 @@ export function SwapDemo() {
             code={`npm install @solana/web3.js @solana/spl-token`}
           />
 
-          <h3 className="text-lg">2. Install SolanaUI TokenInput</h3>
+          <h3 className="text-lg">3. Install SolanaUI TokenInput</h3>
           <p>
             Swap requires the <code>TokenInput</code> component. Copy the code
             below to <code>src/components/sol/token-input.tsx</code>.
           </p>
           <Code reveal={false} code={tokenInputSource} />
 
-          <h3 className="text-lg">3. Install SolanaUI TxnSettings</h3>
+          <h3 className="text-lg">4. Install SolanaUI TxnSettings</h3>
           <p>
             Swap requires the <code>TxnSettings</code> component. Copy the code
             below to <code>src/components/sol/txn-settings.tsx</code>.
           </p>
           <Code reveal={false} code={txnSettingsSource} />
 
-          <h3 className="text-lg">4. Install SolanaUI TxnToast</h3>
+          <h3 className="text-lg">5. Install SolanaUI TxnToast</h3>
           <p>
             Swap requires the <code>TxnToast</code> component. Copy the code
             below to <code>src/components/sol/txn-toast.tsx</code>.
           </p>
           <Code reveal={false} code={txnToastSource} />
 
-          <h3 className="text-lg">5. Install SolanaUI Swap</h3>
+          <h3 className="text-lg">6. Install SolanaUI Swap</h3>
           <p>
             Copy the code below to <code>src/components/sol/swap.tsx</code>.
           </p>
           <Code reveal={false} code={componentSource} />
 
-          <h3 className="text-lg">2. Use Swap</h3>
+          <h3 className="text-lg">7. Use Swap</h3>
           <p>
             Import the <code>Swap</code> component and use it in your app.
           </p>

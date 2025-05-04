@@ -20,6 +20,7 @@ import { DocsInstallTabs } from "@/components/web/docs-install-tabs";
 import { Alert, AlertTitle } from "@/components/ui/alert";
 
 import { Swap } from "@/components/sol/swap";
+import { ConnectWalletDialog } from "@/components/sol/connect-wallet-dialog";
 
 export default function SwapPage() {
   const { publicKey } = useWallet();
@@ -28,6 +29,9 @@ export default function SwapPage() {
   const [outAssets, setOutAssets] = React.useState<SolAsset[]>([]);
   const [isFetching, setIsFetching] = React.useState(false);
   const [componentSource, setComponentSource] = React.useState("");
+  const [tokenInputSource, setTokenInputSource] = React.useState("");
+  const [txnSettingsSource, setTxnSettingsSource] = React.useState("");
+  const [txnToastSource, setTxnToastSource] = React.useState("");
 
   const fetchData = React.useCallback(async () => {
     if (isFetching || !publicKey) return;
@@ -64,6 +68,18 @@ export default function SwapPage() {
     fetch("/generated/component-sources/swap.tsx.txt")
       .then((res) => res.text())
       .then(setComponentSource);
+
+    fetch("/generated/component-sources/token-input.tsx.txt")
+      .then((res) => res.text())
+      .then(setTokenInputSource);
+
+    fetch("/generated/component-sources/txn-settings.tsx.txt")
+      .then((res) => res.text())
+      .then(setTxnSettingsSource);
+
+    fetch("/generated/component-sources/txn-toast.tsx.txt")
+      .then((res) => res.text())
+      .then(setTxnToastSource);
   }, []);
 
   const variants: DocsVariant[] = [
@@ -72,13 +88,17 @@ export default function SwapPage() {
       value: "default",
       preview: (
         <div className="max-w-lg">
-          <Swap
-            inAssets={inAssets}
-            outAssets={outAssets}
-            onSwapComplete={() => {
-              fetchData();
-            }}
-          />
+          {publicKey ? (
+            <Swap
+              inAssets={inAssets}
+              outAssets={outAssets}
+              onSwapComplete={() => {
+                fetchData();
+              }}
+            />
+          ) : (
+            <ConnectWalletDialog title="Connect Wallet" />
+          )}
         </div>
       ),
       code: `import React from "react";
@@ -86,7 +106,7 @@ export default function SwapPage() {
 import { useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey } from "@solana/web3.js";
 
-import { fetchWalletAssets } from "@/lib/assets";
+import { fetchWalletAssets, fetchTrendingAssets } from "@/lib/assets";
 
 import { Swap } from "@/components/sol/swap";
 
@@ -107,12 +127,9 @@ export function SwapDemo() {
       const trendingAssets = await fetchTrendingAssets({
         owner: publicKey,
       });
-      const trendingMints = new Set(trendingAssets.map(asset => asset.mint.toString()));
-      const uniqueFetchedAssets = fetchedAssets.filter(
-        asset => !trendingMints.has(asset.mint.toString())
-      );
+
       setInAssets(fetchedAssets);
-      setOutAssets([...trendingAssets, ...uniqueFetchedAssets]);
+      setOutAssets(trendingAssets);
     } finally {
       setIsFetching(false);
     }
@@ -139,8 +156,8 @@ export function SwapDemo() {
       <div id="demo">
         <DocsH1 href="/docs/components/swap#demo">Swap</DocsH1>
         <p className="text-muted-foreground">
-          The Swap component provides a complete interface for token swapping,
-          including token selection, amount input, and transaction execution.
+          The Swap component provides a complete interface for token swapping
+          using the Jupiter API.
         </p>
         <DocsTabs variants={variants} />
         <div className="w-full max-w-none" id="installation">
@@ -150,7 +167,90 @@ export function SwapDemo() {
 
           <DocsInstallTabs />
 
-          <h3 className="text-lg">1. Install SolanaUI Swap</h3>
+          <h3 className="text-lg">1. Install Dependencies</h3>
+          <p>
+            Swap requires{" "}
+            <Link
+              href="https://github.com/anza-xyz/wallet-adapter"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="border-b border-foreground/75 text-foreground"
+            >
+              Solana Wallet Adapter
+            </Link>{" "}
+            and must be wrapped in{" "}
+            <Link
+              href="https://github.com/anza-xyz/wallet-adapter/blob/master/APP.md"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Connection and Wallet provider
+            </Link>{" "}
+            components.
+          </p>
+          <Code
+            language="shell"
+            code={`npm install @solana/wallet-adapter-react @solana/wallet-adapter-wallets`}
+          />
+
+          <Code
+            language="tsx"
+            code={`<ConnectionProvider endpoint={process.env.YOUR_RPC_URL}>
+  <WalletProvider wallets={wallets}>
+    <App />
+  </WalletProvider>
+</ConnectionProvider>`}
+          />
+
+          <h3 className="text-lg">
+            2. Install @solana/web3.js and @solana/spl-token
+          </h3>
+          <p>
+            Swap requires{" "}
+            <Link
+              href="https://github.com/solana-labs/solana-web3.js"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="border-b border-foreground/75 text-foreground"
+            >
+              @solana/web3.js
+            </Link>{" "}
+            and{" "}
+            <Link
+              href="https://www.npmjs.com/package/@solana/spl-token"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              @solana/spl-token
+            </Link>
+          </p>
+          <Code
+            language="shell"
+            code={`npm install @solana/web3.js @solana/spl-token`}
+          />
+
+          <h3 className="text-lg">2. Install SolanaUI TokenInput</h3>
+          <p>
+            Swap requires the <code>TokenInput</code> component. Copy the code
+            below to <code>src/components/sol/token-input.tsx</code>.
+          </p>
+          <Code reveal={false} code={tokenInputSource} />
+
+          <h3 className="text-lg">3. Install SolanaUI TxnSettings</h3>
+          <p>
+            Swap requires the <code>TxnSettings</code> component. Copy the code
+            below to <code>src/components/sol/txn-settings.tsx</code>.
+          </p>
+          <Code reveal={false} code={txnSettingsSource} />
+
+          <h3 className="text-lg">4. Install SolanaUI TxnToast</h3>
+          <p>
+            Swap requires the <code>TxnToast</code> component. Copy the code
+            below to <code>src/components/sol/txn-toast.tsx</code>.
+          </p>
+          <Code reveal={false} code={txnToastSource} />
+
+          <h3 className="text-lg">5. Install SolanaUI Swap</h3>
           <p>
             Copy the code below to <code>src/components/sol/swap.tsx</code>.
           </p>
@@ -194,6 +294,11 @@ export function SwapDemo() {
                   name: "outAssets",
                   type: "SolAsset[]",
                   default: `[]`,
+                },
+                {
+                  name: "onSwapComplete",
+                  type: "() => void",
+                  default: `undefined`,
                 },
               ]}
             />

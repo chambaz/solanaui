@@ -189,7 +189,7 @@ const AppSidebar = () => {
                               <SidebarMenuSubButton asChild>
                                 <Link
                                   href={`${child.href}#demo`}
-                                  onClick={() => setOpenMobile(false)} // Close mobile sidebar when sub-item is clicked
+                                  onClick={() => setOpenMobile(false)}
                                 >
                                   Demo
                                 </Link>
@@ -199,7 +199,7 @@ const AppSidebar = () => {
                               <SidebarMenuSubButton asChild>
                                 <Link
                                   href={`${child.href}#installation`}
-                                  onClick={() => setOpenMobile(false)} // Close mobile sidebar when sub-item is clicked
+                                  onClick={() => setOpenMobile(false)}
                                 >
                                   Installation
                                 </Link>
@@ -210,7 +210,7 @@ const AppSidebar = () => {
                                 <SidebarMenuSubButton asChild>
                                   <Link
                                     href={`${child.href}#api`}
-                                    onClick={() => setOpenMobile(false)} // Close mobile sidebar when sub-item is clicked
+                                    onClick={() => setOpenMobile(false)}
                                   >
                                     API
                                   </Link>
@@ -221,7 +221,7 @@ const AppSidebar = () => {
                                 <SidebarMenuSubButton asChild>
                                   <Link
                                     href={`${child.href}#props`}
-                                    onClick={() => setOpenMobile(false)} // Close mobile sidebar when sub-item is clicked
+                                    onClick={() => setOpenMobile(false)}
                                   >
                                     Props
                                   </Link>
@@ -239,7 +239,7 @@ const AppSidebar = () => {
                               <SidebarMenuSubButton asChild>
                                 <Link
                                   href={`${child.href}#types`}
-                                  onClick={() => setOpenMobile(false)} // Close mobile sidebar when sub-item is clicked
+                                  onClick={() => setOpenMobile(false)}
                                 >
                                   Setup
                                 </Link>
@@ -249,7 +249,7 @@ const AppSidebar = () => {
                               <SidebarMenuSubButton asChild>
                                 <Link
                                   href={`${child.href}#fetchassets`}
-                                  onClick={() => setOpenMobile(false)} // Close mobile sidebar when sub-item is clicked
+                                  onClick={() => setOpenMobile(false)}
                                 >
                                   fetchAssets
                                 </Link>
@@ -259,7 +259,7 @@ const AppSidebar = () => {
                               <SidebarMenuSubButton asChild>
                                 <Link
                                   href={`${child.href}#fetchwalletassets`}
-                                  onClick={() => setOpenMobile(false)} // Close mobile sidebar when sub-item is clicked
+                                  onClick={() => setOpenMobile(false)}
                                 >
                                   fetchWalletAssets
                                 </Link>
@@ -268,8 +268,18 @@ const AppSidebar = () => {
                             <SidebarMenuSubItem>
                               <SidebarMenuSubButton asChild>
                                 <Link
+                                  href={`${child.href}#fetchTrendingAssets`}
+                                  onClick={() => setOpenMobile(false)}
+                                >
+                                  fetchTrendingAssets
+                                </Link>
+                              </SidebarMenuSubButton>
+                            </SidebarMenuSubItem>
+                            <SidebarMenuSubItem>
+                              <SidebarMenuSubButton asChild>
+                                <Link
                                   href={`${child.href}#searchassets`}
-                                  onClick={() => setOpenMobile(false)} // Close mobile sidebar when sub-item is clicked
+                                  onClick={() => setOpenMobile(false)}
                                 >
                                   searchAssets
                                 </Link>

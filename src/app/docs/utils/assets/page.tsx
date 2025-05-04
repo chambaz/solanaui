@@ -11,6 +11,7 @@ export default function AssetsPage() {
   const [birdeyeFetchSource, setBirdeyeFetchSource] = React.useState("");
   const [birdeyeSearchSource, setBirdeyeSearchSource] = React.useState("");
   const [birdeyeWalletSource, setBirdeyeWalletSource] = React.useState("");
+  const [birdeyeTrendingSource, setBirdeyeTrendingSource] = React.useState("");
   const [heliusSource, setHeliusSource] = React.useState("");
   const [heliusWalletSource, setHeliusWalletSource] = React.useState("");
   const [umiSource, setUmiSource] = React.useState("");
@@ -27,6 +28,10 @@ export default function AssetsPage() {
     fetch("/generated/component-sources/assets_birdeye_search.ts.txt")
       .then((res) => res.text())
       .then(setBirdeyeSearchSource);
+
+    fetch("/generated/component-sources/assets_birdeye_trending.ts.txt")
+      .then((res) => res.text())
+      .then(setBirdeyeTrendingSource);
 
     fetch("/generated/component-sources/assets_helius.ts.txt")
       .then((res) => res.text())
@@ -311,6 +316,37 @@ const assets = await fetchWalletAssets({
   owner: new PublicKey("..."), // owner is required to show wallet balance
   connection, // connection is required to fetch native SOL balance
   combineNativeBalance: true, // combines WSOL and native SOL, defaults to true
+});`}
+          />
+        </div>
+      </div>
+
+      <div className="space-y-4" id="fetchTrendingAssets">
+        <DocsH2 href="/docs/utils/assets#fetchTrendingAssets">
+          fetchTrendingAssets
+        </DocsH2>
+        <p>
+          The <code>fetchTrendingAssets</code> function takes an optional owner
+          wallet address and returns an array of trending assets as{" "}
+          <code>SolAsset</code> objects. SolanaUI comes a
+          <code>fetchTrendingAssets</code> example using Birdeye, but you can
+          easily hook up your own data feed.
+        </p>
+
+        <div className="space-y-4">
+          <p>
+            Copy the code below to <code>lib/assets.ts</code>, or wherever is
+            convenient, just be sure to update the component imports.
+          </p>
+          <Code reveal={false} code={birdeyeTrendingSource} />
+
+          <p>Use the fetchTrendingAssets function in your codebase like so.</p>
+          <Code
+            code={`import { fetchTrendingAssets } from "@/lib/assets";
+
+const assets = await fetchTrendingAssets({
+  owner: new PublicKey("..."),
+  limit: 10,
 });`}
           />
         </div>

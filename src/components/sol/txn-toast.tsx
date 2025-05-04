@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import React from "react";
 
 import type { RpcResponseAndContext, SignatureResult } from "@solana/web3.js";
 import { LoaderCircleIcon } from "lucide-react";

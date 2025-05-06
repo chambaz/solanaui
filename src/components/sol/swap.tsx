@@ -22,7 +22,6 @@ import {
 } from "lucide-react";
 
 import { SearchAssetsArgs, SolAsset } from "@/lib/types";
-import { searchAssets } from "@/lib/assets/birdeye/search";
 import { SOL_MINT, WSOL_MINT } from "@/lib/consts";
 import { cn, formatNumberGrouped } from "@/lib/utils";
 
@@ -35,6 +34,7 @@ import { Button } from "@/components/ui/button";
 type SwapProps = {
   inAssets: SolAsset[];
   outAssets: SolAsset[];
+  onSearch?: (args: SearchAssetsArgs) => Promise<SolAsset[]>;
   onSwapComplete?: () => void;
 };
 
@@ -86,7 +86,7 @@ type JupiterQuoteResponse = {
   timeTaken: number;
 };
 
-const Swap = ({ inAssets, outAssets, onSwapComplete }: SwapProps) => {
+const Swap = ({ inAssets, outAssets, onSearch, onSwapComplete }: SwapProps) => {
   const [tokenFrom, setTokenFrom] = React.useState<SolAsset | null>(null);
   const [tokenTo, setTokenTo] = React.useState<SolAsset | null>(null);
   const [amountFrom, setAmountFrom] = React.useState<number>(0);
@@ -211,21 +211,6 @@ const Swap = ({ inAssets, outAssets, onSwapComplete }: SwapProps) => {
     setAmountTo(0);
     setSwapQuote(null);
   }, []);
-
-  const onSearch = React.useCallback(
-    async (args: SearchAssetsArgs) => {
-      if (!publicKey || !connection) return [];
-
-      const searchResults = await searchAssets({
-        ...args,
-        owner: publicKey,
-        connection,
-      });
-
-      return searchResults;
-    },
-    [publicKey, connection],
-  );
 
   // fetch swap quote from Jupiter API
   const fetchSwapQuote = React.useCallback(async () => {

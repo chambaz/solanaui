@@ -6,9 +6,10 @@ import Link from "next/link";
 import { useWallet, useConnection } from "@solana/wallet-adapter-react";
 import { IconInfoCircle } from "@tabler/icons-react";
 
-import { SolAsset } from "@/lib/types";
+import { SearchAssetsArgs, SolAsset } from "@/lib/types";
 import { fetchWalletAssets } from "@/lib/assets/birdeye/wallet";
 import { fetchTrendingAssets } from "@/lib/assets/birdeye/trending";
+import { searchAssets } from "@/lib/assets/birdeye/search";
 
 import { DocsWrapper } from "@/components/web/docs-wrapper";
 import { DocsTabs, DocsVariant } from "@/components/web/docs-tabs";
@@ -32,6 +33,21 @@ export default function SwapPage() {
   const [tokenInputSource, setTokenInputSource] = React.useState("");
   const [txnSettingsSource, setTxnSettingsSource] = React.useState("");
   const [txnToastSource, setTxnToastSource] = React.useState("");
+
+  const onSearch = React.useCallback(
+    async (args: SearchAssetsArgs) => {
+      if (!publicKey || !connection) return [];
+
+      const searchResults = await searchAssets({
+        ...args,
+        owner: publicKey,
+        connection,
+      });
+
+      return searchResults;
+    },
+    [publicKey, connection],
+  );
 
   const fetchData = React.useCallback(async () => {
     if (isFetching || !publicKey) return;
@@ -92,6 +108,7 @@ export default function SwapPage() {
             <Swap
               inAssets={inAssets}
               outAssets={outAssets}
+              onSearch={onSearch}
               onSwapComplete={() => {
                 fetchData();
               }}
@@ -106,7 +123,7 @@ export default function SwapPage() {
 import { useWallet } from "@solana/wallet-adapter-react";
 import { PublicKey } from "@solana/web3.js";
 
-import { fetchWalletAssets, fetchTrendingAssets } from "@/lib/assets";
+import { fetchWalletAssets, fetchTrendingAssets, searchAssets } from "@/lib/assets";
 
 import { Swap } from "@/components/sol/swap";
 
@@ -145,6 +162,10 @@ export function SwapDemo() {
     <Swap
       inAssets={inAssets}
       outAssets={outAssets}
+      onSearch={onSearch}
+      onSwapComplete={() => {
+        fetchData();
+      }}
     />
   )
 }`,

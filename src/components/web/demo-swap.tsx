@@ -4,9 +4,10 @@ import React from "react";
 
 import { useWallet, useConnection } from "@solana/wallet-adapter-react";
 
-import { SolAsset } from "@/lib/types";
+import { SearchAssetsArgs, SolAsset } from "@/lib/types";
 import { fetchWalletAssets } from "@/lib/assets/birdeye/wallet";
 import { fetchTrendingAssets } from "@/lib/assets/birdeye/trending";
+import { searchAssets } from "@/lib/assets/birdeye/search";
 
 import { Swap } from "@/components/sol/swap";
 import { ConnectWalletDialog } from "@/components/sol/connect-wallet-dialog";
@@ -17,6 +18,21 @@ const DemoSwap = () => {
   const [inAssets, setInAssets] = React.useState<SolAsset[]>([]);
   const [outAssets, setOutAssets] = React.useState<SolAsset[]>([]);
   const [isFetching, setIsFetching] = React.useState(false);
+
+  const onSearch = React.useCallback(
+    async (args: SearchAssetsArgs) => {
+      if (!publicKey || !connection) return [];
+
+      const searchResults = await searchAssets({
+        ...args,
+        owner: publicKey,
+        connection,
+      });
+
+      return searchResults;
+    },
+    [publicKey, connection],
+  );
 
   const fetchData = React.useCallback(async () => {
     if (isFetching || !publicKey) return;
@@ -64,6 +80,7 @@ const DemoSwap = () => {
           <Swap
             inAssets={inAssets}
             outAssets={outAssets}
+            onSearch={onSearch}
             onSwapComplete={() => {
               fetchData();
             }}

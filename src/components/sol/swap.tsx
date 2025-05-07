@@ -96,6 +96,7 @@ const Swap = ({ inAssets, outAssets, onSearch, onSwapComplete }: SwapProps) => {
     null,
   );
   const [isLoadingQuote, setIsLoadingQuote] = React.useState<boolean>(false);
+  const quoteTimeoutRef = React.useRef<NodeJS.Timeout>();
   const { publicKey, sendTransaction, wallet } = useWallet();
   const { connection } = useConnection();
   const { txnToast } = useTxnToast();
@@ -214,8 +215,6 @@ const Swap = ({ inAssets, outAssets, onSearch, onSwapComplete }: SwapProps) => {
   const fetchSwapQuote = React.useCallback(async () => {
     const params = quoteParams;
     if (!params) {
-      setSwapQuote(null);
-      setAmountTo(0);
       return;
     }
 
@@ -439,10 +438,28 @@ const Swap = ({ inAssets, outAssets, onSearch, onSwapComplete }: SwapProps) => {
     getJupiterPriorityLevel,
   ]);
 
-  // effect to fetch quote when inputs change
+  // effect to fetch quote when inputs change with debounce
   React.useEffect(() => {
-    fetchSwapQuote();
-  }, [fetchSwapQuote]);
+    if (!tokenFrom || !tokenTo || !amountFrom || amountFrom <= 0) {
+      setSwapQuote(null);
+      setAmountTo(0);
+      return;
+    }
+
+    if (quoteTimeoutRef.current) {
+      clearTimeout(quoteTimeoutRef.current);
+    }
+
+    quoteTimeoutRef.current = setTimeout(() => {
+      fetchSwapQuote();
+    }, 500); // 500ms debounce
+
+    return () => {
+      if (quoteTimeoutRef.current) {
+        clearTimeout(quoteTimeoutRef.current);
+      }
+    };
+  }, [tokenFrom, tokenTo, amountFrom, fetchSwapQuote]);
 
   return (
     <div className="mb-12 mt-4 flex w-full flex-col items-center justify-center gap-8">
@@ -452,7 +469,8 @@ const Swap = ({ inAssets, outAssets, onSearch, onSwapComplete }: SwapProps) => {
             assets={inAssets}
             selectedAsset={tokenFrom}
             amount={amountFrom}
-            disabled={isLoadingQuote}
+            disabled={false}
+            capMaxAmount={true}
             onTokenSelect={(token) => {
               reset();
               setTokenFrom(token);
@@ -516,7 +534,11 @@ const Swap = ({ inAssets, outAssets, onSearch, onSwapComplete }: SwapProps) => {
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">Slippage</span>
-              <span>{(swapQuote.slippageBps / 100).toFixed(2)}%</span>
+              <span>
+                {slippageMode === "dynamic"
+                  ? "Dynamic"
+                  : `${(slippageValue * 100).toFixed(2)}%`}
+              </span>
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">Price Impact</span>

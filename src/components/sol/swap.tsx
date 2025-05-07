@@ -114,7 +114,7 @@ const Swap = ({ inAssets, outAssets, onSearch, onSwapComplete }: SwapProps) => {
       return total + feeAmount * (route.percent / 100);
     }, 0);
 
-    const impact = Number(swapQuote.priceImpactPct).toFixed(4);
+    const impact = (Number(swapQuote.priceImpactPct) * 100).toFixed(2);
     return {
       totalFee: fee,
       priceImpact: Number(impact) > 0 ? impact : 0,
@@ -517,9 +517,7 @@ const Swap = ({ inAssets, outAssets, onSearch, onSwapComplete }: SwapProps) => {
             <div className="flex justify-between">
               <span className="text-muted-foreground">Price Impact</span>
               <span
-                className={
-                  Number(swapQuote.priceImpactPct) > 1 ? "text-destructive" : ""
-                }
+                className={Number(priceImpact) > 1 ? "text-destructive" : ""}
               >
                 {priceImpact}%
               </span>

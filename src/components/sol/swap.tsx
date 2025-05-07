@@ -135,9 +135,7 @@ const Swap = ({ inAssets, outAssets, onSearch, onSwapComplete }: SwapProps) => {
       : tokenTo.mint.toBase58();
     const amount = Math.floor(amountFrom * Math.pow(10, tokenFrom.decimals));
     const slippageBps =
-      slippageMode === "dynamic"
-        ? 50 // Jupiter's default for dynamic
-        : Math.floor(slippageValue * 100); // Convert percentage to bps
+      slippageMode !== "dynamic" ? Math.floor(slippageValue * 100) : undefined;
 
     return { inputMint, outputMint, amount, slippageBps };
   }, [tokenFrom, tokenTo, amountFrom, slippageMode, slippageValue]);
@@ -225,10 +223,16 @@ const Swap = ({ inAssets, outAssets, onSearch, onSwapComplete }: SwapProps) => {
       setIsLoadingQuote(true);
       const startTime = Date.now();
 
+      const url = new URL(
+        `https://lite-api.jup.ag/swap/v1/quote?inputMint=${params.inputMint}&outputMint=${params.outputMint}&amount=${params.amount}`,
+      );
+
+      if (params.slippageBps) {
+        url.searchParams.set("slippageBps", params.slippageBps.toString());
+      }
+
       // fetch the quote from Jupiter API using the updated endpoint
-      const quoteResponse = await fetch(
-        `https://lite-api.jup.ag/swap/v1/quote?inputMint=${params.inputMint}&outputMint=${params.outputMint}&amount=${params.amount}&slippageBps=${params.slippageBps}`,
-      ).then((res) => res.json());
+      const quoteResponse = await fetch(url).then((res) => res.json());
 
       // calculate elapsed time and remaining time to reach 1 second
       const elapsedTime = Date.now() - startTime;

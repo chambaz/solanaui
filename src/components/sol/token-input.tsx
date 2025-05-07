@@ -46,6 +46,7 @@ const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
       onTokenSelect,
       onAmountChange,
       onSearch,
+      capMaxAmount,
     },
     amountInputRef: React.ForwardedRef<HTMLInputElement>,
   ) => {
@@ -61,11 +62,11 @@ const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
       selectedToken?.mint.toBase58() === WSOL_MINT.toBase58() ||
       selectedToken?.mint.toBase58() === SOL_MINT.toBase58();
 
-    const wsolAmount = selectedToken?.userTokenAccount?.amount ?? 0;
+    const tokenAmount = selectedToken?.userTokenAccount?.amount ?? 0;
 
     const safeMaxAmount = isSol
       ? Math.max(0, nativeSolBalance - ESTIMATED_SOL_FEE)
-      : wsolAmount;
+      : tokenAmount;
 
     // use external amount if provided (controlled) or internal amount if not (uncontrolled)
     const amount =
@@ -179,12 +180,24 @@ const TokenInput = React.forwardRef<HTMLInputElement, TokenInputProps>(
               floatValue?: number;
               value: string;
             }) => {
+              let finalValue = floatValue ?? 0;
+              let finalStringValue = value;
+
+              // If capMaxAmount is true and we have a selected token, enforce the maximum amount
+              if (capMaxAmount && selectedToken && finalValue > safeMaxAmount) {
+                finalValue = safeMaxAmount;
+                finalStringValue = formatNumberGrouped(
+                  safeMaxAmount,
+                  selectedToken.decimals,
+                );
+              }
+
               // Only update internal state if uncontrolled
               if (externalAmount === undefined) {
-                setInternalAmount(value);
+                setInternalAmount(finalStringValue);
               }
               if (onAmountChange) {
-                onAmountChange(floatValue ?? 0);
+                onAmountChange(finalValue);
               }
             }}
             thousandSeparator

@@ -89,7 +89,7 @@ export default function IntroductionPage() {
           your RPC requests via a server side route to avoid exposing your API
           key.
         </p>
-        <Code code={`NEXT_PUBLIC_RPC_URL"=https://your-rpc-url.com"`} />
+        <Code code={`NEXT_PUBLIC_RPC_URL="https://your-rpc-url.com"`} />
       </div>
       <div id="themes">
         <DocsH2 href="/docs#themes">Themes</DocsH2>

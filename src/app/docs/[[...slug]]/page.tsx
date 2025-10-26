@@ -1,16 +1,18 @@
-import { getPageImage, source } from '@/lib/source';
+import { getPageImage, source } from "@/lib/source";
 import {
   DocsBody,
   DocsDescription,
   DocsPage,
   DocsTitle,
-} from 'fumadocs-ui/page';
-import { notFound } from 'next/navigation';
-import { getMDXComponents } from '@/mdx-components';
-import type { Metadata } from 'next';
-import { createRelativeLink } from 'fumadocs-ui/mdx';
+} from "fumadocs-ui/page";
+import { notFound } from "next/navigation";
+import { getMDXComponents } from "@/mdx-components";
+import type { Metadata } from "next";
+import { createRelativeLink } from "fumadocs-ui/mdx";
 
-export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
+import { AuthDialog } from "@/components/sol/auth-dialog";
+
+export default async function Page(props: PageProps<"/docs/[[...slug]]">) {
   const params = await props.params;
   const page = source.getPage(params.slug);
   if (!page) notFound();
@@ -26,6 +28,7 @@ export default async function Page(props: PageProps<'/docs/[[...slug]]'>) {
           components={getMDXComponents({
             // this allows you to link to other pages with relative file paths
             a: createRelativeLink(source, page),
+            AuthDialog,
           })}
         />
       </DocsBody>
@@ -38,7 +41,7 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata(
-  props: PageProps<'/docs/[[...slug]]'>,
+  props: PageProps<"/docs/[[...slug]]">
 ): Promise<Metadata> {
   const params = await props.params;
   const page = source.getPage(params.slug);

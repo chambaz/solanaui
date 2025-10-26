@@ -11,6 +11,17 @@ import type { Metadata } from "next";
 import { createRelativeLink } from "fumadocs-ui/mdx";
 
 import { AuthDialog } from "@/components/sol/auth-dialog";
+import { LeverageSlider } from "@/components/sol/leverage-slider";
+import { TokenCard } from "@/components/sol/token-card";
+import { NFTCard } from "@/components/sol/nft-card";
+import { TokenCombobox } from "@/components/sol/token-combobox";
+import { TokenCommand } from "@/components/sol/token-command";
+import { TokenIcon } from "@/components/sol/token-icon";
+import { TokenInput } from "@/components/sol/token-input";
+import { TokenTable } from "@/components/sol/token-table";
+import { TrendBadge } from "@/components/sol/trend-badge";
+import { WalletSheet } from "@/components/sol/wallet-sheet";
+import { TxnToast } from "@/components/sol/txn-toast";
 
 export default async function Page(props: PageProps<"/docs/[[...slug]]">) {
   const params = await props.params;
@@ -29,6 +40,17 @@ export default async function Page(props: PageProps<"/docs/[[...slug]]">) {
             // this allows you to link to other pages with relative file paths
             a: createRelativeLink(source, page),
             AuthDialog,
+            LeverageSlider,
+            TokenCard,
+            NFTCard,
+            TokenCombobox,
+            TokenCommand,
+            TokenIcon,
+            TokenInput,
+            TokenTable,
+            TrendBadge,
+            WalletSheet,
+            TxnToast,
           })}
         />
       </DocsBody>

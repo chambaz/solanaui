@@ -21,197 +21,47 @@ interface TradeChartProps {
   chartOptions?: DeepPartial<TimeChartOptions>;
 }
 
-// Helper function to get CSS variable raw value
-const getCSSVariable = (variable: string): string => {
-  if (typeof window === "undefined") return "";
-  return getComputedStyle(document.documentElement)
-    .getPropertyValue(variable)
-    .trim();
+// Hardcoded theme colors matching global.css
+// Light mode colors
+const LIGHT_COLORS = {
+  background: "rgb(255, 255, 255)",
+  foreground: "rgb(37, 37, 37)",
+  border: "rgb(235, 235, 235)",
+  mutedForeground: "rgb(142, 142, 142)",
+  chart1: "rgb(223, 123, 55)", // oklch(0.646 0.222 41.116) - orange
+  chart2: "rgb(63, 153, 153)", // oklch(0.6 0.118 184.704) - cyan
+  chart3: "rgb(82, 91, 118)", // oklch(0.398 0.07 227.392) - dark blue
+  chart4: "rgb(201, 211, 83)", // oklch(0.828 0.189 84.429) - yellow-green
+  chart5: "rgb(211, 180, 68)", // oklch(0.769 0.188 70.08) - yellow
 };
 
-// Convert OKLAB to RGB
-// Based on: https://www.w3.org/TR/css-color-4/#color-conversion-code
-const oklabToRgb = (
-  L: number,
-  a: number,
-  b: number,
-  alpha: number = 1
-): string => {
-  // OKLAB to Linear RGB
-  const l_ = L + 0.3963377774 * a + 0.2158037573 * b;
-  const m_ = L - 0.1055613458 * a - 0.0638541728 * b;
-  const s_ = L - 0.0894841775 * a - 1.291485548 * b;
-
-  const lCube = l_ * l_ * l_;
-  const mCube = m_ * m_ * m_;
-  const sCube = s_ * s_ * s_;
-
-  let r = 4.0767416621 * lCube - 3.3077115913 * mCube + 0.2309699292 * sCube;
-  let g = -1.2684380046 * lCube + 2.6097574011 * mCube - 0.3413193965 * sCube;
-  let bVal = -0.0041960863 * lCube - 0.7034186147 * mCube + 1.707614701 * sCube;
-
-  // Convert linear RGB to sRGB
-  const toSRGB = (c: number) => {
-    const abs = Math.abs(c);
-    if (abs > 0.0031308) {
-      return Math.sign(c) * (1.055 * Math.pow(abs, 1 / 2.4) - 0.055);
-    }
-    return 12.92 * c;
-  };
-
-  r = toSRGB(r);
-  g = toSRGB(g);
-  bVal = toSRGB(bVal);
-
-  // Clamp to 0-255
-  const clamp = (val: number) =>
-    Math.max(0, Math.min(255, Math.round(val * 255)));
-
-  return `rgba(${clamp(r)}, ${clamp(g)}, ${clamp(bVal)}, ${alpha})`;
+// Dark mode colors
+const DARK_COLORS = {
+  background: "rgb(37, 37, 37)",
+  foreground: "rgb(251, 251, 251)",
+  border: "rgba(255, 255, 255, 0.1)",
+  mutedForeground: "rgb(180, 180, 180)",
+  chart1: "rgb(124, 58, 237)", // oklch(0.488 0.243 264.376) - purple
+  chart2: "rgb(52, 177, 152)", // oklch(0.696 0.17 162.48) - cyan
+  chart3: "rgb(211, 180, 68)", // oklch(0.769 0.188 70.08) - yellow
+  chart4: "rgb(192, 72, 185)", // oklch(0.627 0.265 303.9) - magenta
+  chart5: "rgb(214, 107, 82)", // oklch(0.645 0.246 16.439) - orange-red
 };
 
-// Convert CIELAB to RGB
-const cielabToRgb = (
-  L: number,
-  a: number,
-  b: number,
-  alpha: number = 1
-): string => {
-  // CIELAB to XYZ (D65 white point)
-  const fy = (L + 16) / 116;
-  const fx = a / 500 + fy;
-  const fz = fy - b / 200;
-
-  const xr = fx > 0.206897 ? fx * fx * fx : (fx - 16 / 116) / 7.787;
-  const yr = fy > 0.206897 ? fy * fy * fy : (fy - 16 / 116) / 7.787;
-  const zr = fz > 0.206897 ? fz * fz * fz : (fz - 16 / 116) / 7.787;
-
-  // D65 white point
-  const x = xr * 0.95047;
-  const y = yr * 1.0;
-  const z = zr * 1.08883;
-
-  // XYZ to Linear RGB (sRGB matrix)
-  let r = x * 3.2404542 + y * -1.5371385 + z * -0.4985314;
-  let g = x * -0.969266 + y * 1.8760108 + z * 0.041556;
-  let bVal = x * 0.0556434 + y * -0.2040259 + z * 1.0572252;
-
-  // Linear RGB to sRGB
-  const toSRGB = (c: number) => {
-    if (c <= 0.0031308) {
-      return 12.92 * c;
-    }
-    return 1.055 * Math.pow(c, 1 / 2.4) - 0.055;
-  };
-
-  r = toSRGB(r);
-  g = toSRGB(g);
-  bVal = toSRGB(bVal);
-
-  // Clamp to 0-255
-  const clamp = (val: number) =>
-    Math.max(0, Math.min(255, Math.round(val * 255)));
-
-  return `rgba(${clamp(r)}, ${clamp(g)}, ${clamp(bVal)}, ${alpha})`;
-};
-
-// Parse and convert LAB to RGB
-const labToRgb = (labString: string): string => {
-  // Parse lab(L a b) or lab(L a b / A)
-  const match = labString.match(
-    /lab\(\s*([\d.]+%?)\s+([\d.+-]+)\s+([\d.+-]+)\s*(?:\/\s*([\d.]+%?))?\s*\)/
-  );
-  if (!match) {
-    console.warn("Failed to parse LAB:", labString);
-    return "rgba(0, 0, 0, 1)";
+// Helper to add opacity to RGB color
+const addOpacity = (rgb: string, opacity: number): string => {
+  const match = rgb.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+  if (match) {
+    return `rgba(${match[1]}, ${match[2]}, ${match[3]}, ${opacity})`;
   }
-
-  const [, lStr, aStr, bStr, alphaStr] = match;
-
-  // Parse L value - CIELAB L is 0-100 (given as percentage 0-100%)
-  const L = lStr.endsWith("%") ? parseFloat(lStr) : parseFloat(lStr);
-
-  // Parse a and b values - CIELAB a/b range from about -128 to 127
-  const a = parseFloat(aStr);
-  const b = parseFloat(bStr);
-
-  const alpha = alphaStr
-    ? alphaStr.endsWith("%")
-      ? parseFloat(alphaStr) / 100
-      : parseFloat(alphaStr)
-    : 1;
-
-  console.log(`CIELAB parsing: ${labString} -> L:${L}, a:${a}, b:${b}`);
-
-  return cielabToRgb(L, a, b, alpha);
-};
-
-// Parse and convert OKLCH to RGB
-const oklchToRgb = (oklchString: string): string => {
-  // Parse oklch(L C H) or oklch(L C H / A)
-  const match = oklchString.match(
-    /oklch\(\s*([\d.]+%?)\s+([\d.]+%?)\s+([\d.]+)\s*(?:\/\s*([\d.]+%?))?\s*\)/
-  );
-  if (!match) {
-    console.warn("Failed to parse OKLCH:", oklchString);
-    return "rgba(0, 0, 0, 1)";
-  }
-
-  const [, lStr, cStr, hStr, aStr] = match;
-
-  // Convert percentages if present
-  const L = lStr.endsWith("%") ? parseFloat(lStr) / 100 : parseFloat(lStr);
-  const C = cStr.endsWith("%")
-    ? (parseFloat(cStr) / 100) * 0.4
-    : parseFloat(cStr);
-  const H = parseFloat(hStr);
-  const alpha = aStr
-    ? aStr.endsWith("%")
-      ? parseFloat(aStr) / 100
-      : parseFloat(aStr)
-    : 1;
-
-  // Convert OKLCH -> OKLAB
-  const hRad = (H * Math.PI) / 180;
-  const a = C * Math.cos(hRad);
-  const b = C * Math.sin(hRad);
-
-  return oklabToRgb(L, a, b, alpha);
-};
-
-// Convert color string to RGB format
-const toRgb = (color: string): string => {
-  if (!color) return "rgba(0, 0, 0, 1)";
-
-  if (color.startsWith("oklch(")) {
-    return oklchToRgb(color);
-  }
-
-  if (color.startsWith("lab(")) {
-    return labToRgb(color);
-  }
-
-  // Already in rgb/rgba format
-  if (color.startsWith("rgb")) {
-    return color;
-  }
-
-  return color;
-};
-
-// Helper to add opacity to color
-const addOpacity = (color: string, opacity: number = 1): string => {
-  const rgb = toRgb(color);
-
-  if (rgb.startsWith("rgba")) {
-    return rgb.replace(/[\d.]+\)$/, `${opacity})`);
-  }
-
-  if (rgb.startsWith("rgb")) {
-    return rgb.replace("rgb(", "rgba(").replace(")", `, ${opacity})`);
-  }
-
   return rgb;
+};
+
+// Get colors based on theme
+const getThemeColors = () => {
+  if (typeof window === "undefined") return LIGHT_COLORS;
+  const isDark = document.documentElement.classList.contains("dark");
+  return isDark ? DARK_COLORS : LIGHT_COLORS;
 };
 
 const TradeChart = ({
@@ -226,60 +76,55 @@ const TradeChart = ({
   React.useEffect(() => {
     if (!containerRef.current) return;
 
-    // Get raw theme colors
-    const rawBackground = getCSSVariable("--background");
-    const rawForeground = getCSSVariable("--foreground");
-    const rawBorder = getCSSVariable("--border");
-    const rawMutedForeground = getCSSVariable("--muted-foreground");
-
-    // Convert to RGB
-    const background = toRgb(rawBackground);
-    const foreground = toRgb(rawForeground);
-    const border = toRgb(rawBorder);
-    const mutedForeground = toRgb(rawMutedForeground);
-
-    // Get first chart color for crosshair
-    const firstChartColor = toRgb(getCSSVariable("--chart-1"));
+    // Get theme colors
+    const colors = getThemeColors();
+    const chartColors = [
+      colors.chart1,
+      colors.chart2,
+      colors.chart3,
+      colors.chart4,
+      colors.chart5,
+    ];
 
     // Create chart with theme-aware options
     const defaultChartOptions: DeepPartial<TimeChartOptions> = {
       layout: {
-        textColor: foreground,
+        textColor: colors.foreground,
         background: {
           type: ColorType.Solid as const,
-          color: background,
+          color: colors.background,
         },
         fontFamily: "var(--font-geist-sans)",
       },
       grid: {
         vertLines: {
-          color: border,
+          color: colors.border,
           style: 1,
         },
         horzLines: {
-          color: border,
+          color: colors.border,
           style: 1,
         },
       },
       crosshair: {
         vertLine: {
-          color: mutedForeground,
+          color: colors.mutedForeground,
           width: 1,
           style: 3,
-          labelBackgroundColor: firstChartColor,
+          labelBackgroundColor: colors.chart1,
         },
         horzLine: {
-          color: mutedForeground,
+          color: colors.mutedForeground,
           width: 1,
           style: 3,
-          labelBackgroundColor: firstChartColor,
+          labelBackgroundColor: colors.chart1,
         },
       },
       rightPriceScale: {
-        borderColor: border,
+        borderColor: colors.border,
       },
       timeScale: {
-        borderColor: border,
+        borderColor: colors.border,
         timeVisible: true,
       },
       ...chartOptions,
@@ -290,13 +135,12 @@ const TradeChart = ({
     // Create multiple series with auto-assigned colors
     seriesRefs.current = series.map((seriesConfig, index) => {
       // Auto-assign colors in order (1-5, cycling if more than 5)
-      const colorIndex = (index % 5) + 1;
-      const chartColorVar = toRgb(getCSSVariable(`--chart-${colorIndex}`));
+      const chartColor = chartColors[index % 5];
 
       const defaultSeriesOptions: DeepPartial<AreaSeriesPartialOptions> = {
-        lineColor: chartColorVar,
-        topColor: chartColorVar,
-        bottomColor: addOpacity(chartColorVar, 0.1),
+        lineColor: chartColor,
+        topColor: chartColor,
+        bottomColor: addOpacity(chartColor, 0.1),
         lineWidth: 2,
         ...seriesConfig.options,
       };

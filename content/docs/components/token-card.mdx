@@ -1,10 +1,28 @@
 ---
 title: Token Card
-description: Token Card description
+description: A card component for displaying token information
 ---
 
 <TokenCard />
 
-```js
+```tsx
+import { TokenCard } from "@/components/sol/token-card";
+
+export function TokenCardDemo() {
+  return <TokenCard />;
+}
+```
+
+## Installation
+
+<Tabs items={["pnpm", "npm", "yarn"]}>
+  <Tab value="pnpm">pnpm dlx solanaui@latest add token-card</Tab>
+  <Tab value="npm">npx solanaui@latest add token-card</Tab>
+  <Tab value="yarn">yarn solanaui@latest add token-card</Tab>
+</Tabs>
+
+## Usage
+
+```tsx
 <TokenCard />
 ```

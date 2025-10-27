@@ -1,10 +1,28 @@
 ---
 title: Trend Badge
-description: Trend Badge description
+description: A badge component for displaying trend indicators
 ---
 
 <TrendBadge />
 
-```js
+```tsx
+import { TrendBadge } from "@/components/sol/trend-badge";
+
+export function TrendBadgeDemo() {
+  return <TrendBadge />;
+}
+```
+
+## Installation
+
+<Tabs items={["pnpm", "npm", "yarn"]}>
+  <Tab value="pnpm">pnpm dlx solanaui@latest add trend-badge</Tab>
+  <Tab value="npm">npx solanaui@latest add trend-badge</Tab>
+  <Tab value="yarn">yarn solanaui@latest add trend-badge</Tab>
+</Tabs>
+
+## Usage
+
+```tsx
 <TrendBadge />
 ```

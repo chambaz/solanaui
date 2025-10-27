@@ -1,10 +1,28 @@
 ---
 title: Token Combobox
-description: Token Combobox description
+description: A combobox component for selecting tokens with search functionality
 ---
 
 <TokenCombobox />
 
-```js
+```tsx
+import { TokenCombobox } from "@/components/sol/token-combobox";
+
+export function TokenComboboxDemo() {
+  return <TokenCombobox />;
+}
+```
+
+## Installation
+
+<Tabs items={["pnpm", "npm", "yarn"]}>
+  <Tab value="pnpm">pnpm dlx solanaui@latest add token-combobox</Tab>
+  <Tab value="npm">npx solanaui@latest add token-combobox</Tab>
+  <Tab value="yarn">yarn solanaui@latest add token-combobox</Tab>
+</Tabs>
+
+## Usage
+
+```tsx
 <TokenCombobox />
 ```

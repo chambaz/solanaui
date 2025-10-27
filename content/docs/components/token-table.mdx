@@ -1,10 +1,28 @@
 ---
 title: Token Table
-description: Token Table description
+description: A table component for displaying token data
 ---
 
 <TokenTable />
 
-```js
+```tsx
+import { TokenTable } from "@/components/sol/token-table";
+
+export function TokenTableDemo() {
+  return <TokenTable />;
+}
+```
+
+## Installation
+
+<Tabs items={["pnpm", "npm", "yarn"]}>
+  <Tab value="pnpm">pnpm dlx solanaui@latest add token-table</Tab>
+  <Tab value="npm">npx solanaui@latest add token-table</Tab>
+  <Tab value="yarn">yarn solanaui@latest add token-table</Tab>
+</Tabs>
+
+## Usage
+
+```tsx
 <TokenTable />
 ```

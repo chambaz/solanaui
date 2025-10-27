@@ -3,12 +3,6 @@ title: Trade Chart
 description: A theme-aware TradingView Lightweight Chart component integrated with Shadcn design system
 ---
 
-import { TradeChart } from "@/components/sol/trade-chart";
-
-## Examples
-
-### Single Series
-
 <TradeChart
   series={[
     {
@@ -26,7 +20,7 @@ import { TradeChart } from "@/components/sol/trade-chart";
 ```tsx
 import { TradeChart } from "@/components/sol/trade-chart";
 
-export default function Example() {
+export function TradeChartDemo() {
   return (
     <TradeChart
       series={[
@@ -45,50 +39,18 @@ export default function Example() {
 }
 ```
 
-### Multiple Series
+## Installation
 
-<TradeChart
-  series={[
-    {
-      data: [
-        { time: "2024-01-01", value: 32 },
-        { time: "2024-01-02", value: 35 },
-        { time: "2024-01-03", value: 33 },
-        { time: "2024-01-04", value: 38 },
-        { time: "2024-01-05", value: 36 },
-      ],
-    },
-    {
-      data: [
-        { time: "2024-01-01", value: 28 },
-        { time: "2024-01-02", value: 30 },
-        { time: "2024-01-03", value: 29 },
-        { time: "2024-01-04", value: 33 },
-        { time: "2024-01-05", value: 32 },
-      ],
-    },
-    {
-      data: [
-        { time: "2024-01-01", value: 25 },
-        { time: "2024-01-02", value: 27 },
-        { time: "2024-01-03", value: 26 },
-        { time: "2024-01-04", value: 29 },
-        { time: "2024-01-05", value: 28 },
-      ],
-    },
-  ]}
-/>
+<Tabs items={["pnpm", "npm", "yarn"]}>
+  <Tab value="pnpm">pnpm dlx solanaui@latest add trade-chart</Tab>
+  <Tab value="npm">npx solanaui@latest add trade-chart</Tab>
+  <Tab value="yarn">yarn solanaui@latest add trade-chart</Tab>
+</Tabs>
+
+## Usage
 
 ```tsx
 <TradeChart
-  series={[{ data: bitcoinData }, { data: ethereumData }, { data: solanaData }]}
-/>
-```
-
-### Custom Height
-
-<TradeChart
-  className="h-[200px] w-full"
   series={[
     {
       data: [
@@ -99,54 +61,4 @@ export default function Example() {
     },
   ]}
 />
-
-```tsx
-<TradeChart className="h-[200px] w-full" series={[{ data }]} />
 ```
-
-### Custom Series Options
-
-Customize individual series appearance:
-
-```tsx
-<TradeChart
-  series={[
-    {
-      data: bitcoinData,
-      options: {
-        lineWidth: 3,
-        priceLineVisible: false,
-      },
-    },
-    {
-      data: ethereumData,
-      options: {
-        lineWidth: 2,
-      },
-    },
-  ]}
-  chartOptions={{
-    grid: {
-      vertLines: { visible: false },
-      horzLines: { visible: false },
-    },
-  }}
-/>
-```
-
-## Props
-
-### TradeChart
-
-| Prop           | Type                            | Default              | Description                            |
-| -------------- | ------------------------------- | -------------------- | -------------------------------------- |
-| `series`       | `SeriesConfig[]`                | Required             | Array of series configurations         |
-| `className`    | `string`                        | `"h-[320px] w-full"` | Tailwind classes for container styling |
-| `chartOptions` | `DeepPartial<TimeChartOptions>` | `{}`                 | Custom chart configuration             |
-
-### SeriesConfig
-
-| Prop      | Type                                    | Description                       |
-| --------- | --------------------------------------- | --------------------------------- |
-| `data`    | `SingleValueData[]`                     | Array of time/value data points   |
-| `options` | `DeepPartial<AreaSeriesPartialOptions>` | Custom styling options for series |

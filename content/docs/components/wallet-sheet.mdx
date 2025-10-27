@@ -1,10 +1,28 @@
 ---
 title: Wallet Sheet
-description: Wallet Sheet description
+description: A slide-out sheet component for wallet management
 ---
 
 <WalletSheet />
 
-```js
+```tsx
+import { WalletSheet } from "@/components/sol/wallet-sheet";
+
+export function WalletSheetDemo() {
+  return <WalletSheet />;
+}
+```
+
+## Installation
+
+<Tabs items={["pnpm", "npm", "yarn"]}>
+  <Tab value="pnpm">pnpm dlx solanaui@latest add wallet-sheet</Tab>
+  <Tab value="npm">npx solanaui@latest add wallet-sheet</Tab>
+  <Tab value="yarn">yarn solanaui@latest add wallet-sheet</Tab>
+</Tabs>
+
+## Usage
+
+```tsx
 <WalletSheet />
 ```

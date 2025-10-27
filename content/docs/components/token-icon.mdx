@@ -1,10 +1,28 @@
 ---
 title: Token Icon
-description: Token Icon description
+description: An icon component for displaying token logos
 ---
 
 <TokenIcon />
 
-```js
+```tsx
+import { TokenIcon } from "@/components/sol/token-icon";
+
+export function TokenIconDemo() {
+  return <TokenIcon />;
+}
+```
+
+## Installation
+
+<Tabs items={["pnpm", "npm", "yarn"]}>
+  <Tab value="pnpm">pnpm dlx solanaui@latest add token-icon</Tab>
+  <Tab value="npm">npx solanaui@latest add token-icon</Tab>
+  <Tab value="yarn">yarn solanaui@latest add token-icon</Tab>
+</Tabs>
+
+## Usage
+
+```tsx
 <TokenIcon />
 ```

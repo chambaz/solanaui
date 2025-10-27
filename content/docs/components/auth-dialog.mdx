@@ -5,6 +5,24 @@ description: Auth Dialog description
 
 <AuthDialog />
 
-```js
+```tsx
+import { AuthDialog } from "@/components/sol/auth-dialog";
+
+export function AuthDialogDemo() {
+  return <AuthDialog />;
+}
+```
+
+## Installation
+
+<Tabs items={["pnpm", "npm", "yarn"]}>
+  <Tab value="pnpm">pnpm dlx solanaui@latest add auth-dialog</Tab>
+  <Tab value="npm">npx solanaui@latest add auth-dialog</Tab>
+  <Tab value="yarn">yarn solanaui@latest add auth-dialog</Tab>
+</Tabs>
+
+## Usage
+
+```tsx
 <AuthDialog />
 ```

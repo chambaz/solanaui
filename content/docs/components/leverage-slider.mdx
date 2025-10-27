@@ -1,10 +1,28 @@
 ---
 title: Leverage Slider
-description: Leverage Slider description
+description: A slider component for selecting leverage levels
 ---
 
-<LeverageSlider />
+<LeverageSlider defaultValue={[50]} max={100} step={1} />
 
-```js
-<LeverageSlider />
+```tsx
+import { LeverageSlider } from "@/components/sol/leverage-slider";
+
+export function LeverageSliderDemo() {
+  return <LeverageSlider defaultValue={[50]} max={100} step={1} />;
+}
+```
+
+## Installation
+
+<Tabs items={["pnpm", "npm", "yarn"]}>
+  <Tab value="pnpm">pnpm dlx solanaui@latest add leverage-slider</Tab>
+  <Tab value="npm">npx solanaui@latest add leverage-slider</Tab>
+  <Tab value="yarn">yarn solanaui@latest add leverage-slider</Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+<LeverageSlider defaultValue={[50]} max={100} step={1} />
 ```

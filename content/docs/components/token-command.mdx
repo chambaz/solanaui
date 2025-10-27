@@ -1,10 +1,28 @@
 ---
 title: Token Command
-description: Token Command description
+description: A command palette component for token selection
 ---
 
 <TokenCommand />
 
-```js
+```tsx
+import { TokenCommand } from "@/components/sol/token-command";
+
+export function TokenCommandDemo() {
+  return <TokenCommand />;
+}
+```
+
+## Installation
+
+<Tabs items={["pnpm", "npm", "yarn"]}>
+  <Tab value="pnpm">pnpm dlx solanaui@latest add token-command</Tab>
+  <Tab value="npm">npx solanaui@latest add token-command</Tab>
+  <Tab value="yarn">yarn solanaui@latest add token-command</Tab>
+</Tabs>
+
+## Usage
+
+```tsx
 <TokenCommand />
 ```

@@ -1,10 +1,28 @@
 ---
 title: Txn Toast
-description: Txn Toast description
+description: A toast notification component for displaying transaction updates
 ---
 
 <TxnToast />
 
-```js
+```tsx
+import { TxnToast } from "@/components/sol/txn-toast";
+
+export function TxnToastDemo() {
+  return <TxnToast />;
+}
+```
+
+## Installation
+
+<Tabs items={["pnpm", "npm", "yarn"]}>
+  <Tab value="pnpm">pnpm dlx solanaui@latest add txn-toast</Tab>
+  <Tab value="npm">npx solanaui@latest add txn-toast</Tab>
+  <Tab value="yarn">yarn solanaui@latest add txn-toast</Tab>
+</Tabs>
+
+## Usage
+
+```tsx
 <TxnToast />
 ```

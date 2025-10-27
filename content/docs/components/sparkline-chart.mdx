@@ -3,10 +3,6 @@ title: Sparkline Chart
 description: A compact line chart for visualizing trends in small spaces
 ---
 
-import { SparklineChart } from "@/components/sol/sparkline-chart";
-
-## Example
-
 <SparklineChart
   series={[
     { time: "2024-01-01", value: 32.51 },
@@ -20,7 +16,7 @@ import { SparklineChart } from "@/components/sol/sparkline-chart";
 ```tsx
 import { SparklineChart } from "@/components/sol/sparkline-chart";
 
-export default function Example() {
+export function SparklineChartDemo() {
   const data = [
     { time: "2024-01-01", value: 32.51 },
     { time: "2024-01-02", value: 31.11 },
@@ -33,15 +29,22 @@ export default function Example() {
 }
 ```
 
-## Props
+## Installation
 
-| Prop     | Type                                | Description                     |
-| -------- | ----------------------------------- | ------------------------------- |
-| `series` | `{ time: string; value: number }[]` | Array of time/value data points |
+<Tabs items={["pnpm", "npm", "yarn"]}>
+  <Tab value="pnpm">pnpm dlx solanaui@latest add sparkline-chart</Tab>
+  <Tab value="npm">npx solanaui@latest add sparkline-chart</Tab>
+  <Tab value="yarn">yarn solanaui@latest add sparkline-chart</Tab>
+</Tabs>
 
-## Features
+## Usage
 
-- 📊 Compact visualization perfect for dashboards
-- 🎨 Auto-colored based on trend (green for up, red for down)
-- 📈 Gradient fill for visual appeal
-- 🔍 Responsive and adaptable
+```tsx
+<SparklineChart
+  series={[
+    { time: "2024-01-01", value: 32.51 },
+    { time: "2024-01-02", value: 31.11 },
+    { time: "2024-01-03", value: 35.02 },
+  ]}
+/>
+```

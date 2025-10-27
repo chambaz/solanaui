@@ -1,10 +1,28 @@
 ---
 title: NFT Card
-description: NFT Card description
+description: A card component for displaying NFT information
 ---
 
 <NFTCard />
 
-```js
+```tsx
+import { NFTCard } from "@/components/sol/nft-card";
+
+export function NFTCardDemo() {
+  return <NFTCard />;
+}
+```
+
+## Installation
+
+<Tabs items={["pnpm", "npm", "yarn"]}>
+  <Tab value="pnpm">pnpm dlx solanaui@latest add nft-card</Tab>
+  <Tab value="npm">npx solanaui@latest add nft-card</Tab>
+  <Tab value="yarn">yarn solanaui@latest add nft-card</Tab>
+</Tabs>
+
+## Usage
+
+```tsx
 <NFTCard />
 ```

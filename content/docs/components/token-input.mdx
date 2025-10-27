@@ -1,10 +1,28 @@
 ---
 title: Token Input
-description: Token Input description
+description: An input field for entering token amounts
 ---
 
 <TokenInput />
 
-```js
+```tsx
+import { TokenInput } from "@/components/sol/token-input";
+
+export function TokenInputDemo() {
+  return <TokenInput />;
+}
+```
+
+## Installation
+
+<Tabs items={["pnpm", "npm", "yarn"]}>
+  <Tab value="pnpm">pnpm dlx solanaui@latest add token-input</Tab>
+  <Tab value="npm">npx solanaui@latest add token-input</Tab>
+  <Tab value="yarn">yarn solanaui@latest add token-input</Tab>
+</Tabs>
+
+## Usage
+
+```tsx
 <TokenInput />
 ```

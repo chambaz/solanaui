@@ -20,7 +20,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         {
           type: "main",
           text: "Examples",
-          url: "/examples",
+          url: "/docs/examples",
         },
       ]}
     >

@@ -23,6 +23,7 @@ import { TrendBadge } from "@/components/sol/trend-badge";
 import { WalletSheet } from "@/components/sol/wallet-sheet";
 import { TxnToast } from "@/components/sol/txn-toast";
 import { TradeChart } from "@/components/sol/trade-chart";
+import { SparklineChart } from "@/components/sol/sparkline-chart";
 
 export default async function Page(props: PageProps<"/docs/[[...slug]]">) {
   const params = await props.params;
@@ -53,6 +54,7 @@ export default async function Page(props: PageProps<"/docs/[[...slug]]">) {
             WalletSheet,
             TxnToast,
             TradeChart,
+            SparklineChart,
           })}
         />
       </DocsBody>

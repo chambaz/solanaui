@@ -38,6 +38,9 @@ importers:
       fumadocs-ui:
         specifier: 16.0.3
         version: 16.0.3(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(lucide-react@0.546.0(react@19.2.0))(next@16.0.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(tailwindcss@4.1.16)
+      lightweight-charts:
+        specifier: ^5.0.9
+        version: 5.0.9
       lucide-react:
         specifier: ^0.546.0
         version: 0.546.0(react@19.2.0)
@@ -1209,6 +1212,9 @@ packages:
   extend@3.0.2:
     resolution: {integrity: sha512-fjquC59cD7CyW6urNXK0FBufkZcoiGG80wTuPujX590cB5Ttln20E2UB4S/WARVqhXffZl2LNgS+gQdPIIim/g==}
 
+  fancy-canvas@2.1.0:
+    resolution: {integrity: sha512-nifxXJ95JNLFR2NgRV4/MxVP45G9909wJTEKz5fg/TZS20JJZA6hfgRVh/bC9bwl2zBtBNcYPjiBE4njQHVBwQ==}
+
   fdir@6.5.0:
     resolution: {integrity: sha512-tIbYtZbucOs0BRGqPJkshJUYdL+SDH7dVM8gjy+ERp3WAUjLEFJE+02kanyHtwjWOnwrKYBiwAmM0p4kLJAnXg==}
     engines: {node: '>=12.0.0'}
@@ -1420,6 +1426,9 @@ packages:
   lightningcss@1.30.2:
     resolution: {integrity: sha512-utfs7Pr5uJyyvDETitgsaqSyjCb2qNRAtuqUeWIAKztsOYdcACf2KtARYXg2pSvhkt+9NfoaNY7fxjl6nuMjIQ==}
     engines: {node: '>= 12.0.0'}
+
+  lightweight-charts@5.0.9:
+    resolution: {integrity: sha512-8oQIis8jfZVfSwz8j9Z5x3O79dIRTkEYI9UY7DKtE4O3ZxlHjMK3L0+4nOVOOFq4FHI/oSIzz1RHeNImCk6/Jg==}
 
   lodash.merge@4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
@@ -2930,6 +2939,8 @@ snapshots:
 
   extend@3.0.2: {}
 
+  fancy-canvas@2.1.0: {}
+
   fdir@6.5.0(picomatch@4.0.3):
     optionalDependencies:
       picomatch: 4.0.3
@@ -3167,6 +3178,10 @@ snapshots:
       lightningcss-linux-x64-musl: 1.30.2
       lightningcss-win32-arm64-msvc: 1.30.2
       lightningcss-win32-x64-msvc: 1.30.2
+
+  lightweight-charts@5.0.9:
+    dependencies:
+      fancy-canvas: 2.1.0
 
   lodash.merge@4.6.2: {}
 

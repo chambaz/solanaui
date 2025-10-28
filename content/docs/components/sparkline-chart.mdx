@@ -3,15 +3,17 @@ title: Sparkline Chart
 description: A compact line chart for visualizing trends in small spaces
 ---
 
-<SparklineChart
-  series={[
-    { time: "2024-01-01", value: 32.51 },
-    { time: "2024-01-02", value: 31.11 },
-    { time: "2024-01-03", value: 35.02 },
-    { time: "2024-01-04", value: 37.32 },
-    { time: "2024-01-05", value: 35.17 },
-  ]}
-/>
+<ComponentDemo>
+  <SparklineChart
+    series={[
+      { time: "2024-01-01", value: 32.51 },
+      { time: "2024-01-02", value: 31.11 },
+      { time: "2024-01-03", value: 35.02 },
+      { time: "2024-01-04", value: 37.32 },
+      { time: "2024-01-05", value: 35.17 },
+    ]}
+  />
+</ComponentDemo>
 
 ```tsx
 import { SparklineChart } from "@/components/sol/sparkline-chart";
@@ -48,3 +50,7 @@ export function SparklineChartDemo() {
   ]}
 />
 ```
+
+## Source Code
+
+<ComponentCode name="sparkline-chart" />

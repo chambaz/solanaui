@@ -3,7 +3,9 @@ title: Leverage Slider
 description: A slider component for selecting leverage levels
 ---
 
-<LeverageSlider defaultValue={[50]} max={100} step={1} />
+<ComponentDemo>
+  <LeverageSlider defaultValue={[50]} max={100} step={1} />
+</ComponentDemo>
 
 ```tsx
 import { LeverageSlider } from "@/components/sol/leverage-slider";
@@ -26,3 +28,7 @@ export function LeverageSliderDemo() {
 ```tsx
 <LeverageSlider defaultValue={[50]} max={100} step={1} />
 ```
+
+## Source Code
+
+<ComponentCode name="leverage-slider" />

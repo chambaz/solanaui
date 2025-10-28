@@ -3,19 +3,21 @@ title: Trade Chart
 description: A theme-aware TradingView Lightweight Chart component integrated with Shadcn design system
 ---
 
-<TradeChart
-  series={[
-    {
-      data: [
-        { time: "2024-01-01", value: 32.51 },
-        { time: "2024-01-02", value: 31.11 },
-        { time: "2024-01-03", value: 35.02 },
-        { time: "2024-01-04", value: 37.32 },
-        { time: "2024-01-05", value: 35.17 },
-      ],
-    },
-  ]}
-/>
+<ComponentDemo>
+  <TradeChart
+    series={[
+      {
+        data: [
+          { time: "2024-01-01", value: 32.51 },
+          { time: "2024-01-02", value: 31.11 },
+          { time: "2024-01-03", value: 35.02 },
+          { time: "2024-01-04", value: 37.32 },
+          { time: "2024-01-05", value: 35.17 },
+        ],
+      },
+    ]}
+  />
+</ComponentDemo>
 
 ```tsx
 import { TradeChart } from "@/components/sol/trade-chart";
@@ -62,3 +64,7 @@ export function TradeChartDemo() {
   ]}
 />
 ```
+
+## Source Code
+
+<ComponentCode name="trade-chart" />

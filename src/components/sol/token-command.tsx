@@ -1,15 +1,7 @@
 "use client";
 
 import * as React from "react";
-import {
-  Calculator,
-  Calendar,
-  ChevronsUpDown,
-  CreditCard,
-  Settings,
-  Smile,
-  User,
-} from "lucide-react";
+import { ChevronsUpDown } from "lucide-react";
 
 import {
   CommandDialog,
@@ -18,17 +10,26 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
-  CommandShortcut,
 } from "@/components/ui/command";
 import { Button } from "@/components/ui/button";
+import { TokenIcon } from "@/components/sol/token-icon";
 
-const TokenCommand = () => {
+type TokenCommandProps = {
+  tokens: {
+    icon: string;
+    symbol: string;
+  }[];
+};
+
+const TokenCommand = ({ tokens }: TokenCommandProps) => {
   const [open, setOpen] = React.useState(false);
+  const [value, setValue] = React.useState("");
+
+  const activeToken = tokens.find((token) => token.symbol === value);
 
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
-      if (e.key === "j" && (e.metaKey || e.ctrlKey)) {
+      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
         setOpen((open) => !open);
       }
@@ -45,44 +46,44 @@ const TokenCommand = () => {
         className="w-[200px] justify-between"
         onClick={() => setOpen(true)}
       >
-        Select Token
+        {activeToken ? (
+          <div className="flex items-center gap-2.5">
+            <TokenIcon
+              src={activeToken.icon}
+              alt={activeToken.symbol}
+              width={20}
+              height={20}
+            />
+            {activeToken.symbol}
+          </div>
+        ) : (
+          "Select token..."
+        )}
         <ChevronsUpDown className="opacity-50" />
       </Button>
       <CommandDialog open={open} onOpenChange={setOpen}>
-        <CommandInput placeholder="Type a command or search..." />
+        <CommandInput placeholder="Search token..." />
         <CommandList>
-          <CommandEmpty>No results found.</CommandEmpty>
-          <CommandGroup heading="Suggestions">
-            <CommandItem>
-              <Calendar />
-              <span>Calendar</span>
-            </CommandItem>
-            <CommandItem>
-              <Smile />
-              <span>Search Emoji</span>
-            </CommandItem>
-            <CommandItem>
-              <Calculator />
-              <span>Calculator</span>
-            </CommandItem>
-          </CommandGroup>
-          <CommandSeparator />
-          <CommandGroup heading="Settings">
-            <CommandItem>
-              <User />
-              <span>Profile</span>
-              <CommandShortcut>⌘P</CommandShortcut>
-            </CommandItem>
-            <CommandItem>
-              <CreditCard />
-              <span>Billing</span>
-              <CommandShortcut>⌘B</CommandShortcut>
-            </CommandItem>
-            <CommandItem>
-              <Settings />
-              <span>Settings</span>
-              <CommandShortcut>⌘S</CommandShortcut>
-            </CommandItem>
+          <CommandEmpty>No tokens found.</CommandEmpty>
+          <CommandGroup heading="Tokens">
+            {tokens.map((token) => (
+              <CommandItem
+                key={token.symbol}
+                value={token.symbol}
+                onSelect={(currentValue) => {
+                  setValue(currentValue === value ? "" : currentValue);
+                  setOpen(false);
+                }}
+              >
+                <TokenIcon
+                  src={token.icon}
+                  alt={token.symbol}
+                  width={20}
+                  height={20}
+                />
+                {token.symbol}
+              </CommandItem>
+            ))}
           </CommandGroup>
         </CommandList>
       </CommandDialog>
@@ -90,4 +91,5 @@ const TokenCommand = () => {
   );
 };
 
+export type { TokenCommandProps };
 export { TokenCommand };

@@ -11,6 +11,7 @@ import type { Metadata } from "next";
 import { createRelativeLink } from "fumadocs-ui/mdx";
 
 import { AuthDialog } from "@/components/sol/auth-dialog";
+import { AuthCard } from "@/components/sol/auth-card";
 import { LeverageSlider } from "@/components/sol/leverage-slider";
 import { TokenCard } from "@/components/sol/token-card";
 import { NFTCard } from "@/components/sol/nft-card";
@@ -24,6 +25,11 @@ import { WalletSheet } from "@/components/sol/wallet-sheet";
 import { TxnToast } from "@/components/sol/txn-toast";
 import { TradeChart } from "@/components/sol/trade-chart";
 import { SparklineChart } from "@/components/sol/sparkline-chart";
+import { OrderBook } from "@/components/sol/order-book";
+import { PositionCard } from "@/components/sol/position-card";
+import { PositionTable } from "@/components/sol/position-table";
+import { TxnTable } from "@/components/sol/txn-table";
+import { TradeButtons } from "@/components/sol/trade-buttons";
 
 export default async function Page(props: PageProps<"/docs/[[...slug]]">) {
   const params = await props.params;
@@ -42,6 +48,7 @@ export default async function Page(props: PageProps<"/docs/[[...slug]]">) {
             // this allows you to link to other pages with relative file paths
             a: createRelativeLink(source, page),
             AuthDialog,
+            AuthCard,
             LeverageSlider,
             TokenCard,
             NFTCard,
@@ -55,6 +62,11 @@ export default async function Page(props: PageProps<"/docs/[[...slug]]">) {
             TxnToast,
             TradeChart,
             SparklineChart,
+            OrderBook,
+            PositionCard,
+            PositionTable,
+            TxnTable,
+            TradeButtons,
           })}
         />
       </DocsBody>

@@ -38,7 +38,7 @@ const SparklineChart = ({ series }: SparklineChartProps) => {
   const chartColor = isPositive ? positiveColor : negativeColor;
 
   return (
-    <div className="relative w-[240px] h-[60px]">
+    <div className="relative w-full h-[60px]">
       <ChartContainer
         config={chartConfig}
         className="w-full h-[60px] shrink-0 pr-12"

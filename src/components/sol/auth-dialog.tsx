@@ -31,7 +31,7 @@ const AuthDialog = () => {
         <form>
           <FieldGroup>
             <FieldSet className="gap-2">
-              <Field>
+              <Field className="gap-1">
                 <FieldLabel>Email</FieldLabel>
                 <Input type="text" placeholder="Your email address" required />
               </Field>

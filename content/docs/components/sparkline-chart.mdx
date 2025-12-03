@@ -4,15 +4,64 @@ description: A compact line chart for visualizing trends in small spaces
 ---
 
 <ComponentDemo>
-  <SparklineChart
-    series={[
-      { time: "2024-01-01", value: 32.51 },
-      { time: "2024-01-02", value: 31.11 },
-      { time: "2024-01-03", value: 35.02 },
-      { time: "2024-01-04", value: 37.32 },
-      { time: "2024-01-05", value: 35.17 },
-    ]}
-  />
+  <div className="flex items-center gap-12 w-full max-w-md">
+    <SparklineChart
+      series={[
+        { time: "00:00", value: 142.32 },
+        { time: "01:00", value: 141.85 },
+        { time: "02:00", value: 140.92 },
+        { time: "03:00", value: 141.45 },
+        { time: "04:00", value: 142.18 },
+        { time: "05:00", value: 143.22 },
+        { time: "06:00", value: 144.67 },
+        { time: "07:00", value: 146.35 },
+        { time: "08:00", value: 148.12 },
+        { time: "09:00", value: 149.88 },
+        { time: "10:00", value: 151.45 },
+        { time: "11:00", value: 152.33 },
+        { time: "12:00", value: 153.71 },
+        { time: "13:00", value: 152.88 },
+        { time: "14:00", value: 151.92 },
+        { time: "15:00", value: 153.45 },
+        { time: "16:00", value: 155.22 },
+        { time: "17:00", value: 154.85 },
+        { time: "18:00", value: 156.12 },
+        { time: "19:00", value: 157.45 },
+        { time: "20:00", value: 156.88 },
+        { time: "21:00", value: 155.33 },
+        { time: "22:00", value: 154.71 },
+        { time: "23:00", value: 154.22 },
+      ]}
+    />
+    <SparklineChart
+      series={[
+        { time: "00:00", value: 154.22 },
+        { time: "01:00", value: 153.68 },
+        { time: "02:00", value: 155.12 },
+        { time: "03:00", value: 154.33 },
+        { time: "04:00", value: 152.88 },
+        { time: "05:00", value: 151.45 },
+        { time: "06:00", value: 150.12 },
+        { time: "07:00", value: 148.92 },
+        { time: "08:00", value: 147.33 },
+        { time: "09:00", value: 146.15 },
+        { time: "10:00", value: 145.22 },
+        { time: "11:00", value: 144.88 },
+        { time: "12:00", value: 143.45 },
+        { time: "13:00", value: 144.67 },
+        { time: "14:00", value: 145.88 },
+        { time: "15:00", value: 144.15 },
+        { time: "16:00", value: 142.45 },
+        { time: "17:00", value: 143.22 },
+        { time: "18:00", value: 142.15 },
+        { time: "19:00", value: 141.33 },
+        { time: "20:00", value: 141.88 },
+        { time: "21:00", value: 143.12 },
+        { time: "22:00", value: 142.67 },
+        { time: "23:00", value: 142.18 },
+      ]}
+    />
+  </div>
 </ComponentDemo>
 
 ```tsx

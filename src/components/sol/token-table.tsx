@@ -1,87 +1,99 @@
+import { MoreHorizontal } from "lucide-react";
+
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { TokenIcon } from "@/components/sol/token-icon";
+import { Button } from "@/components/ui/button";
 
-const invoices = [
+const tokens = [
   {
-    invoice: "INV001",
-    paymentStatus: "Paid",
-    totalAmount: "$250.00",
-    paymentMethod: "Credit Card",
+    address: "23jf...ad87",
+    icon: "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/So11111111111111111111111111111111111111112.png",
+    symbol: "SOL",
+    price: 1234,
+    apy: 7.34,
+    weight: 85,
   },
   {
-    invoice: "INV002",
-    paymentStatus: "Pending",
-    totalAmount: "$150.00",
-    paymentMethod: "PayPal",
+    address: "23jf...ad87",
+    icon: "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/So11111111111111111111111111111111111111112.png",
+    symbol: "SOL",
+    price: 1234,
+    apy: 7.34,
+    weight: 85,
   },
   {
-    invoice: "INV003",
-    paymentStatus: "Unpaid",
-    totalAmount: "$350.00",
-    paymentMethod: "Bank Transfer",
+    address: "23jf...ad87",
+    icon: "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/So11111111111111111111111111111111111111112.png",
+    symbol: "SOL",
+    price: 1234,
+    apy: 7.34,
+    weight: 85,
   },
   {
-    invoice: "INV004",
-    paymentStatus: "Paid",
-    totalAmount: "$450.00",
-    paymentMethod: "Credit Card",
+    address: "23jf...ad87",
+    icon: "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/So11111111111111111111111111111111111111112.png",
+    symbol: "SOL",
+    price: 1234,
+    apy: 7.34,
+    weight: 85,
   },
   {
-    invoice: "INV005",
-    paymentStatus: "Paid",
-    totalAmount: "$550.00",
-    paymentMethod: "PayPal",
-  },
-  {
-    invoice: "INV006",
-    paymentStatus: "Pending",
-    totalAmount: "$200.00",
-    paymentMethod: "Bank Transfer",
-  },
-  {
-    invoice: "INV007",
-    paymentStatus: "Unpaid",
-    totalAmount: "$300.00",
-    paymentMethod: "Credit Card",
+    address: "23jf...ad87",
+    icon: "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/So11111111111111111111111111111111111111112.png",
+    symbol: "SOL",
+    price: 1234,
+    apy: 7.34,
+    weight: 85,
   },
 ];
 
 const TokenTable = () => {
   return (
     <Table>
-      <TableCaption>A list of your recent invoices.</TableCaption>
       <TableHeader>
         <TableRow>
-          <TableHead className="w-[100px]">Invoice</TableHead>
-          <TableHead>Status</TableHead>
-          <TableHead>Method</TableHead>
-          <TableHead className="text-right">Amount</TableHead>
+          <TableHead>Token</TableHead>
+          <TableHead>Address</TableHead>
+          <TableHead>Price</TableHead>
+          <TableHead>APY</TableHead>
+          <TableHead>Weight</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {invoices.map((invoice) => (
-          <TableRow key={invoice.invoice}>
-            <TableCell className="font-medium">{invoice.invoice}</TableCell>
-            <TableCell>{invoice.paymentStatus}</TableCell>
-            <TableCell>{invoice.paymentMethod}</TableCell>
-            <TableCell className="text-right">{invoice.totalAmount}</TableCell>
+        {tokens.map((token) => (
+          <TableRow key={token.address}>
+            <TableCell>
+              <div className="flex items-center gap-1.5">
+                <TokenIcon
+                  src={token.icon}
+                  alt={token.symbol}
+                  width={20}
+                  height={20}
+                />
+                {token.symbol}
+              </div>
+            </TableCell>
+            <TableCell>{token.address}</TableCell>
+            <TableCell>${token.price.toFixed(2)}</TableCell>
+            <TableCell className="text-green-500">
+              {token.apy.toFixed(2)}%
+            </TableCell>
+            <TableCell>{token.weight.toFixed(2)}%</TableCell>
+            <TableCell>
+              <Button variant="ghost" size="sm">
+                <MoreHorizontal />
+              </Button>
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>
-      <TableFooter>
-        <TableRow>
-          <TableCell colSpan={3}>Total</TableCell>
-          <TableCell className="text-right">$2,500.00</TableCell>
-        </TableRow>
-      </TableFooter>
     </Table>
   );
 };

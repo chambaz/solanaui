@@ -2,8 +2,10 @@
 
 import * as React from "react";
 
-import { Slider } from "@/components/ui/slider";
 import * as SliderPrimitive from "@radix-ui/react-slider";
+
+import { Slider } from "@/components/ui/slider";
+import { Label } from "@/components/ui/label";
 
 const LeverageSlider = (
   props: React.ComponentProps<typeof SliderPrimitive.Root>
@@ -34,9 +36,10 @@ const LeverageSlider = (
   };
 
   return (
-    <div className="w-full">
-      <div className="flex justify-end mb-2">
-        <span className="text-sm font-medium">{currentValue}x</span>
+    <div className="w-full space-y-2">
+      <div className="flex items-center justify-between text-sm">
+        <Label className="text-muted-foreground">Leverage</Label>
+        <span className="font-medium">{currentValue}x</span>
       </div>
       <Slider
         min={min}

@@ -19,32 +19,20 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-const frameworks = [
-  {
-    value: "next.js",
-    label: "Next.js",
-  },
-  {
-    value: "sveltekit",
-    label: "SvelteKit",
-  },
-  {
-    value: "nuxt.js",
-    label: "Nuxt.js",
-  },
-  {
-    value: "remix",
-    label: "Remix",
-  },
-  {
-    value: "astro",
-    label: "Astro",
-  },
-];
+import { TokenIcon } from "@/components/sol/token-icon";
 
-const TokenCombobox = () => {
+type TokenComboboxProps = {
+  tokens: {
+    icon: string;
+    symbol: string;
+  }[];
+};
+
+const TokenCombobox = ({ tokens }: TokenComboboxProps) => {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
+
+  const activeToken = tokens.find((token) => token.symbol === value);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -55,32 +43,48 @@ const TokenCombobox = () => {
           aria-expanded={open}
           className="w-[200px] justify-between"
         >
-          {value
-            ? frameworks.find((framework) => framework.value === value)?.label
-            : "Select framework..."}
+          {activeToken ? (
+            <div className="flex items-center gap-2.5">
+              <TokenIcon
+                src={activeToken.icon}
+                alt={activeToken.symbol}
+                width={20}
+                height={20}
+              />
+              {activeToken.symbol}
+            </div>
+          ) : (
+            "Select token..."
+          )}
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
         <Command>
-          <CommandInput placeholder="Search framework..." className="h-9" />
+          <CommandInput placeholder="Search token..." className="h-9" />
           <CommandList>
-            <CommandEmpty>No framework found.</CommandEmpty>
+            <CommandEmpty>No tokens found.</CommandEmpty>
             <CommandGroup>
-              {frameworks.map((framework) => (
+              {tokens.map((token) => (
                 <CommandItem
-                  key={framework.value}
-                  value={framework.value}
+                  key={token.symbol}
+                  value={token.symbol}
                   onSelect={(currentValue) => {
                     setValue(currentValue === value ? "" : currentValue);
                     setOpen(false);
                   }}
                 >
-                  {framework.label}
+                  <TokenIcon
+                    src={token.icon}
+                    alt={token.symbol}
+                    width={20}
+                    height={20}
+                  />
+                  {token.symbol}
                   <Check
                     className={cn(
                       "ml-auto",
-                      value === framework.value ? "opacity-100" : "opacity-0"
+                      value === token.symbol ? "opacity-100" : "opacity-0"
                     )}
                   />
                 </CommandItem>
@@ -93,4 +97,5 @@ const TokenCombobox = () => {
   );
 };
 
+export type { TokenComboboxProps };
 export { TokenCombobox };

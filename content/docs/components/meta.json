@@ -1,3 +1,26 @@
 {
-  "defaultOpen": true
+  "defaultOpen": true,
+  "pages": [
+    "index",
+    "auth-card",
+    "auth-dialog",
+    "token-icon",
+    "leverage-slider",
+    "sparkline-chart",
+    "token-card",
+    "position-card",
+    "nft-card",
+    "token-combobox",
+    "token-command",
+    "trade-buttons",
+    "order-book",
+    "trade-chart",
+    "trend-badge",
+    "token-input",
+    "token-table",
+    "position-table",
+    "txn-table",
+    "txn-toast",
+    "wallet-sheet"
+  ]
 }

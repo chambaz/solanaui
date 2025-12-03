@@ -80,12 +80,16 @@ const TokenTable = () => {
                 {token.symbol}
               </div>
             </TableCell>
-            <TableCell>{token.address}</TableCell>
-            <TableCell>${token.price.toFixed(2)}</TableCell>
-            <TableCell className="text-green-500">
+            <TableCell className="text-left">{token.address}</TableCell>
+            <TableCell className="text-left">
+              ${token.price.toFixed(2)}
+            </TableCell>
+            <TableCell className="text-green-500 text-left">
               {token.apy.toFixed(2)}%
             </TableCell>
-            <TableCell>{token.weight.toFixed(2)}%</TableCell>
+            <TableCell className="text-left">
+              {token.weight.toFixed(2)}%
+            </TableCell>
             <TableCell>
               <Button variant="ghost" size="sm">
                 <MoreHorizontal />

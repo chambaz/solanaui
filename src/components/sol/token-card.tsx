@@ -30,7 +30,9 @@ const TokenCard = () => {
           </div>
           <span>$162.56</span>
         </CardTitle>
-        <CardDescription>TokenCard description</CardDescription>
+        <CardDescription className="text-left">
+          TokenCard description
+        </CardDescription>
       </CardHeader>
       <CardContent className="p-0">
         <div>

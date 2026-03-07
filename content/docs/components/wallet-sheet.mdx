@@ -1,17 +1,65 @@
 ---
 title: Wallet Sheet
-description: A slide-out sheet component for wallet management
+description: A Phantom-style slide-out wallet panel with balance, action buttons, and token list
 ---
 
 <ComponentDemo>
-  <WalletSheet />
+  <WalletSheet
+    address="7xKpR4nm3kW9vBzL5hQd2mFnZq"
+    balance="$5,684.76"
+    balanceChange="-$20.60"
+    balanceChangePercent="-0.36%"
+    tokens={[
+      {
+        icon: "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/So11111111111111111111111111111111111111112.png",
+        name: "Solana",
+        symbol: "SOL",
+        balance: "24.58",
+        value: "$3,996.73",
+        change: "-$12.40",
+      },
+      {
+        icon: "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v.png",
+        name: "USD Coin",
+        symbol: "USDC",
+        balance: "1,250.00",
+        value: "$1,250.00",
+        change: "+$0.01",
+      },
+      {
+        icon: "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263.png",
+        name: "Bonk",
+        symbol: "BONK",
+        balance: "15,420,000",
+        value: "$438.03",
+        change: "-$8.21",
+      },
+    ]}
+  />
 </ComponentDemo>
 
 ```tsx
 import { WalletSheet } from "@/components/sol/wallet-sheet";
 
 export function WalletSheetDemo() {
-  return <WalletSheet />;
+  return (
+    <WalletSheet
+      address="7xKpR4nm3kW9vBzL5hQd2mFnZq"
+      balance="$5,684.76"
+      balanceChange="-$20.60"
+      balanceChangePercent="-0.36%"
+      tokens={[
+        {
+          icon: "/sol.png",
+          name: "Solana",
+          symbol: "SOL",
+          balance: "24.58",
+          value: "$3,996.73",
+          change: "-$12.40",
+        },
+      ]}
+    />
+  );
 }
 ```
 
@@ -26,7 +74,25 @@ export function WalletSheetDemo() {
 ## Usage
 
 ```tsx
-<WalletSheet />
+<WalletSheet
+  address="7xKpR4nm3kW9vBzL5hQd2mFnZq"
+  balance="$5,684.76"
+  balanceChange="-$20.60"
+  balanceChangePercent="-0.36%"
+  tokens={[
+    {
+      icon: "/sol.png",
+      name: "Solana",
+      symbol: "SOL",
+      balance: "24.58",
+      value: "$3,996.73",
+      change: "-$12.40",
+    },
+  ]}
+>
+  {/* Optional footer content */}
+  <Button variant="outline" className="w-full">Disconnect</Button>
+</WalletSheet>
 ```
 
 ## Source Code

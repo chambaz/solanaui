@@ -1,17 +1,30 @@
 ---
 title: Token Table
-description: A table component for displaying token data
+description: A table for displaying token data with auto-detected optional columns for address, APY, weight, and row actions
 ---
 
 <ComponentDemo>
-  <TokenTable />
+  <TokenTable
+    tokens={[
+      { symbol: "SOL", icon: "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/So11111111111111111111111111111111111111112.png", price: "$162.56", apy: "6.82%" },
+      { symbol: "USDC", icon: "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v.png", price: "$1.00", apy: "8.45%" },
+      { symbol: "JitoSOL", icon: "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn.png", price: "$189.32", apy: "9.12%" },
+    ]}
+  />
 </ComponentDemo>
 
 ```tsx
 import { TokenTable } from "@/components/sol/token-table";
 
 export function TokenTableDemo() {
-  return <TokenTable />;
+  return (
+    <TokenTable
+      tokens={[
+        { symbol: "SOL", icon: "/sol.png", price: "$162.56", apy: "6.82%" },
+        { symbol: "USDC", icon: "/usdc.png", price: "$1.00", apy: "8.45%" },
+      ]}
+    />
+  );
 }
 ```
 
@@ -26,7 +39,31 @@ export function TokenTableDemo() {
 ## Usage
 
 ```tsx
-<TokenTable />
+<TokenTable
+  tokens={[
+    { symbol: "SOL", icon: "/sol.png", price: "$162.56" },
+    { symbol: "USDC", icon: "/usdc.png", price: "$1.00" },
+  ]}
+/>
+```
+
+### With Actions
+
+Pass an `actions` array of React nodes to render action buttons for each row. The array should match the length of the `tokens` array.
+
+```tsx
+import { Button } from "@/components/ui/button";
+
+<TokenTable
+  tokens={[
+    { symbol: "SOL", icon: "/sol.png", price: "$162.56", apy: "6.82%" },
+    { symbol: "USDC", icon: "/usdc.png", price: "$1.00", apy: "8.45%" },
+  ]}
+  actions={[
+    <Button variant="outline" size="sm">Deposit</Button>,
+    <Button variant="outline" size="sm">Deposit</Button>,
+  ]}
+/>
 ```
 
 ## Source Code

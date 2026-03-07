@@ -1,8 +1,9 @@
 "use client";
 
-import * as React from "react";
 import { ChevronsUpDown } from "lucide-react";
-
+import React from "react";
+import { TokenIcon } from "@/components/sol/token-icon";
+import { Button } from "@/components/ui/button";
 import {
   CommandDialog,
   CommandEmpty,
@@ -11,21 +12,23 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { Button } from "@/components/ui/button";
-import { TokenIcon } from "@/components/sol/token-icon";
+import { cn } from "@/lib/utils";
 
-type TokenCommandProps = {
+interface TokenCommandProps {
   tokens: {
     icon: string;
     symbol: string;
   }[];
-};
+  className?: string;
+}
 
-const TokenCommand = ({ tokens }: TokenCommandProps) => {
+const TokenCommand = ({ tokens, className }: TokenCommandProps) => {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
 
-  const activeToken = tokens.find((token) => token.symbol === value);
+  const activeToken = tokens.find(
+    (token) => token.symbol.toLowerCase() === value.toLowerCase(),
+  );
 
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -43,7 +46,7 @@ const TokenCommand = ({ tokens }: TokenCommandProps) => {
     <>
       <Button
         variant="outline"
-        className="w-[200px] justify-between"
+        className={cn("w-[200px] justify-between", className)}
         onClick={() => setOpen(true)}
       >
         {activeToken ? (

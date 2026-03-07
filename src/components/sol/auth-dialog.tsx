@@ -1,93 +1,35 @@
-"use client";
-
+import type React from "react";
+import type { AuthCardProps } from "@/components/sol/auth-card";
+import { AuthCard } from "@/components/sol/auth-card";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Field, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
 
-const AuthDialog = () => {
+interface AuthDialogProps extends AuthCardProps {
+  trigger?: React.ReactNode;
+}
+
+const AuthDialog = ({ trigger, ...authCardProps }: AuthDialogProps) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>Sign in</Button>
+        {trigger ?? <Button>Sign in</Button>}
       </DialogTrigger>
-      <DialogContent>
-        <DialogHeader className="flex flex-col gap-2 items-center justify-center pb-4">
-          <DialogTitle className="text-2xl font-medium">
-            Sign in to SolanaUI
-          </DialogTitle>
-          <DialogDescription className="text-muted-foreground text-center">
-            Connect your wallet or sign in below.
-          </DialogDescription>
-        </DialogHeader>
-        <form>
-          <FieldGroup>
-            <FieldSet className="gap-2">
-              <Field className="gap-1">
-                <FieldLabel>Email</FieldLabel>
-                <Input type="text" placeholder="Your email address" required />
-              </Field>
-              <Field>
-                <Button type="submit">Sign in</Button>
-              </Field>
-            </FieldSet>
-          </FieldGroup>
-        </form>
-        <div className="flex gap-4 justify-center">
-          <Button variant="secondary" size="icon">
-            <svg viewBox="0 0 424 432" className="w-4 h-4" fill="currentColor">
-              <path d="M214 186v-1h201q3 12 3 36q0 93-56.5 150.5T213 429q-88 0-150.5-62T0 216T62 65T213 3q87 0 144 57l-57 56q-33-33-86-33q-54 0-92.5 39.5t-38.5 95t38.5 94.5t92.5 39q31 0 55-9.5t37.5-24.5t20.5-29.5t10-27.5H214v-74z" />
-            </svg>
-          </Button>
-          <Button variant="secondary" size="icon">
-            <svg viewBox="0 0 24 24" className="w-4 h-4" fill="currentColor">
-              <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584l-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z" />
-            </svg>
-          </Button>
-          <Button variant="secondary" size="icon">
-            <svg viewBox="0 0 368 432" className="w-4 h-4" fill="currentColor">
-              <path d="M353 146q-21 7-35 32.5T304 229q0 31 16 57.5t43 33.5q-8 27-26.5 55.5T299 418q-16 11-40 11q-16 0-37-8q-18-9-31-9q-10 0-40 12q-18 5-26 5q-24 0-49-20q-36-34-56-81T0 230q0-53 30.5-93.5T108 96q26 0 48 11q17 11 34 11q16 0 31-6q39-16 52-16q35 0 61 23q12 12 19 27zM179 99q0-32 25-63q25-27 61-33q0 38-24 67q-27 29-62 29z" />
-            </svg>
-          </Button>
-        </div>
-        <Separator className="my-1" />
-        <div className="flex flex-col gap-2">
-          <Button variant="secondary" className="gap-2">
-            <svg viewBox="0 0 512 512" className="w-4 h-4" fill="currentColor">
-              <path d="M60.4856 512C125.715 512 174.736 443.765 203.991 389.845C200.433 401.775 198.456 413.703 198.456 425.155C198.456 456.649 213.479 479.075 243.128 479.075C283.847 479.075 327.334 436.131 349.868 389.845C348.286 396.526 347.496 402.729 347.496 408.454C347.496 430.404 357.774 444.243 378.727 444.243C444.748 444.243 511.162 303.478 511.162 180.369C511.162 84.4585 470.839 0 369.635 0C191.736 0 0 261.488 0 430.404C0 496.73 29.6498 512 60.4856 512ZM308.358 169.872C308.358 146.013 319.428 129.313 335.635 129.313C351.449 129.313 362.518 146.013 362.518 169.872C362.518 193.73 351.449 210.908 335.635 210.908C319.428 210.908 308.358 193.73 308.358 169.872ZM392.959 169.872C392.959 146.013 404.028 129.313 420.236 129.313C436.05 129.313 447.119 146.013 447.119 169.872C447.119 193.73 436.05 210.908 420.236 210.908C404.028 210.908 392.959 193.73 392.959 169.872Z" />
-            </svg>
-            Phantom
-          </Button>
-          <Button variant="secondary" className="gap-2">
-            <svg viewBox="0 0 512 512" className="w-4 h-4" fill="currentColor">
-              <path d="M386.131 368.844C403.976 368.844 412.898 368.844 418.44 374.402C423.984 379.959 423.984 388.904 423.984 406.794V432.094C423.984 467.872 423.984 485.761 412.898 496.877C401.811 507.992 383.965 507.992 348.278 507.992H152.706C117.018 507.992 99.1734 507.992 88.0866 496.877C76.9998 485.761 77 467.872 77 432.094V406.794C77 388.904 76.9999 379.959 82.5433 374.402C88.0867 368.844 97.0088 368.844 114.853 368.844H386.131Z" />
-              <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
-                d="M250.492 76.3182C426.509 76.3182 423.984 193.959 423.984 250.253C423.984 306.546 423.984 313.502 423.984 313.502C423.984 323.981 415.51 332.477 405.057 332.477H95.9263C85.4735 332.477 76.9999 323.981 76.9999 313.502C76.9999 313.502 76.9999 306.546 76.9999 250.253C76.9999 193.959 74.4748 76.3182 250.492 76.3182ZM250.492 121.146C220.876 121.146 196.867 145.216 196.867 174.908C196.867 204.598 220.876 228.67 250.492 228.67C280.109 228.67 304.116 204.598 304.116 174.908C304.116 145.216 280.109 121.146 250.492 121.146Z"
-              />
-              <path d="M250.441 3.39102C288.422 3.39102 321.669 16.7 330.462 38.3741C331.787 42.1136 332.448 43.9838 331.271 45.3722C330.093 46.7608 327.815 46.3469 323.259 45.519C311.483 43.3792 294.812 41.908 280.135 41.4733C270.77 40.9687 260.891 40.7073 250.495 40.7073C240.104 40.7073 230.229 40.9691 220.869 41.4733C206.12 41.9078 189.39 43.3788 177.573 45.4465C173.113 46.2266 170.883 46.616 169.714 45.2317C168.546 43.8471 169.192 42.0111 170.484 38.3401C179.206 16.7343 212.473 3.39115 250.441 3.39102Z" />
-            </svg>
-            Backpack
-          </Button>
-          <Button variant="secondary" className="gap-2">
-            <svg viewBox="0 0 512 512" className="w-4 h-4" fill="currentColor">
-              <path d="M244.078 275.686L278.23 242.683L341.9 263.527C383.575 277.425 404.415 302.901 404.415 338.799C404.415 366.014 393.995 383.964 373.158 407.125L366.791 414.072L369.106 397.859C378.366 338.799 361.003 313.323 303.698 294.793L244.078 275.686ZM158.41 73.6093L332.061 131.511L294.435 167.41L204.138 137.301C172.882 126.879 162.463 110.087 158.41 74.7673V73.6093ZM147.99 367.751L187.352 330.113L261.443 354.434C300.224 367.172 313.536 383.964 309.486 426.232L147.99 367.751ZM98.2119 199.834C98.2119 188.835 104 178.412 113.84 169.726C124.259 184.781 142.203 198.098 170.565 207.363L231.923 227.628L197.771 260.633L137.572 240.944C109.788 231.682 98.2119 217.784 98.2119 199.834ZM279.966 503.819C407.308 419.284 475.611 361.96 475.611 291.32C475.611 244.42 447.826 218.362 386.471 198.098L340.164 182.464L466.929 60.8708L441.459 33.657L403.836 66.6608L226.135 8.18005C171.144 26.1297 101.685 78.8203 101.685 131.511C101.685 137.301 102.264 143.091 104 149.461C58.2723 175.516 39.7498 199.834 39.7498 229.943C39.7498 258.315 54.7993 286.687 102.843 302.322L141.045 315.06L9.07166 441.863L34.5402 469.078L75.6374 431.443L279.966 503.819Z" />
-            </svg>
-            Solflare
-          </Button>
-        </div>
+      <DialogContent className="flex items-center justify-center p-8 sm:max-w-md">
+        <DialogTitle className="sr-only">Sign in</DialogTitle>
+        <DialogDescription className="sr-only">
+          Sign in to your account
+        </DialogDescription>
+        <AuthCard {...authCardProps} />
       </DialogContent>
     </Dialog>
   );
 };
 
+export type { AuthDialogProps };
 export { AuthDialog };

@@ -16,7 +16,7 @@ const ComponentCode = ({ name }: ComponentCodeProps) => {
     "src",
     "components",
     "sol",
-    fileName
+    fileName,
   );
 
   // Read the file synchronously at build time

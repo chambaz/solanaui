@@ -33,8 +33,13 @@ description: A command palette component for token selection
 ```tsx
 import { TokenCommand } from "@/components/sol/token-command";
 
+const tokens = [
+  { icon: "/sol.png", symbol: "SOL" },
+  { icon: "/usdc.png", symbol: "USDC" },
+];
+
 export function TokenCommandDemo() {
-  return <TokenCommand />;
+  return <TokenCommand tokens={tokens} />;
 }
 ```
 
@@ -49,7 +54,12 @@ export function TokenCommandDemo() {
 ## Usage
 
 ```tsx
-<TokenCommand />
+<TokenCommand
+  tokens={[
+    { icon: "/sol.png", symbol: "SOL" },
+    { icon: "/usdc.png", symbol: "USDC" },
+  ]}
+/>
 ```
 
 ## Source Code

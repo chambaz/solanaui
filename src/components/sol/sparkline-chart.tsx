@@ -1,58 +1,47 @@
 "use client";
 
-import { LineChart, CartesianGrid, XAxis, YAxis, Line } from "recharts";
-
+import { Line, LineChart, YAxis } from "recharts";
+import { type ChartConfig, ChartContainer } from "@/components/ui/chart";
 import { cn } from "@/lib/utils";
 
-import { ChartConfig, ChartContainer } from "@/components/ui/chart";
-
-type SparklineChartProps = {
+interface SparklineChartProps {
   series: {
     time: string;
     value: number;
   }[];
-};
+  className?: string;
+}
 
 const chartConfig = {
-  desktop: {
+  value: {
     label: "Value",
-    color: "hsl(var(--chart-1))",
   },
 } satisfies ChartConfig;
 
-const SparklineChart = ({ series }: SparklineChartProps) => {
+const POSITIVE_COLOR = "hsl(160 84% 39%)";
+const NEGATIVE_COLOR = "hsl(0 84% 67%)";
+
+const SparklineChart = ({ series, className }: SparklineChartProps) => {
   if (!series.length) return null;
 
   const minValue = Math.min(...series.map((s) => s.value));
   const maxValue = Math.max(...series.map((s) => s.value));
 
-  // Calculate percentage change
   const firstValue = series[0].value;
   const lastValue = series[series.length - 1].value;
-  const percentChange = ((lastValue - firstValue) / firstValue) * 100;
+  const percentChange =
+    firstValue !== 0 ? ((lastValue - firstValue) / firstValue) * 100 : 0;
   const isPositive = percentChange >= 0;
-
-  // Get colors from CSS variables
-  const positiveColor = "hsl(161.4 93.5% 30.4%)"; // Tailwind green-600
-  const negativeColor = "hsl(346.8 77.2% 49.8%)"; // Tailwind red-600
-  const chartColor = isPositive ? positiveColor : negativeColor;
+  const chartColor = isPositive ? POSITIVE_COLOR : NEGATIVE_COLOR;
 
   return (
-    <div className="relative w-full h-[60px]">
+    <div className={cn("relative w-full h-[60px]", className)}>
       <ChartContainer
         config={chartConfig}
         className="w-full h-[60px] shrink-0 pr-12"
       >
         <LineChart accessibilityLayer data={series}>
-          <CartesianGrid horizontal={false} vertical={false} />
-          <XAxis dataKey="time" hide={true} />
-          <YAxis domain={[minValue, maxValue]} hide={true} />
-          <defs>
-            <linearGradient id="fill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor={chartColor} stopOpacity={0.8} />
-              <stop offset="95%" stopColor={chartColor} stopOpacity={0.1} />
-            </linearGradient>
-          </defs>
+          <YAxis domain={[minValue, maxValue]} hide />
           <Line
             dataKey="value"
             type="natural"
@@ -64,14 +53,14 @@ const SparklineChart = ({ series }: SparklineChartProps) => {
       <div
         className={cn(
           "absolute right-0 z-10",
-          isPositive ? "top-0" : "bottom-0"
+          isPositive ? "top-0" : "bottom-0",
         )}
       >
         <span
-          className="text-xs font-medium"
-          style={{
-            color: isPositive ? positiveColor : negativeColor,
-          }}
+          className={cn(
+            "text-xs font-medium",
+            isPositive ? "text-emerald-500" : "text-red-400",
+          )}
         >
           {isPositive ? "+" : ""}
           {percentChange.toFixed(2)}%
@@ -81,4 +70,5 @@ const SparklineChart = ({ series }: SparklineChartProps) => {
   );
 };
 
+export type { SparklineChartProps };
 export { SparklineChart };

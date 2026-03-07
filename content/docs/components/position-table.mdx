@@ -1,17 +1,61 @@
 ---
 title: Position Table
-description: Position Table description
+description: A table for displaying open perpetual trading positions with P&L, leverage, and entry/mark prices
 ---
 
 <ComponentDemo>
-  <PositionTable />
+  <PositionTable
+    positions={[
+      {
+        symbol: "SOL",
+        icon: "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/So11111111111111111111111111111111111111112.png",
+        side: "long",
+        size: "150.0 SOL",
+        value: "$24,384.00",
+        leverage: "5x",
+        entryPrice: "$148.32",
+        markPrice: "$162.56",
+        pnl: "+$2,136.00",
+        pnlPercent: "+14.4%",
+      },
+      {
+        symbol: "ETH",
+        icon: "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/7vfCXTUXx5WJV5JADk17DUJ4kXCL1sCqzGGchHB54pTM.png",
+        side: "short",
+        size: "4.25 ETH",
+        value: "$14,212.50",
+        leverage: "3x",
+        entryPrice: "$3,420.00",
+        markPrice: "$3,344.12",
+        pnl: "+$322.49",
+        pnlPercent: "+2.3%",
+      },
+    ]}
+  />
 </ComponentDemo>
 
 ```tsx
 import { PositionTable } from "@/components/sol/position-table";
 
 export function PositionTableDemo() {
-  return <PositionTable />;
+  return (
+    <PositionTable
+      positions={[
+        {
+          symbol: "SOL",
+          icon: "/sol.png",
+          side: "long",
+          size: "150.0 SOL",
+          value: "$24,384.00",
+          leverage: "5x",
+          entryPrice: "$148.32",
+          markPrice: "$162.56",
+          pnl: "+$2,136.00",
+          pnlPercent: "+14.4%",
+        },
+      ]}
+    />
+  );
 }
 ```
 
@@ -26,7 +70,21 @@ export function PositionTableDemo() {
 ## Usage
 
 ```tsx
-<PositionTable />
+<PositionTable
+  positions={[
+    {
+      symbol: "SOL",
+      icon: "/sol.png",
+      side: "long",
+      size: "150.0 SOL",
+      value: "$24,384.00",
+      leverage: "5x",
+      entryPrice: "$148.32",
+      markPrice: "$162.56",
+      pnl: "+$2,136.00",
+    },
+  ]}
+/>
 ```
 
 ## Source Code

@@ -1,68 +1,111 @@
+"use client";
+
 import { WalletIcon } from "lucide-react";
-
-import { Input } from "@/components/ui/input";
-
+import React from "react";
 import { TokenCombobox } from "@/components/sol/token-combobox";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 
-const tokens = [
-  {
-    icon: "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/So11111111111111111111111111111111111111112.png",
-    symbol: "SOL",
-  },
-  {
-    icon: "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/LSTxxxnJzKDFSLr4dUkPcmCf5VyryEqzPLz5j4bpxFp.png",
-    symbol: "LST",
-  },
-  {
-    icon: "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn.png",
-    symbol: "JitoSOL",
-  },
-  {
-    icon: "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v.png",
-    symbol: "USDC",
-  },
-  {
-    icon: "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263.png",
-    symbol: "BONK",
-  },
-];
+interface TokenInputProps {
+  tokens: { icon: string; symbol: string }[];
+  defaultToken?: string;
+  balance?: string;
+  value?: string;
+  usdValue?: string;
+  onValueChange?: (value: string) => void;
+  onTokenSelect?: (token: { icon: string; symbol: string }) => void;
+  className?: string;
+}
 
-const TokenInput = () => {
+const TokenInput = ({
+  tokens,
+  defaultToken,
+  balance,
+  value,
+  usdValue,
+  onValueChange,
+  onTokenSelect,
+  className,
+}: TokenInputProps) => {
+  const [internalValue, setInternalValue] = React.useState(value ?? "");
+  const currentValue = value ?? internalValue;
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const raw = e.target.value;
+    // Allow only numbers and a single decimal point
+    if (raw === "" || /^\d*\.?\d*$/.test(raw)) {
+      setInternalValue(raw);
+      onValueChange?.(raw);
+    }
+  };
+
+  const handleQuickAmount = (fraction: number) => {
+    if (!balance) return;
+    const numericBalance = Number.parseFloat(balance.replace(/,/g, ""));
+    if (Number.isNaN(numericBalance)) return;
+    const newValue = (numericBalance * fraction).toString();
+    setInternalValue(newValue);
+    onValueChange?.(newValue);
+  };
+
   return (
-    <div className="flex flex-col items-center gap-4 border p-4 rounded-lg w-full relative">
-      <div className="flex items-center gap-2 ml-auto">
-        <Button variant="ghost" size="sm" className="text-xs h-6 px-2">
-          <WalletIcon className="w-4 h-4" />
-          10.87
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          className="text-xs h-6 px-2 rounded-sm"
-        >
-          Half
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          className="text-xs h-6 px-2 rounded-sm"
-        >
-          Max
-        </Button>
-      </div>
+    <div
+      className={cn(
+        "flex flex-col gap-3 border p-4 rounded-lg w-full",
+        className,
+      )}
+    >
+      {balance && (
+        <div className="flex items-center justify-between">
+          <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
+            <WalletIcon className="size-3.5" />
+            {balance}
+          </span>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              className="text-xs h-6 px-2 rounded-sm"
+              onClick={() => handleQuickAmount(0.5)}
+            >
+              Half
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="text-xs h-6 px-2 rounded-sm"
+              onClick={() => handleQuickAmount(1)}
+            >
+              Max
+            </Button>
+          </div>
+        </div>
+      )}
       <div className="flex items-center gap-2 w-full">
-        <TokenCombobox tokens={tokens} />
-        <Input
-          placeholder="0"
-          className="-translate-y-1.5 text-right bg-transparent pr-1 dark:bg-transparent shadow-none border-none focus:ring-0 focus-visible:ring-0 w-full md:text-xl"
+        <TokenCombobox
+          tokens={tokens}
+          defaultValue={defaultToken}
+          onSelect={onTokenSelect}
         />
-        <span className="absolute bottom-[13px] right-5 text-xs text-muted-foreground">
-          $0.00
-        </span>
+        <div className="flex flex-col flex-1 min-w-0 items-end">
+          <Input
+            inputMode="decimal"
+            placeholder="0"
+            value={currentValue}
+            onChange={handleChange}
+            className="text-right bg-transparent pr-1 dark:bg-transparent shadow-none border-none focus:ring-0 focus-visible:ring-0 w-full md:text-xl"
+          />
+          {usdValue && (
+            <span className="text-xs text-muted-foreground pr-1">
+              {usdValue}
+            </span>
+          )}
+        </div>
       </div>
     </div>
   );
 };
 
+export type { TokenInputProps };
 export { TokenInput };

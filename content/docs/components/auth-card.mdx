@@ -1,6 +1,6 @@
 ---
 title: Auth Card
-description: Auth Card description
+description: A sign-in card with email, social, and wallet provider options
 ---
 
 <ComponentDemo>
@@ -11,7 +11,12 @@ description: Auth Card description
 import { AuthCard } from "@/components/sol/auth-card";
 
 export function AuthCardDemo() {
-  return <AuthCard />;
+  return (
+    <AuthCard
+      title="Sign in"
+      description="Connect your wallet or sign in below."
+    />
+  );
 }
 ```
 
@@ -26,7 +31,11 @@ export function AuthCardDemo() {
 ## Usage
 
 ```tsx
-<AuthCard />
+<AuthCard
+  title="Sign in"
+  showEmail={true}
+  socialProviders={[{ name: "Google", icon: <GoogleIcon /> }]}
+/>
 ```
 
 ## Source Code

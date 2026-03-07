@@ -1,18 +1,36 @@
-import { TrendingUpIcon } from "lucide-react";
-
+import { TrendingDownIcon, TrendingUpIcon } from "lucide-react";
+import type React from "react";
 import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
-type TrendBadgeProps = {
-  children?: React.ReactNode;
-};
+interface TrendBadgeProps extends React.ComponentProps<typeof Badge> {
+  trend?: "up" | "down";
+}
 
-const TrendBadge = ({ children }: TrendBadgeProps) => {
+const TrendBadge = ({
+  trend = "up",
+  children,
+  className,
+  ...props
+}: TrendBadgeProps) => {
+  const isUp = trend === "up";
+  const Icon = isUp ? TrendingUpIcon : TrendingDownIcon;
+
   return (
-    <Badge className="bg-green-900/50 text-green-300/75 border-green-900">
-      <TrendingUpIcon className="size-4" />
+    <Badge
+      className={cn(
+        isUp
+          ? "bg-emerald-500/15 text-emerald-500 border-emerald-500/25"
+          : "bg-red-400/15 text-red-400 border-red-400/25",
+        className,
+      )}
+      {...props}
+    >
+      <Icon className="size-3" />
       {children && <span className="text-xs">{children}</span>}
     </Badge>
   );
 };
 
+export type { TrendBadgeProps };
 export { TrendBadge };

@@ -1,5 +1,5 @@
-import { MoreHorizontal } from "lucide-react";
-
+import type React from "react";
+import { TokenIcon } from "@/components/sol/token-icon";
 import {
   Table,
   TableBody,
@@ -8,93 +8,69 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { TokenIcon } from "@/components/sol/token-icon";
-import { Button } from "@/components/ui/button";
 
-const tokens = [
-  {
-    address: "23jf...ad87",
-    icon: "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/So11111111111111111111111111111111111111112.png",
-    symbol: "SOL",
-    price: 1234,
-    apy: 7.34,
-    weight: 85,
-  },
-  {
-    address: "23jf...ad87",
-    icon: "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/So11111111111111111111111111111111111111112.png",
-    symbol: "SOL",
-    price: 1234,
-    apy: 7.34,
-    weight: 85,
-  },
-  {
-    address: "23jf...ad87",
-    icon: "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/So11111111111111111111111111111111111111112.png",
-    symbol: "SOL",
-    price: 1234,
-    apy: 7.34,
-    weight: 85,
-  },
-  {
-    address: "23jf...ad87",
-    icon: "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/So11111111111111111111111111111111111111112.png",
-    symbol: "SOL",
-    price: 1234,
-    apy: 7.34,
-    weight: 85,
-  },
-  {
-    address: "23jf...ad87",
-    icon: "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/So11111111111111111111111111111111111111112.png",
-    symbol: "SOL",
-    price: 1234,
-    apy: 7.34,
-    weight: 85,
-  },
-];
+interface TokenTableProps {
+  tokens: {
+    symbol: string;
+    icon: string;
+    address?: string;
+    price: string;
+    apy?: string;
+    weight?: string;
+  }[];
+  actions?: React.ReactNode[];
+  className?: string;
+}
 
-const TokenTable = () => {
+const TokenTable = ({ tokens, actions, className }: TokenTableProps) => {
+  const showAddress = tokens.some((t) => t.address);
+  const showApy = tokens.some((t) => t.apy);
+  const showWeight = tokens.some((t) => t.weight);
+  const showActions = actions && actions.length > 0;
+
   return (
-    <Table>
+    <Table className={className}>
       <TableHeader>
         <TableRow>
           <TableHead>Token</TableHead>
-          <TableHead>Address</TableHead>
+          {showAddress && <TableHead>Address</TableHead>}
           <TableHead>Price</TableHead>
-          <TableHead>APY</TableHead>
-          <TableHead>Weight</TableHead>
+          {showApy && <TableHead>APY</TableHead>}
+          {showWeight && <TableHead>Weight</TableHead>}
+          {showActions && <TableHead className="text-right" />}
         </TableRow>
       </TableHeader>
       <TableBody>
-        {tokens.map((token) => (
-          <TableRow key={token.address}>
+        {tokens.map((token, i) => (
+          <TableRow key={`${token.symbol}-${token.address ?? token.price}`}>
             <TableCell>
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-2">
                 <TokenIcon
                   src={token.icon}
                   alt={token.symbol}
                   width={20}
                   height={20}
                 />
-                {token.symbol}
+                <span className="font-medium">{token.symbol}</span>
               </div>
             </TableCell>
-            <TableCell className="text-left">{token.address}</TableCell>
-            <TableCell className="text-left">
-              ${token.price.toFixed(2)}
-            </TableCell>
-            <TableCell className="text-green-500 text-left">
-              {token.apy.toFixed(2)}%
-            </TableCell>
-            <TableCell className="text-left">
-              {token.weight.toFixed(2)}%
-            </TableCell>
-            <TableCell>
-              <Button variant="ghost" size="sm">
-                <MoreHorizontal />
-              </Button>
-            </TableCell>
+            {showAddress && (
+              <TableCell className="text-muted-foreground font-mono text-xs">
+                {token.address}
+              </TableCell>
+            )}
+            <TableCell>{token.price}</TableCell>
+            {showApy && (
+              <TableCell className="text-emerald-500">{token.apy}</TableCell>
+            )}
+            {showWeight && (
+              <TableCell className="text-muted-foreground">
+                {token.weight}
+              </TableCell>
+            )}
+            {showActions && actions[i] && (
+              <TableCell className="text-right">{actions[i]}</TableCell>
+            )}
           </TableRow>
         ))}
       </TableBody>
@@ -102,4 +78,5 @@ const TokenTable = () => {
   );
 };
 
+export type { TokenTableProps };
 export { TokenTable };

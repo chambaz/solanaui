@@ -1,17 +1,60 @@
 ---
 title: Txn Table
-description: Txn Table description
+description: A table for displaying blockchain transactions with signature links, action badges, and token info
 ---
 
 <ComponentDemo>
-  <TxnTable />
+  <TxnTable
+    transactions={[
+      {
+        signature: "5UfD...3kPm",
+        time: "2 min ago",
+        action: "Swap",
+        token: "SOL",
+        tokenIcon: "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/So11111111111111111111111111111111111111112.png",
+        amount: "24.5 SOL",
+        value: "$3,982.72",
+      },
+      {
+        signature: "8mRx...7jKn",
+        time: "15 min ago",
+        action: "Transfer",
+        token: "USDC",
+        tokenIcon: "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v.png",
+        amount: "1,000 USDC",
+        value: "$1,000.00",
+      },
+      {
+        signature: "3vPq...9hLr",
+        time: "1 hr ago",
+        action: "Stake",
+        token: "JitoSOL",
+        tokenIcon: "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn.png",
+        amount: "100 SOL",
+        value: "$16,256.00",
+      },
+    ]}
+  />
 </ComponentDemo>
 
 ```tsx
 import { TxnTable } from "@/components/sol/txn-table";
 
 export function TxnTableDemo() {
-  return <TxnTable />;
+  return (
+    <TxnTable
+      transactions={[
+        {
+          signature: "5UfD...3kPm",
+          time: "2 min ago",
+          action: "Swap",
+          token: "SOL",
+          amount: "24.5 SOL",
+          value: "$3,982.72",
+        },
+      ]}
+    />
+  );
 }
 ```
 
@@ -26,7 +69,17 @@ export function TxnTableDemo() {
 ## Usage
 
 ```tsx
-<TxnTable />
+<TxnTable
+  transactions={[
+    {
+      signature: "5UfD...3kPm",
+      time: "2 min ago",
+      action: "Swap",
+      token: "SOL",
+      amount: "24.5 SOL",
+    },
+  ]}
+/>
 ```
 
 ## Source Code

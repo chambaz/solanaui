@@ -1,11 +1,11 @@
 "use client";
 
-import React from "react";
 import Image from "next/image";
-
+import React from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 
-import { Skeleton } from "@/components/ui/skeleton";
+type TokenIconProps = React.ComponentProps<typeof Image>;
 
 const TokenIcon = ({
   alt = "Token",
@@ -13,9 +13,9 @@ const TokenIcon = ({
   width,
   height,
   ...props
-}: React.ComponentProps<typeof Image>) => {
+}: TokenIconProps) => {
   const [status, setStatus] = React.useState<"loading" | "loaded" | "error">(
-    "loading"
+    "loading",
   );
 
   if (status === "error") {
@@ -24,7 +24,7 @@ const TokenIcon = ({
       <div
         className={cn(
           "rounded-full bg-muted inline-flex items-center justify-center font-medium text-muted-foreground",
-          className
+          className,
         )}
         style={{ width, height, fontSize }}
       >
@@ -46,7 +46,7 @@ const TokenIcon = ({
         className={cn(
           "rounded-full",
           status === "loading" && "opacity-0",
-          className
+          className,
         )}
         onLoad={() => setStatus("loaded")}
         onError={() => setStatus("error")}
@@ -58,4 +58,5 @@ const TokenIcon = ({
   );
 };
 
+export type { TokenIconProps };
 export { TokenIcon };

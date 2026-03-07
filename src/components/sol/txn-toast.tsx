@@ -1,26 +1,77 @@
 "use client";
 
+import {
+  CheckCircle2Icon,
+  ExternalLinkIcon,
+  Loader2Icon,
+  XCircleIcon,
+} from "lucide-react";
 import { toast } from "sonner";
 
-import { Button } from "@/components/ui/button";
+interface TxnToastProps {
+  title?: string;
+  description?: string;
+  signature?: string;
+  status?: "pending" | "confirmed" | "error";
+  explorerUrl?: string;
+}
 
-const TxnToast = () => {
-  return (
-    <Button
-      variant="outline"
-      onClick={() =>
-        toast("Event has been created", {
-          description: "Sunday, December 03, 2023 at 9:00 AM",
-          action: {
-            label: "Undo",
-            onClick: () => console.log("Undo"),
-          },
-        })
-      }
-    >
-      Show Toast
-    </Button>
-  );
+const statusConfig = {
+  pending: {
+    icon: <Loader2Icon className="size-4 animate-spin text-muted-foreground" />,
+    defaultTitle: "Transaction pending",
+    defaultDescription: "Waiting for confirmation...",
+  },
+  confirmed: {
+    icon: <CheckCircle2Icon className="size-4 text-emerald-500" />,
+    defaultTitle: "Transaction confirmed",
+    defaultDescription: "Your transaction was successful.",
+  },
+  error: {
+    icon: <XCircleIcon className="size-4 text-red-400" />,
+    defaultTitle: "Transaction failed",
+    defaultDescription: "Something went wrong. Please try again.",
+  },
 };
 
-export { TxnToast };
+const truncateSignature = (sig: string) => {
+  if (sig.length <= 12) return sig;
+  return `${sig.slice(0, 6)}...${sig.slice(-4)}`;
+};
+
+const txnToast = ({
+  title,
+  description,
+  signature,
+  status = "confirmed",
+  explorerUrl,
+}: TxnToastProps) => {
+  const config = statusConfig[status];
+  const resolvedExplorerUrl =
+    explorerUrl ??
+    (signature ? `https://solscan.io/tx/${signature}` : undefined);
+
+  return toast(title ?? config.defaultTitle, {
+    description: (
+      <div className="flex flex-col gap-1.5">
+        <span>{description ?? config.defaultDescription}</span>
+        {resolvedExplorerUrl && (
+          <a
+            href={resolvedExplorerUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
+          >
+            {signature ? truncateSignature(signature) : "View transaction"}
+            <ExternalLinkIcon className="size-3" />
+          </a>
+        )}
+      </div>
+    ),
+    icon: config.icon,
+    duration: status === "pending" ? Infinity : 5000,
+  });
+};
+
+export type { TxnToastProps };
+export { txnToast };

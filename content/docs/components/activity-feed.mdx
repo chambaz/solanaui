@@ -1,0 +1,80 @@
+---
+title: Activity Feed
+description: A compact event list for displaying recent activity like sales, listings, and transfers
+---
+
+<ComponentDemo>
+  <div className="max-w-lg mx-auto w-full">
+    <ActivityFeed
+      items={[
+        {
+          icon: "https://madlads.s3.us-west-2.amazonaws.com/4281.png",
+          title: "Mad Lad #4281 sold",
+          description: "Buyer: 7xKp...3mFn",
+          time: "2m ago",
+          value: "142.5 SOL",
+        },
+        {
+          icon: "https://madlads.s3.us-west-2.amazonaws.com/1337.png",
+          title: "Mad Lad #1337 listed",
+          description: "Seller: 9dVq...8hJr",
+          time: "8m ago",
+          value: "158.2 SOL",
+        },
+        {
+          icon: "https://madlads.s3.us-west-2.amazonaws.com/7892.png",
+          title: "Mad Lad #7892 sold",
+          description: "Buyer: 3kYm...2wBt",
+          time: "15m ago",
+          value: "135.0 SOL",
+        },
+      ]}
+    />
+  </div>
+</ComponentDemo>
+
+```tsx
+import { ActivityFeed } from "@/components/sol/activity-feed";
+
+export function ActivityFeedDemo() {
+  return (
+    <ActivityFeed
+      items={[
+        {
+          icon: "/nft.png",
+          title: "Mad Lad #4281 sold",
+          description: "Buyer: 7xKp...3mFn",
+          time: "2m ago",
+          value: "142.5 SOL",
+        },
+      ]}
+    />
+  );
+}
+```
+
+## Installation
+
+<Tabs items={["pnpm", "npm", "yarn"]}>
+  <Tab value="pnpm">pnpm dlx solanaui@latest add activity-feed</Tab>
+  <Tab value="npm">npx solanaui@latest add activity-feed</Tab>
+  <Tab value="yarn">yarn solanaui@latest add activity-feed</Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+<ActivityFeed
+  items={[
+    {
+      title: "Mad Lad #4281 sold",
+      time: "2m ago",
+      value: "142.5 SOL",
+    },
+  ]}
+/>
+```
+
+## Source Code
+
+<ComponentCode name="activity-feed" />

@@ -1,3 +1,6 @@
+import { ExternalLinkIcon } from "lucide-react";
+import { TokenIcon } from "@/components/sol/token-icon";
+import { Badge } from "@/components/ui/badge";
 import {
   Table,
   TableBody,
@@ -6,117 +9,98 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { TokenIcon } from "@/components/sol/token-icon";
+import { cn } from "@/lib/utils";
 
-const txns = [
-  {
-    signature: "5FCs...11t4j",
-    time: "16s ago",
-    action: "deposit",
-    address: "23jf...ad87",
-    token: {
-      icon: "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/So11111111111111111111111111111111111111112.png",
-      symbol: "SOL",
-    },
-    value: 1234,
-    valueUSD: 100,
-  },
-  {
-    signature: "5FCs...11t4j",
-    time: "16s ago",
-    action: "deposit",
-    address: "23jf...ad87",
-    token: {
-      icon: "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/So11111111111111111111111111111111111111112.png",
-      symbol: "SOL",
-    },
-    value: 1234,
-    valueUSD: 100,
-  },
-  {
-    signature: "5FCs...11t4j",
-    time: "16s ago",
-    action: "deposit",
-    address: "23jf...ad87",
-    token: {
-      icon: "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/So11111111111111111111111111111111111111112.png",
-      symbol: "SOL",
-    },
-    value: 1234,
-    valueUSD: 100,
-  },
-  {
-    signature: "5FCs...11t4j",
-    time: "16s ago",
-    action: "deposit",
-    address: "23jf...ad87",
-    token: {
-      icon: "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/So11111111111111111111111111111111111111112.png",
-      symbol: "SOL",
-    },
-    value: 1234,
-    valueUSD: 100,
-  },
-  {
-    signature: "5FCs...11t4j",
-    time: "16s ago",
-    action: "deposit",
-    address: "23jf...ad87",
-    token: {
-      icon: "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/So11111111111111111111111111111111111111112.png",
-      symbol: "SOL",
-    },
-    value: 1234,
-    valueUSD: 100,
-  },
-];
+interface TxnTableProps {
+  transactions: {
+    signature: string;
+    time: string;
+    action: string;
+    token: string;
+    tokenIcon?: string;
+    amount: string;
+    value?: string;
+    explorerUrl?: string;
+  }[];
+  className?: string;
+}
 
-const TxnTable = () => {
+const truncateSignature = (sig: string) => {
+  if (sig.length <= 12) return sig;
+  return `${sig.slice(0, 4)}...${sig.slice(-4)}`;
+};
+
+const TxnTable = ({ transactions, className }: TxnTableProps) => {
   return (
-    <Table>
+    <Table className={className}>
       <TableHeader>
         <TableRow>
-          <TableHead className="w-[100px]">Signature</TableHead>
+          <TableHead>Signature</TableHead>
           <TableHead>Time</TableHead>
           <TableHead>Action</TableHead>
-          <TableHead>Address</TableHead>
           <TableHead>Token</TableHead>
           <TableHead className="text-right">Amount</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {txns.map((txn) => (
-          <TableRow key={txn.signature}>
-            <TableCell className="font-medium">{txn.signature}</TableCell>
-            <TableCell>{txn.time}</TableCell>
-            <TableCell>{txn.action}</TableCell>
-            <TableCell>{txn.address}</TableCell>
-            <TableCell>
-              <div className="flex items-center gap-1.5">
-                <TokenIcon
-                  src={txn.token.icon}
-                  alt={txn.token.symbol}
-                  width={20}
-                  height={20}
-                />
-                {txn.token.symbol}
-              </div>
-            </TableCell>
-            <TableCell className="text-right">
-              <div className="flex flex-col items-end">
-                <span>
-                  {txn.value} {txn.token.symbol}
-                </span>
-                <span className="text-xs text-muted-foreground">
-                  ${txn.valueUSD.toFixed(2)}
-                </span>
-              </div>
-            </TableCell>
-          </TableRow>
-        ))}
+        {transactions.map((txn, i) => {
+          const explorerUrl =
+            txn.explorerUrl ?? `https://solscan.io/tx/${txn.signature}`;
+
+          return (
+            <TableRow key={`${txn.signature}-${i}`}>
+              <TableCell>
+                <a
+                  href={explorerUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={cn(
+                    "inline-flex items-center gap-1 font-mono text-xs",
+                    "text-muted-foreground hover:text-foreground transition-colors",
+                  )}
+                >
+                  {truncateSignature(txn.signature)}
+                  <ExternalLinkIcon className="size-3" />
+                </a>
+              </TableCell>
+              <TableCell className="text-muted-foreground text-sm">
+                {txn.time}
+              </TableCell>
+              <TableCell>
+                <Badge variant="secondary" className="capitalize text-xs">
+                  {txn.action}
+                </Badge>
+              </TableCell>
+              <TableCell>
+                <div className="flex items-center gap-1.5">
+                  {txn.tokenIcon && (
+                    <TokenIcon
+                      src={txn.tokenIcon}
+                      alt={txn.token}
+                      width={18}
+                      height={18}
+                    />
+                  )}
+                  <span className="font-medium">{txn.token}</span>
+                </div>
+              </TableCell>
+              <TableCell className="text-right">
+                <div className="flex flex-col items-end">
+                  <span className="font-medium">{txn.amount}</span>
+                  {txn.value && (
+                    <span className="text-xs text-muted-foreground">
+                      {txn.value}
+                    </span>
+                  )}
+                </div>
+              </TableCell>
+            </TableRow>
+          );
+        })}
       </TableBody>
     </Table>
   );
 };
 
+export type { TxnTableProps };
 export { TxnTable };

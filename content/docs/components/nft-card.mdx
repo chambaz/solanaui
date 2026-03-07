@@ -1,17 +1,31 @@
 ---
 title: NFT Card
-description: A card component for displaying NFT information
+description: A card component for displaying NFT artwork with collection info and price
 ---
 
 <ComponentDemo>
-  <NFTCard />
+  <div className="max-w-xs mx-auto">
+    <NFTCard
+      name="Mad Lad #4281"
+      image="https://madlads.s3.us-west-2.amazonaws.com/4281.png"
+      collection="Mad Lads"
+      price="142.5"
+    />
+  </div>
 </ComponentDemo>
 
 ```tsx
 import { NFTCard } from "@/components/sol/nft-card";
 
 export function NFTCardDemo() {
-  return <NFTCard />;
+  return (
+    <NFTCard
+      name="Mad Lad #4281"
+      image="https://madlads.s3.us-west-2.amazonaws.com/4281.png"
+      collection="Mad Lads"
+      price="142.5"
+    />
+  );
 }
 ```
 
@@ -26,7 +40,12 @@ export function NFTCardDemo() {
 ## Usage
 
 ```tsx
-<NFTCard />
+<NFTCard
+  name="Mad Lad #4281"
+  image="/nft.png"
+  collection="Mad Lads"
+  price="142.5"
+/>
 ```
 
 ## Source Code

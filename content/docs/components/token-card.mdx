@@ -1,17 +1,49 @@
 ---
 title: Token Card
-description: A card component for displaying token information
+description: A card component for displaying token information with price and sparkline chart
 ---
 
 <ComponentDemo>
-  <TokenCard />
+  <TokenCard
+    name="Solana"
+    symbol="SOL"
+    icon="https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/So11111111111111111111111111111111111111112.png"
+    price="$162.56"
+    description="Solana is a high-performance blockchain"
+    series={[
+      { time: "2025-01-01", value: 148.32 },
+      { time: "2025-01-02", value: 151.45 },
+      { time: "2025-01-03", value: 149.73 },
+      { time: "2025-01-04", value: 155.62 },
+      { time: "2025-01-05", value: 162.56 },
+    ]}
+  />
 </ComponentDemo>
 
 ```tsx
 import { TokenCard } from "@/components/sol/token-card";
+import { Button } from "@/components/ui/button";
 
 export function TokenCardDemo() {
-  return <TokenCard />;
+  return (
+    <TokenCard
+      name="Solana"
+      symbol="SOL"
+      icon="/sol.png"
+      price="$162.56"
+      series={[
+        { time: "2025-01-01", value: 148.32 },
+        { time: "2025-01-02", value: 151.45 },
+        { time: "2025-01-03", value: 155.62 },
+        { time: "2025-01-04", value: 162.56 },
+      ]}
+    >
+      <div className="grid grid-cols-2 gap-2 w-full">
+        <Button variant="secondary" size="sm">Buy</Button>
+        <Button variant="secondary" size="sm">Sell</Button>
+      </div>
+    </TokenCard>
+  );
 }
 ```
 
@@ -26,7 +58,12 @@ export function TokenCardDemo() {
 ## Usage
 
 ```tsx
-<TokenCard />
+<TokenCard
+  name="Solana"
+  symbol="SOL"
+  icon="/sol.png"
+  price="$162.56"
+/>
 ```
 
 ## Source Code

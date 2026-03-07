@@ -1,0 +1,96 @@
+---
+title: Trade Box
+description: An order form with trade direction, token input, leverage, and order details
+---
+
+<ComponentDemo>
+  <div className="max-w-sm mx-auto w-full">
+    <TradeBox
+      tokens={[
+        { icon: "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v.png", symbol: "USDC" },
+        { icon: "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/So11111111111111111111111111111111111111112.png", symbol: "SOL" },
+      ]}
+      defaultToken="USDC"
+      balance="4,812.50"
+      details={[
+        { label: "Est. Entry Price", value: "$162.56" },
+        { label: "Liquidation Price", value: "$132.45", className: "text-red-400" },
+        { label: "Fees", value: "0.05%" },
+      ]}
+    />
+  </div>
+</ComponentDemo>
+
+```tsx
+import { TradeBox } from "@/components/sol/trade-box";
+
+export function TradeBoxDemo() {
+  return (
+    <TradeBox
+      tokens={[
+        { icon: "/usdc.png", symbol: "USDC" },
+        { icon: "/sol.png", symbol: "SOL" },
+      ]}
+      defaultToken="USDC"
+      balance="4,812.50"
+      details={[
+        { label: "Est. Entry Price", value: "$162.56" },
+        { label: "Liquidation Price", value: "$132.45", className: "text-red-400" },
+        { label: "Fees", value: "0.05%" },
+      ]}
+    />
+  );
+}
+```
+
+## Installation
+
+<Tabs items={["pnpm", "npm", "yarn"]}>
+  <Tab value="pnpm">pnpm dlx solanaui@latest add trade-box</Tab>
+  <Tab value="npm">npx solanaui@latest add trade-box</Tab>
+  <Tab value="yarn">yarn solanaui@latest add trade-box</Tab>
+</Tabs>
+
+## Usage
+
+### With Leverage (Perps)
+
+```tsx
+<TradeBox
+  tokens={[{ icon: "/usdc.png", symbol: "USDC" }]}
+  defaultToken="USDC"
+  balance="4,812.50"
+  showLeverage={true}
+  leverageMin={1}
+  leverageMax={50}
+  leverageDefault={5}
+  details={[
+    { label: "Est. Entry Price", value: "$162.56" },
+    { label: "Liquidation Price", value: "$132.45", className: "text-red-400" },
+    { label: "Fees", value: "0.05%" },
+  ]}
+  submitLabel="Open Long"
+/>
+```
+
+### Without Leverage (Lending)
+
+```tsx
+<TradeBox
+  tokens={[{ icon: "/sol.png", symbol: "SOL" }]}
+  defaultToken="SOL"
+  balance="24.58"
+  labels={["Deposit", "Withdraw"]}
+  defaultSide="long"
+  showLeverage={false}
+  details={[
+    { label: "APY", value: "6.82%" },
+    { label: "Utilization", value: "78.4%" },
+  ]}
+  submitLabel="Deposit SOL"
+/>
+```
+
+## Source Code
+
+<ComponentCode name="trade-box" />

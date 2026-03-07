@@ -1,18 +1,33 @@
 ---
 title: Txn Toast
-description: A toast notification component for displaying transaction updates
+description: A toast notification function for displaying transaction status updates with explorer links
 ---
 
 <ComponentDemo>
-  <TxnToast />
+  <TxnToastDemo />
 </ComponentDemo>
 
 ```tsx
-import { TxnToast } from "@/components/sol/txn-toast";
+import { txnToast } from "@/components/sol/txn-toast";
 
-export function TxnToastDemo() {
-  return <TxnToast />;
-}
+// Show a confirmed transaction toast
+txnToast({
+  signature: "5UfDq3kPmE8yR4vN7bXjT2wZcA9fGhL6nKpQrS1dM8xY",
+  status: "confirmed",
+});
+
+// Show a pending transaction toast
+txnToast({
+  title: "Swapping SOL for USDC",
+  status: "pending",
+});
+
+// Show an error toast
+txnToast({
+  title: "Swap failed",
+  description: "Insufficient balance",
+  status: "error",
+});
 ```
 
 ## Installation
@@ -26,7 +41,34 @@ export function TxnToastDemo() {
 ## Usage
 
 ```tsx
-<TxnToast />
+import { txnToast } from "@/components/sol/txn-toast";
+
+// Confirmed - auto-generates explorer link from signature
+txnToast({
+  signature: "5UfDq3kPm...",
+  status: "confirmed",
+});
+
+// Pending - shows a spinner, stays visible until dismissed
+txnToast({
+  title: "Swapping SOL for USDC",
+  status: "pending",
+});
+
+// Error - red icon, auto-dismisses after 5s
+txnToast({
+  title: "Swap failed",
+  description: "Insufficient balance",
+  status: "error",
+});
+
+// Custom title + explorer URL
+txnToast({
+  title: "Staked 100 SOL",
+  signature: "5UfDq3kPm...",
+  explorerUrl: "https://solscan.io/tx/5UfDq3kPm...",
+  status: "confirmed",
+});
 ```
 
 ## Source Code

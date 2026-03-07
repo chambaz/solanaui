@@ -1,9 +1,8 @@
 "use client";
 
-import * as React from "react";
 import { Check, ChevronsUpDown } from "lucide-react";
-
-import { cn } from "@/lib/utils";
+import React from "react";
+import { TokenIcon } from "@/components/sol/token-icon";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -18,21 +17,30 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
 
-import { TokenIcon } from "@/components/sol/token-icon";
-
-type TokenComboboxProps = {
+interface TokenComboboxProps {
   tokens: {
     icon: string;
     symbol: string;
   }[];
-};
+  defaultValue?: string;
+  onSelect?: (token: { icon: string; symbol: string }) => void;
+  className?: string;
+}
 
-const TokenCombobox = ({ tokens }: TokenComboboxProps) => {
+const TokenCombobox = ({
+  tokens,
+  defaultValue,
+  onSelect,
+  className,
+}: TokenComboboxProps) => {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("");
+  const [value, setValue] = React.useState(defaultValue ?? "");
 
-  const activeToken = tokens.find((token) => token.symbol === value);
+  const activeToken = tokens.find(
+    (token) => token.symbol.toLowerCase() === value.toLowerCase(),
+  );
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -41,7 +49,7 @@ const TokenCombobox = ({ tokens }: TokenComboboxProps) => {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[200px] justify-between"
+          className={cn("shrink-0 justify-between", className)}
         >
           {activeToken ? (
             <div className="flex items-center gap-2.5">
@@ -70,8 +78,16 @@ const TokenCombobox = ({ tokens }: TokenComboboxProps) => {
                   key={token.symbol}
                   value={token.symbol}
                   onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue);
+                    const newValue = currentValue === value ? "" : currentValue;
+                    setValue(newValue);
                     setOpen(false);
+                    if (newValue) {
+                      const selected = tokens.find(
+                        (t) =>
+                          t.symbol.toLowerCase() === newValue.toLowerCase(),
+                      );
+                      if (selected) onSelect?.(selected);
+                    }
                   }}
                 >
                   <TokenIcon
@@ -84,7 +100,9 @@ const TokenCombobox = ({ tokens }: TokenComboboxProps) => {
                   <Check
                     className={cn(
                       "ml-auto",
-                      value === token.symbol ? "opacity-100" : "opacity-0"
+                      value.toLowerCase() === token.symbol.toLowerCase()
+                        ? "opacity-100"
+                        : "opacity-0",
                     )}
                   />
                 </CommandItem>

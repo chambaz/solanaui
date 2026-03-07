@@ -33,8 +33,13 @@ description: A combobox component for selecting tokens with search functionality
 ```tsx
 import { TokenCombobox } from "@/components/sol/token-combobox";
 
+const tokens = [
+  { icon: "/sol.png", symbol: "SOL" },
+  { icon: "/usdc.png", symbol: "USDC" },
+];
+
 export function TokenComboboxDemo() {
-  return <TokenCombobox />;
+  return <TokenCombobox tokens={tokens} />;
 }
 ```
 
@@ -49,7 +54,12 @@ export function TokenComboboxDemo() {
 ## Usage
 
 ```tsx
-<TokenCombobox />
+<TokenCombobox
+  tokens={[
+    { icon: "/sol.png", symbol: "SOL" },
+    { icon: "/usdc.png", symbol: "USDC" },
+  ]}
+/>
 ```
 
 ## Source Code

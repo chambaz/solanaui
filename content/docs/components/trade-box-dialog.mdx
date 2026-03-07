@@ -1,0 +1,69 @@
+---
+title: Trade Box Dialog
+description: A dialog wrapper around TradeBox for modal trading flows
+---
+
+<ComponentDemo>
+  <TradeBoxDialog
+    tokens={[
+      { icon: "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v.png", symbol: "USDC" },
+      { icon: "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/So11111111111111111111111111111111111111112.png", symbol: "SOL" },
+    ]}
+    defaultToken="USDC"
+    balance="4,812.50"
+    details={[
+      { label: "Est. Entry Price", value: "$162.56" },
+      { label: "Liquidation Price", value: "$132.45", className: "text-red-400" },
+      { label: "Fees", value: "0.05%" },
+    ]}
+    submitLabel="Open Long"
+  />
+</ComponentDemo>
+
+```tsx
+import { TradeBoxDialog } from "@/components/sol/trade-box-dialog";
+
+export function TradeBoxDialogDemo() {
+  return (
+    <TradeBoxDialog
+      trigger={<button>Trade</button>}
+      tokens={[
+        { icon: "/usdc.png", symbol: "USDC" },
+        { icon: "/sol.png", symbol: "SOL" },
+      ]}
+      defaultToken="USDC"
+      balance="4,812.50"
+      details={[
+        { label: "Est. Entry Price", value: "$162.56" },
+        { label: "Liquidation Price", value: "$132.45", className: "text-red-400" },
+        { label: "Fees", value: "0.05%" },
+      ]}
+      submitLabel="Open Long"
+    />
+  );
+}
+```
+
+## Installation
+
+<Tabs items={["pnpm", "npm", "yarn"]}>
+  <Tab value="pnpm">pnpm dlx solanaui@latest add trade-box-dialog</Tab>
+  <Tab value="npm">npx solanaui@latest add trade-box-dialog</Tab>
+  <Tab value="yarn">yarn solanaui@latest add trade-box-dialog</Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+<TradeBoxDialog
+  trigger={<button>Trade</button>}
+  tokens={[{ icon: "/usdc.png", symbol: "USDC" }]}
+  defaultToken="USDC"
+  balance="4,812.50"
+  submitLabel="Open Long"
+/>
+```
+
+## Source Code
+
+<ComponentCode name="trade-box-dialog" />

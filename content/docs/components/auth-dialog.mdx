@@ -1,6 +1,6 @@
 ---
 title: Auth Dialog
-description: Auth Dialog description
+description: A dialog wrapper around AuthCard for modal sign-in flows
 ---
 
 <ComponentDemo>
@@ -11,7 +11,7 @@ description: Auth Dialog description
 import { AuthDialog } from "@/components/sol/auth-dialog";
 
 export function AuthDialogDemo() {
-  return <AuthDialog />;
+  return <AuthDialog trigger={<button>Sign in</button>} />;
 }
 ```
 
@@ -26,7 +26,7 @@ export function AuthDialogDemo() {
 ## Usage
 
 ```tsx
-<AuthDialog />
+<AuthDialog trigger={<button>Sign in</button>} />
 ```
 
 ## Source Code

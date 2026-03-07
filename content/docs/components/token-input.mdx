@@ -1,11 +1,19 @@
 ---
 title: Token Input
-description: An input field for entering token amounts
+description: An input field for entering token amounts with a token selector and balance display
 ---
 
 <ComponentDemo>
   <div className="max-w-lg mx-auto w-full">
-    <TokenInput />
+    <TokenInput
+      tokens={[
+        { icon: "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/So11111111111111111111111111111111111111112.png", symbol: "SOL" },
+        { icon: "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v.png", symbol: "USDC" },
+      ]}
+      defaultToken="SOL"
+      balance="24.58"
+      usdValue="$3,996.73"
+    />
   </div>
 </ComponentDemo>
 
@@ -13,7 +21,16 @@ description: An input field for entering token amounts
 import { TokenInput } from "@/components/sol/token-input";
 
 export function TokenInputDemo() {
-  return <TokenInput />;
+  return (
+    <TokenInput
+      tokens={[
+        { icon: "/sol.png", symbol: "SOL" },
+        { icon: "/usdc.png", symbol: "USDC" },
+      ]}
+      balance="24.58"
+      usdValue="$3,996.73"
+    />
+  );
 }
 ```
 
@@ -28,7 +45,14 @@ export function TokenInputDemo() {
 ## Usage
 
 ```tsx
-<TokenInput />
+<TokenInput
+  tokens={[
+    { icon: "/sol.png", symbol: "SOL" },
+    { icon: "/usdc.png", symbol: "USDC" },
+  ]}
+  defaultToken="SOL"
+  balance="24.58"
+/>
 ```
 
 ## Source Code

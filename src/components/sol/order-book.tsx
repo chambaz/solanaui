@@ -1,14 +1,6 @@
-"use client";
+import { cn } from "@/lib/utils";
 
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  CardDescription,
-} from "@/components/ui/card";
-
-type OrderBookProps = {
+interface OrderBookProps {
   bids: {
     price: number;
     size: number;
@@ -17,123 +9,128 @@ type OrderBookProps = {
     price: number;
     size: number;
   }[];
+  className?: string;
+}
+
+const formatSize = (value: number) => {
+  if (value >= 1_000_000) return `${(value / 1_000_000).toFixed(2)}M`;
+  if (value >= 1_000) return `${(value / 1_000).toFixed(0)}K`;
+  return value.toFixed(0);
 };
 
-const OrderBook = ({ bids, asks }: OrderBookProps) => {
-  // Calculate spread
-  const highestBid = bids[0]?.price || 0;
-  const lowestAsk = asks[0]?.price || 0;
+const OrderBook = ({ bids, asks, className }: OrderBookProps) => {
+  if (bids.length === 0 && asks.length === 0) return null;
+
+  const highestBid = bids[0]?.price ?? 0;
+  const lowestAsk = asks[0]?.price ?? 0;
+  const midPrice =
+    bids.length > 0 && asks.length > 0
+      ? (highestBid + lowestAsk) / 2
+      : highestBid || lowestAsk;
   const spread = lowestAsk - highestBid;
-  const spreadPercent = ((spread / highestBid) * 100).toFixed(3);
+  const spreadPercent = highestBid > 0 ? (spread / highestBid) * 100 : 0;
 
-  // Get mid price
-  const midPrice = ((highestBid + lowestAsk) / 2).toFixed(3);
-
-  // Calculate cumulative depths for bids and asks
   let cumulativeBidSize = 0;
-  const bidDepths = bids.map((bid) => {
+  const bidTotals = bids.map((bid) => {
     cumulativeBidSize += bid.size;
     return cumulativeBidSize;
   });
 
   let cumulativeAskSize = 0;
-  const askDepths = asks.map((ask) => {
+  const askTotals = asks.map((ask) => {
     cumulativeAskSize += ask.size;
     return cumulativeAskSize;
   });
 
-  const maxBidDepth = Math.max(...bidDepths);
-  const maxAskDepth = Math.max(...askDepths);
+  const maxTotal = Math.max(
+    bidTotals[bidTotals.length - 1] || 0,
+    askTotals[askTotals.length - 1] || 0,
+  );
+
+  const reversedAsks = [...asks].reverse();
+  const reversedAskTotals = [...askTotals].reverse();
 
   return (
-    <Card className="w-full max-w-sm h-full p-0 gap-0 flex flex-col">
-      <CardHeader className="border-b px-4 py-4 [.border-b]:pb-4">
-        <CardTitle className="font-medium">Orderbook</CardTitle>
-        <CardDescription className="text-xs text-muted-foreground">
-          The orderbook is a list of buy and sell orders for a given token.
-        </CardDescription>
-      </CardHeader>
+    <div
+      className={cn(
+        "w-full max-w-sm flex flex-col overflow-hidden rounded-lg border bg-card text-card-foreground",
+        className,
+      )}
+    >
+      {/* Column headers */}
+      <div className="grid grid-cols-3 px-3 py-2 text-xs text-muted-foreground border-b">
+        <span>Price</span>
+        <span className="text-right">Size</span>
+        <span className="text-right">Total</span>
+      </div>
 
-      <CardContent className="p-0 flex-1 flex flex-col overflow-hidden">
-        {/* Mid Price & Spread */}
-        <div className="px-4 py-3 border-b bg-muted/50">
-          <div className="flex items-center justify-between">
-            <div className="text-2xl font-medium text-green-500">
-              {midPrice}
-            </div>
-            <div className="text-right space-y-0.5">
-              <div className="text-xs text-muted-foreground">Spread:</div>
-              <div className="text-xs text-muted-foreground">
-                ${spread.toFixed(2)} ({spreadPercent}%)
+      {/* Asks (reversed so lowest ask is at bottom, near spread) */}
+      <div className="flex flex-col overflow-auto">
+        {reversedAsks.map((ask, i) => {
+          const total = reversedAskTotals[i];
+          const depth = maxTotal > 0 ? (total / maxTotal) * 100 : 0;
+          return (
+            <div key={`ask-${ask.price}`} className="relative">
+              <div
+                className="absolute right-0 top-0 bottom-0 bg-red-400/10"
+                style={{ width: `${depth}%` }}
+              />
+              <div className="relative grid grid-cols-3 px-3 py-1 text-xs">
+                <span className="text-red-400 font-medium tabular-nums">
+                  {ask.price.toFixed(2)}
+                </span>
+                <span className="text-right text-muted-foreground tabular-nums">
+                  {formatSize(ask.size)}
+                </span>
+                <span className="text-right text-muted-foreground tabular-nums">
+                  {formatSize(total)}
+                </span>
               </div>
             </div>
-          </div>
-        </div>
+          );
+        })}
+      </div>
 
-        {/* Column Headers */}
-        <div className="grid grid-cols-2 border-b">
-          <div className="grid grid-cols-2 gap-2 px-4 py-2 text-xs text-muted-foreground">
-            <div>Size (USD)</div>
-            <div className="text-center">Price</div>
-          </div>
-          <div className="grid grid-cols-2 gap-2 px-4 py-2 text-xs text-muted-foreground border-l">
-            <div className="text-center">Price</div>
-            <div className="text-right">Size (USD)</div>
-          </div>
-        </div>
-        <div className="grid grid-cols-2 flex-1 overflow-hidden">
-          {/* Bids (Green) - Left */}
-          <div className="overflow-auto">
-            {bids.map((bid, i) => {
-              const depth = (bidDepths[i] / maxBidDepth) * 100;
-              return (
-                <div key={`bid-${i}`} className="relative">
-                  {/* Depth bar - aligned to right (center divider) */}
-                  <div
-                    className="absolute right-0 top-0 bottom-0 bg-green-500/15"
-                    style={{ width: `${depth}%` }}
-                  />
-                  {/* Content */}
-                  <div className="relative grid grid-cols-2 gap-2 px-4 py-1.5 text-xs">
-                    <div className="text-muted-foreground">
-                      {(bid.size / 1000).toFixed(1)}K
-                    </div>
-                    <div className="text-center text-green-500">
-                      {bid.price.toFixed(3)}
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+      {/* Spread / mid price */}
+      <div className="grid grid-cols-3 px-3 py-2 border-y">
+        <span className="text-lg font-semibold text-emerald-500 tabular-nums">
+          {midPrice.toFixed(2)}
+        </span>
+        <span className="text-right text-xs text-muted-foreground self-center">
+          Spread
+        </span>
+        <span className="text-right text-xs text-muted-foreground self-center tabular-nums">
+          {spread.toFixed(2)} ({spreadPercent.toFixed(3)}%)
+        </span>
+      </div>
 
-          {/* Asks (Red) - Right */}
-          <div className="overflow-auto border-l">
-            {asks.map((ask, i) => {
-              const depth = (askDepths[i] / maxAskDepth) * 100;
-              return (
-                <div key={`ask-${i}`} className="relative">
-                  {/* Depth bar - aligned to left (center divider) */}
-                  <div
-                    className="absolute left-0 top-0 bottom-0 bg-red-500/15"
-                    style={{ width: `${depth}%` }}
-                  />
-                  {/* Content */}
-                  <div className="relative grid grid-cols-2 gap-2 px-4 py-1.5 text-xs">
-                    <div className="text-center text-red-500">
-                      {ask.price.toFixed(3)}
-                    </div>
-                    <div className="text-right text-muted-foreground">
-                      {(ask.size / 1000).toFixed(1)}K
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+      {/* Bids */}
+      <div className="flex flex-col overflow-auto">
+        {bids.map((bid, i) => {
+          const total = bidTotals[i];
+          const depth = maxTotal > 0 ? (total / maxTotal) * 100 : 0;
+          return (
+            <div key={`bid-${bid.price}`} className="relative">
+              <div
+                className="absolute right-0 top-0 bottom-0 bg-emerald-500/10"
+                style={{ width: `${depth}%` }}
+              />
+              <div className="relative grid grid-cols-3 px-3 py-1 text-xs">
+                <span className="text-emerald-500 font-medium tabular-nums">
+                  {bid.price.toFixed(2)}
+                </span>
+                <span className="text-right text-muted-foreground tabular-nums">
+                  {formatSize(bid.size)}
+                </span>
+                <span className="text-right text-muted-foreground tabular-nums">
+                  {formatSize(total)}
+                </span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
   );
 };
 

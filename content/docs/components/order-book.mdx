@@ -1,57 +1,39 @@
 ---
 title: Order Book
-description: A live orderbook component displaying bids and asks
+description: A vertical orderbook displaying bids and asks with cumulative depth
 ---
 
 <ComponentDemo>
-  <div className="max-h-[400px]">
-    <OrderBook
-      bids={[
-        { price: 157.097, size: 204000 },
-        { price: 157.096, size: 10000 },
-        { price: 157.095, size: 20000 },
-        { price: 157.092, size: 50000 },
-        { price: 157.083, size: 155000 },
-        { price: 157.071, size: 95000 },
-        { price: 157.065, size: 100000 },
-        { price: 157.058, size: 155000 },
-        { price: 157.045, size: 155000 },
-        { price: 157.041, size: 8000 },
-        { price: 157.032, size: 120000 },
-        { price: 157.019, size: 180000 },
-        { price: 157.007, size: 90000 },
-        { price: 156.999, size: 500 },
-        { price: 156.994, size: 125000 },
-        { price: 156.981, size: 170000 },
-        { price: 156.968, size: 85000 },
-        { price: 156.965, size: 16000 },
-        { price: 156.955, size: 65000 },
-        { price: 156.943, size: 140000 },
-      ]}
-      asks={[
-        { price: 157.146, size: 15000 },
-        { price: 157.148, size: 20000 },
-        { price: 157.15, size: 50000 },
-        { price: 157.16, size: 135000 },
-        { price: 157.174, size: 195000 },
-        { price: 157.176, size: 5000 },
-        { price: 157.188, size: 110000 },
-        { price: 157.191, size: 40000 },
-        { price: 157.192, size: 45000 },
-        { price: 157.196, size: 50000 },
-        { price: 157.2, size: 50000 },
-        { price: 157.202, size: 171000 },
-        { price: 157.216, size: 171000 },
-        { price: 157.217, size: 500 },
-        { price: 157.23, size: 171000 },
-        { price: 157.231, size: 50000 },
-        { price: 157.237, size: 6000 },
-        { price: 157.244, size: 171000 },
-        { price: 157.258, size: 171000 },
-        { price: 157.273, size: 171000 },
-      ]}
-    />
-  </div>
+  <OrderBook
+    bids={[
+      { price: 162.55, size: 12400 },
+      { price: 162.53, size: 28100 },
+      { price: 162.50, size: 45300 },
+      { price: 162.48, size: 18700 },
+      { price: 162.45, size: 62500 },
+      { price: 162.42, size: 34200 },
+      { price: 162.40, size: 51800 },
+      { price: 162.38, size: 22300 },
+      { price: 162.35, size: 41600 },
+      { price: 162.32, size: 58900 },
+      { price: 162.29, size: 15200 },
+      { price: 162.26, size: 37400 },
+    ]}
+    asks={[
+      { price: 162.57, size: 15800 },
+      { price: 162.59, size: 31200 },
+      { price: 162.62, size: 42100 },
+      { price: 162.65, size: 19500 },
+      { price: 162.68, size: 55700 },
+      { price: 162.71, size: 28400 },
+      { price: 162.74, size: 47600 },
+      { price: 162.77, size: 36100 },
+      { price: 162.80, size: 22800 },
+      { price: 162.83, size: 44500 },
+      { price: 162.86, size: 18300 },
+      { price: 162.89, size: 39700 },
+    ]}
+  />
 </ComponentDemo>
 
 ```tsx
@@ -59,15 +41,19 @@ import { OrderBook } from "@/components/sol/order-book";
 
 export function OrderBookDemo() {
   const bids = [
-    { price: 157.097, size: 204000 },
-    { price: 157.096, size: 9990 },
-    { price: 157.095, size: 19900 },
+    { price: 162.55, size: 12400 },
+    { price: 162.53, size: 28100 },
+    { price: 162.50, size: 45300 },
+    { price: 162.48, size: 18700 },
+    { price: 162.45, size: 62500 },
   ];
 
   const asks = [
-    { price: 157.146, size: 14900 },
-    { price: 157.148, size: 19900 },
-    { price: 157.15, size: 49900 },
+    { price: 162.57, size: 15800 },
+    { price: 162.59, size: 31200 },
+    { price: 162.62, size: 42100 },
+    { price: 162.65, size: 19500 },
+    { price: 162.68, size: 55700 },
   ];
 
   return <OrderBook bids={bids} asks={asks} />;
@@ -85,7 +71,18 @@ export function OrderBookDemo() {
 ## Usage
 
 ```tsx
-<OrderBook />
+<OrderBook
+  bids={[
+    { price: 162.55, size: 12400 },
+    { price: 162.53, size: 28100 },
+    { price: 162.50, size: 45300 },
+  ]}
+  asks={[
+    { price: 162.57, size: 15800 },
+    { price: 162.59, size: 31200 },
+    { price: 162.62, size: 42100 },
+  ]}
+/>
 ```
 
 ## Source Code

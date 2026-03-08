@@ -92,7 +92,7 @@ interface ActionBoxProps {
     name: "AddressDisplay",
     file: "address-display",
     description:
-      "A truncated Solana address with copy-to-clipboard and optional explorer link.",
+      "A truncated Solana address with copy-to-clipboard and optional explorer link. The explorerUrl prop is a base URL (e.g. https://solscan.io/account) and the address is appended automatically.",
     props: `interface AddressDisplayProps {
   address: string;
   truncate?: boolean;
@@ -103,7 +103,7 @@ interface ActionBoxProps {
 }`,
     usage: `<AddressDisplay
   address="7xKpR4nm3kW9vBzL5hQd2mFnZq8gT4pYx9eRwVb3mKs"
-  explorerUrl="https://solscan.io/account/7xKpR4nm3kW9vBzL5hQd2mFnZq8gT4pYx9eRwVb3mKs"
+  explorerUrl="https://solscan.io/account"
 />`,
   },
   {

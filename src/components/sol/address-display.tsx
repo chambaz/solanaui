@@ -43,23 +43,15 @@ const AddressDisplay = ({
   };
 
   const displayed = formatAddress(address, truncate, truncateChars);
+  const fullUrl = explorerUrl
+    ? `${explorerUrl.replace(/\/+$/, "")}/${address}`
+    : undefined;
 
   return (
     <span className={cn("inline-flex items-center gap-1.5", className)}>
-      {explorerUrl ? (
-        <a
-          href={explorerUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="font-mono text-sm text-muted-foreground hover:text-foreground transition-colors"
-        >
-          {displayed}
-        </a>
-      ) : (
-        <span className="font-mono text-sm text-muted-foreground">
-          {displayed}
-        </span>
-      )}
+      <span className="font-mono text-sm text-muted-foreground">
+        {displayed}
+      </span>
       {copyable && (
         <button
           type="button"
@@ -74,8 +66,16 @@ const AddressDisplay = ({
           )}
         </button>
       )}
-      {explorerUrl && (
-        <ExternalLinkIcon className="size-3 text-muted-foreground" />
+      {fullUrl && (
+        <a
+          href={fullUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-muted-foreground hover:text-foreground transition-colors"
+          aria-label="View in explorer"
+        >
+          <ExternalLinkIcon className="size-3.5" />
+        </a>
       )}
     </span>
   );

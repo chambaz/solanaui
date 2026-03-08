@@ -1,6 +1,6 @@
 ---
 title: Trade Box
-description: An order form with trade direction, token input, leverage, and order details
+description: A perps/margin trading form with long/short toggle, token input, leverage slider, and order details
 ---
 
 <ComponentDemo>
@@ -58,17 +58,15 @@ export function TradeBoxDemo() {
 
 ## Usage
 
-### With Leverage (Perps)
+TradeBox is purpose-built for perpetuals and margin trading. It always includes long/short toggle buttons and a leverage slider.
+
+For non-trading actions like staking, lending, depositing, or bridging, use [ActionBox](/docs/components/action-box) instead.
 
 ```tsx
-const USDC_ICON =
-  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png";
-
 <TradeBox
   tokens={[{ icon: USDC_ICON, symbol: "USDC" }]}
   defaultToken="USDC"
   balance="4,812.50"
-  showLeverage={true}
   leverageMin={1}
   leverageMax={50}
   leverageDefault={5}
@@ -81,24 +79,16 @@ const USDC_ICON =
 />
 ```
 
-### Without Leverage (Lending)
+### Custom Labels
 
 ```tsx
-const SOL_ICON =
-  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png";
-
 <TradeBox
   tokens={[{ icon: SOL_ICON, symbol: "SOL" }]}
   defaultToken="SOL"
-  balance="24.58"
-  labels={["Deposit", "Withdraw"]}
+  labels={["Buy", "Sell"]}
   defaultSide="long"
-  showLeverage={false}
-  details={[
-    { label: "APY", value: "6.82%" },
-    { label: "Utilization", value: "78.4%" },
-  ]}
-  submitLabel="Deposit SOL"
+  leverageMax={20}
+  submitLabel="Place Order"
 />
 ```
 

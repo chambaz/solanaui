@@ -1,13 +1,56 @@
 ---
 title: Get Started
-description: Your first document
+description: Get started with SolanaUI
 ---
 
-Welcome to the docs! You can start writing documents in `/content/docs`.
+SolanaUI is a component library for building Solana app interfaces. It provides 30+ production-ready components covering swaps, trading, lending, NFTs, wallets, and more -- designed for both human developers and AI coding agents.
 
-## What is Next?
+## AI Skill (Recommended)
+
+The fastest way to build with SolanaUI is to install the AI skill and let your coding agent handle the rest.
+
+```bash
+npx skills add chambaz/solanaui
+```
+
+This gives your agent (Claude Code, Cursor, Windsurf, etc.) full knowledge of every component, prop interface, composition pattern, and token image URL. Just describe the UI you want and your agent will generate it.
+
+See the [AI Skill](/docs/skill) page for more details including manual installation.
+
+## Manual Component Installation
+
+Install individual components directly into your project:
+
+<Tabs items={["pnpm", "npm", "yarn"]}>
+  <Tab value="pnpm">
+    ```bash
+    pnpm dlx solanaui@latest add <component-name>
+    ```
+  </Tab>
+  <Tab value="npm">
+    ```bash
+    npx solanaui@latest add <component-name>
+    ```
+  </Tab>
+  <Tab value="yarn">
+    ```bash
+    yarn solanaui@latest add <component-name>
+    ```
+  </Tab>
+</Tabs>
+
+For example, to add the SwapBox component:
+
+```bash
+pnpm dlx solanaui@latest add swap-box
+```
+
+Browse all available components in the [Components](/docs/components) reference.
+
+## Explore
 
 <Cards>
-  <Card title="Learn more about Next.js" href="https://nextjs.org/docs" />
-  <Card title="Learn more about Fumadocs" href="https://fumadocs.dev" />
+  <Card title="AI Skill" href="/docs/skill" />
+  <Card title="Components" href="/docs/components" />
+  <Card title="Examples" href="/docs/examples" />
 </Cards>

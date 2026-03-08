@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { AIBuilder } from "@/components/builder/ai-builder";
 
 export default function HomePage() {
@@ -6,30 +5,19 @@ export default function HomePage() {
     <div className="mx-auto flex w-full max-w-[1400px] flex-1 flex-col px-4 py-12">
       {/* Hero */}
       <div className="mb-12 text-center">
+        <img
+          src="/solanaui-logo.png"
+          alt="SolanaUI"
+          width={80}
+          height={80}
+          className="mx-auto mb-4"
+        />
         <h1 className="mb-3 text-4xl font-bold tracking-tight">SolanaUI</h1>
         <p className="mx-auto max-w-xl text-lg text-muted-foreground">
-          Beautiful, production-ready UI components for Solana apps. Describe
-          what you want to build and watch it come to life.
+          UI tooling for Solana builders and agents
         </p>
-        <div className="mt-4 flex items-center justify-center gap-4 text-sm">
-          <Link
-            href="/docs"
-            className="font-medium text-foreground underline underline-offset-4"
-          >
-            Documentation
-          </Link>
-          <Link
-            href="/docs/components"
-            className="font-medium text-muted-foreground underline underline-offset-4 hover:text-foreground"
-          >
-            Components
-          </Link>
-          <Link
-            href="/examples/swap"
-            className="font-medium text-muted-foreground underline underline-offset-4 hover:text-foreground"
-          >
-            Examples
-          </Link>
+        <div className="mt-4 inline-flex items-center rounded-lg border border-border bg-muted/50 px-4 py-2 font-mono text-sm text-foreground">
+          npx skills add chambaz/solanaui
         </div>
       </div>
 

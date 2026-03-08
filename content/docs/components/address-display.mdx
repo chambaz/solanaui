@@ -1,0 +1,72 @@
+---
+title: Address Display
+description: A truncated address display with copy-to-clipboard and optional explorer link
+---
+
+<ComponentDemo>
+  <div className="flex flex-col gap-4 items-start">
+    <AddressDisplay
+      address="7xKpR4nm3kW9vBzL5hQd2mFnZq8gT4pYx9eRwVb3mKs"
+    />
+    <AddressDisplay
+      address="7xKpR4nm3kW9vBzL5hQd2mFnZq8gT4pYx9eRwVb3mKs"
+      explorerUrl="https://solscan.io/account/7xKpR4nm3kW9vBzL5hQd2mFnZq8gT4pYx9eRwVb3mKs"
+    />
+    <AddressDisplay
+      address="7xKpR4nm3kW9vBzL5hQd2mFnZq8gT4pYx9eRwVb3mKs"
+      truncateChars={[6, 6]}
+      explorerUrl="https://solscan.io/account/7xKpR4nm3kW9vBzL5hQd2mFnZq8gT4pYx9eRwVb3mKs"
+    />
+  </div>
+</ComponentDemo>
+
+```tsx
+import { AddressDisplay } from "@/components/sol/address-display";
+
+export function AddressDisplayDemo() {
+  return (
+    <AddressDisplay
+      address="7xKpR4nm3kW9vBzL5hQd2mFnZq8gT4pYx9eRwVb3mKs"
+      explorerUrl="https://solscan.io/account/7xKpR4nm3kW9vBzL5hQd2mFnZq8gT4pYx9eRwVb3mKs"
+    />
+  );
+}
+```
+
+## Installation
+
+<Tabs items={["pnpm", "npm", "yarn"]}>
+  <Tab value="pnpm">pnpm dlx solanaui@latest add address-display</Tab>
+  <Tab value="npm">npx solanaui@latest add address-display</Tab>
+  <Tab value="yarn">yarn solanaui@latest add address-display</Tab>
+</Tabs>
+
+## Usage
+
+### Basic
+
+```tsx
+<AddressDisplay address="7xKpR4nm3kW9vBzL5hQd2mFnZq8gT4pYx9eRwVb3mKs" />
+```
+
+### With Explorer Link
+
+```tsx
+<AddressDisplay
+  address="7xKpR4nm3kW9vBzL5hQd2mFnZq8gT4pYx9eRwVb3mKs"
+  explorerUrl="https://solscan.io/account/7xKpR4nm3kW9vBzL5hQd2mFnZq8gT4pYx9eRwVb3mKs"
+/>
+```
+
+### Custom Truncation
+
+```tsx
+<AddressDisplay
+  address="7xKpR4nm3kW9vBzL5hQd2mFnZq8gT4pYx9eRwVb3mKs"
+  truncateChars={[8, 8]}
+/>
+```
+
+## Source Code
+
+<ComponentCode name="address-display" />

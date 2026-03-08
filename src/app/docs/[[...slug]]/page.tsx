@@ -8,24 +8,29 @@ import {
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { TxnToastDemo } from "@/components/docs/txn-toast-demo";
+import { ActionBox } from "@/components/sol/action-box";
+import { ActionBoxDialog } from "@/components/sol/action-box-dialog";
 import { ActivityFeed } from "@/components/sol/activity-feed";
+import { AddressDisplay } from "@/components/sol/address-display";
 import { AuthCard } from "@/components/sol/auth-card";
 import { AuthDialog } from "@/components/sol/auth-dialog";
 import { HealthBar } from "@/components/sol/health-bar";
 import { LeverageSlider } from "@/components/sol/leverage-slider";
 import { NFTCard } from "@/components/sol/nft-card";
 import { OrderBook } from "@/components/sol/order-book";
+import { PoolCard } from "@/components/sol/pool-card";
+import { PoolTable } from "@/components/sol/pool-table";
 import { PositionCard } from "@/components/sol/position-card";
 import { PositionTable } from "@/components/sol/position-table";
 import { PriceChart } from "@/components/sol/price-chart";
 import { SparklineChart } from "@/components/sol/sparkline-chart";
 import { StatCard } from "@/components/sol/stat-card";
-import { TokenCard } from "@/components/sol/token-card";
+import { SwapBox } from "@/components/sol/swap-box";
 import { TokenCombobox } from "@/components/sol/token-combobox";
 import { TokenCommand } from "@/components/sol/token-command";
 import { TokenIcon } from "@/components/sol/token-icon";
+import { TokenIconGroup } from "@/components/sol/token-icon-group";
 import { TokenInput } from "@/components/sol/token-input";
-import { TokenTable } from "@/components/sol/token-table";
 import { TradeBox } from "@/components/sol/trade-box";
 import { TradeBoxDialog } from "@/components/sol/trade-box-dialog";
 import { TradeButtons } from "@/components/sol/trade-buttons";
@@ -53,33 +58,38 @@ export default async function Page(props: PageProps<"/docs/[[...slug]]">) {
           components={getMDXComponents({
             // this allows you to link to other pages with relative file paths
             a: createRelativeLink(source, page),
-            AuthDialog,
+            ActionBox,
+            ActionBoxDialog,
+            ActivityFeed,
+            AddressDisplay,
             AuthCard,
+            AuthDialog,
+            Button,
+            HealthBar,
             LeverageSlider,
-            TokenCard,
             NFTCard,
-            TokenCombobox,
-            TokenCommand,
-            TokenIcon,
-            TokenInput,
-            TokenTable,
-            TrendBadge,
-            WalletSheet,
-            TradeChart,
-            SparklineChart,
             OrderBook,
+            PoolCard,
+            PoolTable,
             PositionCard,
             PositionTable,
             PriceChart,
-            TxnTable,
+            SparklineChart,
+            StatCard,
+            SwapBox,
+            TokenCombobox,
+            TokenCommand,
+            TokenIcon,
+            TokenIconGroup,
+            TokenInput,
             TradeBox,
             TradeBoxDialog,
             TradeButtons,
-            ActivityFeed,
-            Button,
-            HealthBar,
-            StatCard,
+            TradeChart,
+            TrendBadge,
+            TxnTable,
             TxnToastDemo,
+            WalletSheet,
           })}
         />
       </DocsBody>

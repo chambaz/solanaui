@@ -2,14 +2,13 @@
 
 import {
   ArrowUpIcon,
-  CheckIcon,
-  CopyIcon,
   DollarSignIcon,
   QrCodeIcon,
   RepeatIcon,
   WalletIcon,
 } from "lucide-react";
-import React from "react";
+import type React from "react";
+import { AddressDisplay } from "@/components/sol/address-display";
 import { TokenIcon } from "@/components/sol/token-icon";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -64,19 +63,6 @@ const WalletSheet = ({
   trigger,
   className,
 }: WalletSheetProps) => {
-  const [copied, setCopied] = React.useState(false);
-
-  const handleCopy = async () => {
-    if (!address) return;
-    try {
-      await navigator.clipboard.writeText(address);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      console.error("Failed to copy address to clipboard");
-    }
-  };
-
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -90,22 +76,8 @@ const WalletSheet = ({
       <SheetContent className={cn("flex flex-col p-0 gap-0", className)}>
         {/* Header: address + copy */}
         {address && (
-          <div className="flex items-center justify-center gap-2 pt-6 pb-2 px-6">
-            <span className="font-mono text-sm text-muted-foreground">
-              {truncateAddress(address)}
-            </span>
-            <button
-              type="button"
-              onClick={handleCopy}
-              className="text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
-              aria-label="Copy address"
-            >
-              {copied ? (
-                <CheckIcon className="size-3.5 text-emerald-500" />
-              ) : (
-                <CopyIcon className="size-3.5" />
-              )}
-            </button>
+          <div className="flex items-center justify-center pt-6 pb-2 px-6">
+            <AddressDisplay address={address} />
           </div>
         )}
 

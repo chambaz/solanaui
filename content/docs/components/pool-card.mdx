@@ -1,0 +1,162 @@
+---
+title: Pool Card
+description: A versatile card for displaying a single token or multi-token pool with metrics, sparkline, and action slot
+---
+
+<ComponentDemo>
+  <div className="grid grid-cols-2 gap-4">
+    <PoolCard
+      tokens={[
+        { icon: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png", symbol: "SOL" },
+      ]}
+      name="Solana"
+      price="$162.56"
+      description="6.82% APY"
+      series={[
+        { time: "2026-01-01", value: 148.2 },
+        { time: "2026-01-02", value: 151.4 },
+        { time: "2026-01-03", value: 149.8 },
+        { time: "2026-01-04", value: 153.6 },
+        { time: "2026-01-05", value: 156.1 },
+        { time: "2026-01-06", value: 154.3 },
+        { time: "2026-01-07", value: 158.9 },
+        { time: "2026-01-08", value: 157.2 },
+        { time: "2026-01-09", value: 160.4 },
+        { time: "2026-01-10", value: 162.56 },
+      ]}
+    >
+      <TrendBadge>+9.69%</TrendBadge>
+    </PoolCard>
+    <PoolCard
+      tokens={[
+        { icon: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png", symbol: "SOL" },
+        { icon: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png", symbol: "USDC" },
+      ]}
+      metrics={[
+        { label: "TVL", value: "$245.8M" },
+        { label: "Volume (24h)", value: "$18.2M" },
+        { label: "APY", value: "12.4%", className: "text-emerald-500" },
+        { label: "Fee", value: "0.25%" },
+      ]}
+    >
+      <Button variant="outline" size="sm" className="w-full">Add Liquidity</Button>
+    </PoolCard>
+  </div>
+</ComponentDemo>
+
+```tsx
+import { PoolCard } from "@/components/sol/pool-card";
+import { TrendBadge } from "@/components/sol/trend-badge";
+import { Button } from "@/components/ui/button";
+
+const SOL_ICON =
+  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png";
+const USDC_ICON =
+  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png";
+
+export function PoolCardDemo() {
+  return (
+    <div className="grid grid-cols-2 gap-4">
+      {/* Single token */}
+      <PoolCard
+        tokens={[{ icon: SOL_ICON, symbol: "SOL" }]}
+        name="Solana"
+        price="$162.56"
+        description="6.82% APY"
+        series={SOL_SPARKLINE}
+      >
+        <TrendBadge>+9.69%</TrendBadge>
+      </PoolCard>
+
+      {/* Multi-token pool */}
+      <PoolCard
+        tokens={[
+          { icon: SOL_ICON, symbol: "SOL" },
+          { icon: USDC_ICON, symbol: "USDC" },
+        ]}
+        metrics={[
+          { label: "TVL", value: "$245.8M" },
+          { label: "Volume (24h)", value: "$18.2M" },
+          { label: "APY", value: "12.4%", className: "text-emerald-500" },
+          { label: "Fee", value: "0.25%" },
+        ]}
+      >
+        <Button variant="outline" size="sm" className="w-full">
+          Add Liquidity
+        </Button>
+      </PoolCard>
+    </div>
+  );
+}
+```
+
+## Installation
+
+<Tabs items={["pnpm", "npm", "yarn"]}>
+  <Tab value="pnpm">pnpm dlx solanaui@latest add pool-card</Tab>
+  <Tab value="npm">npx solanaui@latest add pool-card</Tab>
+  <Tab value="yarn">yarn solanaui@latest add pool-card</Tab>
+</Tabs>
+
+## Usage
+
+### Single Token
+
+Display a single asset with price, description, and sparkline chart.
+
+```tsx
+<PoolCard
+  tokens={[{ icon: SOL_ICON, symbol: "SOL" }]}
+  name="Solana"
+  price="$162.56"
+  description="6.82% APY"
+  series={SOL_SPARKLINE}
+>
+  <TrendBadge>+9.69%</TrendBadge>
+</PoolCard>
+```
+
+### Multi-Token Pool with Metrics
+
+Display a liquidity pool with overlapping token icons and a metrics grid.
+
+```tsx
+<PoolCard
+  tokens={[
+    { icon: SOL_ICON, symbol: "SOL" },
+    { icon: USDC_ICON, symbol: "USDC" },
+  ]}
+  metrics={[
+    { label: "TVL", value: "$245.8M" },
+    { label: "Volume (24h)", value: "$18.2M" },
+    { label: "APY", value: "12.4%", className: "text-emerald-500" },
+    { label: "Fee", value: "0.25%" },
+  ]}
+>
+  <Button variant="outline" size="sm" className="w-full">
+    Add Liquidity
+  </Button>
+</PoolCard>
+```
+
+### Custom Name
+
+Override the auto-generated name (defaults to joining token symbols with "/").
+
+```tsx
+<PoolCard
+  tokens={[
+    { icon: SOL_ICON, symbol: "SOL" },
+    { icon: USDC_ICON, symbol: "USDC" },
+  ]}
+  name="SOL-USDC Concentrated"
+  metrics={[
+    { label: "TVL", value: "$245.8M" },
+    { label: "APY", value: "12.4%", className: "text-emerald-500" },
+  ]}
+/>
+```
+
+## Source Code
+
+<ComponentCode name="pool-card" />

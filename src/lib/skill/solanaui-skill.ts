@@ -17,6 +17,56 @@ interface ComponentDefinition {
 
 const COMPONENT_CATALOG: ComponentDefinition[] = [
   {
+    name: "ActionBox",
+    file: "action-box",
+    description:
+      "A generic single-input action form for staking, lending supply/borrow, LP deposit, bridging, and more. The versatile counterpart to TradeBox.",
+    props: `interface ActionBoxDetail {
+  label: string;
+  value: string;
+  className?: string;
+}
+
+interface ActionBoxProps {
+  tokens: { icon: string; symbol: string }[];
+  defaultToken?: string;
+  balance?: string;
+  label?: string;
+  details?: ActionBoxDetail[];
+  submitLabel?: string;
+  className?: string;
+}`,
+    usage: `<ActionBox
+  tokens={[{ icon: "/sol.png", symbol: "SOL" }]}
+  defaultToken="SOL"
+  balance="24.58"
+  label="Stake"
+  details={[
+    { label: "APY", value: "7.2%", className: "text-emerald-500" },
+    { label: "Annual Rewards", value: "~1.77 SOL" },
+  ]}
+  submitLabel="Stake SOL"
+/>`,
+  },
+  {
+    name: "ActionBoxDialog",
+    file: "action-box-dialog",
+    description:
+      "Wraps ActionBox in a dialog modal with a customizable trigger button. Use for deposit/withdraw/stake/borrow flows.",
+    props: `interface ActionBoxDialogProps extends ActionBoxProps {
+  trigger?: React.ReactNode;
+}`,
+    usage: `<ActionBoxDialog
+  trigger={<Button>Deposit</Button>}
+  tokens={[{ icon: "/usdc.png", symbol: "USDC" }]}
+  defaultToken="USDC"
+  balance="1,250.00"
+  label="Deposit"
+  details={[{ label: "APY", value: "8.45%" }]}
+  submitLabel="Deposit USDC"
+/>`,
+  },
+  {
     name: "ActivityFeed",
     file: "activity-feed",
     description:
@@ -36,6 +86,24 @@ const COMPONENT_CATALOG: ComponentDefinition[] = [
     { icon: "/sol.png", title: "SOL Purchased", description: "Bought 2.5 SOL", time: "2 min ago", value: "$406.40" },
     { icon: "/usdc.png", title: "USDC Deposited", time: "15 min ago", value: "$1,000.00" },
   ]}
+/>`,
+  },
+  {
+    name: "AddressDisplay",
+    file: "address-display",
+    description:
+      "A truncated Solana address with copy-to-clipboard and optional explorer link.",
+    props: `interface AddressDisplayProps {
+  address: string;
+  truncate?: boolean;
+  truncateChars?: [number, number];
+  copyable?: boolean;
+  explorerUrl?: string;
+  className?: string;
+}`,
+    usage: `<AddressDisplay
+  address="7xKpR4nm3kW9vBzL5hQd2mFnZq8gT4pYx9eRwVb3mKs"
+  explorerUrl="https://solscan.io/account/7xKpR4nm3kW9vBzL5hQd2mFnZq8gT4pYx9eRwVb3mKs"
 />`,
   },
   {
@@ -82,7 +150,7 @@ interface AuthCardProps {
     name: "HealthBar",
     file: "health-bar",
     description:
-      "A gradient progress bar (red-to-green) showing health factor percentage with a position marker and semantic labels.",
+      "A gradient progress bar (red-to-green) showing health factor percentage with semantic labels.",
     props: `interface HealthBarProps {
   value: number;
   label?: string;
@@ -146,6 +214,84 @@ interface AuthCardProps {
   asks={[
     { price: 162.55, size: 10.2 },
     { price: 162.60, size: 15.1 },
+  ]}
+/>`,
+  },
+  {
+    name: "PoolCard",
+    file: "pool-card",
+    description:
+      "A versatile card for a single token or multi-token pool. Shows stacked icons (via TokenIconGroup), optional price, description, metrics grid, sparkline chart, and children slot. Use for token info cards, pool cards, and market cards.",
+    props: `interface PoolCardMetric {
+  label: string;
+  value: string;
+  className?: string;
+}
+
+interface PoolCardProps {
+  tokens: { icon: string; symbol: string }[];
+  name?: string;
+  price?: string;
+  description?: string;
+  metrics?: PoolCardMetric[];
+  series?: { time: string; value: number }[];
+  children?: React.ReactNode;
+  className?: string;
+}`,
+    usage: `<PoolCard
+  tokens={[
+    { icon: "/sol.png", symbol: "SOL" },
+    { icon: "/usdc.png", symbol: "USDC" },
+  ]}
+  metrics={[
+    { label: "TVL", value: "$245.8M" },
+    { label: "Volume (24h)", value: "$18.2M" },
+    { label: "APY", value: "12.4%", className: "text-emerald-500" },
+    { label: "Fee", value: "0.25%" },
+  ]}
+>
+  <Button variant="outline" size="sm" className="w-full">Add Liquidity</Button>
+</PoolCard>`,
+  },
+  {
+    name: "PoolTable",
+    file: "pool-table",
+    description:
+      "A flexible data table with token icons (one or more per row), user-defined columns, and optional row actions. Works for pool listings, token tables, validator tables, and any icon+data table.",
+    props: `interface PoolTableColumn {
+  key: string;
+  label: string;
+  className?: string;
+}
+
+interface PoolTableRow {
+  icons: { src: string; alt?: string }[];
+  name?: string;
+  data: Record<string, string>;
+}
+
+interface PoolTableProps {
+  columns: PoolTableColumn[];
+  rows: PoolTableRow[];
+  actions?: React.ReactNode[];
+  className?: string;
+}`,
+    usage: `<PoolTable
+  columns={[
+    { key: "tvl", label: "TVL" },
+    { key: "volume", label: "Volume (24h)" },
+    { key: "apy", label: "APY", className: "text-emerald-500" },
+    { key: "fee", label: "Fee" },
+  ]}
+  rows={[
+    {
+      icons: [{ src: "/sol.png", alt: "SOL" }, { src: "/usdc.png", alt: "USDC" }],
+      data: { tvl: "$245.8M", volume: "$18.2M", apy: "12.4%", fee: "0.25%" },
+    },
+    {
+      icons: [{ src: "/sol.png", alt: "SOL" }, { src: "/bonk.png", alt: "BONK" }],
+      data: { tvl: "$12.4M", volume: "$3.1M", apy: "24.8%", fee: "1.00%" },
+    },
   ]}
 />`,
   },
@@ -260,30 +406,42 @@ interface AuthCardProps {
     usage: `<StatCard label="Total Value Locked" value="$1.2B" change="+4.2%" trend="up" />`,
   },
   {
-    name: "TokenCard",
-    file: "token-card",
+    name: "SwapBox",
+    file: "swap-box",
     description:
-      "A token info card with icon, name, symbol, price, optional sparkline chart, and footer slot for TrendBadge.",
-    props: `interface TokenCardProps {
-  name: string;
-  symbol: string;
-  icon: string;
-  price: string;
-  description?: string;
-  series?: { time: string; value: number }[];
-  children?: React.ReactNode;
+      "A two-sided token swap form with flip button, detail rows, and submit action. The most common DeFi interaction.",
+    props: `interface SwapBoxDetail {
+  label: string;
+  value: string;
+  className?: string;
+}
+
+interface SwapBoxProps {
+  tokens: { icon: string; symbol: string }[];
+  defaultFromToken?: string;
+  defaultToToken?: string;
+  fromBalance?: string;
+  toBalance?: string;
+  details?: SwapBoxDetail[];
+  submitLabel?: string;
   className?: string;
 }`,
-    usage: `<TokenCard
-  name="Solana"
-  symbol="SOL"
-  icon="/sol.png"
-  price="$162.56"
-  series={[{ time: "2026-01-01", value: 148 }, { time: "2026-03-01", value: 162.56 }]}
->
-  <TrendBadge>+9.69%</TrendBadge>
-</TokenCard>`,
+    usage: `<SwapBox
+  tokens={[
+    { icon: "/usdc.png", symbol: "USDC" },
+    { icon: "/sol.png", symbol: "SOL" },
+  ]}
+  defaultFromToken="USDC"
+  defaultToToken="SOL"
+  fromBalance="1,250.00"
+  details={[
+    { label: "Exchange Rate", value: "1 SOL = 162.56 USDC" },
+    { label: "Price Impact", value: "0.01%", className: "text-emerald-500" },
+    { label: "Minimum Received", value: "0.00612 SOL" },
+  ]}
+/>`,
   },
+
   {
     name: "TokenCombobox",
     file: "token-combobox",
@@ -335,6 +493,26 @@ interface AuthCardProps {
     usage: `<TokenIcon src="/sol.png" alt="SOL" width={32} height={32} />`,
   },
   {
+    name: "TokenIconGroup",
+    file: "token-icon-group",
+    description:
+      "Stacked, overlapping token icons for displaying LP pairs, multi-token groups, or collateral baskets. Shows a +N badge when tokens exceed max.",
+    props: `interface TokenIconGroupProps {
+  tokens: { src: string; alt?: string }[];
+  size?: number;
+  overlap?: number;
+  max?: number;
+  className?: string;
+}`,
+    usage: `<TokenIconGroup
+  tokens={[
+    { src: "/sol.png", alt: "SOL" },
+    { src: "/usdc.png", alt: "USDC" },
+  ]}
+  size={28}
+/>`,
+  },
+  {
     name: "TokenInput",
     file: "token-input",
     description:
@@ -360,35 +538,12 @@ interface AuthCardProps {
   usdValue="$1,625.60"
 />`,
   },
-  {
-    name: "TokenTable",
-    file: "token-table",
-    description:
-      "A data table listing tokens with icon, symbol, price, and optional APY, weight, address, and action columns.",
-    props: `interface TokenTableProps {
-  tokens: {
-    symbol: string;
-    icon: string;
-    address?: string;
-    price: string;
-    apy?: string;
-    weight?: string;
-  }[];
-  actions?: React.ReactNode[];
-  className?: string;
-}`,
-    usage: `<TokenTable
-  tokens={[
-    { symbol: "SOL", icon: "/sol.png", price: "$162.56", apy: "6.82%" },
-    { symbol: "USDC", icon: "/usdc.png", price: "$1.00", apy: "8.45%" },
-  ]}
-/>`,
-  },
+
   {
     name: "TradeBox",
     file: "trade-box",
     description:
-      "A complete trading form with long/short toggle, token input, leverage slider, detail rows, and submit button.",
+      "A perps/margin trading form with long/short toggle, token input, leverage slider, detail rows, and submit button. Always includes trade direction buttons and leverage. For non-trading actions use ActionBox instead.",
     props: `interface TradeBoxDetail {
   label: string;
   value: string;
@@ -399,10 +554,8 @@ interface TradeBoxProps {
   tokens: { icon: string; symbol: string }[];
   defaultToken?: string;
   balance?: string;
-  showTradeButtons?: boolean;
   labels?: [string, string];
   defaultSide?: string;
-  showLeverage?: boolean;
   leverageMin?: number;
   leverageMax?: number;
   leverageDefault?: number;
@@ -415,7 +568,6 @@ interface TradeBoxProps {
   tokens={[{ icon: "/sol.png", symbol: "SOL" }, { icon: "/usdc.png", symbol: "USDC" }]}
   defaultToken="SOL"
   balance="24.58"
-  showLeverage
   leverageMax={20}
   leverageDefault={5}
   details={[
@@ -569,8 +721,8 @@ interface TradeBoxProps {
 
 const COMPOSITION_PATTERNS = `
 ## Swap Interface
-Use two TokenInput components stacked vertically with a swap arrow button between them.
-Add two TokenCard components below to show the tokens being swapped with sparklines and TrendBadges.
+Use SwapBox as the main form -- it handles two TokenInputs with a flip button, details, and submit.
+Add PoolCards below to show the tokens being swapped with sparklines and TrendBadges (single-token mode with price and series).
 Wrap the swap form in a centered container (max-w-xl mx-auto).
 
 ## Perps Trading Page
@@ -581,8 +733,12 @@ Use max-w-[1400px] mx-auto px-4 for the container.
 
 ## Lending Dashboard
 Tabbed layout with Lend and Portfolio tabs.
-Lend tab: TokenCards in a row showing available markets, TokenTable below with deposit/borrow actions.
-Portfolio tab: HealthBar at top, StatCards row (Total Deposits, Total Borrows, Net Balance), PositionCards for each position.
+Lend tab: PoolCards in a row showing available markets (single-token mode with price and series), PoolTable below with deposit/borrow ActionBoxDialogs.
+Portfolio tab: HealthBar at top, StatCards row (Total Deposits, Total Borrows, Net Balance), PositionCards with ActionBoxDialog buttons for each position.
+
+## Liquidity Pools
+Use PoolTable for listing multiple pools. Use PoolCard for featured/highlighted pools.
+Both use TokenIconGroup internally for stacked token pair icons.
 
 ## NFT Marketplace
 Header with WalletSheet button. StatCards row showing collection stats (Floor Price, Volume, Listed, Owners).
@@ -591,13 +747,17 @@ Sidebar or below: ActivityFeed showing recent sales/listings.
 
 ## Token Portfolio
 WalletSheet in the header. StatCards showing portfolio metrics.
-TokenTable listing all holdings. SparklineCharts inline with token data.
+PoolTable listing all holdings. SparklineCharts inline with token data.
 TxnTable below showing recent transaction history.
 
 ## DeFi Stats Dashboard
 Grid of StatCards showing protocol metrics (TVL, Volume, Users, Revenue).
-TokenTable showing top tokens. Multiple SparklineCharts for historical data.
+PoolTable showing top tokens. Multiple SparklineCharts for historical data.
 ActivityFeed for recent protocol events.
+
+## Staking Page
+Use ActionBox with label="Stake", details for APY/rewards/validator, and submitLabel="Stake SOL".
+For a dialog-based flow, wrap it in ActionBoxDialog.
 `;
 
 const TOKEN_IMAGE_GUIDANCE = `
@@ -619,7 +779,7 @@ const OUTPUT_RULES = `
 - Output ONLY raw code. No markdown fences, no explanation text, no comments before or after the code
 - Output a single React component as a default export
 - Use ONLY the SolanaUI components and shadcn/ui components listed in this prompt
-- Import SolanaUI components from "@/components/sol/<kebab-case-name>" (e.g., import { TokenCard } from "@/components/sol/token-card")
+- Import SolanaUI components from "@/components/sol/<kebab-case-name>" (e.g., import { PoolCard } from "@/components/sol/pool-card")
 - Import shadcn/ui components from "@/components/ui/<name>" (e.g., import { Card } from "@/components/ui/card", import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs")
 - Include realistic Solana ecosystem demo data: SOL (~$162), USDC ($1.00), BONK, JitoSOL (~$189), mSOL (~$186)
 - Use the token image URLs from the Token Images section above

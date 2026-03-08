@@ -92,6 +92,7 @@ const TradeChart = ({
       },
       rightPriceScale: { borderColor: colors.border },
       timeScale: { borderColor: colors.border, timeVisible: true },
+      autoSize: true,
       ...parsedChartOptions,
     };
 
@@ -112,19 +113,7 @@ const TradeChart = ({
       chartRef.current.timeScale().fitContent();
     }
 
-    const handleResize = () => {
-      if (containerRef.current && chartRef.current) {
-        chartRef.current.applyOptions({
-          width: containerRef.current.clientWidth,
-          height: containerRef.current.clientHeight,
-        });
-      }
-    };
-
-    window.addEventListener("resize", handleResize);
-
     return () => {
-      window.removeEventListener("resize", handleResize);
       chartRef.current?.remove();
     };
   }, [data, visibleBars, chartOptionsKey, seriesOptionsKey]);

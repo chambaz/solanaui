@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowUpIcon, Loader2Icon } from "lucide-react";
+import { Loader2Icon, SparklesIcon } from "lucide-react";
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -8,10 +8,8 @@ import { cn } from "@/lib/utils";
 const SUGGESTED_PROMPTS = [
   "Token swap interface",
   "Perps trading dashboard",
-  "Lending protocol with health bar",
-  "NFT collection marketplace",
-  "Token portfolio overview",
-  "DeFi stats dashboard",
+  "Borrow / lend protocol",
+  "NFT marketplace",
 ];
 
 interface PromptInputProps {
@@ -59,19 +57,25 @@ const PromptInput = ({
           onKeyDown={handleKeyDown}
           placeholder="Describe the Solana UI you want to build..."
           disabled={isStreaming || disabled}
-          rows={2}
+          rows={4}
           className="w-full resize-none rounded-lg border border-border bg-background px-4 py-3 pr-12 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
         />
         <Button
-          size="icon"
+          size="sm"
           onClick={handleSubmit}
           disabled={!value.trim() || isStreaming || disabled}
-          className="absolute right-2 bottom-2 h-8 w-8"
+          className="absolute right-3 bottom-5"
         >
           {isStreaming ? (
-            <Loader2Icon className="h-4 w-4 animate-spin" />
+            <>
+              <Loader2Icon className="h-4 w-4 animate-spin" />
+              Generating UI...
+            </>
           ) : (
-            <ArrowUpIcon className="h-4 w-4" />
+            <>
+              <SparklesIcon className="h-4 w-4" />
+              Generate UI
+            </>
           )}
         </Button>
       </div>

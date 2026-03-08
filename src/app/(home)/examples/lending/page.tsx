@@ -1,11 +1,11 @@
 import { CoinsIcon, LandmarkIcon, WalletIcon } from "lucide-react";
+import { ActionBoxDialog } from "@/components/sol/action-box-dialog";
 import { HealthBar } from "@/components/sol/health-bar";
+import { PoolCard } from "@/components/sol/pool-card";
+import { PoolTable } from "@/components/sol/pool-table";
 import { PositionCard } from "@/components/sol/position-card";
 import { PriceChart } from "@/components/sol/price-chart";
 import { StatCard } from "@/components/sol/stat-card";
-import { TokenCard } from "@/components/sol/token-card";
-import { TokenTable } from "@/components/sol/token-table";
-import { TradeBoxDialog } from "@/components/sol/trade-box-dialog";
 import { TrendBadge } from "@/components/sol/trend-badge";
 import { WalletSheet } from "@/components/sol/wallet-sheet";
 import { Button } from "@/components/ui/button";
@@ -80,6 +80,12 @@ const JITOSOL_SPARKLINE = [
   { time: "2026-01-10", value: 189.32 },
 ];
 
+const MARKET_COLUMNS = [
+  { key: "price", label: "Price" },
+  { key: "apy", label: "APY", className: "text-emerald-500" },
+  { key: "weight", label: "Weight" },
+];
+
 const MARKETS = [
   {
     symbol: "SOL",
@@ -123,9 +129,15 @@ const MARKETS = [
   },
 ];
 
+const MARKET_ROWS = MARKETS.map((token) => ({
+  icons: [{ src: token.icon, alt: token.symbol }],
+  name: token.symbol,
+  data: { price: token.price, apy: token.apy, weight: token.weight },
+}));
+
 const MARKET_ACTIONS = MARKETS.map((token) => (
   <div key={token.symbol} className="flex items-center gap-2 justify-end">
-    <TradeBoxDialog
+    <ActionBoxDialog
       trigger={
         <Button variant="outline" size="sm">
           Deposit
@@ -134,15 +146,14 @@ const MARKET_ACTIONS = MARKETS.map((token) => (
       tokens={[{ icon: token.icon, symbol: token.symbol }]}
       defaultToken={token.symbol}
       balance={token.balance}
-      showTradeButtons={false}
-      showLeverage={false}
+      label="Deposit"
       details={[
         { label: "APY", value: token.apy },
         { label: "Utilization", value: "78.4%" },
       ]}
       submitLabel={`Deposit ${token.symbol}`}
     />
-    <TradeBoxDialog
+    <ActionBoxDialog
       trigger={
         <Button variant="outline" size="sm">
           Borrow
@@ -151,8 +162,7 @@ const MARKET_ACTIONS = MARKETS.map((token) => (
       tokens={[{ icon: token.icon, symbol: token.symbol }]}
       defaultToken={token.symbol}
       balance={token.balance}
-      showTradeButtons={false}
-      showLeverage={false}
+      label="Borrow"
       details={[
         { label: "Borrow APY", value: token.apy },
         { label: "Available", value: "$2.4M" },
@@ -194,39 +204,36 @@ export default function LendingPage() {
           <TabsContent value="lend" className="flex flex-col gap-6">
             {/* Featured tokens */}
             <div className="grid grid-cols-3 gap-4">
-              <TokenCard
+              <PoolCard
+                tokens={[{ icon: SOL_ICON, symbol: "SOL" }]}
                 name="Solana"
-                symbol="SOL"
-                icon={SOL_ICON}
                 price="$162.56"
                 description="6.82% APY"
                 series={SOL_SPARKLINE}
                 className="max-w-none"
               >
                 <TrendBadge>+9.69%</TrendBadge>
-              </TokenCard>
-              <TokenCard
+              </PoolCard>
+              <PoolCard
+                tokens={[{ icon: USDC_ICON, symbol: "USDC" }]}
                 name="USD Coin"
-                symbol="USDC"
-                icon={USDC_ICON}
                 price="$1.00"
                 description="8.45% APY"
                 series={USDC_SPARKLINE}
                 className="max-w-none"
               >
                 <TrendBadge>+0.01%</TrendBadge>
-              </TokenCard>
-              <TokenCard
+              </PoolCard>
+              <PoolCard
+                tokens={[{ icon: JITOSOL_ICON, symbol: "JitoSOL" }]}
                 name="Jito Staked SOL"
-                symbol="JitoSOL"
-                icon={JITOSOL_ICON}
                 price="$189.32"
                 description="9.12% APY"
                 series={JITOSOL_SPARKLINE}
                 className="max-w-none"
               >
                 <TrendBadge>+9.75%</TrendBadge>
-              </TokenCard>
+              </PoolCard>
             </div>
 
             {/* Markets table */}
@@ -237,7 +244,11 @@ export default function LendingPage() {
                   {MARKETS.length} assets available
                 </span>
               </div>
-              <TokenTable tokens={MARKETS} actions={MARKET_ACTIONS} />
+              <PoolTable
+                columns={MARKET_COLUMNS}
+                rows={MARKET_ROWS}
+                actions={MARKET_ACTIONS}
+              />
             </div>
           </TabsContent>
 
@@ -304,7 +315,7 @@ export default function LendingPage() {
                   className="max-w-none"
                 >
                   <div className="grid grid-cols-2 gap-2 w-full">
-                    <TradeBoxDialog
+                    <ActionBoxDialog
                       trigger={
                         <Button
                           variant="secondary"
@@ -317,12 +328,11 @@ export default function LendingPage() {
                       tokens={[{ icon: SOL_ICON, symbol: "SOL" }]}
                       defaultToken="SOL"
                       balance="45.25"
-                      showTradeButtons={false}
-                      showLeverage={false}
+                      label="Withdraw"
                       details={[{ label: "APY", value: "6.82%" }]}
                       submitLabel="Withdraw SOL"
                     />
-                    <TradeBoxDialog
+                    <ActionBoxDialog
                       trigger={
                         <Button
                           variant="secondary"
@@ -335,8 +345,7 @@ export default function LendingPage() {
                       tokens={[{ icon: SOL_ICON, symbol: "SOL" }]}
                       defaultToken="SOL"
                       balance="24.58"
-                      showTradeButtons={false}
-                      showLeverage={false}
+                      label="Supply"
                       details={[{ label: "APY", value: "6.82%" }]}
                       submitLabel="Supply SOL"
                     />
@@ -351,7 +360,7 @@ export default function LendingPage() {
                   className="max-w-none"
                 >
                   <div className="grid grid-cols-2 gap-2 w-full">
-                    <TradeBoxDialog
+                    <ActionBoxDialog
                       trigger={
                         <Button
                           variant="secondary"
@@ -364,12 +373,11 @@ export default function LendingPage() {
                       tokens={[{ icon: USDC_ICON, symbol: "USDC" }]}
                       defaultToken="USDC"
                       balance="2,500.00"
-                      showTradeButtons={false}
-                      showLeverage={false}
+                      label="Withdraw"
                       details={[{ label: "APY", value: "8.45%" }]}
                       submitLabel="Withdraw USDC"
                     />
-                    <TradeBoxDialog
+                    <ActionBoxDialog
                       trigger={
                         <Button
                           variant="secondary"
@@ -382,8 +390,7 @@ export default function LendingPage() {
                       tokens={[{ icon: USDC_ICON, symbol: "USDC" }]}
                       defaultToken="USDC"
                       balance="1,250.00"
-                      showTradeButtons={false}
-                      showLeverage={false}
+                      label="Supply"
                       details={[{ label: "APY", value: "8.45%" }]}
                       submitLabel="Supply USDC"
                     />
@@ -398,7 +405,7 @@ export default function LendingPage() {
                   className="max-w-none"
                 >
                   <div className="grid grid-cols-2 gap-2 w-full">
-                    <TradeBoxDialog
+                    <ActionBoxDialog
                       trigger={
                         <Button
                           variant="secondary"
@@ -411,12 +418,11 @@ export default function LendingPage() {
                       tokens={[{ icon: JITOSOL_ICON, symbol: "JitoSOL" }]}
                       defaultToken="JitoSOL"
                       balance="8.12"
-                      showTradeButtons={false}
-                      showLeverage={false}
+                      label="Withdraw"
                       details={[{ label: "APY", value: "9.12%" }]}
                       submitLabel="Withdraw JitoSOL"
                     />
-                    <TradeBoxDialog
+                    <ActionBoxDialog
                       trigger={
                         <Button
                           variant="secondary"
@@ -429,8 +435,7 @@ export default function LendingPage() {
                       tokens={[{ icon: JITOSOL_ICON, symbol: "JitoSOL" }]}
                       defaultToken="JitoSOL"
                       balance="0"
-                      showTradeButtons={false}
-                      showLeverage={false}
+                      label="Supply"
                       details={[{ label: "APY", value: "9.12%" }]}
                       submitLabel="Supply JitoSOL"
                     />
@@ -451,7 +456,7 @@ export default function LendingPage() {
                   className="max-w-none"
                 >
                   <div className="grid grid-cols-2 gap-2 w-full">
-                    <TradeBoxDialog
+                    <ActionBoxDialog
                       trigger={
                         <Button
                           variant="secondary"
@@ -464,12 +469,11 @@ export default function LendingPage() {
                       tokens={[{ icon: USDC_ICON, symbol: "USDC" }]}
                       defaultToken="USDC"
                       balance="1,250.00"
-                      showTradeButtons={false}
-                      showLeverage={false}
+                      label="Repay"
                       details={[{ label: "Borrow APY", value: "10.21%" }]}
                       submitLabel="Repay USDC"
                     />
-                    <TradeBoxDialog
+                    <ActionBoxDialog
                       trigger={
                         <Button
                           variant="secondary"
@@ -481,8 +485,7 @@ export default function LendingPage() {
                       }
                       tokens={[{ icon: USDC_ICON, symbol: "USDC" }]}
                       defaultToken="USDC"
-                      showTradeButtons={false}
-                      showLeverage={false}
+                      label="Borrow"
                       details={[
                         { label: "Borrow APY", value: "10.21%" },
                         { label: "Available", value: "$2.4M" },
@@ -501,7 +504,7 @@ export default function LendingPage() {
                   className="max-w-none"
                 >
                   <div className="grid grid-cols-2 gap-2 w-full">
-                    <TradeBoxDialog
+                    <ActionBoxDialog
                       trigger={
                         <Button
                           variant="secondary"
@@ -514,12 +517,11 @@ export default function LendingPage() {
                       tokens={[{ icon: MSOL_ICON, symbol: "mSOL" }]}
                       defaultToken="mSOL"
                       balance="0"
-                      showTradeButtons={false}
-                      showLeverage={false}
+                      label="Repay"
                       details={[{ label: "Borrow APY", value: "9.78%" }]}
                       submitLabel="Repay mSOL"
                     />
-                    <TradeBoxDialog
+                    <ActionBoxDialog
                       trigger={
                         <Button
                           variant="secondary"
@@ -531,8 +533,7 @@ export default function LendingPage() {
                       }
                       tokens={[{ icon: MSOL_ICON, symbol: "mSOL" }]}
                       defaultToken="mSOL"
-                      showTradeButtons={false}
-                      showLeverage={false}
+                      label="Borrow"
                       details={[
                         { label: "Borrow APY", value: "9.78%" },
                         { label: "Available", value: "$1.8M" },

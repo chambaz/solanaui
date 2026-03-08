@@ -1,62 +1,44 @@
-import { LeverageSlider } from "@/components/sol/leverage-slider";
 import { TokenInput } from "@/components/sol/token-input";
-import { TradeButtons } from "@/components/sol/trade-buttons";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { cn } from "@/lib/utils";
 
-interface TradeBoxDetail {
+interface ActionBoxDetail {
   label: string;
   value: string;
   className?: string;
 }
 
-interface TradeBoxProps {
+interface ActionBoxProps {
   tokens: { icon: string; symbol: string }[];
   defaultToken?: string;
   balance?: string;
-  labels?: [string, string];
-  defaultSide?: string;
-  leverageMin?: number;
-  leverageMax?: number;
-  leverageDefault?: number;
-  leverageStep?: number;
-  details?: TradeBoxDetail[];
+  label?: string;
+  details?: ActionBoxDetail[];
   submitLabel?: string;
   className?: string;
 }
 
-const TradeBox = ({
+const ActionBox = ({
   tokens,
   defaultToken,
   balance,
-  labels = ["Long", "Short"],
-  defaultSide = "long",
-  leverageMin = 1,
-  leverageMax = 50,
-  leverageDefault = 5,
-  leverageStep = 1,
+  label,
   details,
-  submitLabel = "Open Long",
+  submitLabel = "Submit",
   className,
-}: TradeBoxProps) => {
+}: ActionBoxProps) => {
   return (
     <div className={cn("flex flex-col gap-4 border rounded-lg p-4", className)}>
-      <TradeButtons defaultValue={defaultSide} labels={labels} />
-      <Separator />
-      <div className="flex flex-col gap-2">
-        <span className="text-sm text-muted-foreground">Collateral</span>
-        <TokenInput
-          tokens={tokens}
-          defaultToken={defaultToken}
-          balance={balance}
-        />
-      </div>
-      <LeverageSlider
-        min={leverageMin}
-        max={leverageMax}
-        defaultValue={[leverageDefault]}
-        step={leverageStep}
+      {label && (
+        <span className="text-sm font-medium text-muted-foreground">
+          {label}
+        </span>
+      )}
+      <TokenInput
+        tokens={tokens}
+        defaultToken={defaultToken}
+        balance={balance}
       />
       {details && details.length > 0 && (
         <>
@@ -78,5 +60,5 @@ const TradeBox = ({
   );
 };
 
-export type { TradeBoxProps, TradeBoxDetail };
-export { TradeBox };
+export type { ActionBoxProps, ActionBoxDetail };
+export { ActionBox };

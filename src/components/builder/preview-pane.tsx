@@ -179,7 +179,6 @@ function buildSandboxHtml(isDark: boolean): string {
       background: var(--background);
       color: var(--foreground);
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-      padding: 24px;
       min-height: 100vh;
     }
   </style>
@@ -264,7 +263,6 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  padding: 24px;
   min-height: 100vh;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;

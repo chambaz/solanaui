@@ -1,0 +1,157 @@
+---
+title: Pool Table
+description: A flexible data table with token icons, user-defined columns, and optional row actions
+---
+
+<ComponentDemo>
+  <PoolTable
+    columns={[
+      { key: "tvl", label: "TVL" },
+      { key: "volume", label: "Volume (24h)" },
+      { key: "apy", label: "APY", className: "text-emerald-500" },
+      { key: "fee", label: "Fee" },
+    ]}
+    rows={[
+      {
+        icons: [
+          { src: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png", alt: "SOL" },
+          { src: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png", alt: "USDC" },
+        ],
+        data: { tvl: "$245.8M", volume: "$18.2M", apy: "12.4%", fee: "0.25%" },
+      },
+      {
+        icons: [
+          { src: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png", alt: "SOL" },
+          { src: "https://arweave.net/hQiPZOsRZXGXBJd_82PhVdlM_hACsT_q6wqwf5cSY7I", alt: "BONK" },
+        ],
+        data: { tvl: "$12.4M", volume: "$3.1M", apy: "24.8%", fee: "1.00%" },
+      },
+      {
+        icons: [
+          { src: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So/logo.png", alt: "mSOL" },
+          { src: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png", alt: "SOL" },
+        ],
+        data: { tvl: "$89.2M", volume: "$5.6M", apy: "8.1%", fee: "0.04%" },
+      },
+      {
+        icons: [
+          { src: "https://storage.googleapis.com/token-metadata/JitoSOL-256.png", alt: "JitoSOL" },
+          { src: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png", alt: "SOL" },
+        ],
+        data: { tvl: "$156.3M", volume: "$8.4M", apy: "9.6%", fee: "0.04%" },
+      },
+    ]}
+  />
+</ComponentDemo>
+
+```tsx
+import { PoolTable } from "@/components/sol/pool-table";
+
+const SOL_ICON =
+  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png";
+const USDC_ICON =
+  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png";
+
+export function PoolTableDemo() {
+  return (
+    <PoolTable
+      columns={[
+        { key: "tvl", label: "TVL" },
+        { key: "volume", label: "Volume (24h)" },
+        { key: "apy", label: "APY", className: "text-emerald-500" },
+        { key: "fee", label: "Fee" },
+      ]}
+      rows={[
+        {
+          icons: [
+            { src: SOL_ICON, alt: "SOL" },
+            { src: USDC_ICON, alt: "USDC" },
+          ],
+          data: { tvl: "$245.8M", volume: "$18.2M", apy: "12.4%", fee: "0.25%" },
+        },
+      ]}
+    />
+  );
+}
+```
+
+## Installation
+
+<Tabs items={["pnpm", "npm", "yarn"]}>
+  <Tab value="pnpm">pnpm dlx solanaui@latest add pool-table</Tab>
+  <Tab value="npm">npx solanaui@latest add pool-table</Tab>
+  <Tab value="yarn">yarn solanaui@latest add pool-table</Tab>
+</Tabs>
+
+## Usage
+
+Define your columns and rows. Each row has `icons` (one or more token icons), an optional `name`, and a `data` object mapping column keys to display values.
+
+```tsx
+<PoolTable
+  columns={[
+    { key: "tvl", label: "TVL" },
+    { key: "apy", label: "APY", className: "text-emerald-500" },
+  ]}
+  rows={[
+    {
+      icons: [
+        { src: SOL_ICON, alt: "SOL" },
+        { src: USDC_ICON, alt: "USDC" },
+      ],
+      data: { tvl: "$245.8M", apy: "12.4%" },
+    },
+  ]}
+/>
+```
+
+### Single Icon Per Row
+
+Works with a single icon for token listings, validator tables, or any data table with icons.
+
+```tsx
+<PoolTable
+  columns={[
+    { key: "price", label: "Price" },
+    { key: "apy", label: "APY", className: "text-emerald-500" },
+  ]}
+  rows={[
+    {
+      icons: [{ src: SOL_ICON, alt: "SOL" }],
+      name: "Solana",
+      data: { price: "$162.56", apy: "6.82%" },
+    },
+    {
+      icons: [{ src: USDC_ICON, alt: "USDC" }],
+      name: "USD Coin",
+      data: { price: "$1.00", apy: "8.45%" },
+    },
+  ]}
+/>
+```
+
+### With Actions
+
+```tsx
+import { Button } from "@/components/ui/button";
+
+<PoolTable
+  columns={[
+    { key: "tvl", label: "TVL" },
+    { key: "apy", label: "APY", className: "text-emerald-500" },
+  ]}
+  rows={[
+    {
+      icons: [{ src: SOL_ICON, alt: "SOL" }, { src: USDC_ICON, alt: "USDC" }],
+      data: { tvl: "$245.8M", apy: "12.4%" },
+    },
+  ]}
+  actions={[
+    <Button variant="outline" size="sm">Add Liquidity</Button>,
+  ]}
+/>
+```
+
+## Source Code
+
+<ComponentCode name="pool-table" />

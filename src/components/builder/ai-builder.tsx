@@ -141,17 +141,19 @@ const AIBuilder = ({ className }: AIBuilderProps) => {
 
   return (
     <div className={cn("flex flex-col gap-6", className)}>
-      <PromptInput
-        onSubmit={handleSubmit}
-        isStreaming={isStreaming}
-        disabled={limitReached}
-      />
+      <div className="mx-auto w-full max-w-4xl">
+        <PromptInput
+          onSubmit={handleSubmit}
+          isStreaming={isStreaming}
+          disabled={limitReached}
+        />
 
-      {error && !isStreaming && !generatedCode && (
-        <div className="rounded-lg border border-red-400/20 bg-red-400/5 px-4 py-3">
-          <p className="text-sm text-red-400">{error}</p>
-        </div>
-      )}
+        {error && !isStreaming && !generatedCode && (
+          <div className="mt-6 rounded-lg border border-red-400/20 bg-red-400/5 px-4 py-3">
+            <p className="text-sm text-red-400">{error}</p>
+          </div>
+        )}
+      </div>
 
       {showOutput && (
         <div className="flex flex-col overflow-hidden rounded-lg border border-border">

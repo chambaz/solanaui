@@ -1,9 +1,7 @@
-import { ArrowDownUpIcon } from "lucide-react";
-import { TokenCard } from "@/components/sol/token-card";
-import { TokenInput } from "@/components/sol/token-input";
+import { PoolCard } from "@/components/sol/pool-card";
+import { SwapBox } from "@/components/sol/swap-box";
 import { TrendBadge } from "@/components/sol/trend-badge";
 import { WalletSheet } from "@/components/sol/wallet-sheet";
-import { Button } from "@/components/ui/button";
 
 const SOL_ICON =
   "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png";
@@ -81,51 +79,44 @@ export default function SwapPage() {
           />
         </div>
 
-        {/* Token inputs with swap arrow */}
-        <div className="flex flex-col gap-2 items-center">
-          <TokenInput
-            tokens={TOKENS}
-            defaultToken="USDC"
-            balance="0.299431"
-            usdValue="$0"
-          />
-          <Button
-            variant="outline"
-            size="icon"
-            className="rounded-full size-8 -my-5 z-10 bg-background"
-          >
-            <ArrowDownUpIcon className="size-4" />
-          </Button>
-          <TokenInput tokens={TOKENS} defaultToken="SOL" usdValue="$0" />
-        </div>
-
-        {/* CTA button */}
-        <Button size="lg" className="w-full" disabled>
-          Enter an amount
-        </Button>
+        {/* Swap form */}
+        <SwapBox
+          tokens={TOKENS}
+          defaultFromToken="USDC"
+          defaultToToken="SOL"
+          fromBalance="1,250.00"
+          details={[
+            { label: "Exchange Rate", value: "1 SOL = 162.56 USDC" },
+            {
+              label: "Price Impact",
+              value: "0.01%",
+              className: "text-emerald-500",
+            },
+            { label: "Minimum Received", value: "0.00612 SOL" },
+            { label: "Network Fee", value: "0.00005 SOL" },
+          ]}
+        />
 
         {/* Token cards */}
         <div className="grid grid-cols-2 gap-3">
-          <TokenCard
+          <PoolCard
+            tokens={[{ icon: USDC_ICON, symbol: "USDC" }]}
             name="USD Coin"
-            symbol="USDC"
-            icon={USDC_ICON}
             price="$1.00"
             description="EPjF...Dt1v"
             series={USDC_SPARKLINE}
           >
             <TrendBadge>+0.01%</TrendBadge>
-          </TokenCard>
-          <TokenCard
+          </PoolCard>
+          <PoolCard
+            tokens={[{ icon: SOL_ICON, symbol: "SOL" }]}
             name="Solana"
-            symbol="SOL"
-            icon={SOL_ICON}
             price="$162.56"
             description="So11...1112"
             series={SOL_SPARKLINE}
           >
             <TrendBadge>+9.69%</TrendBadge>
-          </TokenCard>
+          </PoolCard>
         </div>
       </div>
     </div>

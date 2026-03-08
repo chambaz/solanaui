@@ -1,7 +1,6 @@
 {
   "defaultOpen": true,
   "pages": [
-    "index",
     "activity-feed",
     "auth-card",
     "auth-dialog",

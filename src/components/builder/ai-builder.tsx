@@ -3,6 +3,7 @@
 import React from "react";
 import { CodeDisplay } from "@/components/builder/code-display";
 import { InstallCommands } from "@/components/builder/install-commands";
+import { PerpsDemo } from "@/components/builder/perps-demo";
 import { PreviewPane } from "@/components/builder/preview-pane";
 import { PromptInput } from "@/components/builder/prompt-input";
 import type { ParsedImports } from "@/lib/builder/parse-imports";
@@ -40,10 +41,12 @@ const AIBuilder = ({ className }: AIBuilderProps) => {
   const [parsedImports, setParsedImports] =
     React.useState<ParsedImports | null>(null);
   const [activeTab, setActiveTab] = React.useState<"code" | "preview">("code");
+  const [hasSubmitted, setHasSubmitted] = React.useState(false);
   const abortControllerRef = React.useRef<AbortController | null>(null);
 
   const handleSubmit = async (prompt: string) => {
     // Reset state
+    setHasSubmitted(true);
     setGeneratedCode("");
     setError(null);
     setIsStreaming(true);
@@ -154,6 +157,12 @@ const AIBuilder = ({ className }: AIBuilderProps) => {
           </div>
         )}
       </div>
+
+      {!hasSubmitted && (
+        <div className="mt-10">
+          <PerpsDemo />
+        </div>
+      )}
 
       {showOutput && (
         <div className="flex flex-col overflow-hidden rounded-lg border border-border">

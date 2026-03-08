@@ -39,7 +39,7 @@ const TokenIcon = ({
   }
 
   return (
-    <div className="relative inline-flex" style={{ width, height }}>
+    <div className="relative inline-block" style={{ width, height }}>
       {status === "loading" && (
         <Skeleton
           className={cn("rounded-full absolute inset-0", className)}
@@ -49,7 +49,7 @@ const TokenIcon = ({
       <img
         alt={alt}
         className={cn(
-          "rounded-full",
+          "rounded-full block",
           status === "loading" && "opacity-0",
           className,
         )}

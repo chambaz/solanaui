@@ -10,5 +10,6 @@ export function baseOptions(): BaseLayoutProps {
         </div>
       ),
     },
+    githubUrl: "https://github.com/chambaz/solanaui",
   };
 }

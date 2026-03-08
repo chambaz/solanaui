@@ -208,8 +208,16 @@ export default function LendingPage() {
                 tokens={[{ icon: SOL_ICON, symbol: "SOL" }]}
                 name="Solana"
                 price="$162.56"
-                description="6.82% APY"
-                series={SOL_SPARKLINE}
+                metrics={[
+                  {
+                    label: "Supply APY",
+                    value: "6.82%",
+                    highlight: true,
+                    className: "text-emerald-500",
+                  },
+                  { label: "TVL", value: "$420.8M" },
+                  { label: "Utilization", value: "78.4%" },
+                ]}
                 className="max-w-none"
               >
                 <TrendBadge>+9.69%</TrendBadge>
@@ -218,8 +226,16 @@ export default function LendingPage() {
                 tokens={[{ icon: USDC_ICON, symbol: "USDC" }]}
                 name="USD Coin"
                 price="$1.00"
-                description="8.45% APY"
-                series={USDC_SPARKLINE}
+                metrics={[
+                  {
+                    label: "Supply APY",
+                    value: "8.45%",
+                    highlight: true,
+                    className: "text-emerald-500",
+                  },
+                  { label: "TVL", value: "$69.9M" },
+                  { label: "Utilization", value: "82.1%" },
+                ]}
                 className="max-w-none"
               >
                 <TrendBadge>+0.01%</TrendBadge>
@@ -228,8 +244,16 @@ export default function LendingPage() {
                 tokens={[{ icon: JITOSOL_ICON, symbol: "JitoSOL" }]}
                 name="Jito Staked SOL"
                 price="$189.32"
-                description="9.12% APY"
-                series={JITOSOL_SPARKLINE}
+                metrics={[
+                  {
+                    label: "Supply APY",
+                    value: "9.12%",
+                    highlight: true,
+                    className: "text-emerald-500",
+                  },
+                  { label: "TVL", value: "$24.2M" },
+                  { label: "Utilization", value: "71.3%" },
+                ]}
                 className="max-w-none"
               >
                 <TrendBadge>+9.75%</TrendBadge>

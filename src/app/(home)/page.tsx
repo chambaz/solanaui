@@ -13,8 +13,8 @@ export default function HomePage() {
           className="mx-auto mb-4"
         />
         <h1 className="mb-3 text-4xl font-bold tracking-tight">SolanaUI</h1>
-        <p className="mx-auto max-w-xl text-lg text-muted-foreground">
-          UI tooling for Solana builders and agents
+        <p className="mx-auto text-lg text-muted-foreground">
+          Beautifully designed components and tooling for Solana builders
         </p>
         <div className="mt-4 inline-flex items-center rounded-lg border border-border bg-muted/50 px-4 py-2 font-mono text-sm text-foreground">
           npx skills add chambaz/solanaui

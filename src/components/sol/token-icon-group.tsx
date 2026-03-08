@@ -12,20 +12,27 @@ interface TokenIconGroupProps {
 const TokenIconGroup = ({
   tokens,
   size = 24,
-  overlap = -8,
+  overlap = -10,
   max = 4,
   className,
 }: TokenIconGroupProps) => {
   const visible = tokens.slice(0, max);
   const remaining = tokens.length - max;
+  const hasOverlap = visible.length > 1 || remaining > 0;
 
   return (
     <div className={cn("flex items-center", className)}>
       {visible.map((token, i) => (
         <div
           key={`${token.src}-${i}`}
-          className="rounded-full ring-2 ring-background"
-          style={{ marginLeft: i === 0 ? 0 : overlap }}
+          className={cn(
+            "rounded-full relative",
+            hasOverlap && "ring-2 ring-background",
+          )}
+          style={{
+            marginLeft: i === 0 ? 0 : overlap,
+            zIndex: visible.length + 1 - i,
+          }}
         >
           <TokenIcon
             src={token.src}
@@ -37,12 +44,13 @@ const TokenIconGroup = ({
       ))}
       {remaining > 0 && (
         <div
-          className="flex items-center justify-center rounded-full bg-muted text-muted-foreground ring-2 ring-background font-medium"
+          className="relative flex items-center justify-center rounded-full bg-muted text-muted-foreground ring-2 ring-background font-medium"
           style={{
             width: size,
             height: size,
             marginLeft: overlap,
             fontSize: size * 0.35,
+            zIndex: visible.length + 2,
           }}
         >
           +{remaining}

@@ -19,6 +19,8 @@ interface SwapBoxProps {
   defaultToToken?: string;
   fromBalance?: string;
   toBalance?: string;
+  fromLabel?: string;
+  toLabel?: string;
   details?: SwapBoxDetail[];
   submitLabel?: string;
   className?: string;
@@ -30,6 +32,8 @@ const SwapBox = ({
   defaultToToken,
   fromBalance,
   toBalance,
+  fromLabel = "Sell",
+  toLabel = "Buy",
   details,
   submitLabel = "Swap",
   className,
@@ -40,30 +44,42 @@ const SwapBox = ({
   const toToken = flipped ? defaultFromToken : defaultToToken;
   const fromBal = flipped ? toBalance : fromBalance;
   const toBal = flipped ? fromBalance : toBalance;
+  const currentFromLabel = flipped ? toLabel : fromLabel;
+  const currentToLabel = flipped ? fromLabel : toLabel;
 
   return (
-    <div className={cn("flex flex-col gap-4 border rounded-lg p-4", className)}>
-      <div className="flex flex-col gap-2 items-center">
-        <TokenInput
-          key={`from-${flipped}`}
-          tokens={tokens}
-          defaultToken={fromToken}
-          balance={fromBal}
-        />
+    <div className={cn("flex flex-col gap-4 border rounded-lg p-5", className)}>
+      <div className="flex flex-col items-center">
+        <div className="w-full flex flex-col gap-1.5">
+          <span className="text-xs font-medium text-muted-foreground">
+            {currentFromLabel}
+          </span>
+          <TokenInput
+            key={`from-${flipped}`}
+            tokens={tokens}
+            defaultToken={fromToken}
+            balance={fromBal}
+          />
+        </div>
         <Button
           variant="outline"
           size="icon"
-          className="rounded-full size-8 -my-5 z-10 bg-background"
+          className="rounded-full size-9 -my-4 z-10 bg-background border-2"
           onClick={() => setFlipped((f) => !f)}
         >
           <ArrowDownUpIcon className="size-4" />
         </Button>
-        <TokenInput
-          key={`to-${flipped}`}
-          tokens={tokens}
-          defaultToken={toToken}
-          balance={toBal}
-        />
+        <div className="w-full flex flex-col gap-1.5">
+          <span className="text-xs font-medium text-muted-foreground">
+            {currentToLabel}
+          </span>
+          <TokenInput
+            key={`to-${flipped}`}
+            tokens={tokens}
+            defaultToken={toToken}
+            balance={toBal}
+          />
+        </div>
       </div>
       {details && details.length > 0 && (
         <>

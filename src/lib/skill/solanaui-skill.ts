@@ -225,6 +225,7 @@ interface AuthCardProps {
     props: `interface PoolCardMetric {
   label: string;
   value: string;
+  highlight?: boolean;
   className?: string;
 }
 
@@ -422,6 +423,8 @@ interface SwapBoxProps {
   defaultToToken?: string;
   fromBalance?: string;
   toBalance?: string;
+  fromLabel?: string;
+  toLabel?: string;
   details?: SwapBoxDetail[];
   submitLabel?: string;
   className?: string;
@@ -516,7 +519,7 @@ interface SwapBoxProps {
     name: "TokenInput",
     file: "token-input",
     description:
-      "A numeric input with integrated token selector, wallet balance, Half/Max buttons, and USD value display.",
+      "A numeric input with integrated token selector, wallet balance, Half/Max buttons, and USD value display. Automatically formats numbers with thousand separators (e.g. 69420 displays as 69,420). The onValueChange callback receives the raw unformatted number string.",
     props: `interface TokenInputProps {
   tokens: { icon: string; symbol: string }[];
   defaultToken?: string;

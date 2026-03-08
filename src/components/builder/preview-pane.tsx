@@ -74,6 +74,7 @@ const SANDBOX_DEPENDENCIES: Record<string, string> = {
   "@radix-ui/react-collapsible": "^1.1.11",
   sonner: "^2.0.7",
   "next-themes": "^0.4.6",
+  "react-number-format": "^5.4.4",
 };
 
 /**

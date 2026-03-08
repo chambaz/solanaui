@@ -139,6 +139,23 @@ Display a liquidity pool with overlapping token icons and a metrics grid.
 </PoolCard>
 ```
 
+### Highlight Metric
+
+Make a key metric visually prominent with `highlight: true`. Useful for lending/yield cards where APY is the primary value.
+
+```tsx
+<PoolCard
+  tokens={[{ icon: SOL_ICON, symbol: "SOL" }]}
+  name="Solana"
+  price="$162.56"
+  metrics={[
+    { label: "Supply APY", value: "6.82%", highlight: true, className: "text-emerald-500" },
+    { label: "TVL", value: "$420.8M" },
+    { label: "Utilization", value: "78.4%" },
+  ]}
+/>
+```
+
 ### Custom Name
 
 Override the auto-generated name (defaults to joining token symbols with "/").

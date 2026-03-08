@@ -2,6 +2,7 @@
 
 import { WalletIcon } from "lucide-react";
 import React from "react";
+import { NumericFormat } from "react-number-format";
 import { TokenCombobox } from "@/components/sol/token-combobox";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -31,13 +32,9 @@ const TokenInput = ({
   const [internalValue, setInternalValue] = React.useState(value ?? "");
   const currentValue = value ?? internalValue;
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const raw = e.target.value;
-    // Allow only numbers and a single decimal point
-    if (raw === "" || /^\d*\.?\d*$/.test(raw)) {
-      setInternalValue(raw);
-      onValueChange?.(raw);
-    }
+  const handleValueChange = (values: { value: string }) => {
+    setInternalValue(values.value);
+    onValueChange?.(values.value);
   };
 
   const handleQuickAmount = (fraction: number) => {
@@ -89,11 +86,15 @@ const TokenInput = ({
           onSelect={onTokenSelect}
         />
         <div className="flex flex-col flex-1 min-w-0 items-end">
-          <Input
-            inputMode="decimal"
-            placeholder="0"
+          <NumericFormat
             value={currentValue}
-            onChange={handleChange}
+            onValueChange={handleValueChange}
+            thousandSeparator=","
+            decimalSeparator="."
+            allowNegative={false}
+            placeholder="0"
+            inputMode="decimal"
+            customInput={Input}
             className="text-right bg-transparent pr-1 dark:bg-transparent shadow-none border-none focus:ring-0 focus-visible:ring-0 w-full md:text-xl"
           />
           {usdValue && (

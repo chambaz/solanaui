@@ -39,6 +39,7 @@
     "radix-ui": "^1.4.3",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "react-number-format": "^5.4.4",
     "recharts": "2.15.4",
     "shiki": "^3.14.0",
     "sonner": "^2.0.7",

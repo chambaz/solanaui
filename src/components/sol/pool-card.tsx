@@ -14,6 +14,7 @@ import { cn } from "@/lib/utils";
 interface PoolCardMetric {
   label: string;
   value: string;
+  highlight?: boolean;
   className?: string;
 }
 
@@ -43,6 +44,9 @@ const PoolCard = ({
   const iconSize = tokens.length > 1 ? 28 : 36;
   const iconOverlap = tokens.length > 1 ? -10 : 0;
 
+  const highlightMetric = metrics?.find((m) => m.highlight);
+  const regularMetrics = metrics?.filter((m) => !m.highlight);
+
   return (
     <Card className={cn("p-4 w-full max-w-sm", className)} {...props}>
       <CardHeader className="p-0">
@@ -62,10 +66,28 @@ const PoolCard = ({
         )}
       </CardHeader>
 
-      {metrics && metrics.length > 0 && (
+      {highlightMetric && (
+        <CardContent className="p-0">
+          <div className="flex flex-col">
+            <span className="text-muted-foreground text-xs">
+              {highlightMetric.label}
+            </span>
+            <span
+              className={cn(
+                "text-2xl font-bold tracking-tight",
+                highlightMetric.className,
+              )}
+            >
+              {highlightMetric.value}
+            </span>
+          </div>
+        </CardContent>
+      )}
+
+      {regularMetrics && regularMetrics.length > 0 && (
         <CardContent className="p-0">
           <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
-            {metrics.map((metric) => (
+            {regularMetrics.map((metric) => (
               <div key={metric.label} className="flex flex-col">
                 <span className="text-muted-foreground text-xs">
                   {metric.label}

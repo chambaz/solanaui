@@ -35,11 +35,11 @@ const NFTCard = ({
 
   return (
     <Card
-      className={cn("w-full py-0 gap-0 overflow-hidden", className)}
+      className={cn("w-full max-w-xs py-0 gap-0 overflow-hidden", className)}
       {...props}
     >
       <CardContent className="p-0">
-        <div className="relative aspect-square w-full bg-muted">
+        <div className="relative aspect-square w-full bg-muted overflow-hidden">
           {status === "loading" && (
             <Skeleton className="absolute inset-0 rounded-none" />
           )}
@@ -52,7 +52,7 @@ const NFTCard = ({
               src={image}
               alt={name}
               className={cn(
-                "w-full aspect-square object-cover",
+                "absolute inset-0 w-full h-full object-cover",
                 status === "loading" && "opacity-0",
               )}
               onLoad={() => setStatus("loaded")}

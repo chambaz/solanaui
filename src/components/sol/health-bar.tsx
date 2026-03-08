@@ -45,20 +45,18 @@ const HealthBar = ({
           </div>
         )}
       </div>
-      <div className="relative h-2 w-full rounded-full bg-muted overflow-hidden">
-        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-red-400 via-yellow-500 to-emerald-500" />
-        {/* Mask overlay to show only filled portion */}
+      <div className="relative h-2.5 w-full rounded-full bg-muted">
+        {/* Clip wrapper: sized to filled portion, rounds the right edge */}
         <div
-          className="absolute top-0 right-0 bottom-0 bg-muted rounded-r-full"
-          style={{ width: `${100 - clamped}%` }}
-        />
-        {/* Position marker */}
-        <div
-          className="absolute top-1/2 -translate-y-1/2 size-3.5 rounded-full bg-white border-2 border-foreground/80 shadow-sm transition-all duration-300"
-          style={{
-            left: `clamp(0px, calc(${clamped}% - 7px), calc(100% - 14px))`,
-          }}
-        />
+          className="absolute inset-y-0 left-0 overflow-hidden rounded-full transition-all duration-300"
+          style={{ width: `${clamped}%` }}
+        >
+          {/* Full-width gradient stretches across the entire bar */}
+          <div
+            className="h-full bg-gradient-to-r from-red-400 via-yellow-500 to-emerald-500"
+            style={{ width: `${clamped > 0 ? (100 / clamped) * 100 : 100}%` }}
+          />
+        </div>
       </div>
     </div>
   );

@@ -122,7 +122,7 @@ interface AuthCardProps {
 }`,
     usage: `<NFTCard
   name="Mad Lad #4281"
-  image="/nft.png"
+  image="https://ybqkchja2noth7nabnjwtcd5wpepkmirgqqptgfupzqk32uwygpa.arweave.net/wGChHSDTXTP9oAtTaYh9s8j1MRE0IPmYtH5greqWwZ4"
   collection="Mad Lads"
   price="142.5"
   currency="SOL"
@@ -156,11 +156,13 @@ interface AuthCardProps {
       "An area chart for displaying token price or portfolio value history with X/Y axes, grid lines, gradient fill, and tooltips.",
     props: `interface PriceChartProps {
   title?: string;
+  description?: string;
   series: { time: string; value: number }[];
   className?: string;
 }`,
     usage: `<PriceChart
   title="SOL Price (90d)"
+  description="Weekly closing price"
   series={[
     { time: "2026-01-01", value: 148.32 },
     { time: "2026-01-15", value: 152.45 },
@@ -607,6 +609,7 @@ If you do not already have access to token images in your codebase, use these as
 - JitoSOL: https://storage.googleapis.com/token-metadata/JitoSOL-256.png
 - mSOL: https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So/logo.png
 - ETH: https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/7vfCXTUXx5WJV5JADk17DUJ4kXCL1sCqzGGchHB54pTM/logo.png
+- NFT (placeholder artwork): https://ybqkchja2noth7nabnjwtcd5wpepkmirgqqptgfupzqk32uwygpa.arweave.net/wGChHSDTXTP9oAtTaYh9s8j1MRE0IPmYtH5greqWwZ4
 
 Define these as constants at the top of your file for readability.
 `;

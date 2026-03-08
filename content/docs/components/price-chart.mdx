@@ -6,6 +6,7 @@ description: An area chart for displaying token price history with axes, grid li
 <ComponentDemo>
   <PriceChart
     title="SOL Price (90d)"
+    description="Weekly closing price"
     series={[
       { time: "2025-12-08", value: 138.42 },
       { time: "2025-12-15", value: 141.85 },
@@ -32,6 +33,7 @@ export function PriceChartDemo() {
   return (
     <PriceChart
       title="SOL Price (90d)"
+      description="Weekly closing price"
       series={[
         { time: "2025-12-08", value: 138.42 },
         { time: "2025-12-15", value: 141.85 },
@@ -66,6 +68,7 @@ export function PriceChartDemo() {
 ```tsx
 <PriceChart
   title="SOL Price (90d)"
+  description="Weekly closing price"
   series={[
     { time: "2026-01-01", value: 148.32 },
     { time: "2026-02-01", value: 155.40 },

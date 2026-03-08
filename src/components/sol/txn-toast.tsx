@@ -51,26 +51,35 @@ const txnToast = ({
     explorerUrl ??
     (signature ? `https://solscan.io/tx/${signature}` : undefined);
 
-  return toast(title ?? config.defaultTitle, {
-    description: (
-      <div className="flex flex-col gap-1.5">
-        <span>{description ?? config.defaultDescription}</span>
-        {resolvedExplorerUrl && (
-          <a
-            href={resolvedExplorerUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
-          >
-            {signature ? truncateSignature(signature) : "View transaction"}
-            <ExternalLinkIcon className="size-3" />
-          </a>
-        )}
+  return toast.custom(
+    () => (
+      <div className="flex gap-3 w-[356px] rounded-lg border bg-background p-4 shadow-lg">
+        <div className="mt-0.5 shrink-0">{config.icon}</div>
+        <div className="flex flex-col gap-1">
+          <span className="text-sm font-medium">
+            {title ?? config.defaultTitle}
+          </span>
+          <span className="text-sm text-muted-foreground">
+            {description ?? config.defaultDescription}
+          </span>
+          {resolvedExplorerUrl && (
+            <a
+              href={resolvedExplorerUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
+            >
+              {signature ? truncateSignature(signature) : "View transaction"}
+              <ExternalLinkIcon className="size-3" />
+            </a>
+          )}
+        </div>
       </div>
     ),
-    icon: config.icon,
-    duration: status === "pending" ? Infinity : 5000,
-  });
+    {
+      duration: status === "pending" ? Infinity : 5000,
+    },
+  );
 };
 
 export type { TxnToastProps };

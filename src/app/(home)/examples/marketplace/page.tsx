@@ -4,7 +4,8 @@ import { NFTCard } from "@/components/sol/nft-card";
 import { StatCard } from "@/components/sol/stat-card";
 import { WalletSheet } from "@/components/sol/wallet-sheet";
 
-const MAD_LADS_BASE = "https://madlads.s3.us-west-2.amazonaws.com";
+const NFT_IMAGE =
+  "https://ybqkchja2noth7nabnjwtcd5wpepkmirgqqptgfupzqk32uwygpa.arweave.net/wGChHSDTXTP9oAtTaYh9s8j1MRE0IPmYtH5greqWwZ4";
 
 const SOL_ICON =
   "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png";
@@ -16,73 +17,73 @@ const BONK_ICON =
 const NFTS = [
   {
     name: "Mad Lad #4281",
-    image: `${MAD_LADS_BASE}/4281.png`,
+    image: NFT_IMAGE,
     collection: "Mad Lads",
     price: "142.5",
   },
   {
     name: "Mad Lad #1337",
-    image: `${MAD_LADS_BASE}/1337.png`,
+    image: NFT_IMAGE,
     collection: "Mad Lads",
     price: "158.2",
   },
   {
     name: "Mad Lad #7892",
-    image: `${MAD_LADS_BASE}/7892.png`,
+    image: NFT_IMAGE,
     collection: "Mad Lads",
     price: "135.0",
   },
   {
     name: "Mad Lad #2048",
-    image: `${MAD_LADS_BASE}/2048.png`,
+    image: NFT_IMAGE,
     collection: "Mad Lads",
     price: "167.8",
   },
   {
     name: "Mad Lad #512",
-    image: `${MAD_LADS_BASE}/512.png`,
+    image: NFT_IMAGE,
     collection: "Mad Lads",
     price: "145.3",
   },
   {
     name: "Mad Lad #9001",
-    image: `${MAD_LADS_BASE}/9001.png`,
+    image: NFT_IMAGE,
     collection: "Mad Lads",
     price: "152.7",
   },
   {
     name: "Mad Lad #3456",
-    image: `${MAD_LADS_BASE}/3456.png`,
+    image: NFT_IMAGE,
     collection: "Mad Lads",
     price: "139.9",
   },
   {
     name: "Mad Lad #6174",
-    image: `${MAD_LADS_BASE}/6174.png`,
+    image: NFT_IMAGE,
     collection: "Mad Lads",
     price: "148.1",
   },
   {
     name: "Mad Lad #8523",
-    image: `${MAD_LADS_BASE}/8523.png`,
+    image: NFT_IMAGE,
     collection: "Mad Lads",
     price: "155.4",
   },
   {
     name: "Mad Lad #2901",
-    image: `${MAD_LADS_BASE}/2901.png`,
+    image: NFT_IMAGE,
     collection: "Mad Lads",
     price: "141.2",
   },
   {
     name: "Mad Lad #5678",
-    image: `${MAD_LADS_BASE}/5678.png`,
+    image: NFT_IMAGE,
     collection: "Mad Lads",
     price: "163.9",
   },
   {
     name: "Mad Lad #7401",
-    image: `${MAD_LADS_BASE}/7401.png`,
+    image: NFT_IMAGE,
     collection: "Mad Lads",
     price: "137.6",
   },
@@ -90,42 +91,42 @@ const NFTS = [
 
 const RECENT_ACTIVITY = [
   {
-    icon: `${MAD_LADS_BASE}/4281.png`,
+    icon: NFT_IMAGE,
     title: "Mad Lad #4281 sold",
     description: "Buyer: 7xKp...3mFn",
     time: "2m ago",
     value: "142.5 SOL",
   },
   {
-    icon: `${MAD_LADS_BASE}/1337.png`,
+    icon: NFT_IMAGE,
     title: "Mad Lad #1337 listed",
     description: "Seller: 9dVq...8hJr",
     time: "8m ago",
     value: "158.2 SOL",
   },
   {
-    icon: `${MAD_LADS_BASE}/7892.png`,
+    icon: NFT_IMAGE,
     title: "Mad Lad #7892 sold",
     description: "Buyer: 3kYm...2wBt",
     time: "15m ago",
     value: "135.0 SOL",
   },
   {
-    icon: `${MAD_LADS_BASE}/2048.png`,
+    icon: NFT_IMAGE,
     title: "Mad Lad #2048 bid placed",
     description: "Bidder: 5nPx...9eLq",
     time: "22m ago",
     value: "160.0 SOL",
   },
   {
-    icon: `${MAD_LADS_BASE}/512.png`,
+    icon: NFT_IMAGE,
     title: "Mad Lad #512 sold",
     description: "Buyer: 8gRz...4kNs",
     time: "38m ago",
     value: "145.3 SOL",
   },
   {
-    icon: `${MAD_LADS_BASE}/9001.png`,
+    icon: NFT_IMAGE,
     title: "Mad Lad #9001 delisted",
     description: "Owner: 2jCf...7mDw",
     time: "1h ago",

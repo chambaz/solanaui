@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 
 interface PriceChartProps {
   title?: string;
+  description?: string;
   series: {
     time: string;
     value: number;
@@ -28,7 +29,12 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-const PriceChart = ({ title, series, className }: PriceChartProps) => {
+const PriceChart = ({
+  title,
+  description,
+  series,
+  className,
+}: PriceChartProps) => {
   const gradientId = React.useId();
 
   if (!series.length) return null;
@@ -45,16 +51,21 @@ const PriceChart = ({ title, series, className }: PriceChartProps) => {
   return (
     <div
       className={cn(
-        "flex flex-col gap-2 rounded-lg border bg-card p-4",
+        "flex min-h-0 flex-1 flex-col gap-2 rounded-lg border bg-card p-4",
         className,
       )}
     >
-      {title && (
-        <span className="text-sm font-medium text-muted-foreground">
-          {title}
-        </span>
+      {(title || description) && (
+        <div className="flex flex-col gap-0.5">
+          {title && (
+            <h3 className="text-base font-semibold tracking-tight">{title}</h3>
+          )}
+          {description && (
+            <p className="text-sm text-muted-foreground">{description}</p>
+          )}
+        </div>
       )}
-      <ChartContainer config={chartConfig} className="h-[200px] w-full">
+      <ChartContainer config={chartConfig} className="min-h-0 flex-1 w-full">
         <AreaChart accessibilityLayer data={series}>
           <defs>
             <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">

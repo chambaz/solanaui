@@ -26,6 +26,8 @@ const TOKEN_ICON_URLS: Record<string, string> = {
     "https://storage.googleapis.com/token-metadata/JitoSOL-256.png",
   "/msol.png":
     "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So/logo.png",
+  "/nft.png":
+    "https://ybqkchja2noth7nabnjwtcd5wpepkmirgqqptgfupzqk32uwygpa.arweave.net/wGChHSDTXTP9oAtTaYh9s8j1MRE0IPmYtH5greqWwZ4",
 };
 
 /**

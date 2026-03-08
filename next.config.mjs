@@ -9,7 +9,8 @@ const config = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "madlads.s3.us-west-2.amazonaws.com",
+        hostname:
+          "ybqkchja2noth7nabnjwtcd5wpepkmirgqqptgfupzqk32uwygpa.arweave.net",
       },
       {
         protocol: "https",

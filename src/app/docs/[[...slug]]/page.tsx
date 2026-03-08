@@ -33,6 +33,7 @@ import { TradeChart } from "@/components/sol/trade-chart";
 import { TrendBadge } from "@/components/sol/trend-badge";
 import { TxnTable } from "@/components/sol/txn-table";
 import { WalletSheet } from "@/components/sol/wallet-sheet";
+import { Button } from "@/components/ui/button";
 import { getPageImage, source } from "@/lib/source";
 import { getMDXComponents } from "@/mdx-components";
 
@@ -75,6 +76,7 @@ export default async function Page(props: PageProps<"/docs/[[...slug]]">) {
             TradeBoxDialog,
             TradeButtons,
             ActivityFeed,
+            Button,
             HealthBar,
             StatCard,
             TxnToastDemo,

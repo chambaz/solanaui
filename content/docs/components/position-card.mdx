@@ -10,7 +10,12 @@ description: A card component for displaying an active lending or staking positi
     amount="45.25 SOL"
     value="$7,355.82"
     apy="6.82%"
-  />
+  >
+    <div className="grid grid-cols-2 gap-2 w-full">
+      <Button variant="secondary" size="sm">Withdraw</Button>
+      <Button variant="secondary" size="sm">Supply More</Button>
+    </div>
+  </PositionCard>
 </ComponentDemo>
 
 ```tsx

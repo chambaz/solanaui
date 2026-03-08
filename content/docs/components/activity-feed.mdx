@@ -1,6 +1,6 @@
 ---
 title: Activity Feed
-description: A compact event list for displaying recent activity like sales, listings, and transfers
+description: A compact event list for displaying recent activity like swaps, trades, and transfers
 ---
 
 <ComponentDemo>
@@ -8,25 +8,25 @@ description: A compact event list for displaying recent activity like sales, lis
     <ActivityFeed
       items={[
         {
-          icon: "https://madlads.s3.us-west-2.amazonaws.com/4281.png",
-          title: "Mad Lad #4281 sold",
-          description: "Buyer: 7xKp...3mFn",
+          icon: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+          title: "Bought SOL",
+          description: "Hdg...248",
           time: "2m ago",
-          value: "142.5 SOL",
+          value: "100 SOL",
         },
         {
-          icon: "https://madlads.s3.us-west-2.amazonaws.com/1337.png",
-          title: "Mad Lad #1337 listed",
-          description: "Seller: 9dVq...8hJr",
+          icon: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+          title: "Sold USDC",
+          description: "9dV...8hJ",
           time: "8m ago",
-          value: "158.2 SOL",
+          value: "5,000 USDC",
         },
         {
-          icon: "https://madlads.s3.us-west-2.amazonaws.com/7892.png",
-          title: "Mad Lad #7892 sold",
-          description: "Buyer: 3kYm...2wBt",
+          icon: "https://arweave.net/hQiPZOsRZXGXBJd_82PhVdlM_hACsT_q6wqwf5cSY7I",
+          title: "Bought BONK",
+          description: "3kY...2wB",
           time: "15m ago",
-          value: "135.0 SOL",
+          value: "2.4M BONK",
         },
       ]}
     />
@@ -36,16 +36,19 @@ description: A compact event list for displaying recent activity like sales, lis
 ```tsx
 import { ActivityFeed } from "@/components/sol/activity-feed";
 
+const SOL_ICON =
+  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png";
+
 export function ActivityFeedDemo() {
   return (
     <ActivityFeed
       items={[
         {
-          icon: "https://madlads.s3.us-west-2.amazonaws.com/4281.png",
-          title: "Mad Lad #4281 sold",
-          description: "Buyer: 7xKp...3mFn",
+          icon: SOL_ICON,
+          title: "Bought SOL",
+          description: "Hdg...248",
           time: "2m ago",
-          value: "142.5 SOL",
+          value: "100 SOL",
         },
       ]}
     />
@@ -67,9 +70,11 @@ export function ActivityFeedDemo() {
 <ActivityFeed
   items={[
     {
-      title: "Mad Lad #4281 sold",
+      icon: SOL_ICON,
+      title: "Bought SOL",
+      description: "Hdg...248",
       time: "2m ago",
-      value: "142.5 SOL",
+      value: "100 SOL",
     },
   ]}
 />

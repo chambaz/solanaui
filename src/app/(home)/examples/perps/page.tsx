@@ -15,11 +15,11 @@ import { WalletSheet } from "@/components/sol/wallet-sheet";
 import { Card } from "@/components/ui/card";
 
 const SOL_ICON =
-  "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/So11111111111111111111111111111111111111112.png";
+  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png";
 const USDC_ICON =
-  "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v.png";
+  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png";
 const ETH_ICON =
-  "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/7vfCXTUXx5WJV5JADk17DUJ4kXCL1sCqzGGchHB54pTM.png";
+  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/7vfCXTUXx5WJV5JADk17DUJ4kXCL1sCqzGGchHB54pTM/logo.png";
 
 const WALLET_TOKENS = [
   {

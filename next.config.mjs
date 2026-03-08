@@ -13,8 +13,17 @@ const config = {
       },
       {
         protocol: "https",
-        hostname: "xcdlwgvabmruuularsvn.supabase.co",
-        pathname: "/storage/v1/object/public/p0-tokens/**",
+        hostname: "raw.githubusercontent.com",
+        pathname: "/solana-labs/token-list/**",
+      },
+      {
+        protocol: "https",
+        hostname: "arweave.net",
+      },
+      {
+        protocol: "https",
+        hostname: "storage.googleapis.com",
+        pathname: "/token-metadata/**",
       },
     ],
   },

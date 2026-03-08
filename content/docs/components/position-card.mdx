@@ -6,7 +6,7 @@ description: A card component for displaying an active lending or staking positi
 <ComponentDemo>
   <PositionCard
     symbol="SOL"
-    icon="https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/So11111111111111111111111111111111111111112.png"
+    icon="https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png"
     amount="45.25 SOL"
     value="$7,355.82"
     apy="6.82%"
@@ -17,11 +17,14 @@ description: A card component for displaying an active lending or staking positi
 import { PositionCard } from "@/components/sol/position-card";
 import { Button } from "@/components/ui/button";
 
+const SOL_ICON =
+  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png";
+
 export function PositionCardDemo() {
   return (
     <PositionCard
       symbol="SOL"
-      icon="/sol.png"
+      icon={SOL_ICON}
       amount="45.25 SOL"
       value="$7,355.82"
       apy="6.82%"
@@ -46,9 +49,12 @@ export function PositionCardDemo() {
 ## Usage
 
 ```tsx
+const SOL_ICON =
+  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png";
+
 <PositionCard
   symbol="SOL"
-  icon="/sol.png"
+  icon={SOL_ICON}
   amount="45.25 SOL"
   value="$7,355.82"
 />

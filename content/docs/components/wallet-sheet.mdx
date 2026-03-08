@@ -11,7 +11,7 @@ description: A Phantom-style slide-out wallet panel with balance, action buttons
     balanceChangePercent="-0.36%"
     tokens={[
       {
-        icon: "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/So11111111111111111111111111111111111111112.png",
+        icon: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
         name: "Solana",
         symbol: "SOL",
         balance: "24.58",
@@ -19,7 +19,7 @@ description: A Phantom-style slide-out wallet panel with balance, action buttons
         change: "-$12.40",
       },
       {
-        icon: "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v.png",
+        icon: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
         name: "USD Coin",
         symbol: "USDC",
         balance: "1,250.00",
@@ -27,7 +27,7 @@ description: A Phantom-style slide-out wallet panel with balance, action buttons
         change: "+$0.01",
       },
       {
-        icon: "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263.png",
+        icon: "https://arweave.net/hQiPZOsRZXGXBJd_82PhVdlM_hACsT_q6wqwf5cSY7I",
         name: "Bonk",
         symbol: "BONK",
         balance: "15,420,000",
@@ -41,6 +41,9 @@ description: A Phantom-style slide-out wallet panel with balance, action buttons
 ```tsx
 import { WalletSheet } from "@/components/sol/wallet-sheet";
 
+const SOL_ICON =
+  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png";
+
 export function WalletSheetDemo() {
   return (
     <WalletSheet
@@ -50,7 +53,7 @@ export function WalletSheetDemo() {
       balanceChangePercent="-0.36%"
       tokens={[
         {
-          icon: "/sol.png",
+          icon: SOL_ICON,
           name: "Solana",
           symbol: "SOL",
           balance: "24.58",
@@ -74,6 +77,9 @@ export function WalletSheetDemo() {
 ## Usage
 
 ```tsx
+const SOL_ICON =
+  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png";
+
 <WalletSheet
   address="7xKpR4nm3kW9vBzL5hQd2mFnZq"
   balance="$5,684.76"
@@ -81,7 +87,7 @@ export function WalletSheetDemo() {
   balanceChangePercent="-0.36%"
   tokens={[
     {
-      icon: "/sol.png",
+      icon: SOL_ICON,
       name: "Solana",
       symbol: "SOL",
       balance: "24.58",

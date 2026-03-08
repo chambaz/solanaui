@@ -1,0 +1,91 @@
+---
+title: Price Chart
+description: An area chart for displaying token price history with axes, grid lines, and tooltips
+---
+
+<ComponentDemo>
+  <PriceChart
+    title="SOL Price (90d)"
+    series={[
+      { time: "2025-12-08", value: 138.42 },
+      { time: "2025-12-15", value: 141.85 },
+      { time: "2025-12-22", value: 139.73 },
+      { time: "2025-12-29", value: 143.22 },
+      { time: "2026-01-05", value: 146.67 },
+      { time: "2026-01-12", value: 144.35 },
+      { time: "2026-01-19", value: 148.12 },
+      { time: "2026-01-26", value: 149.88 },
+      { time: "2026-02-02", value: 151.45 },
+      { time: "2026-02-09", value: 153.71 },
+      { time: "2026-02-16", value: 151.92 },
+      { time: "2026-02-23", value: 155.22 },
+      { time: "2026-03-02", value: 158.45 },
+      { time: "2026-03-08", value: 162.56 },
+    ]}
+  />
+</ComponentDemo>
+
+```tsx
+import { PriceChart } from "@/components/sol/price-chart";
+
+export function PriceChartDemo() {
+  return (
+    <PriceChart
+      title="SOL Price (90d)"
+      series={[
+        { time: "2025-12-08", value: 138.42 },
+        { time: "2025-12-15", value: 141.85 },
+        { time: "2025-12-22", value: 139.73 },
+        { time: "2025-12-29", value: 143.22 },
+        { time: "2026-01-05", value: 146.67 },
+        { time: "2026-01-12", value: 144.35 },
+        { time: "2026-01-19", value: 148.12 },
+        { time: "2026-01-26", value: 149.88 },
+        { time: "2026-02-02", value: 151.45 },
+        { time: "2026-02-09", value: 153.71 },
+        { time: "2026-02-16", value: 151.92 },
+        { time: "2026-02-23", value: 155.22 },
+        { time: "2026-03-02", value: 158.45 },
+        { time: "2026-03-08", value: 162.56 },
+      ]}
+    />
+  );
+}
+```
+
+## Installation
+
+<Tabs items={["pnpm", "npm", "yarn"]}>
+  <Tab value="pnpm">pnpm dlx solanaui@latest add price-chart</Tab>
+  <Tab value="npm">npx solanaui@latest add price-chart</Tab>
+  <Tab value="yarn">yarn solanaui@latest add price-chart</Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+<PriceChart
+  title="SOL Price (90d)"
+  series={[
+    { time: "2026-01-01", value: 148.32 },
+    { time: "2026-02-01", value: 155.40 },
+    { time: "2026-03-01", value: 162.56 },
+  ]}
+/>
+```
+
+### Without Title
+
+```tsx
+<PriceChart
+  series={[
+    { time: "2026-01-01", value: 148.32 },
+    { time: "2026-02-01", value: 155.40 },
+    { time: "2026-03-01", value: 162.56 },
+  ]}
+/>
+```
+
+## Source Code
+
+<ComponentCode name="price-chart" />

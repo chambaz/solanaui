@@ -7,23 +7,23 @@ description: A command palette component for token selection
   <TokenCommand
     tokens={[
       {
-        icon: "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/So11111111111111111111111111111111111111112.png",
+        icon: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
         symbol: "SOL",
       },
       {
-        icon: "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/LSTxxxnJzKDFSLr4dUkPcmCf5VyryEqzPLz5j4bpxFp.png",
+        icon: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/LSTxxxnJzKDFSLr4dUkPcmCf5VyryEqzPLz5j4bpxFp/logo.png",
         symbol: "LST",
       },
       {
-        icon: "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn.png",
+        icon: "https://storage.googleapis.com/token-metadata/JitoSOL-256.png",
         symbol: "JitoSOL",
       },
       {
-        icon: "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v.png",
+        icon: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
         symbol: "USDC",
       },
       {
-        icon: "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263.png",
+        icon: "https://arweave.net/hQiPZOsRZXGXBJd_82PhVdlM_hACsT_q6wqwf5cSY7I",
         symbol: "BONK",
       },
     ]}
@@ -33,9 +33,14 @@ description: A command palette component for token selection
 ```tsx
 import { TokenCommand } from "@/components/sol/token-command";
 
+const SOL_ICON =
+  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png";
+const USDC_ICON =
+  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png";
+
 const tokens = [
-  { icon: "/sol.png", symbol: "SOL" },
-  { icon: "/usdc.png", symbol: "USDC" },
+  { icon: SOL_ICON, symbol: "SOL" },
+  { icon: USDC_ICON, symbol: "USDC" },
 ];
 
 export function TokenCommandDemo() {
@@ -54,10 +59,15 @@ export function TokenCommandDemo() {
 ## Usage
 
 ```tsx
+const SOL_ICON =
+  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png";
+const USDC_ICON =
+  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png";
+
 <TokenCommand
   tokens={[
-    { icon: "/sol.png", symbol: "SOL" },
-    { icon: "/usdc.png", symbol: "USDC" },
+    { icon: SOL_ICON, symbol: "SOL" },
+    { icon: USDC_ICON, symbol: "USDC" },
   ]}
 />
 ```

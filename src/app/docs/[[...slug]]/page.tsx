@@ -17,6 +17,7 @@ import { NFTCard } from "@/components/sol/nft-card";
 import { OrderBook } from "@/components/sol/order-book";
 import { PositionCard } from "@/components/sol/position-card";
 import { PositionTable } from "@/components/sol/position-table";
+import { PriceChart } from "@/components/sol/price-chart";
 import { SparklineChart } from "@/components/sol/sparkline-chart";
 import { StatCard } from "@/components/sol/stat-card";
 import { TokenCard } from "@/components/sol/token-card";
@@ -68,6 +69,7 @@ export default async function Page(props: PageProps<"/docs/[[...slug]]">) {
             OrderBook,
             PositionCard,
             PositionTable,
+            PriceChart,
             TxnTable,
             TradeBox,
             TradeBoxDialog,

@@ -6,13 +6,13 @@ import { WalletSheet } from "@/components/sol/wallet-sheet";
 import { Button } from "@/components/ui/button";
 
 const SOL_ICON =
-  "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/So11111111111111111111111111111111111111112.png";
+  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png";
 const USDC_ICON =
-  "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v.png";
+  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png";
 const JITOSOL_ICON =
-  "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn.png";
+  "https://storage.googleapis.com/token-metadata/JitoSOL-256.png";
 const MSOL_ICON =
-  "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So.png";
+  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So/logo.png";
 
 const TOKENS = [
   { icon: USDC_ICON, symbol: "USDC" },

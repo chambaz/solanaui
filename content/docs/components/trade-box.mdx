@@ -7,8 +7,8 @@ description: An order form with trade direction, token input, leverage, and orde
   <div className="max-w-sm mx-auto w-full">
     <TradeBox
       tokens={[
-        { icon: "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v.png", symbol: "USDC" },
-        { icon: "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/So11111111111111111111111111111111111111112.png", symbol: "SOL" },
+        { icon: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png", symbol: "USDC" },
+        { icon: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png", symbol: "SOL" },
       ]}
       defaultToken="USDC"
       balance="4,812.50"
@@ -24,12 +24,17 @@ description: An order form with trade direction, token input, leverage, and orde
 ```tsx
 import { TradeBox } from "@/components/sol/trade-box";
 
+const SOL_ICON =
+  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png";
+const USDC_ICON =
+  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png";
+
 export function TradeBoxDemo() {
   return (
     <TradeBox
       tokens={[
-        { icon: "/usdc.png", symbol: "USDC" },
-        { icon: "/sol.png", symbol: "SOL" },
+        { icon: USDC_ICON, symbol: "USDC" },
+        { icon: SOL_ICON, symbol: "SOL" },
       ]}
       defaultToken="USDC"
       balance="4,812.50"
@@ -56,8 +61,11 @@ export function TradeBoxDemo() {
 ### With Leverage (Perps)
 
 ```tsx
+const USDC_ICON =
+  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png";
+
 <TradeBox
-  tokens={[{ icon: "/usdc.png", symbol: "USDC" }]}
+  tokens={[{ icon: USDC_ICON, symbol: "USDC" }]}
   defaultToken="USDC"
   balance="4,812.50"
   showLeverage={true}
@@ -76,8 +84,11 @@ export function TradeBoxDemo() {
 ### Without Leverage (Lending)
 
 ```tsx
+const SOL_ICON =
+  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png";
+
 <TradeBox
-  tokens={[{ icon: "/sol.png", symbol: "SOL" }]}
+  tokens={[{ icon: SOL_ICON, symbol: "SOL" }]}
   defaultToken="SOL"
   balance="24.58"
   labels={["Deposit", "Withdraw"]}

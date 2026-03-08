@@ -1,6 +1,7 @@
 import { CoinsIcon, LandmarkIcon, WalletIcon } from "lucide-react";
 import { HealthBar } from "@/components/sol/health-bar";
 import { PositionCard } from "@/components/sol/position-card";
+import { PriceChart } from "@/components/sol/price-chart";
 import { StatCard } from "@/components/sol/stat-card";
 import { TokenCard } from "@/components/sol/token-card";
 import { TokenTable } from "@/components/sol/token-table";
@@ -11,15 +12,15 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const SOL_ICON =
-  "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/So11111111111111111111111111111111111111112.png";
+  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png";
 const USDC_ICON =
-  "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v.png";
+  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png";
 const JITOSOL_ICON =
-  "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn.png";
+  "https://storage.googleapis.com/token-metadata/JitoSOL-256.png";
 const MSOL_ICON =
-  "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So.png";
+  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So/logo.png";
 const BONK_ICON =
-  "https://xcdlwgvabmruuularsvn.supabase.co/storage/v1/object/public/p0-tokens/DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263.png";
+  "https://arweave.net/hQiPZOsRZXGXBJd_82PhVdlM_hACsT_q6wqwf5cSY7I";
 
 const WALLET_TOKENS = [
   {
@@ -244,6 +245,27 @@ export default function LendingPage() {
           <TabsContent value="portfolio" className="flex flex-col gap-6">
             {/* Health bar */}
             <HealthBar value={72} />
+
+            {/* P&L Chart */}
+            <PriceChart
+              title="Portfolio Value (90d)"
+              series={[
+                { time: "2025-12-08", value: 6420.15 },
+                { time: "2025-12-15", value: 6385.22 },
+                { time: "2025-12-22", value: 6510.88 },
+                { time: "2025-12-29", value: 6448.33 },
+                { time: "2026-01-05", value: 6590.45 },
+                { time: "2026-01-12", value: 6725.12 },
+                { time: "2026-01-19", value: 6680.91 },
+                { time: "2026-01-26", value: 6812.56 },
+                { time: "2026-02-02", value: 6945.33 },
+                { time: "2026-02-09", value: 6878.22 },
+                { time: "2026-02-16", value: 7012.45 },
+                { time: "2026-02-23", value: 7085.67 },
+                { time: "2026-03-02", value: 7098.34 },
+                { time: "2026-03-08", value: 7144.11 },
+              ]}
+            />
 
             {/* Stats */}
             <div className="grid grid-cols-3 gap-3">

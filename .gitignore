@@ -3,6 +3,7 @@
 
 # generated content
 .source
+src/lib/builder/preview-files.ts
 
 # test & build
 /coverage

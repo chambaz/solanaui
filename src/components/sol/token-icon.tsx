@@ -1,11 +1,16 @@
 "use client";
 
-import Image from "next/image";
 import React from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 
-type TokenIconProps = React.ComponentProps<typeof Image>;
+type TokenIconProps = {
+  src: string;
+  alt?: string;
+  width?: number;
+  height?: number;
+  className?: string;
+};
 
 const TokenIcon = ({
   alt = "Token",
@@ -41,7 +46,7 @@ const TokenIcon = ({
           style={{ width, height }}
         />
       )}
-      <Image
+      <img
         alt={alt}
         className={cn(
           "rounded-full",

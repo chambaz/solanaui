@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import React from "react";
 import {
   Card,
@@ -49,11 +48,9 @@ const NFTCard = ({
               Failed to load
             </div>
           ) : (
-            <Image
+            <img
               src={image}
               alt={name}
-              width={400}
-              height={400}
               className={cn(
                 "w-full aspect-square object-cover",
                 status === "loading" && "opacity-0",

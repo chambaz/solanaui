@@ -1,6 +1,6 @@
 import { formatDistanceToNow } from "date-fns";
 import { ExternalLinkIcon } from "lucide-react";
-import { TokenIcon } from "@/components/sol/token-icon";
+import { TokenIcon } from "@/registry/sol/token-icon";
 import { Badge } from "@/components/ui/badge";
 import {
   Table,

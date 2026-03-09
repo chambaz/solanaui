@@ -7,9 +7,9 @@ import {
   XIcon,
 } from "lucide-react";
 import React from "react";
-import { ActionBox } from "@/components/sol/action-box";
-import { OrderForm } from "@/components/sol/order-form";
-import { TokenIcon } from "@/components/sol/token-icon";
+import { ActionBox } from "@/registry/sol/action-box";
+import { OrderForm } from "@/registry/sol/order-form";
+import { TokenIcon } from "@/registry/sol/token-icon";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -26,8 +26,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import type { SortDirection } from "@/lib/sort-utils";
-import { compareValues } from "@/lib/sort-utils";
+import type { SortDirection } from "@/registry/lib/sort-utils";
+import { compareValues } from "@/registry/lib/sort-utils";
 import { cn } from "@/lib/utils";
 
 interface PositionTablePosition {

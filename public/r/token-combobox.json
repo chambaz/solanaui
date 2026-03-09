@@ -1,0 +1,24 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "token-combobox",
+  "title": "Token Combobox",
+  "description": "A searchable dropdown combobox for selecting tokens with icon display.",
+  "dependencies": [
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "button",
+    "command",
+    "popover",
+    "https://solanaui.dev/r/token-icon.json"
+  ],
+  "files": [
+    {
+      "path": "src/registry/sol/token-combobox.tsx",
+      "content": "\"use client\";\n\nimport { Check, ChevronsUpDown } from \"lucide-react\";\nimport React from \"react\";\nimport { TokenIcon } from \"@/registry/sol/token-icon\";\nimport { Button } from \"@/components/ui/button\";\nimport {\n  Command,\n  CommandEmpty,\n  CommandGroup,\n  CommandInput,\n  CommandItem,\n  CommandList,\n} from \"@/components/ui/command\";\nimport {\n  Popover,\n  PopoverContent,\n  PopoverTrigger,\n} from \"@/components/ui/popover\";\nimport { cn } from \"@/lib/utils\";\n\ninterface TokenComboboxProps {\n  tokens: {\n    icon: string;\n    symbol: string;\n  }[];\n  defaultValue?: string;\n  onSelect?: (token: { icon: string; symbol: string }) => void;\n  className?: string;\n}\n\nconst TokenCombobox = ({\n  tokens,\n  defaultValue,\n  onSelect,\n  className,\n}: TokenComboboxProps) => {\n  const [open, setOpen] = React.useState(false);\n  const [value, setValue] = React.useState(defaultValue ?? \"\");\n\n  const activeToken = tokens.find(\n    (token) => token.symbol.toLowerCase() === value.toLowerCase(),\n  );\n\n  return (\n    <Popover open={open} onOpenChange={setOpen}>\n      <PopoverTrigger asChild>\n        <Button\n          variant=\"outline\"\n          role=\"combobox\"\n          aria-expanded={open}\n          className={cn(\"shrink-0 justify-between\", className)}\n        >\n          {activeToken ? (\n            <div className=\"flex items-center gap-2.5\">\n              <TokenIcon\n                src={activeToken.icon}\n                alt={activeToken.symbol}\n                width={20}\n                height={20}\n              />\n              {activeToken.symbol}\n            </div>\n          ) : (\n            \"Select token...\"\n          )}\n          <ChevronsUpDown className=\"opacity-50\" />\n        </Button>\n      </PopoverTrigger>\n      <PopoverContent className=\"w-[200px] p-0\">\n        <Command>\n          <CommandInput placeholder=\"Search token...\" className=\"h-9\" />\n          <CommandList>\n            <CommandEmpty>No tokens found.</CommandEmpty>\n            <CommandGroup>\n              {tokens.map((token) => (\n                <CommandItem\n                  key={token.symbol}\n                  value={token.symbol}\n                  onSelect={(currentValue) => {\n                    const newValue = currentValue === value ? \"\" : currentValue;\n                    setValue(newValue);\n                    setOpen(false);\n                    if (newValue) {\n                      const selected = tokens.find(\n                        (t) =>\n                          t.symbol.toLowerCase() === newValue.toLowerCase(),\n                      );\n                      if (selected) onSelect?.(selected);\n                    }\n                  }}\n                >\n                  <TokenIcon\n                    src={token.icon}\n                    alt={token.symbol}\n                    width={20}\n                    height={20}\n                  />\n                  {token.symbol}\n                  <Check\n                    className={cn(\n                      \"ml-auto\",\n                      value.toLowerCase() === token.symbol.toLowerCase()\n                        ? \"opacity-100\"\n                        : \"opacity-0\",\n                    )}\n                  />\n                </CommandItem>\n              ))}\n            </CommandGroup>\n          </CommandList>\n        </Command>\n      </PopoverContent>\n    </Popover>\n  );\n};\n\nexport type { TokenComboboxProps };\nexport { TokenCombobox };\n",
+      "type": "registry:component",
+      "target": "components/sol/token-combobox.tsx"
+    }
+  ],
+  "type": "registry:component"
+}

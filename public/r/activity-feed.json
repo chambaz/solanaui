@@ -1,0 +1,21 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "activity-feed",
+  "title": "Activity Feed",
+  "description": "A real-time feed of recent activity with token icons, descriptions, and relative timestamps.",
+  "dependencies": [
+    "date-fns"
+  ],
+  "registryDependencies": [
+    "https://solanaui.dev/r/token-icon.json"
+  ],
+  "files": [
+    {
+      "path": "src/registry/sol/activity-feed.tsx",
+      "content": "import { formatDistanceToNow } from \"date-fns\";\nimport { TokenIcon } from \"@/registry/sol/token-icon\";\nimport { cn } from \"@/lib/utils\";\n\ninterface ActivityFeedProps {\n  items: {\n    icon?: string;\n    title: string;\n    description?: string;\n    timestamp: Date;\n    value?: string;\n  }[];\n  className?: string;\n}\n\nconst ActivityFeed = ({ items, className }: ActivityFeedProps) => {\n  if (items.length === 0) {\n    return (\n      <div className={cn(\"text-center py-8 text-muted-foreground\", className)}>\n        No recent activity\n      </div>\n    );\n  }\n\n  return (\n    <div className={cn(\"flex flex-col\", className)}>\n      {items.map((item, i) => (\n        <div\n          key={`${item.title}-${i}`}\n          className={cn(\n            \"flex items-center gap-3 py-3 px-1\",\n            i < items.length - 1 && \"border-b\",\n          )}\n        >\n          {item.icon && (\n            <TokenIcon\n              src={item.icon}\n              alt={item.title}\n              width={32}\n              height={32}\n            />\n          )}\n          <div className=\"flex flex-col flex-1 min-w-0\">\n            <span className=\"text-sm font-medium truncate\">{item.title}</span>\n            {item.description && (\n              <span className=\"text-xs text-muted-foreground truncate\">\n                {item.description}\n              </span>\n            )}\n          </div>\n          <div className=\"flex flex-col items-end shrink-0\">\n            {item.value && (\n              <span className=\"text-sm font-medium\">{item.value}</span>\n            )}\n            <span className=\"text-xs text-muted-foreground\">\n              {formatDistanceToNow(item.timestamp, { addSuffix: true })}\n            </span>\n          </div>\n        </div>\n      ))}\n    </div>\n  );\n};\n\nexport type { ActivityFeedProps };\nexport { ActivityFeed };\n",
+      "type": "registry:component",
+      "target": "components/sol/activity-feed.tsx"
+    }
+  ],
+  "type": "registry:component"
+}

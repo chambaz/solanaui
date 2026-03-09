@@ -9,15 +9,15 @@ import {
   XIcon,
 } from "lucide-react";
 import React from "react";
-import { ActionBox } from "@/components/sol/action-box";
-import { HealthBar } from "@/components/sol/health-bar";
-import { PoolCard } from "@/components/sol/pool-card";
-import { PoolTable } from "@/components/sol/pool-table";
-import { PositionCard } from "@/components/sol/position-card";
-import { PriceChart } from "@/components/sol/price-chart";
-import { StatCard } from "@/components/sol/stat-card";
-import { TokenCombobox } from "@/components/sol/token-combobox";
-import { WalletSheet } from "@/components/sol/wallet-sheet";
+import { ActionBox } from "@/registry/sol/action-box";
+import { HealthBar } from "@/registry/sol/health-bar";
+import { PoolCard } from "@/registry/sol/pool-card";
+import { PoolTable } from "@/registry/sol/pool-table";
+import { PositionCard } from "@/registry/sol/position-card";
+import { PriceChart } from "@/registry/sol/price-chart";
+import { StatCard } from "@/registry/sol/stat-card";
+import { TokenCombobox } from "@/registry/sol/token-combobox";
+import { WalletSheet } from "@/registry/sol/wallet-sheet";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,

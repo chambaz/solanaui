@@ -2,7 +2,7 @@
 
 import { Check, ChevronsUpDown } from "lucide-react";
 import React from "react";
-import { TokenIcon } from "@/components/sol/token-icon";
+import { TokenIcon } from "@/registry/sol/token-icon";
 import { Button } from "@/components/ui/button";
 import {
   Command,

@@ -1,0 +1,19 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "txn-toast",
+  "title": "Transaction Toast",
+  "description": "A toast notification function for displaying transaction status updates with explorer links and close button.",
+  "dependencies": [
+    "lucide-react",
+    "sonner"
+  ],
+  "files": [
+    {
+      "path": "src/registry/sol/txn-toast.tsx",
+      "content": "\"use client\";\n\nimport {\n  CheckCircle2Icon,\n  ExternalLinkIcon,\n  Loader2Icon,\n  XCircleIcon,\n  XIcon,\n} from \"lucide-react\";\nimport { toast } from \"sonner\";\n\ninterface TxnToastProps {\n  title?: string;\n  description?: string;\n  signature?: string;\n  status?: \"pending\" | \"confirmed\" | \"error\";\n  explorerUrl?: string;\n}\n\nconst statusConfig = {\n  pending: {\n    icon: <Loader2Icon className=\"size-4 animate-spin text-muted-foreground\" />,\n    defaultTitle: \"Transaction pending\",\n    defaultDescription: \"Waiting for confirmation...\",\n  },\n  confirmed: {\n    icon: <CheckCircle2Icon className=\"size-4 text-emerald-500\" />,\n    defaultTitle: \"Transaction confirmed\",\n    defaultDescription: \"Your transaction was successful.\",\n  },\n  error: {\n    icon: <XCircleIcon className=\"size-4 text-red-400\" />,\n    defaultTitle: \"Transaction failed\",\n    defaultDescription: \"Something went wrong. Please try again.\",\n  },\n};\n\nconst truncateSignature = (sig: string) => {\n  if (sig.length <= 12) return sig;\n  return `${sig.slice(0, 6)}...${sig.slice(-4)}`;\n};\n\nconst renderToast = (props: TxnToastProps, toastId: string | number) => {\n  const {\n    title,\n    description,\n    signature,\n    status = \"confirmed\",\n    explorerUrl,\n  } = props;\n  const config = statusConfig[status];\n  const resolvedExplorerUrl =\n    explorerUrl ??\n    (signature ? `https://solscan.io/tx/${signature}` : undefined);\n\n  return (\n    <div className=\"flex gap-3 w-[356px] rounded-lg border bg-background p-4 shadow-lg\">\n      <div className=\"mt-0.5 shrink-0\">{config.icon}</div>\n      <div className=\"flex flex-1 flex-col gap-1\">\n        <span className=\"text-sm font-medium\">\n          {title ?? config.defaultTitle}\n        </span>\n        <span className=\"text-sm text-muted-foreground\">\n          {description ?? config.defaultDescription}\n        </span>\n        {resolvedExplorerUrl && (\n          <a\n            href={resolvedExplorerUrl}\n            target=\"_blank\"\n            rel=\"noopener noreferrer\"\n            className=\"inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors\"\n          >\n            {signature ? truncateSignature(signature) : \"View transaction\"}\n            <ExternalLinkIcon className=\"size-3\" />\n          </a>\n        )}\n      </div>\n      <button\n        type=\"button\"\n        onClick={() => toast.dismiss(toastId)}\n        className=\"shrink-0 mt-0.5 text-muted-foreground hover:text-foreground transition-colors\"\n      >\n        <XIcon className=\"size-3.5\" />\n      </button>\n    </div>\n  );\n};\n\nconst txnToast = (props: TxnToastProps) => {\n  const status = props.status ?? \"confirmed\";\n\n  return toast.custom((id) => renderToast(props, id), {\n    duration: status === \"pending\" ? Infinity : 5000,\n  });\n};\n\ntxnToast.update = (id: string | number, props: TxnToastProps) => {\n  const status = props.status ?? \"confirmed\";\n\n  toast.custom((toastId) => renderToast(props, toastId), {\n    id,\n    duration: status === \"pending\" ? Infinity : 5000,\n  });\n};\n\nexport type { TxnToastProps };\nexport { txnToast };\n",
+      "type": "registry:component",
+      "target": "components/sol/txn-toast.tsx"
+    }
+  ],
+  "type": "registry:component"
+}

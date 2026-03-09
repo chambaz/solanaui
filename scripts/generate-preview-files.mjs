@@ -12,7 +12,7 @@ import { readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 const ROOT = new URL("..", import.meta.url).pathname;
-const SOL_DIR = join(ROOT, "src/components/sol");
+const SOL_DIR = join(ROOT, "src/registry/sol");
 const UI_DIR = join(ROOT, "src/components/ui");
 const LIB_DIR = join(ROOT, "src/lib");
 const OUT_FILE = join(ROOT, "src/lib/builder/preview-files.ts");
@@ -38,15 +38,19 @@ function readDir(dir, prefix) {
   return files;
 }
 
-const solFiles = readDir(SOL_DIR, "/components/sol");
+const solFiles = readDir(SOL_DIR, "/registry/sol");
 const uiFiles = readDir(UI_DIR, "/components/ui");
 
-// lib/ files needed by components
-const LIB_FILES = ["utils.ts", "types.ts", "sort-utils.ts"];
+// lib/utils.ts (imported as @/lib/utils by all components)
+const REGISTRY_LIB_DIR = join(ROOT, "src/registry/lib");
 const libFiles = {};
-for (const name of LIB_FILES) {
-  const raw = readFileSync(join(LIB_DIR, name), "utf-8");
-  libFiles[`/lib/${name}`] = transformSource(raw);
+const utilsRaw = readFileSync(join(LIB_DIR, "utils.ts"), "utf-8");
+libFiles["/lib/utils.ts"] = transformSource(utilsRaw);
+
+// registry/lib/ files (imported as @/registry/lib/ by registry components)
+for (const name of ["types.ts", "sort-utils.ts"]) {
+  const raw = readFileSync(join(REGISTRY_LIB_DIR, name), "utf-8");
+  libFiles[`/registry/lib/${name}`] = transformSource(raw);
 }
 
 // Build the file map

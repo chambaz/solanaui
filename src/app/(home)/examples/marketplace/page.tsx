@@ -1,8 +1,8 @@
 import { ImageIcon, LayersIcon, TagIcon, UsersIcon } from "lucide-react";
-import { ActivityFeed } from "@/components/sol/activity-feed";
-import { NFTCard } from "@/components/sol/nft-card";
-import { StatCard } from "@/components/sol/stat-card";
-import { WalletSheet } from "@/components/sol/wallet-sheet";
+import { ActivityFeed } from "@/registry/sol/activity-feed";
+import { NFTCard } from "@/registry/sol/nft-card";
+import { StatCard } from "@/registry/sol/stat-card";
+import { WalletSheet } from "@/registry/sol/wallet-sheet";
 
 const SOL_ICON =
   "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png";

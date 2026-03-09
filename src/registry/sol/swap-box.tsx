@@ -2,9 +2,9 @@
 
 import { ArrowDownUpIcon } from "lucide-react";
 import React from "react";
-import { TokenInput } from "@/components/sol/token-input";
+import { TokenInput } from "@/registry/sol/token-input";
 import { Button } from "@/components/ui/button";
-import type { DetailRow } from "@/lib/types";
+import type { DetailRow } from "@/registry/lib/types";
 import { cn } from "@/lib/utils";
 
 type SwapBoxDetail = DetailRow;

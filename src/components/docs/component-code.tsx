@@ -11,13 +11,7 @@ const ComponentCode = ({ name }: ComponentCodeProps) => {
   const fileName = `${name}.tsx`;
 
   // Resolve the absolute path to the component file
-  const filePath = path.join(
-    process.cwd(),
-    "src",
-    "components",
-    "sol",
-    fileName,
-  );
+  const filePath = path.join(process.cwd(), "src", "registry", "sol", fileName);
 
   // Read the file synchronously at build time
   let code: string;

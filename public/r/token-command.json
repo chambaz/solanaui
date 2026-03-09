@@ -1,0 +1,23 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "token-command",
+  "title": "Token Command",
+  "description": "A command palette for searching and selecting tokens with keyboard navigation.",
+  "dependencies": [
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "button",
+    "command",
+    "https://solanaui.dev/r/token-icon.json"
+  ],
+  "files": [
+    {
+      "path": "src/registry/sol/token-command.tsx",
+      "content": "\"use client\";\n\nimport { ChevronsUpDown } from \"lucide-react\";\nimport React from \"react\";\nimport { TokenIcon } from \"@/registry/sol/token-icon\";\nimport { Button } from \"@/components/ui/button\";\nimport {\n  CommandDialog,\n  CommandEmpty,\n  CommandGroup,\n  CommandInput,\n  CommandItem,\n  CommandList,\n} from \"@/components/ui/command\";\nimport { cn } from \"@/lib/utils\";\n\ninterface TokenCommandToken {\n  icon: string;\n  symbol: string;\n}\n\ninterface TokenCommandGroup {\n  heading: string;\n  tokens: TokenCommandToken[];\n}\n\ntype TokenCommandProps = {\n  onSelect?: (token: TokenCommandToken) => void;\n  className?: string;\n} & (\n  | { tokens: TokenCommandToken[]; groups?: never }\n  | { groups: TokenCommandGroup[]; tokens?: never }\n);\n\nconst TokenCommand = ({\n  tokens,\n  groups,\n  onSelect,\n  className,\n}: TokenCommandProps) => {\n  const [open, setOpen] = React.useState(false);\n  const [value, setValue] = React.useState(\"\");\n\n  const allTokens = React.useMemo(() => {\n    if (tokens) return tokens;\n    if (groups) return groups.flatMap((g) => g.tokens);\n    return [];\n  }, [tokens, groups]);\n\n  const activeToken = allTokens.find(\n    (token) => token.symbol.toLowerCase() === value.toLowerCase(),\n  );\n\n  React.useEffect(() => {\n    const down = (e: KeyboardEvent) => {\n      if (e.key === \"k\" && (e.metaKey || e.ctrlKey)) {\n        e.preventDefault();\n        setOpen((open) => !open);\n      }\n    };\n\n    document.addEventListener(\"keydown\", down);\n    return () => document.removeEventListener(\"keydown\", down);\n  }, []);\n\n  const renderItem = (token: TokenCommandToken) => (\n    <CommandItem\n      key={token.symbol}\n      value={token.symbol}\n      onSelect={(currentValue) => {\n        const newValue = currentValue === value ? \"\" : currentValue;\n        setValue(newValue);\n        setOpen(false);\n        if (newValue) {\n          onSelect?.(token);\n        }\n      }}\n    >\n      <TokenIcon src={token.icon} alt={token.symbol} width={20} height={20} />\n      {token.symbol}\n    </CommandItem>\n  );\n\n  return (\n    <>\n      <Button\n        variant=\"outline\"\n        className={cn(\"w-[200px] justify-between\", className)}\n        onClick={() => setOpen(true)}\n      >\n        {activeToken ? (\n          <div className=\"flex items-center gap-2.5\">\n            <TokenIcon\n              src={activeToken.icon}\n              alt={activeToken.symbol}\n              width={20}\n              height={20}\n            />\n            {activeToken.symbol}\n          </div>\n        ) : (\n          \"Select token...\"\n        )}\n        <ChevronsUpDown className=\"opacity-50\" />\n      </Button>\n      <CommandDialog open={open} onOpenChange={setOpen}>\n        <CommandInput placeholder=\"Search token...\" />\n        <CommandList>\n          <CommandEmpty>No tokens found.</CommandEmpty>\n          {groups ? (\n            groups.map((group) => (\n              <CommandGroup key={group.heading} heading={group.heading}>\n                {group.tokens.map(renderItem)}\n              </CommandGroup>\n            ))\n          ) : (\n            <CommandGroup heading=\"Tokens\">\n              {allTokens.map(renderItem)}\n            </CommandGroup>\n          )}\n        </CommandList>\n      </CommandDialog>\n    </>\n  );\n};\n\nexport type { TokenCommandProps, TokenCommandToken, TokenCommandGroup };\nexport { TokenCommand };\n",
+      "type": "registry:component",
+      "target": "components/sol/token-command.tsx"
+    }
+  ],
+  "type": "registry:component"
+}

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "action-box",
+  "title": "Action Box",
+  "description": "A configurable action form with token input, detail rows, and submit button for DeFi operations like staking, lending, and closing positions.",
+  "registryDependencies": [
+    "button",
+    "separator",
+    "https://solanaui.dev/r/token-input.json",
+    "https://solanaui.dev/r/sol-lib-types.json"
+  ],
+  "files": [
+    {
+      "path": "src/registry/sol/action-box.tsx",
+      "content": "import { TokenInput } from \"@/registry/sol/token-input\";\nimport { Button } from \"@/components/ui/button\";\nimport { Separator } from \"@/components/ui/separator\";\nimport type { DetailRow } from \"@/registry/lib/types\";\nimport { cn } from \"@/lib/utils\";\n\ntype ActionBoxDetail = DetailRow;\n\ninterface ActionBoxProps {\n  tokens: { icon: string; symbol: string }[];\n  defaultToken?: string;\n  balance?: string;\n  label?: string;\n  details?: ActionBoxDetail[];\n  submitLabel?: string;\n  onSubmit?: () => void;\n  className?: string;\n}\n\nconst ActionBox = ({\n  tokens,\n  defaultToken,\n  balance,\n  label,\n  details,\n  submitLabel = \"Submit\",\n  onSubmit,\n  className,\n}: ActionBoxProps) => {\n  return (\n    <div className={cn(\"flex flex-col gap-4 border rounded-lg p-4\", className)}>\n      {label && (\n        <span className=\"text-sm font-medium text-muted-foreground\">\n          {label}\n        </span>\n      )}\n      <TokenInput\n        tokens={tokens}\n        defaultToken={defaultToken}\n        balance={balance}\n      />\n      {details && details.length > 0 && (\n        <>\n          <Separator />\n          <div className=\"flex flex-col gap-1.5 text-sm\">\n            {details.map((detail) => (\n              <div key={detail.label} className=\"flex justify-between\">\n                <span className=\"text-muted-foreground\">{detail.label}</span>\n                <span className={detail.className}>{detail.value}</span>\n              </div>\n            ))}\n          </div>\n        </>\n      )}\n      <Button className=\"w-full\" size=\"lg\" onClick={onSubmit}>\n        {submitLabel}\n      </Button>\n    </div>\n  );\n};\n\nexport type { ActionBoxProps, ActionBoxDetail };\nexport { ActionBox };\n",
+      "type": "registry:component",
+      "target": "components/sol/action-box.tsx"
+    }
+  ],
+  "type": "registry:component"
+}

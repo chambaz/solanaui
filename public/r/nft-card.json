@@ -1,0 +1,19 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "nft-card",
+  "title": "NFT Card",
+  "description": "A card for displaying NFT artwork with collection name, token name, and loading skeleton.",
+  "registryDependencies": [
+    "card",
+    "skeleton"
+  ],
+  "files": [
+    {
+      "path": "src/registry/sol/nft-card.tsx",
+      "content": "\"use client\";\n\nimport React from \"react\";\nimport {\n  Card,\n  CardContent,\n  CardDescription,\n  CardFooter,\n  CardHeader,\n  CardTitle,\n} from \"@/components/ui/card\";\nimport { Skeleton } from \"@/components/ui/skeleton\";\nimport { cn } from \"@/lib/utils\";\n\ninterface NFTCardProps extends React.ComponentProps<typeof Card> {\n  name: string;\n  image: string;\n  collection?: string;\n  price?: string;\n  currency?: string;\n}\n\nconst NFTCard = ({\n  name,\n  image,\n  collection,\n  price,\n  currency = \"SOL\",\n  className,\n  ...props\n}: NFTCardProps) => {\n  const [status, setStatus] = React.useState<\"loading\" | \"loaded\" | \"error\">(\n    \"loading\",\n  );\n\n  return (\n    <Card\n      className={cn(\"w-full max-w-xs py-0 gap-0 overflow-hidden\", className)}\n      {...props}\n    >\n      <CardContent className=\"p-0\">\n        <div className=\"relative aspect-square w-full bg-muted overflow-hidden\">\n          {status === \"loading\" && (\n            <Skeleton className=\"absolute inset-0 rounded-none\" />\n          )}\n          {status === \"error\" ? (\n            <div className=\"absolute inset-0 flex items-center justify-center bg-muted text-muted-foreground text-sm\">\n              Failed to load\n            </div>\n          ) : (\n            <img\n              src={image}\n              alt={name}\n              className={cn(\n                \"absolute inset-0 w-full h-full object-cover\",\n                status === \"loading\" && \"opacity-0\",\n              )}\n              onLoad={() => setStatus(\"loaded\")}\n              onError={() => setStatus(\"error\")}\n            />\n          )}\n        </div>\n      </CardContent>\n      <CardHeader className=\"bg-muted/50 py-3 px-4 border-t\">\n        {collection && (\n          <CardDescription className=\"text-xs text-muted-foreground\">\n            {collection}\n          </CardDescription>\n        )}\n        <CardTitle className=\"text-base font-medium\">{name}</CardTitle>\n      </CardHeader>\n      {price && (\n        <CardFooter className=\"bg-muted/50 px-4 pb-3 pt-0\">\n          <span className=\"text-sm font-medium\">\n            {price} {currency}\n          </span>\n        </CardFooter>\n      )}\n    </Card>\n  );\n};\n\nexport type { NFTCardProps };\nexport { NFTCard };\n",
+      "type": "registry:component",
+      "target": "components/sol/nft-card.tsx"
+    }
+  ],
+  "type": "registry:component"
+}

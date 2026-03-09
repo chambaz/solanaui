@@ -1,11 +1,11 @@
 "use client";
 
-import { LeverageSlider } from "@/components/sol/leverage-slider";
-import { TokenInput } from "@/components/sol/token-input";
-import { TradeButtons } from "@/components/sol/trade-buttons";
+import { LeverageSlider } from "@/registry/sol/leverage-slider";
+import { TokenInput } from "@/registry/sol/token-input";
+import { TradeButtons } from "@/registry/sol/trade-buttons";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import type { DetailRow } from "@/lib/types";
+import type { DetailRow } from "@/registry/lib/types";
 import { cn } from "@/lib/utils";
 
 type TradeBoxDetail = DetailRow;

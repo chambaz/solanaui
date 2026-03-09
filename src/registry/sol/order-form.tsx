@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import type { DetailRow } from "@/lib/types";
+import type { DetailRow } from "@/registry/lib/types";
 import { cn } from "@/lib/utils";
 
 type OrderFormDetail = DetailRow;

@@ -4,14 +4,14 @@ import {
   TrendingUpIcon,
   ZapIcon,
 } from "lucide-react";
-import { OrderBook } from "@/components/sol/order-book";
-import { PositionTable } from "@/components/sol/position-table";
-import { StatCard } from "@/components/sol/stat-card";
-import { TokenIcon } from "@/components/sol/token-icon";
-import { TradeBox } from "@/components/sol/trade-box";
-import { TradeChart } from "@/components/sol/trade-chart";
-import { TrendBadge } from "@/components/sol/trend-badge";
-import { WalletSheet } from "@/components/sol/wallet-sheet";
+import { OrderBook } from "@/registry/sol/order-book";
+import { PositionTable } from "@/registry/sol/position-table";
+import { StatCard } from "@/registry/sol/stat-card";
+import { TokenIcon } from "@/registry/sol/token-icon";
+import { TradeBox } from "@/registry/sol/trade-box";
+import { TradeChart } from "@/registry/sol/trade-chart";
+import { TrendBadge } from "@/registry/sol/trend-badge";
+import { WalletSheet } from "@/registry/sol/wallet-sheet";
 import { Card } from "@/components/ui/card";
 
 const SOL_ICON =

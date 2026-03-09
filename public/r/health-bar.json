@@ -1,0 +1,15 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "health-bar",
+  "title": "Health Bar",
+  "description": "A visual health/risk indicator bar that transitions from green to yellow to red based on a percentage value.",
+  "files": [
+    {
+      "path": "src/registry/sol/health-bar.tsx",
+      "content": "import { cn } from \"@/lib/utils\";\n\ninterface HealthBarProps {\n  value: number;\n  label?: string;\n  showValue?: boolean;\n  className?: string;\n}\n\nconst getHealthColor = (value: number) => {\n  if (value >= 66) return \"text-emerald-500\";\n  if (value >= 33) return \"text-yellow-500\";\n  return \"text-red-400\";\n};\n\nconst HealthBar = ({\n  value,\n  label = \"Health Factor\",\n  showValue = true,\n  className,\n}: HealthBarProps) => {\n  const clamped = Math.max(0, Math.min(100, value));\n\n  return (\n    <div className={cn(\"flex flex-col gap-2 w-full\", className)}>\n      <div className=\"flex items-center justify-between\">\n        <span className=\"text-sm text-muted-foreground\">{label}</span>\n        {showValue && (\n          <span className={cn(\"text-sm font-medium\", getHealthColor(clamped))}>\n            {clamped.toFixed(0)}%\n          </span>\n        )}\n      </div>\n      <div className=\"relative h-2.5 w-full rounded-full bg-muted\">\n        <div\n          className=\"absolute inset-y-0 left-0 overflow-hidden rounded-full transition-all duration-300\"\n          style={{ width: `${clamped}%` }}\n        >\n          <div\n            className=\"h-full bg-gradient-to-r from-red-400 via-yellow-500 to-emerald-500\"\n            style={{ width: `${clamped > 0 ? (100 / clamped) * 100 : 100}%` }}\n          />\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport type { HealthBarProps };\nexport { HealthBar };\n",
+      "type": "registry:component",
+      "target": "components/sol/health-bar.tsx"
+    }
+  ],
+  "type": "registry:component"
+}

@@ -3,7 +3,7 @@
 import { WalletIcon } from "lucide-react";
 import React from "react";
 import { NumericFormat } from "react-number-format";
-import { TokenCombobox } from "@/components/sol/token-combobox";
+import { TokenCombobox } from "@/registry/sol/token-combobox";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";

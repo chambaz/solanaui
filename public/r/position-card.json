@@ -1,0 +1,19 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "position-card",
+  "title": "Position Card",
+  "description": "A card displaying an open trading position with side indicator, token icon, size, leverage, entry/mark prices, and P&L.",
+  "registryDependencies": [
+    "card",
+    "https://solanaui.dev/r/token-icon.json"
+  ],
+  "files": [
+    {
+      "path": "src/registry/sol/position-card.tsx",
+      "content": "import type React from \"react\";\nimport { TokenIcon } from \"@/registry/sol/token-icon\";\nimport { Card, CardContent, CardFooter } from \"@/components/ui/card\";\nimport { cn } from \"@/lib/utils\";\n\ninterface PositionCardProps extends React.ComponentProps<typeof Card> {\n  symbol: string;\n  icon: string;\n  amount: string;\n  value: string;\n  apy?: string;\n  trend?: \"up\" | \"down\";\n  children?: React.ReactNode;\n}\n\nconst PositionCard = ({\n  symbol,\n  icon,\n  amount,\n  value,\n  apy,\n  trend = \"up\",\n  children,\n  className,\n  ...props\n}: PositionCardProps) => {\n  return (\n    <Card className={cn(\"p-4 w-full gap-3\", className)} {...props}>\n      <CardContent className=\"flex items-center justify-between p-0 pb-2\">\n        <div className=\"flex items-center gap-3\">\n          <TokenIcon src={icon} alt={symbol} width={48} height={48} />\n          <div className=\"flex flex-col\">\n            <span className=\"text-xl font-medium\">{symbol}</span>\n            {apy && (\n              <span\n                className={cn(\n                  \"text-xs font-medium\",\n                  trend === \"up\" ? \"text-emerald-500\" : \"text-red-400\",\n                )}\n              >\n                {apy} APY\n              </span>\n            )}\n          </div>\n        </div>\n        <div className=\"flex flex-col items-end\">\n          <span className=\"text-2xl font-medium\">{amount}</span>\n          <span className=\"text-sm text-muted-foreground\">{value}</span>\n        </div>\n      </CardContent>\n\n      {children && <CardFooter className=\"p-0\">{children}</CardFooter>}\n    </Card>\n  );\n};\n\nexport type { PositionCardProps };\nexport { PositionCard };\n",
+      "type": "registry:component",
+      "target": "components/sol/position-card.tsx"
+    }
+  ],
+  "type": "registry:component"
+}

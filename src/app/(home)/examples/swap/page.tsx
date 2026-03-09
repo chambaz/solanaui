@@ -1,6 +1,6 @@
-import { PoolCard } from "@/components/sol/pool-card";
-import { SwapBox } from "@/components/sol/swap-box";
-import { WalletSheet } from "@/components/sol/wallet-sheet";
+import { PoolCard } from "@/registry/sol/pool-card";
+import { SwapBox } from "@/registry/sol/swap-box";
+import { WalletSheet } from "@/registry/sol/wallet-sheet";
 
 const SOL_ICON =
   "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png";

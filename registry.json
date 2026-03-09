@@ -1,0 +1,515 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "solanaui",
+  "homepage": "https://solanaui.dev",
+  "items": [
+    {
+      "name": "action-box",
+      "type": "registry:component",
+      "title": "Action Box",
+      "description": "A configurable action form with token input, detail rows, and submit button for DeFi operations like staking, lending, and closing positions.",
+      "registryDependencies": [
+        "button",
+        "separator",
+        "https://solanaui.dev/r/token-input.json",
+        "https://solanaui.dev/r/sol-lib-types.json"
+      ],
+      "files": [
+        {
+          "path": "src/registry/sol/action-box.tsx",
+          "type": "registry:component",
+          "target": "components/sol/action-box.tsx"
+        }
+      ]
+    },
+    {
+      "name": "activity-feed",
+      "type": "registry:component",
+      "title": "Activity Feed",
+      "description": "A real-time feed of recent activity with token icons, descriptions, and relative timestamps.",
+      "dependencies": ["date-fns"],
+      "registryDependencies": ["https://solanaui.dev/r/token-icon.json"],
+      "files": [
+        {
+          "path": "src/registry/sol/activity-feed.tsx",
+          "type": "registry:component",
+          "target": "components/sol/activity-feed.tsx"
+        }
+      ]
+    },
+    {
+      "name": "address-display",
+      "type": "registry:component",
+      "title": "Address Display",
+      "description": "Displays a truncated Solana wallet address with a copy-to-clipboard button.",
+      "dependencies": ["lucide-react"],
+      "files": [
+        {
+          "path": "src/registry/sol/address-display.tsx",
+          "type": "registry:component",
+          "target": "components/sol/address-display.tsx"
+        }
+      ]
+    },
+    {
+      "name": "auth-card",
+      "type": "registry:component",
+      "title": "Auth Card",
+      "description": "An authentication card with email/password form and social login buttons for wallet-connected apps.",
+      "registryDependencies": ["button", "input", "label", "separator"],
+      "files": [
+        {
+          "path": "src/registry/sol/auth-card.tsx",
+          "type": "registry:component",
+          "target": "components/sol/auth-card.tsx"
+        }
+      ]
+    },
+    {
+      "name": "health-bar",
+      "type": "registry:component",
+      "title": "Health Bar",
+      "description": "A visual health/risk indicator bar that transitions from green to yellow to red based on a percentage value.",
+      "files": [
+        {
+          "path": "src/registry/sol/health-bar.tsx",
+          "type": "registry:component",
+          "target": "components/sol/health-bar.tsx"
+        }
+      ]
+    },
+    {
+      "name": "leverage-slider",
+      "type": "registry:component",
+      "title": "Leverage Slider",
+      "description": "A slider for selecting trading leverage with configurable min/max range and step increments.",
+      "registryDependencies": ["label", "slider"],
+      "files": [
+        {
+          "path": "src/registry/sol/leverage-slider.tsx",
+          "type": "registry:component",
+          "target": "components/sol/leverage-slider.tsx"
+        }
+      ]
+    },
+    {
+      "name": "nft-card",
+      "type": "registry:component",
+      "title": "NFT Card",
+      "description": "A card for displaying NFT artwork with collection name, token name, and loading skeleton.",
+      "registryDependencies": ["card", "skeleton"],
+      "files": [
+        {
+          "path": "src/registry/sol/nft-card.tsx",
+          "type": "registry:component",
+          "target": "components/sol/nft-card.tsx"
+        }
+      ]
+    },
+    {
+      "name": "order-book",
+      "type": "registry:component",
+      "title": "Order Book",
+      "description": "A real-time order book display with bid/ask levels, depth visualization, mid-price, and spread indicator.",
+      "files": [
+        {
+          "path": "src/registry/sol/order-book.tsx",
+          "type": "registry:component",
+          "target": "components/sol/order-book.tsx"
+        }
+      ]
+    },
+    {
+      "name": "order-form",
+      "type": "registry:component",
+      "title": "Order Form",
+      "description": "A take profit and stop loss order form for open trading positions with auto-syncing price/percent fields.",
+      "dependencies": ["react-number-format"],
+      "registryDependencies": [
+        "button",
+        "card",
+        "input",
+        "separator",
+        "https://solanaui.dev/r/sol-lib-types.json"
+      ],
+      "files": [
+        {
+          "path": "src/registry/sol/order-form.tsx",
+          "type": "registry:component",
+          "target": "components/sol/order-form.tsx"
+        }
+      ]
+    },
+    {
+      "name": "pool-card",
+      "type": "registry:component",
+      "title": "Pool Card",
+      "description": "A card for displaying liquidity pool information with token icons, metrics grid, and optional sparkline chart.",
+      "registryDependencies": [
+        "card",
+        "https://solanaui.dev/r/sparkline-chart.json",
+        "https://solanaui.dev/r/token-icon-group.json"
+      ],
+      "files": [
+        {
+          "path": "src/registry/sol/pool-card.tsx",
+          "type": "registry:component",
+          "target": "components/sol/pool-card.tsx"
+        }
+      ]
+    },
+    {
+      "name": "pool-table",
+      "type": "registry:component",
+      "title": "Pool Table",
+      "description": "A sortable table of liquidity pools with token icon groups, TVL, volume, APY, and rewards columns.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": [
+        "table",
+        "https://solanaui.dev/r/token-icon-group.json",
+        "https://solanaui.dev/r/sol-lib-sort-utils.json"
+      ],
+      "files": [
+        {
+          "path": "src/registry/sol/pool-table.tsx",
+          "type": "registry:component",
+          "target": "components/sol/pool-table.tsx"
+        }
+      ]
+    },
+    {
+      "name": "position-card",
+      "type": "registry:component",
+      "title": "Position Card",
+      "description": "A card displaying an open trading position with side indicator, token icon, size, leverage, entry/mark prices, and P&L.",
+      "registryDependencies": [
+        "card",
+        "https://solanaui.dev/r/token-icon.json"
+      ],
+      "files": [
+        {
+          "path": "src/registry/sol/position-card.tsx",
+          "type": "registry:component",
+          "target": "components/sol/position-card.tsx"
+        }
+      ]
+    },
+    {
+      "name": "position-table",
+      "type": "registry:component",
+      "title": "Position Table",
+      "description": "A sortable table of open trading positions with built-in TP/SL editor and close position dialogs.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": [
+        "button",
+        "dialog",
+        "table",
+        "https://solanaui.dev/r/action-box.json",
+        "https://solanaui.dev/r/order-form.json",
+        "https://solanaui.dev/r/token-icon.json",
+        "https://solanaui.dev/r/sol-lib-sort-utils.json"
+      ],
+      "files": [
+        {
+          "path": "src/registry/sol/position-table.tsx",
+          "type": "registry:component",
+          "target": "components/sol/position-table.tsx"
+        }
+      ]
+    },
+    {
+      "name": "price-chart",
+      "type": "registry:component",
+      "title": "Price Chart",
+      "description": "An area chart for displaying token price history over time using Recharts.",
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
+      "files": [
+        {
+          "path": "src/registry/sol/price-chart.tsx",
+          "type": "registry:component",
+          "target": "components/sol/price-chart.tsx"
+        }
+      ]
+    },
+    {
+      "name": "sparkline-chart",
+      "type": "registry:component",
+      "title": "Sparkline Chart",
+      "description": "A compact inline sparkline chart for showing price trends in cards and table cells.",
+      "dependencies": ["recharts"],
+      "registryDependencies": ["chart"],
+      "files": [
+        {
+          "path": "src/registry/sol/sparkline-chart.tsx",
+          "type": "registry:component",
+          "target": "components/sol/sparkline-chart.tsx"
+        }
+      ]
+    },
+    {
+      "name": "stat-card",
+      "type": "registry:component",
+      "title": "Stat Card",
+      "description": "A card for displaying a single key metric with label, value, and optional trend badge.",
+      "registryDependencies": [
+        "card",
+        "https://solanaui.dev/r/trend-badge.json"
+      ],
+      "files": [
+        {
+          "path": "src/registry/sol/stat-card.tsx",
+          "type": "registry:component",
+          "target": "components/sol/stat-card.tsx"
+        }
+      ]
+    },
+    {
+      "name": "swap-box",
+      "type": "registry:component",
+      "title": "Swap Box",
+      "description": "A two-sided token swap form with flip button, balance display, detail rows, and submit action.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": [
+        "button",
+        "https://solanaui.dev/r/token-input.json",
+        "https://solanaui.dev/r/sol-lib-types.json"
+      ],
+      "files": [
+        {
+          "path": "src/registry/sol/swap-box.tsx",
+          "type": "registry:component",
+          "target": "components/sol/swap-box.tsx"
+        }
+      ]
+    },
+    {
+      "name": "token-combobox",
+      "type": "registry:component",
+      "title": "Token Combobox",
+      "description": "A searchable dropdown combobox for selecting tokens with icon display.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": [
+        "button",
+        "command",
+        "popover",
+        "https://solanaui.dev/r/token-icon.json"
+      ],
+      "files": [
+        {
+          "path": "src/registry/sol/token-combobox.tsx",
+          "type": "registry:component",
+          "target": "components/sol/token-combobox.tsx"
+        }
+      ]
+    },
+    {
+      "name": "token-command",
+      "type": "registry:component",
+      "title": "Token Command",
+      "description": "A command palette for searching and selecting tokens with keyboard navigation.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": [
+        "button",
+        "command",
+        "https://solanaui.dev/r/token-icon.json"
+      ],
+      "files": [
+        {
+          "path": "src/registry/sol/token-command.tsx",
+          "type": "registry:component",
+          "target": "components/sol/token-command.tsx"
+        }
+      ]
+    },
+    {
+      "name": "token-icon",
+      "type": "registry:component",
+      "title": "Token Icon",
+      "description": "Renders a circular token icon with loading skeleton fallback.",
+      "registryDependencies": ["skeleton"],
+      "files": [
+        {
+          "path": "src/registry/sol/token-icon.tsx",
+          "type": "registry:component",
+          "target": "components/sol/token-icon.tsx"
+        }
+      ]
+    },
+    {
+      "name": "token-icon-group",
+      "type": "registry:component",
+      "title": "Token Icon Group",
+      "description": "Displays a group of overlapping token icons with a configurable max and overflow indicator.",
+      "registryDependencies": ["https://solanaui.dev/r/token-icon.json"],
+      "files": [
+        {
+          "path": "src/registry/sol/token-icon-group.tsx",
+          "type": "registry:component",
+          "target": "components/sol/token-icon-group.tsx"
+        }
+      ]
+    },
+    {
+      "name": "token-input",
+      "type": "registry:component",
+      "title": "Token Input",
+      "description": "A numeric input with integrated token selector dropdown, balance display, and half/max buttons.",
+      "dependencies": ["lucide-react", "react-number-format"],
+      "registryDependencies": [
+        "button",
+        "input",
+        "https://solanaui.dev/r/token-combobox.json"
+      ],
+      "files": [
+        {
+          "path": "src/registry/sol/token-input.tsx",
+          "type": "registry:component",
+          "target": "components/sol/token-input.tsx"
+        }
+      ]
+    },
+    {
+      "name": "trade-box",
+      "type": "registry:component",
+      "title": "Trade Box",
+      "description": "A perpetual trading form with long/short toggle, token input, leverage slider, detail rows, and submit action.",
+      "registryDependencies": [
+        "button",
+        "separator",
+        "https://solanaui.dev/r/leverage-slider.json",
+        "https://solanaui.dev/r/token-input.json",
+        "https://solanaui.dev/r/trade-buttons.json",
+        "https://solanaui.dev/r/sol-lib-types.json"
+      ],
+      "files": [
+        {
+          "path": "src/registry/sol/trade-box.tsx",
+          "type": "registry:component",
+          "target": "components/sol/trade-box.tsx"
+        }
+      ]
+    },
+    {
+      "name": "trade-buttons",
+      "type": "registry:component",
+      "title": "Trade Buttons",
+      "description": "A long/short toggle button group for selecting trade direction.",
+      "registryDependencies": ["toggle-group"],
+      "files": [
+        {
+          "path": "src/registry/sol/trade-buttons.tsx",
+          "type": "registry:component",
+          "target": "components/sol/trade-buttons.tsx"
+        }
+      ]
+    },
+    {
+      "name": "trade-chart",
+      "type": "registry:component",
+      "title": "Trade Chart",
+      "description": "A professional candlestick chart using lightweight-charts for trading interfaces.",
+      "dependencies": ["lightweight-charts"],
+      "files": [
+        {
+          "path": "src/registry/sol/trade-chart.tsx",
+          "type": "registry:component",
+          "target": "components/sol/trade-chart.tsx"
+        }
+      ]
+    },
+    {
+      "name": "trend-badge",
+      "type": "registry:component",
+      "title": "Trend Badge",
+      "description": "A badge that displays a percentage change with an up/down arrow icon and color coding.",
+      "dependencies": ["lucide-react"],
+      "registryDependencies": ["badge"],
+      "files": [
+        {
+          "path": "src/registry/sol/trend-badge.tsx",
+          "type": "registry:component",
+          "target": "components/sol/trend-badge.tsx"
+        }
+      ]
+    },
+    {
+      "name": "txn-table",
+      "type": "registry:component",
+      "title": "Transaction Table",
+      "description": "A table of recent transactions with action badges, token icons, amounts, values, timestamps, and explorer links.",
+      "dependencies": ["date-fns", "lucide-react"],
+      "registryDependencies": [
+        "badge",
+        "table",
+        "https://solanaui.dev/r/token-icon.json"
+      ],
+      "files": [
+        {
+          "path": "src/registry/sol/txn-table.tsx",
+          "type": "registry:component",
+          "target": "components/sol/txn-table.tsx"
+        }
+      ]
+    },
+    {
+      "name": "txn-toast",
+      "type": "registry:component",
+      "title": "Transaction Toast",
+      "description": "A toast notification function for displaying transaction status updates with explorer links and close button.",
+      "dependencies": ["lucide-react", "sonner"],
+      "files": [
+        {
+          "path": "src/registry/sol/txn-toast.tsx",
+          "type": "registry:component",
+          "target": "components/sol/txn-toast.tsx"
+        }
+      ]
+    },
+    {
+      "name": "wallet-sheet",
+      "type": "registry:component",
+      "title": "Wallet Sheet",
+      "description": "A slide-out sheet displaying wallet information with address, token balances, and disconnect button.",
+      "registryDependencies": [
+        "button",
+        "sheet",
+        "https://solanaui.dev/r/address-display.json",
+        "https://solanaui.dev/r/token-icon.json"
+      ],
+      "files": [
+        {
+          "path": "src/registry/sol/wallet-sheet.tsx",
+          "type": "registry:component",
+          "target": "components/sol/wallet-sheet.tsx"
+        }
+      ]
+    },
+    {
+      "name": "sol-lib-types",
+      "type": "registry:lib",
+      "title": "SolanaUI Types",
+      "description": "Shared type definitions used by SolanaUI components.",
+      "files": [
+        {
+          "path": "src/registry/lib/types.ts",
+          "type": "registry:lib",
+          "target": "lib/types.ts"
+        }
+      ]
+    },
+    {
+      "name": "sol-lib-sort-utils",
+      "type": "registry:lib",
+      "title": "SolanaUI Sort Utilities",
+      "description": "Shared sorting utilities for sortable table components.",
+      "files": [
+        {
+          "path": "src/registry/lib/sort-utils.ts",
+          "type": "registry:lib",
+          "target": "lib/sort-utils.ts"
+        }
+      ]
+    }
+  ]
+}

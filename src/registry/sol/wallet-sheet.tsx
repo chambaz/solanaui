@@ -8,8 +8,8 @@ import {
   WalletIcon,
 } from "lucide-react";
 import type React from "react";
-import { AddressDisplay } from "@/components/sol/address-display";
-import { TokenIcon } from "@/components/sol/token-icon";
+import { AddressDisplay } from "@/registry/sol/address-display";
+import { TokenIcon } from "@/registry/sol/token-icon";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";

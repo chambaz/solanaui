@@ -1,5 +1,5 @@
 import type React from "react";
-import { TokenIcon } from "@/components/sol/token-icon";
+import { TokenIcon } from "@/registry/sol/token-icon";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 

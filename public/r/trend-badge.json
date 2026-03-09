@@ -1,0 +1,21 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "trend-badge",
+  "title": "Trend Badge",
+  "description": "A badge that displays a percentage change with an up/down arrow icon and color coding.",
+  "dependencies": [
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "badge"
+  ],
+  "files": [
+    {
+      "path": "src/registry/sol/trend-badge.tsx",
+      "content": "import { TrendingDownIcon, TrendingUpIcon } from \"lucide-react\";\nimport type React from \"react\";\nimport { Badge } from \"@/components/ui/badge\";\nimport { cn } from \"@/lib/utils\";\n\ninterface TrendBadgeProps extends React.ComponentProps<typeof Badge> {\n  trend?: \"up\" | \"down\";\n}\n\nconst TrendBadge = ({\n  trend = \"up\",\n  children,\n  className,\n  ...props\n}: TrendBadgeProps) => {\n  const isUp = trend === \"up\";\n  const Icon = isUp ? TrendingUpIcon : TrendingDownIcon;\n\n  return (\n    <Badge\n      className={cn(\n        isUp\n          ? \"bg-emerald-500/15 text-emerald-500 border-emerald-500/25\"\n          : \"bg-red-400/15 text-red-400 border-red-400/25\",\n        className,\n      )}\n      {...props}\n    >\n      <Icon className=\"size-3\" />\n      {children && <span className=\"text-xs\">{children}</span>}\n    </Badge>\n  );\n};\n\nexport type { TrendBadgeProps };\nexport { TrendBadge };\n",
+      "type": "registry:component",
+      "target": "components/sol/trend-badge.tsx"
+    }
+  ],
+  "type": "registry:component"
+}

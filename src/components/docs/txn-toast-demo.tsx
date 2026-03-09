@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { txnToast } from "@/components/sol/txn-toast";
+import { txnToast } from "@/registry/sol/txn-toast";
 import { Button } from "@/components/ui/button";
 
 const TxnToastDemo = () => {

@@ -2,7 +2,7 @@
 
 import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import React from "react";
-import { TokenIconGroup } from "@/components/sol/token-icon-group";
+import { TokenIconGroup } from "@/registry/sol/token-icon-group";
 import {
   Table,
   TableBody,
@@ -11,8 +11,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import type { SortDirection } from "@/lib/sort-utils";
-import { compareValues } from "@/lib/sort-utils";
+import type { SortDirection } from "@/registry/lib/sort-utils";
+import { compareValues } from "@/registry/lib/sort-utils";
 import { cn } from "@/lib/utils";
 
 interface PoolTableColumn {

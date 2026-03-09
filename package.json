@@ -10,7 +10,8 @@
     "start": "next start",
     "postinstall": "fumadocs-mdx",
     "lint": "biome check",
-    "format": "biome format --write"
+    "format": "biome format --write",
+    "registry:build": "shadcn build"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^3.0.58",
@@ -43,6 +44,7 @@
     "react-dom": "^19.2.0",
     "react-number-format": "^5.4.4",
     "recharts": "2.15.4",
+    "shadcn": "^4.0.2",
     "shiki": "^3.14.0",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.3.1"

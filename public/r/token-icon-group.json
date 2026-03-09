@@ -1,0 +1,18 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "token-icon-group",
+  "title": "Token Icon Group",
+  "description": "Displays a group of overlapping token icons with a configurable max and overflow indicator.",
+  "registryDependencies": [
+    "https://solanaui.dev/r/token-icon.json"
+  ],
+  "files": [
+    {
+      "path": "src/registry/sol/token-icon-group.tsx",
+      "content": "import { TokenIcon } from \"@/registry/sol/token-icon\";\nimport { cn } from \"@/lib/utils\";\n\ninterface TokenIconGroupProps {\n  tokens: { src: string; alt?: string }[];\n  size?: number;\n  overlap?: number;\n  max?: number;\n  className?: string;\n}\n\nconst TokenIconGroup = ({\n  tokens,\n  size = 24,\n  overlap = -10,\n  max = 4,\n  className,\n}: TokenIconGroupProps) => {\n  const visible = tokens.slice(0, max);\n  const remaining = tokens.length - max;\n  const hasOverlap = visible.length > 1 || remaining > 0;\n\n  return (\n    <div className={cn(\"flex items-center\", className)}>\n      {visible.map((token, i) => (\n        <div\n          key={`${token.src}-${i}`}\n          className={cn(\n            \"rounded-full relative leading-[0]\",\n            hasOverlap && \"ring-2 ring-background\",\n          )}\n          style={{\n            marginLeft: i === 0 ? 0 : overlap,\n            zIndex: visible.length + 1 - i,\n          }}\n        >\n          <TokenIcon\n            src={token.src}\n            alt={token.alt ?? \"Token\"}\n            width={size}\n            height={size}\n          />\n        </div>\n      ))}\n      {remaining > 0 && (\n        <div\n          className=\"relative flex items-center justify-center rounded-full bg-muted text-muted-foreground ring-2 ring-background font-medium\"\n          style={{\n            width: size,\n            height: size,\n            marginLeft: overlap,\n            fontSize: size * 0.35,\n            zIndex: visible.length + 2,\n          }}\n        >\n          +{remaining}\n        </div>\n      )}\n    </div>\n  );\n};\n\nexport type { TokenIconGroupProps };\nexport { TokenIconGroup };\n",
+      "type": "registry:component",
+      "target": "components/sol/token-icon-group.tsx"
+    }
+  ],
+  "type": "registry:component"
+}

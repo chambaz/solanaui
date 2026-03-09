@@ -14,10 +14,13 @@ import { cn } from "@/lib/utils";
 /**
  * Rewrite @/ import aliases to / so Sandpack can resolve them
  * from the virtual file system. Strip "use client" directives.
+ * Maps consumer paths (@/components/sol/) to registry paths (/registry/sol/)
+ * so the sandbox resolves against the preview file keys.
  */
 function transformForSandpack(code: string): string {
   return code
     .replace(/["']use client["'];?\s*\n?/g, "")
+    .replace(/from\s+["']@\/components\/sol\//g, 'from "/registry/sol/')
     .replace(/from\s+["']@\//g, 'from "/')
     .replace(/import\s+["']@\//g, 'import "/');
 }

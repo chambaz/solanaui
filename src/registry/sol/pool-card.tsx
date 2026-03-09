@@ -1,6 +1,6 @@
 import type React from "react";
-import { SparklineChart } from "@/components/sol/sparkline-chart";
-import { TokenIconGroup } from "@/components/sol/token-icon-group";
+import { SparklineChart } from "@/registry/sol/sparkline-chart";
+import { TokenIconGroup } from "@/registry/sol/token-icon-group";
 import {
   Card,
   CardContent,

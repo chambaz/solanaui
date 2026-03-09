@@ -1,5 +1,5 @@
 import type React from "react";
-import { TrendBadge } from "@/components/sol/trend-badge";
+import { TrendBadge } from "@/registry/sol/trend-badge";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 

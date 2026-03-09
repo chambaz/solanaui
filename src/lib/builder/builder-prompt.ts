@@ -766,6 +766,7 @@ const OUTPUT_RULES = `
 - ALWAYS define token icon URLs as named constants at the top of the file (e.g. const SOL_ICON = "https://..."). Never inline long CDN URLs directly in JSX props
 - Vary demo data across rows -- use different tokens, prices, amounts, and percentages. Never repeat identical values
 - Wrap standalone tables, charts, and feeds inside Card with CardHeader/CardTitle for visual containment
+- Do NOT use max-w-[1400px], max-w-7xl, or any fixed max-width container. The output renders inside a preview pane that IS the container. Use w-full and let the parent constrain the width
 `;
 
 const AVAILABLE_SHADCN_COMPONENTS = `

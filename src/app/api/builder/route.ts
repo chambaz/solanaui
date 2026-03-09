@@ -93,7 +93,6 @@ export async function POST(req: Request) {
       model: anthropic("claude-opus-4-6"),
       system: BUILDER_SYSTEM_PROMPT,
       prompt: `Create a beautiful, production-quality Solana app interface for: ${prompt}`,
-      maxOutputTokens: 16384,
     });
 
     return result.toTextStreamResponse();

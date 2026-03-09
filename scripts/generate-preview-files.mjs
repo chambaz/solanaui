@@ -41,15 +41,19 @@ function readDir(dir, prefix) {
 const solFiles = readDir(SOL_DIR, "/components/sol");
 const uiFiles = readDir(UI_DIR, "/components/ui");
 
-// lib/utils.ts
-const utilsRaw = readFileSync(join(LIB_DIR, "utils.ts"), "utf-8");
-const utilsContent = transformSource(utilsRaw);
+// lib/ files needed by components
+const LIB_FILES = ["utils.ts", "types.ts", "sort-utils.ts"];
+const libFiles = {};
+for (const name of LIB_FILES) {
+  const raw = readFileSync(join(LIB_DIR, name), "utf-8");
+  libFiles[`/lib/${name}`] = transformSource(raw);
+}
 
 // Build the file map
 const allFiles = {
   ...solFiles,
   ...uiFiles,
-  "/lib/utils.ts": utilsContent,
+  ...libFiles,
 };
 
 // Generate TypeScript source

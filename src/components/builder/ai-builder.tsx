@@ -1,6 +1,7 @@
 "use client";
 
 import { track } from "@vercel/analytics";
+import { TriangleAlertIcon } from "lucide-react";
 import React from "react";
 import { CodeDisplay } from "@/components/builder/code-display";
 import { InstallCommands } from "@/components/builder/install-commands";
@@ -161,7 +162,8 @@ const AIBuilder = ({ className }: AIBuilderProps) => {
         />
 
         {error && !isStreaming && !generatedCode && (
-          <div className="mt-6 rounded-lg border border-red-400/20 bg-red-400/5 px-4 py-3">
+          <div className="mt-6 flex items-start gap-3 rounded-lg border border-red-400/20 bg-red-400/5 px-4 py-3">
+            <TriangleAlertIcon className="mt-0.5 size-4 shrink-0 text-red-400" />
             <p className="text-sm text-red-400">{error}</p>
           </div>
         )}

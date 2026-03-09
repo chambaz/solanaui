@@ -5,11 +5,31 @@ import { BUILDER_SYSTEM_PROMPT } from "@/lib/builder/builder-prompt";
 const CREDITS_PER_WEEK = 5;
 const TTL_SECONDS = 604800; // 7 days
 
-// biome-ignore lint/correctness/noUnusedVariables: rate limiting disabled for testing
+function getClientIp(req: Request): string {
+  return (req.headers.get("x-forwarded-for") ?? "127.0.0.1")
+    .split(",")[0]
+    .trim();
+}
+
+function isBypassedIp(ip: string): boolean {
+  // Always bypass in local dev
+  if (ip === "127.0.0.1" || ip === "::1") return true;
+
+  const raw = process.env.RATE_LIMIT_BYPASS_IPS;
+  if (!raw) return false;
+  const bypassed = raw.split(",").map((s) => s.trim());
+  return bypassed.includes(ip);
+}
+
 async function checkCredits(ip: string): Promise<{
   allowed: boolean;
   used: number;
 }> {
+  // Skip credit check for bypassed IPs
+  if (isBypassedIp(ip)) {
+    return { allowed: true, used: 0 };
+  }
+
   // Skip credit check if Redis is not configured (local dev)
   if (!process.env.KV_REST_API_URL || !process.env.KV_REST_API_TOKEN) {
     return { allowed: true, used: 0 };
@@ -59,16 +79,13 @@ export async function POST(req: Request) {
     return Response.json({ error: "prompt_too_long" }, { status: 400 });
   }
 
-  // 2. Credit check (disabled for testing)
-  // const ip = (req.headers.get("x-forwarded-for") ?? "127.0.0.1")
-  //   .split(",")[0]
-  //   .trim();
-  //
-  // const { allowed } = await checkCredits(ip);
-  //
-  // if (!allowed) {
-  //   return Response.json({ error: "limit_reached" }, { status: 429 });
-  // }
+  // 2. Credit check
+  const ip = getClientIp(req);
+  const { allowed } = await checkCredits(ip);
+
+  if (!allowed) {
+    return Response.json({ error: "limit_reached" }, { status: 429 });
+  }
 
   // 3. Stream from LLM
   try {

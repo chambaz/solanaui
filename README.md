@@ -1,45 +1,58 @@
-# solanaui-2
+# SolanaUI
 
-This is a Next.js application generated with
-[Create Fumadocs](https://github.com/fuma-nama/fumadocs).
+A component library for building Solana dApps. 29 copy-paste components built on shadcn/ui, Radix, and Tailwind CSS.
 
-Run development server:
+Docs and live preview: [solanaui.dev](https://solanaui.dev)
+
+## Components
+
+Swap boxes, trade forms, token inputs, order books, position tables, wallet sheets, transaction toasts, charts, and more. Each component is a single file you own and can modify.
+
+See the full list at [solanaui.dev/docs](https://solanaui.dev/docs).
+
+## Installation
+
+Components are installed individually via the CLI:
 
 ```bash
-npm run dev
-# or
-pnpm dev
-# or
-yarn dev
+pnpm dlx solanaui@latest add swap-box
 ```
 
-Open http://localhost:3000 with your browser to see the result.
+This copies the component source into your project at `src/components/sol/`. You own the code.
 
-## Explore
+### Prerequisites
 
-In the project, you can see:
+- React 19
+- Tailwind CSS v4
+- shadcn/ui
 
-- `lib/source.ts`: Code for content source adapter, [`loader()`](https://fumadocs.dev/docs/headless/source-api) provides the interface to access your content.
-- `lib/layout.shared.tsx`: Shared options for layouts, optional but preferred to keep.
+shadcn/ui primitives are resolved automatically when you install a SolanaUI component.
 
-| Route                     | Description                                            |
-| ------------------------- | ------------------------------------------------------ |
-| `app/(home)`              | The route group for your landing page and other pages. |
-| `app/docs`                | The documentation layout and pages.                    |
-| `app/api/search/route.ts` | The Route Handler for search.                          |
+## Agent Integration
 
-### Fumadocs MDX
+SolanaUI ships a `SKILL.md` for coding agents (Claude Code, Cursor, Windsurf, and others). Install it with:
 
-A `source.config.ts` config file has been included, you can customise different options like frontmatter schema.
+```bash
+npx skills add chambaz/solanaui
+```
 
-Read the [Introduction](https://fumadocs.dev/docs/mdx) for further details.
+Or copy `SKILL.md` from the repo root into your project's `.claude/skills/` directory.
 
-## Learn More
+## Development
 
-To learn more about Next.js and Fumadocs, take a look at the following
-resources:
+```bash
+pnpm install
+pnpm dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js
-  features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-- [Fumadocs](https://fumadocs.dev) - learn about Fumadocs
+The docs site runs at `http://localhost:3000`. Built with Next.js 16, Fumadocs, and React 19.
+
+```bash
+pnpm build     # Production build (includes type checking)
+pnpm lint      # Biome lint
+pnpm format    # Biome format
+```
+
+## License
+
+MIT

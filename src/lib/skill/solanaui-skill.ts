@@ -34,6 +34,7 @@ interface ActionBoxProps {
   label?: string;
   details?: ActionBoxDetail[];
   submitLabel?: string;
+  onSubmit?: () => void;
   className?: string;
 }`,
     usage: `<ActionBox
@@ -49,42 +50,24 @@ interface ActionBoxProps {
 />`,
   },
   {
-    name: "ActionBoxDialog",
-    file: "action-box-dialog",
-    description:
-      "Wraps ActionBox in a dialog modal with a customizable trigger button. Use for deposit/withdraw/stake/borrow flows.",
-    props: `interface ActionBoxDialogProps extends ActionBoxProps {
-  trigger?: React.ReactNode;
-}`,
-    usage: `<ActionBoxDialog
-  trigger={<Button>Deposit</Button>}
-  tokens={[{ icon: "/usdc.png", symbol: "USDC" }]}
-  defaultToken="USDC"
-  balance="1,250.00"
-  label="Deposit"
-  details={[{ label: "APY", value: "8.45%" }]}
-  submitLabel="Deposit USDC"
-/>`,
-  },
-  {
     name: "ActivityFeed",
     file: "activity-feed",
     description:
-      "A chronological list of activity items with optional token icons, descriptions, timestamps, and values.",
+      "A chronological list of activity items with optional token icons, descriptions, timestamps, and values. Uses date-fns formatDistanceToNow for relative time display.",
     props: `interface ActivityFeedProps {
   items: {
     icon?: string;
     title: string;
     description?: string;
-    time: string;
+    timestamp: Date;
     value?: string;
   }[];
   className?: string;
 }`,
     usage: `<ActivityFeed
   items={[
-    { icon: "/sol.png", title: "SOL Purchased", description: "Bought 2.5 SOL", time: "2 min ago", value: "$406.40" },
-    { icon: "/usdc.png", title: "USDC Deposited", time: "15 min ago", value: "$1,000.00" },
+    { icon: "/sol.png", title: "SOL Purchased", description: "Bought 2.5 SOL", timestamp: new Date(Date.now() - 2 * 60 * 1000), value: "$406.40" },
+    { icon: "/usdc.png", title: "USDC Deposited", timestamp: new Date(Date.now() - 15 * 60 * 1000), value: "$1,000.00" },
   ]}
 />`,
   },
@@ -102,7 +85,7 @@ interface ActionBoxProps {
   className?: string;
 }`,
     usage: `<AddressDisplay
-  address="7xKpR4nm3kW9vBzL5hQd2mFnZq8gT4pYx9eRwVb3mKs"
+  address="MFv2hWf31Z9kbCa1snEPYctwafyhdvnV7FZnsebVacA"
   explorerUrl="https://solscan.io/account"
 />`,
   },
@@ -133,24 +116,10 @@ interface AuthCardProps {
 />`,
   },
   {
-    name: "AuthDialog",
-    file: "auth-dialog",
-    description:
-      "Wraps AuthCard in a dialog modal with a customizable trigger button.",
-    props: `interface AuthDialogProps extends AuthCardProps {
-  trigger?: React.ReactNode;
-}`,
-    usage: `<AuthDialog
-  trigger={<Button>Sign In</Button>}
-  title="Sign In"
-  showEmail
-/>`,
-  },
-  {
     name: "HealthBar",
     file: "health-bar",
     description:
-      "A gradient progress bar (red-to-green) showing health factor percentage with semantic labels.",
+      "A gradient progress bar (red-to-green) showing health factor with a colored percentage value.",
     props: `interface HealthBarProps {
   value: number;
   label?: string;
@@ -215,6 +184,38 @@ interface AuthCardProps {
     { price: 162.55, size: 10.2 },
     { price: 162.60, size: 15.1 },
   ]}
+/>`,
+  },
+  {
+    name: "OrderFormCard",
+    file: "order-form-card",
+    description:
+      "A take profit and stop loss order form card for open trading positions. Shows a Card with title/description header, flexible details summary (label/value pairs), dual TP inputs (price + gain %), dual SL inputs (price + loss %), and confirm button. Pass entryPrice (number) to enable auto-sync between price and percent fields. Used inside PositionTable dialogs.",
+    props: `interface OrderFormCardDetail {
+  label: string;
+  value: string;
+  className?: string;
+}
+
+interface OrderFormCardProps {
+  title?: string;
+  description?: string;
+  entryPrice?: number;
+  details?: OrderFormCardDetail[];
+  onSubmit?: (values: { tpPrice: string; tpPercent: string; slPrice: string; slPercent: string }) => void;
+  className?: string;
+}`,
+    usage: `<OrderFormCard
+  title="Edit TP/SL"
+  description="Adjust the parameters on your order"
+  entryPrice={148.32}
+  details={[
+    { label: "Size", value: "150.0" },
+    { label: "Entry Price", value: "$148.32" },
+    { label: "Mark Price", value: "$162.56" },
+    { label: "Liquidation Price", value: "$118.66" },
+  ]}
+  onSubmit={(values) => console.log(values)}
 />`,
   },
   {
@@ -347,29 +348,35 @@ interface PoolTableProps {
     name: "PositionTable",
     file: "position-table",
     description:
-      "A table of open trading positions with side, size, leverage, entry/mark prices, and P&L with trend indicators.",
-    props: `interface PositionTableProps {
-  positions: {
-    symbol: string;
-    icon: string;
-    side: "long" | "short";
-    size: string;
-    value: string;
-    leverage: string;
-    entryPrice: string;
-    markPrice: string;
-    pnl: string;
-    pnlPercent?: string;
-    pnlTrend?: "up" | "down";
-  }[];
+      "A table of open trading positions with Type (long/short), Asset (icon+symbol), size, leverage, entry/mark prices, and inline colored P&L. Includes self-contained TP/SL (pencil icon opens OrderFormCard dialog) and Close (X icon opens ActionBox dialog) columns. Supports onEditTpSl and onClosePosition callbacks for wiring up actual functionality.",
+    props: `interface PositionTablePosition {
+  symbol: string;
+  icon: string;
+  side: "long" | "short";
+  size: string;
+  value: string;
+  leverage: string;
+  entryPrice: string;
+  markPrice: string;
+  liquidationPrice?: string;
+  pnl: string;
+  pnlPercent?: string;
+  pnlTrend?: "up" | "down";
+}
+
+interface PositionTableProps {
+  positions: PositionTablePosition[];
+  onEditTpSl?: (position: PositionTablePosition, values: { tpPrice: string; tpPercent: string; slPrice: string; slPercent: string }) => void;
+  onClosePosition?: (position: PositionTablePosition) => void;
   className?: string;
 }`,
     usage: `<PositionTable
   positions={[
     {
-      symbol: "SOL", icon: "/sol.png", side: "long", size: "150 SOL",
+      symbol: "SOL", icon: "/sol.png", side: "long", size: "150.0",
       value: "$24,384.00", leverage: "5x", entryPrice: "$148.32",
-      markPrice: "$162.56", pnl: "+$2,136.00", pnlPercent: "+48.0%", pnlTrend: "up",
+      markPrice: "$162.56", liquidationPrice: "$118.66",
+      pnl: "+$2,136.00", pnlPercent: "+48.0%",
     },
   ]}
 />`,
@@ -468,16 +475,40 @@ interface SwapBoxProps {
     name: "TokenCommand",
     file: "token-command",
     description:
-      "A Cmd+K command dialog for searching and selecting tokens from a list.",
-    props: `interface TokenCommandProps {
-  tokens: { icon: string; symbol: string }[];
+      "A Cmd+K command dialog for searching and selecting tokens. Supports both a flat token list via the tokens prop and grouped sections via the groups prop. Each group has a heading and its own token list.",
+    props: `interface TokenCommandToken {
+  icon: string;
+  symbol: string;
+}
+
+interface TokenCommandGroup {
+  heading: string;
+  tokens: TokenCommandToken[];
+}
+
+// Pass either tokens or groups, not both
+type TokenCommandProps = {
+  onSelect?: (token: TokenCommandToken) => void;
   className?: string;
-}`,
+} & (
+  | { tokens: TokenCommandToken[]; groups?: never }
+  | { groups: TokenCommandGroup[]; tokens?: never }
+)`,
     usage: `<TokenCommand
-  tokens={[
-    { icon: "/sol.png", symbol: "SOL" },
-    { icon: "/usdc.png", symbol: "USDC" },
-    { icon: "/bonk.png", symbol: "BONK" },
+  groups={[
+    {
+      heading: "Global Pool",
+      tokens: [
+        { icon: "/sol.png", symbol: "SOL" },
+        { icon: "/usdc.png", symbol: "USDC" },
+      ],
+    },
+    {
+      heading: "Isolated Pools",
+      tokens: [
+        { icon: "/bonk.png", symbol: "BONK" },
+      ],
+    },
   ]}
 />`,
   },
@@ -581,21 +612,6 @@ interface TradeBoxProps {
 />`,
   },
   {
-    name: "TradeBoxDialog",
-    file: "trade-box-dialog",
-    description:
-      "Wraps TradeBox in a dialog modal with a customizable trigger button.",
-    props: `interface TradeBoxDialogProps extends TradeBoxProps {
-  trigger?: React.ReactNode;
-}`,
-    usage: `<TradeBoxDialog
-  trigger={<Button>Trade</Button>}
-  tokens={[{ icon: "/sol.png", symbol: "SOL" }]}
-  defaultToken="SOL"
-  balance="24.58"
-/>`,
-  },
-  {
     name: "TradeButtons",
     file: "trade-buttons",
     description:
@@ -644,11 +660,11 @@ interface TradeBoxProps {
     name: "TxnTable",
     file: "txn-table",
     description:
-      "A table of blockchain transactions with truncated signature links, timestamps, action badges, and token amounts.",
+      "A table of blockchain transactions with truncated signature links, relative timestamps via date-fns, action badges, and token amounts. The timestamp prop accepts a Date object and auto-formats to relative time (e.g. '2 minutes ago').",
     props: `interface TxnTableProps {
   transactions: {
     signature: string;
-    time: string;
+    timestamp: Date;
     action: string;
     token: string;
     tokenIcon?: string;
@@ -661,7 +677,7 @@ interface TradeBoxProps {
     usage: `<TxnTable
   transactions={[
     {
-      signature: "5UfD...3xKp", time: "2 min ago", action: "Swap",
+      signature: "5UfD...3xKp", timestamp: new Date(Date.now() - 2 * 60 * 1000), action: "Swap",
       token: "SOL", tokenIcon: "/sol.png", amount: "2.5 SOL", value: "$406.40",
       explorerUrl: "https://solscan.io/tx/...",
     },
@@ -711,7 +727,7 @@ interface TradeBoxProps {
   className?: string;
 }`,
     usage: `<WalletSheet
-  address="7xKp...mKs"
+  address="MFv2...acA"
   balance="$5,245.72"
   balanceChange="-$12.39"
   balanceChangePercent="-0.24%"
@@ -723,44 +739,56 @@ interface TradeBoxProps {
 ];
 
 const COMPOSITION_PATTERNS = `
+## Responsive Layout Rules (IMPORTANT)
+All layouts MUST be fully responsive and work well on mobile (320px+), tablet, and desktop.
+- Headers: use flex-col gap-4 sm:flex-row sm:items-center sm:justify-between so title and wallet stack vertically on mobile.
+- Stat card rows: grid-cols-2 md:grid-cols-4 (never fixed grid-cols-4).
+- Multi-column layouts: start at grid-cols-1 and add columns at breakpoints (e.g. grid-cols-1 lg:grid-cols-[1fr_280px] xl:grid-cols-[1fr_280px_320px]).
+- Card grids: grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 (never fixed grid-cols-3).
+- NFT grids: grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6.
+- Position/portfolio grids: grid-cols-1 md:grid-cols-2.
+- Tables are horizontally scrollable by default on mobile (overflow-x-auto).
+- Always include px-4 on outer containers for mobile padding.
+- Use text-xl sm:text-2xl or text-2xl sm:text-3xl for heading sizes.
+
 ## Swap Interface
 Use SwapBox as the main form -- it handles two TokenInputs with a flip button, details, and submit.
 Add PoolCards below to show the tokens being swapped with sparklines and TrendBadges (single-token mode with price and series).
-Wrap the swap form in a centered container (max-w-xl mx-auto).
+Wrap the swap form in a centered container (max-w-xl mx-auto px-4).
 
 ## Perps Trading Page
-Layout: header with token info + 4 StatCards across the top.
-Main area: three-column grid with TradeChart (in a Card) | OrderBook | TradeBox.
+Layout: header with token info + 4 StatCards (grid-cols-2 md:grid-cols-4).
+Main area: responsive grid (grid-cols-1 lg:grid-cols-[1fr_280px] xl:grid-cols-[1fr_280px_320px]) with TradeChart (in a Card) | OrderBook | TradeBox.
 Below: PositionTable showing open positions.
 Use max-w-[1400px] mx-auto px-4 for the container.
 
 ## Lending Dashboard
 Tabbed layout with Lend and Portfolio tabs.
-Lend tab: PoolCards in a row showing available markets (single-token mode with price and series), PoolTable below with deposit/borrow ActionBoxDialogs.
-Portfolio tab: HealthBar at top, StatCards row (Total Deposits, Total Borrows, Net Balance), PositionCards with ActionBoxDialog buttons for each position.
+Lend tab: PoolCards in a responsive row (grid-cols-1 sm:grid-cols-2 lg:grid-cols-3), PoolTable below with deposit/borrow actions using inline Dialog + ActionBox.
+Portfolio tab: HealthBar at top, StatCards row (grid-cols-1 sm:grid-cols-3), PositionCards in grid-cols-1 md:grid-cols-2.
 
 ## Liquidity Pools
 Use PoolTable for listing multiple pools. Use PoolCard for featured/highlighted pools.
 Both use TokenIconGroup internally for stacked token pair icons.
 
 ## NFT Marketplace
-Header with WalletSheet button. StatCards row showing collection stats (Floor Price, Volume, Listed, Owners).
-Main area: responsive grid of NFTCards (grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5).
+Header with WalletSheet button. StatCards row (grid-cols-2 md:grid-cols-4).
+Main area: responsive grid of NFTCards (grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6).
 Sidebar or below: ActivityFeed showing recent sales/listings.
 
 ## Token Portfolio
-WalletSheet in the header. StatCards showing portfolio metrics.
+WalletSheet in the header. StatCards showing portfolio metrics (grid-cols-2 md:grid-cols-4).
 PoolTable listing all holdings. SparklineCharts inline with token data.
 TxnTable below showing recent transaction history.
 
 ## DeFi Stats Dashboard
-Grid of StatCards showing protocol metrics (TVL, Volume, Users, Revenue).
+Grid of StatCards showing protocol metrics (grid-cols-2 md:grid-cols-4).
 PoolTable showing top tokens. Multiple SparklineCharts for historical data.
 ActivityFeed for recent protocol events.
 
 ## Staking Page
 Use ActionBox with label="Stake", details for APY/rewards/validator, and submitLabel="Stake SOL".
-For a dialog-based flow, wrap it in ActionBoxDialog.
+For a dialog-based flow, wrap ActionBox in a Dialog from shadcn/ui: Dialog > DialogTrigger > DialogContent > ActionBox with className="border-none p-0".
 `;
 
 const TOKEN_IMAGE_GUIDANCE = `
@@ -786,7 +814,8 @@ const OUTPUT_RULES = `
 - Import shadcn/ui components from "@/components/ui/<name>" (e.g., import { Card } from "@/components/ui/card", import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs")
 - Include realistic Solana ecosystem demo data: SOL (~$162), USDC ($1.00), BONK, JitoSOL (~$189), mSOL (~$186)
 - Use the token image URLs from the Token Images section above
-- Use Tailwind CSS classes for all layout (grid, flex, gap, padding, max-width, responsive breakpoints)
+- Use Tailwind CSS classes for all layout (grid, flex, gap, padding, max-width)
+- ALL layouts MUST be fully responsive using Tailwind breakpoints (sm, md, lg, xl). Never use fixed multi-column grids without mobile breakpoints
 - Do NOT import from @solana/web3.js or any Solana SDK -- all data is static props
 - Do NOT invent or create components that are not listed in this prompt
 - Do NOT add interactivity or state management unless the component explicitly requires it

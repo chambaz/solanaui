@@ -48,7 +48,7 @@ const PoolCard = ({
   const regularMetrics = metrics?.filter((m) => !m.highlight);
 
   return (
-    <Card className={cn("p-4 w-full max-w-sm", className)} {...props}>
+    <Card className={cn("p-4 w-full", className)} {...props}>
       <CardHeader className="p-0">
         <CardTitle className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 text-xl">

@@ -14,19 +14,40 @@ import {
 } from "@/components/ui/command";
 import { cn } from "@/lib/utils";
 
-interface TokenCommandProps {
-  tokens: {
-    icon: string;
-    symbol: string;
-  }[];
-  className?: string;
+interface TokenCommandToken {
+  icon: string;
+  symbol: string;
 }
 
-const TokenCommand = ({ tokens, className }: TokenCommandProps) => {
+interface TokenCommandGroup {
+  heading: string;
+  tokens: TokenCommandToken[];
+}
+
+type TokenCommandProps = {
+  onSelect?: (token: TokenCommandToken) => void;
+  className?: string;
+} & (
+  | { tokens: TokenCommandToken[]; groups?: never }
+  | { groups: TokenCommandGroup[]; tokens?: never }
+);
+
+const TokenCommand = ({
+  tokens,
+  groups,
+  onSelect,
+  className,
+}: TokenCommandProps) => {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
 
-  const activeToken = tokens.find(
+  const allTokens = React.useMemo(() => {
+    if (tokens) return tokens;
+    if (groups) return groups.flatMap((g) => g.tokens);
+    return [];
+  }, [tokens, groups]);
+
+  const activeToken = allTokens.find(
     (token) => token.symbol.toLowerCase() === value.toLowerCase(),
   );
 
@@ -41,6 +62,24 @@ const TokenCommand = ({ tokens, className }: TokenCommandProps) => {
     document.addEventListener("keydown", down);
     return () => document.removeEventListener("keydown", down);
   }, []);
+
+  const renderItem = (token: TokenCommandToken) => (
+    <CommandItem
+      key={token.symbol}
+      value={token.symbol}
+      onSelect={(currentValue) => {
+        const newValue = currentValue === value ? "" : currentValue;
+        setValue(newValue);
+        setOpen(false);
+        if (newValue) {
+          onSelect?.(token);
+        }
+      }}
+    >
+      <TokenIcon src={token.icon} alt={token.symbol} width={20} height={20} />
+      {token.symbol}
+    </CommandItem>
+  );
 
   return (
     <>
@@ -68,31 +107,22 @@ const TokenCommand = ({ tokens, className }: TokenCommandProps) => {
         <CommandInput placeholder="Search token..." />
         <CommandList>
           <CommandEmpty>No tokens found.</CommandEmpty>
-          <CommandGroup heading="Tokens">
-            {tokens.map((token) => (
-              <CommandItem
-                key={token.symbol}
-                value={token.symbol}
-                onSelect={(currentValue) => {
-                  setValue(currentValue === value ? "" : currentValue);
-                  setOpen(false);
-                }}
-              >
-                <TokenIcon
-                  src={token.icon}
-                  alt={token.symbol}
-                  width={20}
-                  height={20}
-                />
-                {token.symbol}
-              </CommandItem>
-            ))}
-          </CommandGroup>
+          {groups ? (
+            groups.map((group) => (
+              <CommandGroup key={group.heading} heading={group.heading}>
+                {group.tokens.map(renderItem)}
+              </CommandGroup>
+            ))
+          ) : (
+            <CommandGroup heading="Tokens">
+              {allTokens.map(renderItem)}
+            </CommandGroup>
+          )}
         </CommandList>
       </CommandDialog>
     </>
   );
 };
 
-export type { TokenCommandProps };
+export type { TokenCommandProps, TokenCommandToken, TokenCommandGroup };
 export { TokenCommand };

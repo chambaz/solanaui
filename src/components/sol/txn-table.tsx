@@ -1,3 +1,4 @@
+import { formatDistanceToNow } from "date-fns";
 import { ExternalLinkIcon } from "lucide-react";
 import { TokenIcon } from "@/components/sol/token-icon";
 import { Badge } from "@/components/ui/badge";
@@ -14,7 +15,7 @@ import { cn } from "@/lib/utils";
 interface TxnTableProps {
   transactions: {
     signature: string;
-    time: string;
+    timestamp: Date;
     action: string;
     token: string;
     tokenIcon?: string;
@@ -64,7 +65,7 @@ const TxnTable = ({ transactions, className }: TxnTableProps) => {
                 </a>
               </TableCell>
               <TableCell className="text-muted-foreground text-sm">
-                {txn.time}
+                {formatDistanceToNow(txn.timestamp, { addSuffix: true })}
               </TableCell>
               <TableCell>
                 <Badge variant="secondary" className="capitalize text-xs">

@@ -4,14 +4,10 @@ import { ArrowDownUpIcon } from "lucide-react";
 import React from "react";
 import { TokenInput } from "@/components/sol/token-input";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
+import type { DetailRow } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
-interface SwapBoxDetail {
-  label: string;
-  value: string;
-  className?: string;
-}
+type SwapBoxDetail = DetailRow;
 
 interface SwapBoxProps {
   tokens: { icon: string; symbol: string }[];
@@ -48,42 +44,41 @@ const SwapBox = ({
   const currentToLabel = flipped ? fromLabel : toLabel;
 
   return (
-    <div className={cn("flex flex-col gap-4 border rounded-lg p-5", className)}>
-      <div className="flex flex-col items-center">
-        <div className="w-full flex flex-col gap-1.5">
-          <span className="text-xs font-medium text-muted-foreground">
-            {currentFromLabel}
-          </span>
-          <TokenInput
-            key={`from-${flipped}`}
-            tokens={tokens}
-            defaultToken={fromToken}
-            balance={fromBal}
-          />
-        </div>
+    <div className={cn("flex flex-col border rounded-lg p-5", className)}>
+      <div className="w-full flex flex-col gap-1.5">
+        <span className="text-xs font-medium text-muted-foreground">
+          {currentFromLabel}
+        </span>
+        <TokenInput
+          key={`from-${flipped}`}
+          tokens={tokens}
+          defaultToken={fromToken}
+          balance={fromBal}
+        />
+      </div>
+      <div className="flex items-center justify-center pt-4">
         <Button
           variant="outline"
           size="icon"
-          className="rounded-full size-9 -my-4 z-10 bg-background border-2"
+          className="rounded-full size-9 bg-background border-2"
           onClick={() => setFlipped((f) => !f)}
         >
           <ArrowDownUpIcon className="size-4" />
         </Button>
-        <div className="w-full flex flex-col gap-1.5">
-          <span className="text-xs font-medium text-muted-foreground">
-            {currentToLabel}
-          </span>
-          <TokenInput
-            key={`to-${flipped}`}
-            tokens={tokens}
-            defaultToken={toToken}
-            balance={toBal}
-          />
-        </div>
       </div>
-      {details && details.length > 0 && (
-        <>
-          <Separator />
+      <div className="w-full flex flex-col gap-1.5">
+        <span className="text-xs font-medium text-muted-foreground">
+          {currentToLabel}
+        </span>
+        <TokenInput
+          key={`to-${flipped}`}
+          tokens={tokens}
+          defaultToken={toToken}
+          balance={toBal}
+        />
+      </div>
+      <div className="flex flex-col gap-4 pt-4">
+        {details && details.length > 0 && (
           <div className="flex flex-col gap-1.5 text-sm">
             {details.map((detail) => (
               <div key={detail.label} className="flex justify-between">
@@ -92,11 +87,11 @@ const SwapBox = ({
               </div>
             ))}
           </div>
-        </>
-      )}
-      <Button className="w-full" size="lg">
-        {submitLabel}
-      </Button>
+        )}
+        <Button className="w-full" size="lg">
+          {submitLabel}
+        </Button>
+      </div>
     </div>
   );
 };

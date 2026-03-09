@@ -3,13 +3,10 @@ import { TokenInput } from "@/components/sol/token-input";
 import { TradeButtons } from "@/components/sol/trade-buttons";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import type { DetailRow } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
-interface TradeBoxDetail {
-  label: string;
-  value: string;
-  className?: string;
-}
+type TradeBoxDetail = DetailRow;
 
 interface TradeBoxProps {
   tokens: { icon: string; symbol: string }[];
@@ -45,7 +42,6 @@ const TradeBox = ({
       <TradeButtons defaultValue={defaultSide} labels={labels} />
       <Separator />
       <div className="flex flex-col gap-2">
-        <span className="text-sm text-muted-foreground">Collateral</span>
         <TokenInput
           tokens={tokens}
           defaultToken={defaultToken}

@@ -26,7 +26,7 @@ const TokenIconGroup = ({
         <div
           key={`${token.src}-${i}`}
           className={cn(
-            "rounded-full relative",
+            "rounded-full relative leading-[0]",
             hasOverlap && "ring-2 ring-background",
           )}
           style={{

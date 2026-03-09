@@ -1,13 +1,10 @@
 import { TokenInput } from "@/components/sol/token-input";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import type { DetailRow } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
-interface ActionBoxDetail {
-  label: string;
-  value: string;
-  className?: string;
-}
+type ActionBoxDetail = DetailRow;
 
 interface ActionBoxProps {
   tokens: { icon: string; symbol: string }[];
@@ -16,6 +13,7 @@ interface ActionBoxProps {
   label?: string;
   details?: ActionBoxDetail[];
   submitLabel?: string;
+  onSubmit?: () => void;
   className?: string;
 }
 
@@ -26,6 +24,7 @@ const ActionBox = ({
   label,
   details,
   submitLabel = "Submit",
+  onSubmit,
   className,
 }: ActionBoxProps) => {
   return (
@@ -53,7 +52,7 @@ const ActionBox = ({
           </div>
         </>
       )}
-      <Button className="w-full" size="lg">
+      <Button className="w-full" size="lg" onClick={onSubmit}>
         {submitLabel}
       </Button>
     </div>

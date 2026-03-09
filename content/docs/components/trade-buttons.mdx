@@ -31,6 +31,24 @@ export function TradeButtonsDemo() {
 <TradeButtons />
 ```
 
+### Controlled
+
+Use `value` and `onValueChange` to control the selected side from a parent component.
+
+```tsx
+const [side, setSide] = React.useState("long");
+
+<TradeButtons value={side} onValueChange={setSide} />
+
+{side === "long" ? <LongOrderForm /> : <ShortOrderForm />}
+```
+
+### Custom Labels
+
+```tsx
+<TradeButtons labels={["Buy", "Sell"]} defaultValue="long" />
+```
+
 ## Source Code
 
 <ComponentCode name="trade-buttons" />

@@ -94,42 +94,42 @@ const RECENT_ACTIVITY = [
     icon: NFT_IMAGE,
     title: "Mad Lad #4281 sold",
     description: "Buyer: 7xKp...3mFn",
-    time: "2m ago",
+    timestamp: new Date(Date.now() - 2 * 60 * 1000),
     value: "142.5 SOL",
   },
   {
     icon: NFT_IMAGE,
     title: "Mad Lad #1337 listed",
     description: "Seller: 9dVq...8hJr",
-    time: "8m ago",
+    timestamp: new Date(Date.now() - 8 * 60 * 1000),
     value: "158.2 SOL",
   },
   {
     icon: NFT_IMAGE,
     title: "Mad Lad #7892 sold",
     description: "Buyer: 3kYm...2wBt",
-    time: "15m ago",
+    timestamp: new Date(Date.now() - 15 * 60 * 1000),
     value: "135.0 SOL",
   },
   {
     icon: NFT_IMAGE,
     title: "Mad Lad #2048 bid placed",
     description: "Bidder: 5nPx...9eLq",
-    time: "22m ago",
+    timestamp: new Date(Date.now() - 22 * 60 * 1000),
     value: "160.0 SOL",
   },
   {
     icon: NFT_IMAGE,
     title: "Mad Lad #512 sold",
     description: "Buyer: 8gRz...4kNs",
-    time: "38m ago",
+    timestamp: new Date(Date.now() - 38 * 60 * 1000),
     value: "145.3 SOL",
   },
   {
     icon: NFT_IMAGE,
     title: "Mad Lad #9001 delisted",
     description: "Owner: 2jCf...7mDw",
-    time: "1h ago",
+    timestamp: new Date(Date.now() - 60 * 60 * 1000),
   },
 ];
 
@@ -139,8 +139,8 @@ const WALLET_TOKENS = [
     name: "Solana",
     symbol: "SOL",
     balance: "24.58",
-    value: "$3,995.72",
-    change: "-$12.40",
+    value: "$5,996.73",
+    change: "+$248.30",
   },
   {
     icon: USDC_ICON,
@@ -155,8 +155,8 @@ const WALLET_TOKENS = [
     name: "Bonk",
     symbol: "BONK",
     balance: "15,420,000",
-    value: "$438.03",
-    change: "-$8.21",
+    value: "$994.77",
+    change: "-$102.09",
   },
 ];
 
@@ -165,24 +165,24 @@ export default function MarketplacePage() {
     <div className="py-8">
       <div className="max-w-[1400px] mx-auto w-full px-4 flex flex-col gap-6">
         {/* Header with auth + wallet */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex flex-col gap-1">
-            <h1 className="text-3xl font-semibold">Mad Lads</h1>
+            <h1 className="text-2xl sm:text-3xl font-semibold">Mad Lads</h1>
             <p className="text-sm text-muted-foreground">
               10,000 generative Mad Lads on the Solana blockchain
             </p>
           </div>
           <WalletSheet
-            address="7xKpR4nm3kW9vBzL5hQd2mFnZq8gT4pYx9eRwVb3mKs"
-            balance="$5,683.75"
-            balanceChange="-$20.60"
-            balanceChangePercent="-0.36%"
+            address="MFv2hWf31Z9kbCa1snEPYctwafyhdvnV7FZnsebVacA"
+            balance="$8,241.50"
+            balanceChange="+$146.22"
+            balanceChangePercent="+1.81%"
             tokens={WALLET_TOKENS}
           />
         </div>
 
         {/* Collection stats */}
-        <div className="grid grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <StatCard
             label="Floor Price"
             value="135.0 SOL"

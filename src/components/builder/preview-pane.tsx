@@ -75,6 +75,7 @@ const SANDBOX_DEPENDENCIES: Record<string, string> = {
   sonner: "^2.0.7",
   "next-themes": "^0.4.6",
   "react-number-format": "^5.4.4",
+  "date-fns": "^4.1.0",
 };
 
 /**

@@ -13,19 +13,12 @@ const getHealthColor = (value: number) => {
   return "text-red-400";
 };
 
-const getHealthLabel = (value: number) => {
-  if (value >= 66) return "Healthy";
-  if (value >= 33) return "At Risk";
-  return "Critical";
-};
-
 const HealthBar = ({
   value,
   label = "Health Factor",
   showValue = true,
   className,
 }: HealthBarProps) => {
-  // Clamp between 0-100
   const clamped = Math.max(0, Math.min(100, value));
 
   return (
@@ -33,25 +26,16 @@ const HealthBar = ({
       <div className="flex items-center justify-between">
         <span className="text-sm text-muted-foreground">{label}</span>
         {showValue && (
-          <div className="flex items-center gap-1.5">
-            <span
-              className={cn("text-sm font-medium", getHealthColor(clamped))}
-            >
-              {getHealthLabel(clamped)}
-            </span>
-            <span className="text-sm text-muted-foreground">
-              {clamped.toFixed(0)}%
-            </span>
-          </div>
+          <span className={cn("text-sm font-medium", getHealthColor(clamped))}>
+            {clamped.toFixed(0)}%
+          </span>
         )}
       </div>
       <div className="relative h-2.5 w-full rounded-full bg-muted">
-        {/* Clip wrapper: sized to filled portion, rounds the right edge */}
         <div
           className="absolute inset-y-0 left-0 overflow-hidden rounded-full transition-all duration-300"
           style={{ width: `${clamped}%` }}
         >
-          {/* Full-width gradient stretches across the entire bar */}
           <div
             className="h-full bg-gradient-to-r from-red-400 via-yellow-500 to-emerald-500"
             style={{ width: `${clamped > 0 ? (100 / clamped) * 100 : 100}%` }}

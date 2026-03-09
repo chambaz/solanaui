@@ -9,15 +9,14 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { TxnToastDemo } from "@/components/docs/txn-toast-demo";
 import { ActionBox } from "@/components/sol/action-box";
-import { ActionBoxDialog } from "@/components/sol/action-box-dialog";
 import { ActivityFeed } from "@/components/sol/activity-feed";
 import { AddressDisplay } from "@/components/sol/address-display";
 import { AuthCard } from "@/components/sol/auth-card";
-import { AuthDialog } from "@/components/sol/auth-dialog";
 import { HealthBar } from "@/components/sol/health-bar";
 import { LeverageSlider } from "@/components/sol/leverage-slider";
 import { NFTCard } from "@/components/sol/nft-card";
 import { OrderBook } from "@/components/sol/order-book";
+import { OrderFormCard } from "@/components/sol/order-form-card";
 import { PoolCard } from "@/components/sol/pool-card";
 import { PoolTable } from "@/components/sol/pool-table";
 import { PositionCard } from "@/components/sol/position-card";
@@ -32,7 +31,6 @@ import { TokenIcon } from "@/components/sol/token-icon";
 import { TokenIconGroup } from "@/components/sol/token-icon-group";
 import { TokenInput } from "@/components/sol/token-input";
 import { TradeBox } from "@/components/sol/trade-box";
-import { TradeBoxDialog } from "@/components/sol/trade-box-dialog";
 import { TradeButtons } from "@/components/sol/trade-buttons";
 import { TradeChart } from "@/components/sol/trade-chart";
 import { TrendBadge } from "@/components/sol/trend-badge";
@@ -59,16 +57,15 @@ export default async function Page(props: PageProps<"/docs/[[...slug]]">) {
             // this allows you to link to other pages with relative file paths
             a: createRelativeLink(source, page),
             ActionBox,
-            ActionBoxDialog,
             ActivityFeed,
             AddressDisplay,
             AuthCard,
-            AuthDialog,
             Button,
             HealthBar,
             LeverageSlider,
             NFTCard,
             OrderBook,
+            OrderFormCard,
             PoolCard,
             PoolTable,
             PositionCard,
@@ -83,7 +80,6 @@ export default async function Page(props: PageProps<"/docs/[[...slug]]">) {
             TokenIconGroup,
             TokenInput,
             TradeBox,
-            TradeBoxDialog,
             TradeButtons,
             TradeChart,
             TrendBadge,

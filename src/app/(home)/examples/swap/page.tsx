@@ -1,6 +1,5 @@
 import { PoolCard } from "@/components/sol/pool-card";
 import { SwapBox } from "@/components/sol/swap-box";
-import { TrendBadge } from "@/components/sol/trend-badge";
 import { WalletSheet } from "@/components/sol/wallet-sheet";
 
 const SOL_ICON =
@@ -38,8 +37,8 @@ const WALLET_TOKENS = [
     name: "Solana",
     symbol: "SOL",
     balance: "24.58",
-    value: "$3,995.72",
-    change: "-$12.40",
+    value: "$5,996.73",
+    change: "+$248.30",
   },
   {
     icon: USDC_ICON,
@@ -67,14 +66,14 @@ const USDC_SPARKLINE = [
 export default function SwapPage() {
   return (
     <div className="py-8">
-      <div className="max-w-xl mx-auto w-full flex flex-col gap-6">
+      <div className="max-w-xl mx-auto w-full px-4 flex flex-col gap-6">
         <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold">Token Swap</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold">Token Swap</h1>
           <WalletSheet
-            address="7xKpR4nm3kW9vBzL5hQd2mFnZq8gT4pYx9eRwVb3mKs"
-            balance="$5,245.72"
-            balanceChange="-$12.39"
-            balanceChangePercent="-0.24%"
+            address="MFv2hWf31Z9kbCa1snEPYctwafyhdvnV7FZnsebVacA"
+            balance="$7,246.73"
+            balanceChange="+$248.31"
+            balanceChangePercent="+3.55%"
             tokens={WALLET_TOKENS}
           />
         </div>
@@ -98,25 +97,21 @@ export default function SwapPage() {
         />
 
         {/* Token cards */}
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <PoolCard
             tokens={[{ icon: USDC_ICON, symbol: "USDC" }]}
             name="USD Coin"
             price="$1.00"
             description="EPjF...Dt1v"
             series={USDC_SPARKLINE}
-          >
-            <TrendBadge>+0.01%</TrendBadge>
-          </PoolCard>
+          />
           <PoolCard
             tokens={[{ icon: SOL_ICON, symbol: "SOL" }]}
             name="Solana"
             price="$162.56"
             description="So11...1112"
             series={SOL_SPARKLINE}
-          >
-            <TrendBadge>+9.69%</TrendBadge>
-          </PoolCard>
+          />
         </div>
       </div>
     </div>

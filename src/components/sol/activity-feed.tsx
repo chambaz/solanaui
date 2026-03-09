@@ -1,3 +1,4 @@
+import { formatDistanceToNow } from "date-fns";
 import { TokenIcon } from "@/components/sol/token-icon";
 import { cn } from "@/lib/utils";
 
@@ -6,7 +7,7 @@ interface ActivityFeedProps {
     icon?: string;
     title: string;
     description?: string;
-    time: string;
+    timestamp: Date;
     value?: string;
   }[];
   className?: string;
@@ -25,7 +26,7 @@ const ActivityFeed = ({ items, className }: ActivityFeedProps) => {
     <div className={cn("flex flex-col", className)}>
       {items.map((item, i) => (
         <div
-          key={`${item.title}-${item.time}-${i}`}
+          key={`${item.title}-${i}`}
           className={cn(
             "flex items-center gap-3 py-3 px-1",
             i < items.length - 1 && "border-b",
@@ -51,7 +52,9 @@ const ActivityFeed = ({ items, className }: ActivityFeedProps) => {
             {item.value && (
               <span className="text-sm font-medium">{item.value}</span>
             )}
-            <span className="text-xs text-muted-foreground">{item.time}</span>
+            <span className="text-xs text-muted-foreground">
+              {formatDistanceToNow(item.timestamp, { addSuffix: true })}
+            </span>
           </div>
         </div>
       ))}

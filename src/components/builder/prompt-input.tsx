@@ -79,19 +79,21 @@ const PromptInput = ({
           )}
         </Button>
       </div>
-
-      <div className="mt-3 flex flex-wrap gap-2">
-        {SUGGESTED_PROMPTS.map((prompt) => (
-          <button
-            key={prompt}
-            type="button"
-            onClick={() => handleSuggestion(prompt)}
-            disabled={isStreaming || disabled}
-            className="rounded-full border border-border bg-background px-3 py-1 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {prompt}
-          </button>
-        ))}
+      <div className="mt-4 space-y-3 flex flex-col items-center">
+        <p className="text-muted-foreground text-sm">Or try one of these...</p>
+        <div className="flex flex-wrap gap-2">
+          {SUGGESTED_PROMPTS.map((prompt) => (
+            <button
+              key={prompt}
+              type="button"
+              onClick={() => handleSuggestion(prompt)}
+              disabled={isStreaming || disabled}
+              className="rounded-full border border-border bg-background px-3 py-1 text-xs transition-colors hover:bg-muted disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {prompt}
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );

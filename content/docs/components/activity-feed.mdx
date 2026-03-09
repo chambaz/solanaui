@@ -11,21 +11,21 @@ description: A compact event list for displaying recent activity like swaps, tra
           icon: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
           title: "Bought SOL",
           description: "Hdg...248",
-          time: "2m ago",
+          timestamp: new Date(Date.now() - 2 * 60 * 1000),
           value: "100 SOL",
         },
         {
           icon: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
           title: "Sold USDC",
           description: "9dV...8hJ",
-          time: "8m ago",
+          timestamp: new Date(Date.now() - 8 * 60 * 1000),
           value: "5,000 USDC",
         },
         {
           icon: "https://arweave.net/hQiPZOsRZXGXBJd_82PhVdlM_hACsT_q6wqwf5cSY7I",
           title: "Bought BONK",
           description: "3kY...2wB",
-          time: "15m ago",
+          timestamp: new Date(Date.now() - 15 * 60 * 1000),
           value: "2.4M BONK",
         },
       ]}
@@ -47,7 +47,7 @@ export function ActivityFeedDemo() {
           icon: SOL_ICON,
           title: "Bought SOL",
           description: "Hdg...248",
-          time: "2m ago",
+          timestamp: new Date(Date.now() - 2 * 60 * 1000),
           value: "100 SOL",
         },
       ]}
@@ -73,7 +73,7 @@ export function ActivityFeedDemo() {
       icon: SOL_ICON,
       title: "Bought SOL",
       description: "Hdg...248",
-      time: "2m ago",
+      timestamp: new Date(Date.now() - 2 * 60 * 1000),
       value: "100 SOL",
     },
   ]}

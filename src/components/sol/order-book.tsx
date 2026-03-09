@@ -53,7 +53,7 @@ const OrderBook = ({ bids, asks, className }: OrderBookProps) => {
   return (
     <div
       className={cn(
-        "w-full max-w-sm flex flex-col overflow-hidden rounded-lg border bg-card text-card-foreground",
+        "w-full flex flex-col overflow-hidden rounded-lg border bg-card text-card-foreground",
         className,
       )}
     >

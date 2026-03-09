@@ -25,7 +25,7 @@ const PositionCard = ({
   ...props
 }: PositionCardProps) => {
   return (
-    <Card className={cn("p-4 w-full max-w-sm gap-3", className)} {...props}>
+    <Card className={cn("p-4 w-full gap-3", className)} {...props}>
       <CardContent className="flex items-center justify-between p-0 pb-2">
         <div className="flex items-center gap-3">
           <TokenIcon src={icon} alt={symbol} width={48} height={48} />

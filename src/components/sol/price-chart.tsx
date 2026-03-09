@@ -51,7 +51,7 @@ const PriceChart = ({
   return (
     <div
       className={cn(
-        "flex min-h-0 flex-1 flex-col gap-2 rounded-lg border bg-card p-4",
+        "flex min-h-0 flex-1 flex-col gap-4 rounded-lg border bg-card p-4",
         className,
       )}
     >

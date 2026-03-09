@@ -3,7 +3,6 @@
 import React from "react";
 import { CodeDisplay } from "@/components/builder/code-display";
 import { InstallCommands } from "@/components/builder/install-commands";
-import { PerpsDemo } from "@/components/builder/perps-demo";
 import { PreviewPane } from "@/components/builder/preview-pane";
 import { PromptInput } from "@/components/builder/prompt-input";
 import type { ParsedImports } from "@/lib/builder/parse-imports";
@@ -157,12 +156,6 @@ const AIBuilder = ({ className }: AIBuilderProps) => {
           </div>
         )}
       </div>
-
-      {!hasSubmitted && (
-        <div className="mt-10">
-          <PerpsDemo />
-        </div>
-      )}
 
       {showOutput && (
         <div className="flex flex-col overflow-hidden rounded-lg border border-border">

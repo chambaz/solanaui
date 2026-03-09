@@ -18,8 +18,8 @@ const SOL_ICON =
   "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png";
 const USDC_ICON =
   "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png";
-const ETH_ICON =
-  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/7vfCXTUXx5WJV5JADk17DUJ4kXCL1sCqzGGchHB54pTM/logo.png";
+const JITOSOL_ICON =
+  "https://storage.googleapis.com/token-metadata/JitoSOL-256.png";
 
 const WALLET_TOKENS = [
   {
@@ -27,8 +27,8 @@ const WALLET_TOKENS = [
     name: "Solana",
     symbol: "SOL",
     balance: "24.58",
-    value: "$3,995.72",
-    change: "-$12.40",
+    value: "$5,996.73",
+    change: "+$248.30",
   },
   {
     icon: USDC_ICON,
@@ -111,35 +111,38 @@ const POSITIONS = [
     symbol: "SOL",
     icon: SOL_ICON,
     side: "long" as const,
-    size: "150.0 SOL",
+    size: "150.0",
     value: "$24,384.00",
     leverage: "5x",
     entryPrice: "$148.32",
     markPrice: "$162.56",
+    liquidationPrice: "$118.66",
     pnl: "+$2,136.00",
     pnlPercent: "+48.0%",
   },
   {
-    symbol: "ETH",
-    icon: ETH_ICON,
+    symbol: "JitoSOL",
+    icon: JITOSOL_ICON,
     side: "short" as const,
-    size: "4.25 ETH",
-    value: "$14,212.50",
+    size: "42.5",
+    value: "$8,046.10",
     leverage: "3x",
-    entryPrice: "$3,420.00",
-    markPrice: "$3,344.12",
-    pnl: "+$322.49",
-    pnlPercent: "+6.7%",
+    entryPrice: "$195.20",
+    markPrice: "$189.32",
+    liquidationPrice: "$260.27",
+    pnl: "+$249.80",
+    pnlPercent: "+3.2%",
   },
   {
     symbol: "SOL",
     icon: SOL_ICON,
     side: "short" as const,
-    size: "80.0 SOL",
+    size: "80.0",
     value: "$13,004.80",
     leverage: "10x",
     entryPrice: "$158.10",
     markPrice: "$162.56",
+    liquidationPrice: "$173.91",
     pnl: "-$356.80",
     pnlPercent: "-28.2%",
   },
@@ -150,26 +153,28 @@ export default function PerpsPage() {
     <div className="py-8">
       <div className="max-w-[1400px] mx-auto w-full px-4 flex flex-col gap-6">
         {/* Header: Token pair + stats */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-3 sm:gap-4 flex-wrap">
             <div className="flex items-center gap-2">
               <TokenIcon src={SOL_ICON} alt="SOL" width={36} height={36} />
-              <span className="text-2xl font-semibold">SOL-PERP</span>
+              <span className="text-xl sm:text-2xl font-semibold">
+                SOL-PERP
+              </span>
             </div>
-            <span className="text-2xl font-medium">$162.56</span>
+            <span className="text-xl sm:text-2xl font-medium">$162.56</span>
             <TrendBadge>+9.60%</TrendBadge>
           </div>
           <WalletSheet
-            address="7xKpR4nm3kW9vBzL5hQd2mFnZq8gT4pYx9eRwVb3mKs"
-            balance="$8,808.22"
-            balanceChange="-$12.36"
-            balanceChangePercent="-0.14%"
+            address="MFv2hWf31Z9kbCa1snEPYctwafyhdvnV7FZnsebVacA"
+            balance="$10,809.23"
+            balanceChange="+$248.34"
+            balanceChangePercent="+2.35%"
             tokens={WALLET_TOKENS}
           />
         </div>
 
         {/* Stats row */}
-        <div className="grid grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <StatCard
             label="Mark Price"
             value="$162.56"
@@ -196,13 +201,13 @@ export default function PerpsPage() {
         </div>
 
         {/* Main content: Chart + Order Book + Order form */}
-        <div className="grid grid-cols-[1fr_280px_320px] gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] xl:grid-cols-[1fr_280px_320px] gap-4">
           {/* Trade chart */}
           <Card className="overflow-hidden p-0">
             <TradeChart
               data={CHART_DATA}
               visibleBars={30}
-              className="h-[560px] w-full"
+              className="h-[400px] sm:h-[560px] w-full"
             />
           </Card>
 

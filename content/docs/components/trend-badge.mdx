@@ -4,14 +4,22 @@ description: A badge component for displaying trend indicators
 ---
 
 <ComponentDemo>
-  <TrendBadge>12% APY</TrendBadge>
+  <div className="flex items-center gap-3">
+    <TrendBadge>+9.69%</TrendBadge>
+    <TrendBadge trend="down">-4.36%</TrendBadge>
+  </div>
 </ComponentDemo>
 
 ```tsx
 import { TrendBadge } from "@/components/sol/trend-badge";
 
 export function TrendBadgeDemo() {
-  return <TrendBadge>12% APY</TrendBadge>;
+  return (
+    <div className="flex items-center gap-3">
+      <TrendBadge>+9.69%</TrendBadge>
+      <TrendBadge trend="down">-4.36%</TrendBadge>
+    </div>
+  );
 }
 ```
 
@@ -26,7 +34,8 @@ export function TrendBadgeDemo() {
 ## Usage
 
 ```tsx
-<TrendBadge>12% APY</TrendBadge>
+<TrendBadge>+9.69%</TrendBadge>
+<TrendBadge trend="down">-4.36%</TrendBadge>
 ```
 
 ## Source Code

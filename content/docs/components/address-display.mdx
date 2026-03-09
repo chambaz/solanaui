@@ -6,14 +6,14 @@ description: A truncated address display with copy-to-clipboard and optional exp
 <ComponentDemo>
   <div className="flex flex-col gap-4 items-start">
     <AddressDisplay
-      address="7xKpR4nm3kW9vBzL5hQd2mFnZq8gT4pYx9eRwVb3mKs"
+      address="MFv2hWf31Z9kbCa1snEPYctwafyhdvnV7FZnsebVacA"
     />
     <AddressDisplay
-      address="7xKpR4nm3kW9vBzL5hQd2mFnZq8gT4pYx9eRwVb3mKs"
+      address="MFv2hWf31Z9kbCa1snEPYctwafyhdvnV7FZnsebVacA"
       explorerUrl="https://solscan.io/account"
     />
     <AddressDisplay
-      address="7xKpR4nm3kW9vBzL5hQd2mFnZq8gT4pYx9eRwVb3mKs"
+      address="MFv2hWf31Z9kbCa1snEPYctwafyhdvnV7FZnsebVacA"
       truncateChars={[6, 6]}
       explorerUrl="https://solscan.io/account"
     />
@@ -26,7 +26,7 @@ import { AddressDisplay } from "@/components/sol/address-display";
 export function AddressDisplayDemo() {
   return (
     <AddressDisplay
-      address="7xKpR4nm3kW9vBzL5hQd2mFnZq8gT4pYx9eRwVb3mKs"
+      address="MFv2hWf31Z9kbCa1snEPYctwafyhdvnV7FZnsebVacA"
       explorerUrl="https://solscan.io/account"
     />
   );
@@ -46,14 +46,16 @@ export function AddressDisplayDemo() {
 ### Basic
 
 ```tsx
-<AddressDisplay address="7xKpR4nm3kW9vBzL5hQd2mFnZq8gT4pYx9eRwVb3mKs" />
+<AddressDisplay address="MFv2hWf31Z9kbCa1snEPYctwafyhdvnV7FZnsebVacA" />
 ```
 
 ### With Explorer Link
 
+Pass a base URL for the explorer. The address is appended automatically (e.g. `https://solscan.io/account/MFv2...`).
+
 ```tsx
 <AddressDisplay
-  address="7xKpR4nm3kW9vBzL5hQd2mFnZq8gT4pYx9eRwVb3mKs"
+  address="MFv2hWf31Z9kbCa1snEPYctwafyhdvnV7FZnsebVacA"
   explorerUrl="https://solscan.io/account"
 />
 ```
@@ -62,7 +64,7 @@ export function AddressDisplayDemo() {
 
 ```tsx
 <AddressDisplay
-  address="7xKpR4nm3kW9vBzL5hQd2mFnZq8gT4pYx9eRwVb3mKs"
+  address="MFv2hWf31Z9kbCa1snEPYctwafyhdvnV7FZnsebVacA"
   truncateChars={[8, 8]}
 />
 ```

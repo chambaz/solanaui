@@ -178,11 +178,11 @@ const COMPONENT_CATALOG: ComponentDefinition[] = [
 />`,
   },
   {
-    name: "OrderFormCard",
-    file: "order-form-card",
+    name: "OrderForm",
+    file: "order-form",
     description:
-      "A take profit and stop loss order form card for open trading positions. Shows a Card with title/description header, flexible details summary (label/value pairs), dual TP inputs (price + gain %), dual SL inputs (price + loss %), and confirm button. Pass entryPrice (number) to enable auto-sync between price and percent fields. Used inside PositionTable dialogs.",
-    props: `interface OrderFormCardProps {
+      "A take profit and stop loss order form for open trading positions. Shows a Card with title/description header, flexible details summary (label/value pairs), dual TP inputs (price + gain %), dual SL inputs (price + loss %), and confirm button. Pass entryPrice (number) to enable auto-sync between price and percent fields. Used inside PositionTable dialogs.",
+    props: `interface OrderFormProps {
   title?: string;
   description?: string;
   entryPrice?: number;
@@ -190,7 +190,7 @@ const COMPONENT_CATALOG: ComponentDefinition[] = [
   onSubmit?: (values: { tpPrice: string; tpPercent: string; slPrice: string; slPercent: string }) => void;
   className?: string;
 }`,
-    usage: `<OrderFormCard
+    usage: `<OrderForm
   title="Edit TP/SL"
   description="Adjust the parameters on your order"
   entryPrice={148.32}
@@ -314,7 +314,7 @@ const COMPONENT_CATALOG: ComponentDefinition[] = [
     name: "PositionTable",
     file: "position-table",
     description:
-      "A table of open trading positions with Type (long/short), Asset (icon+symbol), size, leverage, entry/mark prices, and inline colored P&L. Includes self-contained TP/SL (pencil icon opens OrderFormCard dialog) and Close (X icon opens ActionBox dialog) columns. Supports onEditTpSl and onClosePosition callbacks for wiring up actual functionality.",
+      "A table of open trading positions with Type (long/short), Asset (icon+symbol), size, leverage, entry/mark prices, and inline colored P&L. Includes self-contained TP/SL (pencil icon opens OrderForm dialog) and Close (X icon opens ActionBox dialog) columns. Supports onEditTpSl and onClosePosition callbacks for wiring up actual functionality.",
     props: `interface PositionTablePosition {
   symbol: string;
   icon: string;
@@ -394,6 +394,7 @@ interface PositionTableProps {
   toLabel?: string;
   details?: { label: string; value: string; className?: string }[];
   submitLabel?: string;
+  onSubmit?: () => void;
   className?: string;
 }`,
     usage: `<SwapBox
@@ -537,6 +538,7 @@ interface PositionTableProps {
   leverageStep?: number;
   details?: { label: string; value: string; className?: string }[];
   submitLabel?: string;
+  onSubmit?: () => void;
   className?: string;
 }`,
     usage: `<TradeBox
@@ -629,20 +631,19 @@ interface PositionTableProps {
     name: "txnToast",
     file: "txn-toast",
     description:
-      "A toast notification function for transaction status updates (pending/confirmed/error) with explorer links. This is a function, not a React component.",
+      "A toast notification function for transaction status updates (pending/confirmed/error) with explorer links and close button. This is a function, not a React component. Returns a toast ID. Use txnToast.update(id, props) to transition a pending toast to confirmed/error in-place.",
     props: `interface TxnToastProps {
   title?: string;
   description?: string;
   signature?: string;
   status?: "pending" | "confirmed" | "error";
   explorerUrl?: string;
-}`,
-    usage: `txnToast({
-  title: "Transaction Confirmed",
-  status: "confirmed",
-  signature: "5UfD...3xKp",
-  explorerUrl: "https://solscan.io/tx/...",
-})`,
+}
+// txnToast(props): string | number
+// txnToast.update(id, props): void`,
+    usage: `const toastId = txnToast({ title: "Swapping SOL for USDC", status: "pending" });
+// Later, update in-place:
+txnToast.update(toastId, { signature: "5UfD...3xKp", status: "confirmed" })`,
   },
   {
     name: "WalletSheet",

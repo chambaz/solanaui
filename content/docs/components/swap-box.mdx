@@ -83,6 +83,24 @@ const USDC_ICON =
 />
 ```
 
+### Submit Handler
+
+Pass `onSubmit` to handle swap execution when the button is clicked.
+
+```tsx
+<SwapBox
+  tokens={[
+    { icon: USDC_ICON, symbol: "USDC" },
+    { icon: SOL_ICON, symbol: "SOL" },
+  ]}
+  defaultFromToken="USDC"
+  defaultToToken="SOL"
+  onSubmit={() => {
+    // Execute swap logic
+  }}
+/>
+```
+
 ## Source Code
 
 <ComponentCode name="swap-box" />

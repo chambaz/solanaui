@@ -15,13 +15,13 @@ import { Separator } from "@/components/ui/separator";
 import type { DetailRow } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
-type OrderFormCardDetail = DetailRow;
+type OrderFormDetail = DetailRow;
 
-interface OrderFormCardProps {
+interface OrderFormProps {
   title?: string;
   description?: string;
   entryPrice?: number;
-  details?: OrderFormCardDetail[];
+  details?: OrderFormDetail[];
   onSubmit?: (values: {
     tpPrice: string;
     tpPercent: string;
@@ -31,14 +31,14 @@ interface OrderFormCardProps {
   className?: string;
 }
 
-const OrderFormCard = ({
+const OrderForm = ({
   title = "Edit TP/SL",
   description = "Adjust the parameters on your order",
   entryPrice,
   details,
   onSubmit,
   className,
-}: OrderFormCardProps) => {
+}: OrderFormProps) => {
   const [tpPrice, setTpPrice] = React.useState("");
   const [tpPercent, setTpPercent] = React.useState("");
   const [slPrice, setSlPrice] = React.useState("");
@@ -230,5 +230,5 @@ const OrderFormCard = ({
   );
 };
 
-export type { OrderFormCardProps, OrderFormCardDetail };
-export { OrderFormCard };
+export type { OrderFormProps, OrderFormDetail };
+export { OrderForm };

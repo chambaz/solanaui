@@ -190,10 +190,10 @@ interface OrderBookProps {
 }
 ```
 
-### OrderFormCard (`order-form-card`)
+### OrderForm (`order-form`)
 TP/SL order form for open positions. Dual TP inputs (price + gain %), dual SL inputs (price + loss %). Pass `entryPrice` to auto-sync between price and percent fields.
 ```ts
-interface OrderFormCardProps {
+interface OrderFormProps {
   title?: string; description?: string; entryPrice?: number;
   details?: { label: string; value: string; className?: string }[];
   onSubmit?: (values: { tpPrice: string; tpPercent: string; slPrice: string; slPercent: string }) => void;
@@ -279,7 +279,7 @@ interface SwapBoxProps {
   defaultFromToken?: string; defaultToToken?: string;
   fromBalance?: string; toBalance?: string; fromLabel?: string; toLabel?: string;
   details?: { label: string; value: string; className?: string }[];
-  submitLabel?: string; className?: string;
+  submitLabel?: string; onSubmit?: () => void; className?: string;
 }
 ```
 
@@ -335,7 +335,7 @@ interface TradeBoxProps {
   labels?: [string, string]; defaultSide?: string;
   leverageMin?: number; leverageMax?: number; leverageDefault?: number; leverageStep?: number;
   details?: { label: string; value: string; className?: string }[];
-  submitLabel?: string; className?: string;
+  submitLabel?: string; onSubmit?: () => void; className?: string;
 }
 ```
 
@@ -376,12 +376,14 @@ interface TxnTableProps {
 ```
 
 ### txnToast (`txn-toast`)
-Toast notification function (not a component) for transaction status updates with explorer links.
+Toast notification function (not a component) for transaction status updates with explorer links and close button. Returns a toast ID. Use `txnToast.update(id, props)` to transition a pending toast to confirmed/error in-place.
 ```ts
 function txnToast(props: {
   title?: string; description?: string; signature?: string;
   status?: "pending" | "confirmed" | "error"; explorerUrl?: string;
-}): void
+}): string | number
+// Update an existing toast in-place:
+txnToast.update(id: string | number, props: TxnToastProps): void
 ```
 
 ### WalletSheet (`wallet-sheet`)

@@ -1,19 +1,11 @@
 "use client";
 
 import React from "react";
-import { toast } from "sonner";
 import { txnToast } from "@/components/sol/txn-toast";
 import { Button } from "@/components/ui/button";
 
 const TxnToastDemo = () => {
   const pendingToastId = React.useRef<string | number | null>(null);
-
-  const dismissPending = () => {
-    if (pendingToastId.current !== null) {
-      toast.dismiss(pendingToastId.current);
-      pendingToastId.current = null;
-    }
-  };
 
   return (
     <div className="flex flex-wrap items-center gap-3">
@@ -21,7 +13,6 @@ const TxnToastDemo = () => {
         variant="outline"
         size="sm"
         onClick={() => {
-          dismissPending();
           txnToast({
             signature: "5UfDq3kPmE8yR4vN7bXjT2wZcA9fGhL6nKpQrS1dM8xY",
             status: "confirmed",
@@ -34,7 +25,6 @@ const TxnToastDemo = () => {
         variant="outline"
         size="sm"
         onClick={() => {
-          dismissPending();
           pendingToastId.current = txnToast({
             title: "Swapping SOL for USDC",
             description: "Waiting for confirmation...",
@@ -48,7 +38,6 @@ const TxnToastDemo = () => {
         variant="outline"
         size="sm"
         onClick={() => {
-          dismissPending();
           txnToast({
             title: "Swap failed",
             description: "Insufficient balance for this transaction.",
@@ -57,6 +46,21 @@ const TxnToastDemo = () => {
         }}
       >
         Error
+      </Button>
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => {
+          if (pendingToastId.current !== null) {
+            txnToast.update(pendingToastId.current, {
+              signature: "5UfDq3kPmE8yR4vN7bXjT2wZcA9fGhL6nKpQrS1dM8xY",
+              status: "confirmed",
+            });
+            pendingToastId.current = null;
+          }
+        }}
+      >
+        Resolve Pending
       </Button>
     </div>
   );

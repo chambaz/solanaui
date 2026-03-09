@@ -1,3 +1,5 @@
+"use client";
+
 import { LeverageSlider } from "@/components/sol/leverage-slider";
 import { TokenInput } from "@/components/sol/token-input";
 import { TradeButtons } from "@/components/sol/trade-buttons";
@@ -20,6 +22,7 @@ interface TradeBoxProps {
   leverageStep?: number;
   details?: TradeBoxDetail[];
   submitLabel?: string;
+  onSubmit?: () => void;
   className?: string;
 }
 
@@ -35,6 +38,7 @@ const TradeBox = ({
   leverageStep = 1,
   details,
   submitLabel = "Open Long",
+  onSubmit,
   className,
 }: TradeBoxProps) => {
   return (
@@ -67,7 +71,7 @@ const TradeBox = ({
           </div>
         </>
       )}
-      <Button className="w-full" size="lg">
+      <Button className="w-full" size="lg" onClick={onSubmit}>
         {submitLabel}
       </Button>
     </div>

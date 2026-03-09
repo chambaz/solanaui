@@ -16,7 +16,7 @@ import { HealthBar } from "@/components/sol/health-bar";
 import { LeverageSlider } from "@/components/sol/leverage-slider";
 import { NFTCard } from "@/components/sol/nft-card";
 import { OrderBook } from "@/components/sol/order-book";
-import { OrderFormCard } from "@/components/sol/order-form-card";
+import { OrderForm } from "@/components/sol/order-form";
 import { PoolCard } from "@/components/sol/pool-card";
 import { PoolTable } from "@/components/sol/pool-table";
 import { PositionCard } from "@/components/sol/position-card";
@@ -65,7 +65,7 @@ export default async function Page(props: PageProps<"/docs/[[...slug]]">) {
             LeverageSlider,
             NFTCard,
             OrderBook,
-            OrderFormCard,
+            OrderForm,
             PoolCard,
             PoolTable,
             PositionCard,

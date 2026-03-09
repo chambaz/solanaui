@@ -92,6 +92,20 @@ For non-trading actions like staking, lending, depositing, or bridging, use [Act
 />
 ```
 
+### Submit Handler
+
+Pass `onSubmit` to handle order execution when the button is clicked.
+
+```tsx
+<TradeBox
+  tokens={[{ icon: SOL_ICON, symbol: "SOL" }]}
+  defaultToken="SOL"
+  onSubmit={() => {
+    // Execute trade logic
+  }}
+/>
+```
+
 ## Source Code
 
 <ComponentCode name="trade-box" />

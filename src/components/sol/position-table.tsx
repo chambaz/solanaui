@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import React from "react";
 import { ActionBox } from "@/components/sol/action-box";
-import { OrderFormCard } from "@/components/sol/order-form-card";
+import { OrderForm } from "@/components/sol/order-form";
 import { TokenIcon } from "@/components/sol/token-icon";
 import { Button } from "@/components/ui/button";
 import {
@@ -308,7 +308,7 @@ const PositionTable = ({
                     <DialogDescription className="sr-only">
                       Set take profit and stop loss for this position
                     </DialogDescription>
-                    <OrderFormCard
+                    <OrderForm
                       entryPrice={Number.parseFloat(
                         position.entryPrice.replace(/[$,]/g, ""),
                       )}

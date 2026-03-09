@@ -19,6 +19,7 @@ interface SwapBoxProps {
   toLabel?: string;
   details?: SwapBoxDetail[];
   submitLabel?: string;
+  onSubmit?: () => void;
   className?: string;
 }
 
@@ -32,6 +33,7 @@ const SwapBox = ({
   toLabel = "Buy",
   details,
   submitLabel = "Swap",
+  onSubmit,
   className,
 }: SwapBoxProps) => {
   const [fromToken, setFromToken] = React.useState(defaultFromToken);
@@ -97,7 +99,7 @@ const SwapBox = ({
             ))}
           </div>
         )}
-        <Button className="w-full" size="lg">
+        <Button className="w-full" size="lg" onClick={onSubmit}>
           {submitLabel}
         </Button>
       </div>

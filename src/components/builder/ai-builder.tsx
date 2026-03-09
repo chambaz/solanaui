@@ -1,5 +1,6 @@
 "use client";
 
+import { track } from "@vercel/analytics";
 import React from "react";
 import { CodeDisplay } from "@/components/builder/code-display";
 import { InstallCommands } from "@/components/builder/install-commands";
@@ -44,6 +45,8 @@ const AIBuilder = ({ className }: AIBuilderProps) => {
   const abortControllerRef = React.useRef<AbortController | null>(null);
 
   const handleSubmit = async (prompt: string) => {
+    track("builder_submit", { prompt: prompt.slice(0, 500) });
+
     // Reset state
     setHasSubmitted(true);
     setGeneratedCode("");
@@ -68,6 +71,7 @@ const AIBuilder = ({ className }: AIBuilderProps) => {
       });
 
       if (res.status === 429) {
+        track("builder_rate_limited");
         setLimitReached(true);
         setError(
           "You've used all 5 free generations this week. Install SolanaUI components to build your own UI.",
@@ -129,11 +133,17 @@ const AIBuilder = ({ className }: AIBuilderProps) => {
       // Parse imports and generate install commands
       const imports = parseImports(cleanCode);
       setParsedImports(imports);
+
+      track("builder_complete", {
+        prompt: prompt.slice(0, 500),
+        components: imports.solComponents.join(","),
+      });
     } catch (err) {
       if (err instanceof Error && err.name === "AbortError") {
         return;
       }
       console.error("Builder error:", err);
+      track("builder_error", { prompt: prompt.slice(0, 500) });
       setError("Failed to connect. Please try again.");
       setIsStreaming(false);
     }

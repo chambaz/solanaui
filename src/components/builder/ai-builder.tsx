@@ -202,18 +202,18 @@ const AIBuilder = ({ className }: AIBuilderProps) => {
           </div>
 
           {/* Tab content */}
-          <div className="h-[600px]">
+          <div className="h-[800px]">
             {activeTab === "code" ? (
               <CodeDisplay
                 code={generatedCode}
                 isStreaming={isStreaming}
-                className="h-[600px] rounded-none border-0"
+                className="h-[800px] rounded-none border-0"
               />
             ) : (
               <PreviewPane
                 code={generatedCode || null}
                 isLoading={false}
-                className="h-[600px] rounded-none border-0"
+                className="h-[800px] rounded-none border-0"
               />
             )}
           </div>

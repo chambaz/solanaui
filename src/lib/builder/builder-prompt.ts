@@ -685,7 +685,7 @@ const COMPOSITION_PATTERNS = `
 All layouts MUST be fully responsive and work well on mobile (320px+), tablet, and desktop.
 - Headers: use flex-col gap-4 sm:flex-row sm:items-center sm:justify-between so title and wallet stack vertically on mobile.
 - Stat card rows: grid-cols-2 md:grid-cols-4 (never fixed grid-cols-4).
-- Multi-column layouts: start at grid-cols-1 and add columns at breakpoints (e.g. grid-cols-1 lg:grid-cols-[1fr_280px] xl:grid-cols-[1fr_280px_320px]).
+- Multi-column layouts: start at grid-cols-1 and add columns at breakpoints (e.g. grid-cols-1 lg:grid-cols-[1fr_280px] xl:grid-cols-[1fr_280px_300px]). Keep fixed-width columns narrow (280-300px) so the flexible column gets enough space.
 - Card grids: grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 (never fixed grid-cols-3).
 - NFT grids: grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6.
 - Position/portfolio grids: grid-cols-1 md:grid-cols-2.
@@ -700,9 +700,8 @@ Wrap the swap form in a centered container (max-w-xl mx-auto px-4).
 
 ## Perps Trading Page
 Layout: header with token info + 4 StatCards (grid-cols-2 md:grid-cols-4).
-Main area: responsive grid (grid-cols-1 lg:grid-cols-[1fr_280px] xl:grid-cols-[1fr_280px_320px]) with TradeChart (in a Card) | OrderBook | TradeBox.
+Main area: responsive three-column grid. On mobile: single column (chart, order book, trade box stacked). On lg+: grid-cols-1 lg:grid-cols-[1fr_280px] xl:grid-cols-[1fr_280px_300px] with chart | order book | trade box. Give all children min-w-0 to prevent overflow.
 Below: PositionTable showing open positions.
-Use max-w-[1400px] mx-auto px-4 for the container.
 
 ## Lending Dashboard
 Tabbed layout with Lend and Portfolio tabs.
@@ -766,7 +765,9 @@ const OUTPUT_RULES = `
 - ALWAYS define token icon URLs as named constants at the top of the file (e.g. const SOL_ICON = "https://..."). Never inline long CDN URLs directly in JSX props
 - Vary demo data across rows -- use different tokens, prices, amounts, and percentages. Never repeat identical values
 - Wrap standalone tables, charts, and feeds inside Card with CardHeader/CardTitle for visual containment
-- Do NOT use max-w-[1400px], max-w-7xl, or any fixed max-width container. The output renders inside a preview pane that IS the container. Use w-full and let the parent constrain the width
+- The output renders inside a preview pane that is approximately 1500px wide and 800px tall. For full-width layouts (dashboards, trading pages) use w-full. For narrow centered forms (swap, staking) use max-w-xl or max-w-md mx-auto. Do NOT use max-w-7xl or similar wide max-width classes (they do nothing)
+- When using fixed pixel widths in grid columns, keep them narrow (280-300px each) and always pair with a flexible 1fr column. Always add min-w-0 to grid children to prevent overflow. Use responsive breakpoints to collapse to fewer columns on smaller screens
+- For perps/trading layouts: use a three-column grid at xl+ (chart 1fr | order book 280px | trade box 300px) that collapses to two columns at lg and single column on mobile
 `;
 
 const AVAILABLE_SHADCN_COMPONENTS = `

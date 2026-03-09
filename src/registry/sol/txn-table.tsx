@@ -1,6 +1,5 @@
 import { formatDistanceToNow } from "date-fns";
 import { ExternalLinkIcon } from "lucide-react";
-import { TokenIcon } from "@/registry/sol/token-icon";
 import { Badge } from "@/components/ui/badge";
 import {
   Table,
@@ -11,6 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
+import { TokenIcon } from "@/registry/sol/token-icon";
 
 interface TxnTableProps {
   transactions: {

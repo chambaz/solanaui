@@ -8,6 +8,9 @@ import {
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { TxnToastDemo } from "@/components/docs/txn-toast-demo";
+import { Button } from "@/components/ui/button";
+import { getPageImage, source } from "@/lib/source";
+import { getMDXComponents } from "@/mdx-components";
 import { ActionBox } from "@/registry/sol/action-box";
 import { ActivityFeed } from "@/registry/sol/activity-feed";
 import { AddressDisplay } from "@/registry/sol/address-display";
@@ -36,9 +39,6 @@ import { TradeChart } from "@/registry/sol/trade-chart";
 import { TrendBadge } from "@/registry/sol/trend-badge";
 import { TxnTable } from "@/registry/sol/txn-table";
 import { WalletSheet } from "@/registry/sol/wallet-sheet";
-import { Button } from "@/components/ui/button";
-import { getPageImage, source } from "@/lib/source";
-import { getMDXComponents } from "@/mdx-components";
 
 export default async function Page(props: PageProps<"/docs/[[...slug]]">) {
   const params = await props.params;

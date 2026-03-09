@@ -9,15 +9,6 @@ import {
   XIcon,
 } from "lucide-react";
 import React from "react";
-import { ActionBox } from "@/registry/sol/action-box";
-import { HealthBar } from "@/registry/sol/health-bar";
-import { PoolCard } from "@/registry/sol/pool-card";
-import { PoolTable } from "@/registry/sol/pool-table";
-import { PositionCard } from "@/registry/sol/position-card";
-import { PriceChart } from "@/registry/sol/price-chart";
-import { StatCard } from "@/registry/sol/stat-card";
-import { TokenCombobox } from "@/registry/sol/token-combobox";
-import { WalletSheet } from "@/registry/sol/wallet-sheet";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -28,6 +19,15 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ActionBox } from "@/registry/sol/action-box";
+import { HealthBar } from "@/registry/sol/health-bar";
+import { PoolCard } from "@/registry/sol/pool-card";
+import { PoolTable } from "@/registry/sol/pool-table";
+import { PositionCard } from "@/registry/sol/position-card";
+import { PriceChart } from "@/registry/sol/price-chart";
+import { StatCard } from "@/registry/sol/stat-card";
+import { TokenCombobox } from "@/registry/sol/token-combobox";
+import { WalletSheet } from "@/registry/sol/wallet-sheet";
 
 const SOL_ICON =
   "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png";

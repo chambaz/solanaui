@@ -19,31 +19,37 @@ See the [AI Skill](/docs/skill) page for more details including manual installat
 
 ## Manual Component Installation
 
-Install individual components directly into your project:
+SolanaUI uses the shadcn registry. Add the registry to your `components.json`:
+
+```json
+{
+  "registries": {
+    "@solanaui": "https://solanaui.dev/r/{name}.json"
+  }
+}
+```
+
+Then install components individually:
 
 <Tabs items={["pnpm", "npm", "yarn"]}>
   <Tab value="pnpm">
     ```bash
-    pnpm dlx solanaui@latest add <component-name>
+    pnpm dlx shadcn@latest add @solanaui/swap-box
     ```
   </Tab>
   <Tab value="npm">
     ```bash
-    npx solanaui@latest add <component-name>
+    npx shadcn@latest add @solanaui/swap-box
     ```
   </Tab>
   <Tab value="yarn">
     ```bash
-    yarn solanaui@latest add <component-name>
+    yarn dlx shadcn@latest add @solanaui/swap-box
     ```
   </Tab>
 </Tabs>
 
-For example, to add the SwapBox component:
-
-```bash
-pnpm dlx solanaui@latest add swap-box
-```
+This copies the component source into your project at `components/sol/`. You own the code. Any required shadcn/ui primitives are resolved automatically.
 
 Browse all available components in the [Components](/docs/components) reference.
 

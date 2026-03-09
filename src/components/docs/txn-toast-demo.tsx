@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import { txnToast } from "@/registry/sol/txn-toast";
 import { Button } from "@/components/ui/button";
+import { txnToast } from "@/registry/sol/txn-toast";
 
 const TxnToastDemo = () => {
   const pendingToastId = React.useRef<string | number | null>(null);

@@ -12,19 +12,29 @@ See the full list at [solanaui.dev/docs](https://solanaui.dev/docs).
 
 ## Installation
 
-Components are installed individually via the CLI:
+SolanaUI uses the shadcn registry. Add the registry to your `components.json`:
 
-```bash
-pnpm dlx solanaui@latest add swap-box
+```json
+{
+  "registries": {
+    "@solanaui": "https://solanaui.dev/r/{name}.json"
+  }
+}
 ```
 
-This copies the component source into your project at `src/components/sol/`. You own the code.
+Then install components individually:
+
+```bash
+pnpm dlx shadcn@latest add @solanaui/swap-box
+```
+
+This copies the component source into your project at `components/sol/`. You own the code.
 
 ### Prerequisites
 
 - React 19
 - Tailwind CSS v4
-- shadcn/ui
+- shadcn/ui initialized (`pnpm dlx shadcn@latest init`)
 
 shadcn/ui primitives are resolved automatically when you install a SolanaUI component.
 

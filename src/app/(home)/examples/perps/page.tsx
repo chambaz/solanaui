@@ -4,6 +4,7 @@ import {
   TrendingUpIcon,
   ZapIcon,
 } from "lucide-react";
+import { Card } from "@/components/ui/card";
 import { OrderBook } from "@/registry/sol/order-book";
 import { PositionTable } from "@/registry/sol/position-table";
 import { StatCard } from "@/registry/sol/stat-card";
@@ -12,7 +13,6 @@ import { TradeBox } from "@/registry/sol/trade-box";
 import { TradeChart } from "@/registry/sol/trade-chart";
 import { TrendBadge } from "@/registry/sol/trend-badge";
 import { WalletSheet } from "@/registry/sol/wallet-sheet";
-import { Card } from "@/components/ui/card";
 
 const SOL_ICON =
   "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png";

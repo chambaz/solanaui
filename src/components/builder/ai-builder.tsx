@@ -42,14 +42,12 @@ const AIBuilder = ({ className }: AIBuilderProps) => {
   const [parsedImports, setParsedImports] =
     React.useState<ParsedImports | null>(null);
   const [activeTab, setActiveTab] = React.useState<"code" | "preview">("code");
-  const [hasSubmitted, setHasSubmitted] = React.useState(false);
   const abortControllerRef = React.useRef<AbortController | null>(null);
 
   const handleSubmit = async (prompt: string) => {
     track("builder_submit", { prompt: prompt.slice(0, 500) });
 
     // Reset state
-    setHasSubmitted(true);
     setGeneratedCode("");
     setError(null);
     setIsStreaming(true);

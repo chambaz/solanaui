@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { AIBuilder } from "@/components/builder/ai-builder";
 
 export const metadata: Metadata = {
@@ -14,7 +15,7 @@ export default function HomePage() {
     <div className="mx-auto flex w-full max-w-[1600px] flex-1 flex-col px-4 py-16">
       {/* Hero */}
       <div className="mb-12 text-center">
-        <img
+        <Image
           src="/solanaui-logo.png"
           alt="SolanaUI"
           width={80}

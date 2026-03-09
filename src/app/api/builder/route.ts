@@ -43,9 +43,10 @@ async function checkCredits(ip: string): Promise<{
     });
 
     const key = `builder:${ip}`;
-    const used = await redis.incr(key);
+    const [used, ttl] = await Promise.all([redis.incr(key), redis.ttl(key)]);
 
-    if (used === 1) {
+    // Set expiry if the key has no TTL (new key or lost expiry)
+    if (ttl < 0) {
       await redis.expire(key, TTL_SECONDS);
     }
 

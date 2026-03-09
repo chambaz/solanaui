@@ -31,12 +31,6 @@ const DARK_COLORS = {
   mutedForeground: "rgb(180, 180, 180)",
 };
 
-const getThemeColors = () => {
-  if (typeof window === "undefined") return LIGHT_COLORS;
-  const isDark = document.documentElement.classList.contains("dark");
-  return isDark ? DARK_COLORS : LIGHT_COLORS;
-};
-
 const TradeChart = ({
   data,
   visibleBars,
@@ -46,6 +40,22 @@ const TradeChart = ({
 }: TradeChartProps) => {
   const containerRef = React.useRef<HTMLDivElement>(null);
   const chartRef = React.useRef<ReturnType<typeof createChart> | null>(null);
+  const [isDark, setIsDark] = React.useState(() => {
+    if (typeof window === "undefined") return false;
+    return document.documentElement.classList.contains("dark");
+  });
+
+  // Watch for theme changes on <html> class
+  React.useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setIsDark(document.documentElement.classList.contains("dark"));
+    });
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+    return () => observer.disconnect();
+  }, []);
 
   // Stable serialized keys so inline object literals don't cause re-renders
   const chartOptionsKey = JSON.stringify(chartOptions);
@@ -63,7 +73,7 @@ const TradeChart = ({
         ) as DeepPartial<CandlestickSeriesPartialOptions>)
       : undefined;
 
-    const colors = getThemeColors();
+    const colors = isDark ? DARK_COLORS : LIGHT_COLORS;
 
     const defaultChartOptions: DeepPartial<TimeChartOptions> = {
       layout: {
@@ -116,7 +126,7 @@ const TradeChart = ({
     return () => {
       chartRef.current?.remove();
     };
-  }, [data, visibleBars, chartOptionsKey, seriesOptionsKey]);
+  }, [data, visibleBars, isDark, chartOptionsKey, seriesOptionsKey]);
 
   return <div className={className} ref={containerRef} />;
 };

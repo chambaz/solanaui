@@ -22,7 +22,7 @@ Add the SolanaUI registry to your `components.json`:
 ```json
 {
   "registries": {
-    "@solanaui": "https://solanaui.com/r/{name}.json"
+    "@solanaui": "https://solanaui.dev/r/{name}.json"
   }
 }
 ```

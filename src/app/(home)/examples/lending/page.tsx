@@ -6,6 +6,7 @@ import {
   SearchIcon,
   ShieldIcon,
   WalletIcon,
+  XIcon,
 } from "lucide-react";
 import React from "react";
 import { ActionBox } from "@/components/sol/action-box";
@@ -302,6 +303,16 @@ export default function LendingPage() {
                     }
                     className="h-9"
                   />
+                  {tokenFilter && (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="size-9 shrink-0"
+                      onClick={() => setTokenFilter("")}
+                    >
+                      <XIcon className="size-3.5" />
+                    </Button>
+                  )}
                 </div>
               </div>
               <PoolTable

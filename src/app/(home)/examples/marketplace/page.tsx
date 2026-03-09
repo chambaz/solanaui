@@ -4,9 +4,6 @@ import { NFTCard } from "@/components/sol/nft-card";
 import { StatCard } from "@/components/sol/stat-card";
 import { WalletSheet } from "@/components/sol/wallet-sheet";
 
-const NFT_IMAGE =
-  "https://ybqkchja2noth7nabnjwtcd5wpepkmirgqqptgfupzqk32uwygpa.arweave.net/wGChHSDTXTP9oAtTaYh9s8j1MRE0IPmYtH5greqWwZ4";
-
 const SOL_ICON =
   "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png";
 const USDC_ICON =
@@ -16,118 +13,118 @@ const BONK_ICON =
 
 const NFTS = [
   {
-    name: "Mad Lad #4281",
-    image: NFT_IMAGE,
-    collection: "Mad Lads",
-    price: "142.5",
+    name: "SMB #1429",
+    image: "https://arweave.net/ttlKMD2c3mVUNGSGcJ5jb9KFyyZgZgjtn9-wcl889a4",
+    collection: "SMB Gen2",
+    price: "20.8",
   },
   {
-    name: "Mad Lad #1337",
-    image: NFT_IMAGE,
-    collection: "Mad Lads",
-    price: "158.2",
+    name: "SMB #2840",
+    image: "https://arweave.net/D1Bho4qwg9EJSe59oPBMCA5Gno7dUxOqKewBtq0tjYE",
+    collection: "SMB Gen2",
+    price: "22.1",
   },
   {
-    name: "Mad Lad #7892",
-    image: NFT_IMAGE,
-    collection: "Mad Lads",
-    price: "135.0",
+    name: "SMB #3054",
+    image: "https://arweave.net/yTzVlsafyhZ2sDfwZKwdYDgNQ0nnVR5ybu_FLltRZUY",
+    collection: "SMB Gen2",
+    price: "19.5",
   },
   {
-    name: "Mad Lad #2048",
-    image: NFT_IMAGE,
-    collection: "Mad Lads",
-    price: "167.8",
+    name: "SMB #276",
+    image: "https://arweave.net/mBxxs2nzRF_l76iXc9_qQJkmWG8jVXKI4tFwNr91oSI",
+    collection: "SMB Gen2",
+    price: "24.3",
   },
   {
-    name: "Mad Lad #512",
-    image: NFT_IMAGE,
-    collection: "Mad Lads",
-    price: "145.3",
+    name: "SMB #4805",
+    image: "https://arweave.net/e2JXOcYA-vhOY4e7dNEW7dcRlTnFgrPHf4luwQcOb6I",
+    collection: "SMB Gen2",
+    price: "21.6",
   },
   {
-    name: "Mad Lad #9001",
-    image: NFT_IMAGE,
-    collection: "Mad Lads",
-    price: "152.7",
+    name: "SMB #1766",
+    image: "https://arweave.net/7dQh_4_sUZnrat7oaIv5MpVRifrnTn1N2nPH7yp0nzI",
+    collection: "SMB Gen2",
+    price: "23.4",
   },
   {
-    name: "Mad Lad #3456",
-    image: NFT_IMAGE,
-    collection: "Mad Lads",
-    price: "139.9",
+    name: "SMB #3268",
+    image: "https://arweave.net/ePb3-byiEwhiRAFgXraUIw-OLpMG59-HkLLXo1xTJRA",
+    collection: "SMB Gen2",
+    price: "18.9",
   },
   {
-    name: "Mad Lad #6174",
-    image: NFT_IMAGE,
-    collection: "Mad Lads",
-    price: "148.1",
+    name: "SMB #805",
+    image: "https://arweave.net/WMZV0Fm2y2hxyiyYaoPmpxmF4enQn5IwnSHGeqtx5Zc",
+    collection: "SMB Gen2",
+    price: "25.7",
   },
   {
-    name: "Mad Lad #8523",
-    image: NFT_IMAGE,
-    collection: "Mad Lads",
-    price: "155.4",
+    name: "SMB #2058",
+    image: "https://arweave.net/A6_moeCwY2FKlV4_FxY5c51ru7BtFI5XiR8srk-WIBc",
+    collection: "SMB Gen2",
+    price: "20.2",
   },
   {
-    name: "Mad Lad #2901",
-    image: NFT_IMAGE,
-    collection: "Mad Lads",
-    price: "141.2",
+    name: "SMB #4021",
+    image: "https://arweave.net/k9KObJK7xG1toFKFb1DtybjeNtsaOVPpDtRBAgube1M",
+    collection: "SMB Gen2",
+    price: "22.8",
   },
   {
-    name: "Mad Lad #5678",
-    image: NFT_IMAGE,
-    collection: "Mad Lads",
-    price: "163.9",
+    name: "SMB #4825",
+    image: "https://arweave.net/UwhVkroWwjB3KfNiOnouI57CxT-AqvrBf09kjfRmzUs",
+    collection: "SMB Gen2",
+    price: "19.1",
   },
   {
-    name: "Mad Lad #7401",
-    image: NFT_IMAGE,
-    collection: "Mad Lads",
-    price: "137.6",
+    name: "SMB #372",
+    image: "https://arweave.net/oHRIY5eYXGO66i5fJ5dzWYvMS1vz1G_lXotIF9PSHa0",
+    collection: "SMB Gen2",
+    price: "26.4",
   },
 ];
 
 const RECENT_ACTIVITY = [
   {
-    icon: NFT_IMAGE,
-    title: "Mad Lad #4281 sold",
+    icon: "https://arweave.net/ttlKMD2c3mVUNGSGcJ5jb9KFyyZgZgjtn9-wcl889a4",
+    title: "SMB #1429 sold",
     description: "Buyer: 7xKp...3mFn",
     timestamp: new Date(Date.now() - 2 * 60 * 1000),
-    value: "142.5 SOL",
+    value: "20.8 SOL",
   },
   {
-    icon: NFT_IMAGE,
-    title: "Mad Lad #1337 listed",
+    icon: "https://arweave.net/D1Bho4qwg9EJSe59oPBMCA5Gno7dUxOqKewBtq0tjYE",
+    title: "SMB #2840 listed",
     description: "Seller: 9dVq...8hJr",
     timestamp: new Date(Date.now() - 8 * 60 * 1000),
-    value: "158.2 SOL",
+    value: "22.1 SOL",
   },
   {
-    icon: NFT_IMAGE,
-    title: "Mad Lad #7892 sold",
+    icon: "https://arweave.net/yTzVlsafyhZ2sDfwZKwdYDgNQ0nnVR5ybu_FLltRZUY",
+    title: "SMB #3054 sold",
     description: "Buyer: 3kYm...2wBt",
     timestamp: new Date(Date.now() - 15 * 60 * 1000),
-    value: "135.0 SOL",
+    value: "19.5 SOL",
   },
   {
-    icon: NFT_IMAGE,
-    title: "Mad Lad #2048 bid placed",
+    icon: "https://arweave.net/mBxxs2nzRF_l76iXc9_qQJkmWG8jVXKI4tFwNr91oSI",
+    title: "SMB #276 bid placed",
     description: "Bidder: 5nPx...9eLq",
     timestamp: new Date(Date.now() - 22 * 60 * 1000),
-    value: "160.0 SOL",
+    value: "23.0 SOL",
   },
   {
-    icon: NFT_IMAGE,
-    title: "Mad Lad #512 sold",
+    icon: "https://arweave.net/e2JXOcYA-vhOY4e7dNEW7dcRlTnFgrPHf4luwQcOb6I",
+    title: "SMB #4805 sold",
     description: "Buyer: 8gRz...4kNs",
     timestamp: new Date(Date.now() - 38 * 60 * 1000),
-    value: "145.3 SOL",
+    value: "21.6 SOL",
   },
   {
-    icon: NFT_IMAGE,
-    title: "Mad Lad #9001 delisted",
+    icon: "https://arweave.net/7dQh_4_sUZnrat7oaIv5MpVRifrnTn1N2nPH7yp0nzI",
+    title: "SMB #1766 delisted",
     description: "Owner: 2jCf...7mDw",
     timestamp: new Date(Date.now() - 60 * 60 * 1000),
   },
@@ -167,9 +164,11 @@ export default function MarketplacePage() {
         {/* Header with auth + wallet */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex flex-col gap-1">
-            <h1 className="text-2xl sm:text-3xl font-semibold">Mad Lads</h1>
+            <h1 className="text-2xl sm:text-3xl font-semibold">
+              Solana Monkey Business
+            </h1>
             <p className="text-sm text-muted-foreground">
-              10,000 generative Mad Lads on the Solana blockchain
+              5,000 unique pixel monkeys on the Solana blockchain
             </p>
           </div>
           <WalletSheet
@@ -185,32 +184,32 @@ export default function MarketplacePage() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <StatCard
             label="Floor Price"
-            value="135.0 SOL"
-            change="+12.5%"
+            value="18.9 SOL"
+            change="+8.2%"
             icon={<TagIcon className="size-4" />}
           />
           <StatCard
             label="Total Volume"
-            value="1.2M SOL"
-            change="+4.8%"
+            value="842K SOL"
+            change="+3.1%"
             icon={<LayersIcon className="size-4" />}
           />
           <StatCard
             label="Listed"
-            value="342"
-            change="-2.1%"
+            value="218"
+            change="-1.4%"
             trend="down"
             icon={<ImageIcon className="size-4" />}
           />
           <StatCard
             label="Owners"
-            value="4,891"
-            change="+1.3%"
+            value="3,412"
+            change="+0.9%"
             icon={<UsersIcon className="size-4" />}
           />
         </div>
 
-        {/* NFT grid - 5 columns, full width */}
+        {/* NFT grid */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
           {NFTS.map((nft) => (
             <NFTCard key={nft.name} {...nft} />

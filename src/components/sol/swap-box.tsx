@@ -34,26 +34,34 @@ const SwapBox = ({
   submitLabel = "Swap",
   className,
 }: SwapBoxProps) => {
-  const [flipped, setFlipped] = React.useState(false);
+  const [fromToken, setFromToken] = React.useState(defaultFromToken);
+  const [toToken, setToToken] = React.useState(defaultToToken);
+  const [fromBal, setFromBal] = React.useState(fromBalance);
+  const [toBal, setToBal] = React.useState(toBalance);
 
-  const fromToken = flipped ? defaultToToken : defaultFromToken;
-  const toToken = flipped ? defaultFromToken : defaultToToken;
-  const fromBal = flipped ? toBalance : fromBalance;
-  const toBal = flipped ? fromBalance : toBalance;
-  const currentFromLabel = flipped ? toLabel : fromLabel;
-  const currentToLabel = flipped ? fromLabel : toLabel;
+  const handleFlip = () => {
+    const prevFrom = fromToken;
+    const prevTo = toToken;
+    const prevFromBal = fromBal;
+    const prevToBal = toBal;
+    setFromToken(prevTo);
+    setToToken(prevFrom);
+    setFromBal(prevToBal);
+    setToBal(prevFromBal);
+  };
 
   return (
     <div className={cn("flex flex-col border rounded-lg p-5", className)}>
       <div className="w-full flex flex-col gap-1.5">
         <span className="text-xs font-medium text-muted-foreground">
-          {currentFromLabel}
+          {fromLabel}
         </span>
         <TokenInput
-          key={`from-${flipped}`}
+          key={`from-${fromToken}`}
           tokens={tokens}
           defaultToken={fromToken}
           balance={fromBal}
+          onTokenSelect={(token) => setFromToken(token.symbol)}
         />
       </div>
       <div className="flex items-center justify-center pt-4">
@@ -61,20 +69,21 @@ const SwapBox = ({
           variant="outline"
           size="icon"
           className="rounded-full size-9 bg-background border-2"
-          onClick={() => setFlipped((f) => !f)}
+          onClick={handleFlip}
         >
           <ArrowDownUpIcon className="size-4" />
         </Button>
       </div>
       <div className="w-full flex flex-col gap-1.5">
         <span className="text-xs font-medium text-muted-foreground">
-          {currentToLabel}
+          {toLabel}
         </span>
         <TokenInput
-          key={`to-${flipped}`}
+          key={`to-${toToken}`}
           tokens={tokens}
           defaultToken={toToken}
           balance={toBal}
+          onTokenSelect={(token) => setToToken(token.symbol)}
         />
       </div>
       <div className="flex flex-col gap-4 pt-4">

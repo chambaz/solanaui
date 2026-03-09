@@ -280,7 +280,7 @@ const PositionTable = ({
               <TableCell>{position.entryPrice}</TableCell>
               <TableCell>{position.markPrice}</TableCell>
               <TableCell>{position.leverage}</TableCell>
-              <TableCell className="text-right">
+              <TableCell>
                 <span
                   className={cn(
                     "text-sm font-medium",

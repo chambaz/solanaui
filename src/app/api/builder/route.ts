@@ -1,6 +1,6 @@
 import { anthropic } from "@ai-sdk/anthropic";
 import { streamText } from "ai";
-import { SOLANAUI_SYSTEM_PROMPT } from "@/lib/skill";
+import { BUILDER_SYSTEM_PROMPT } from "@/lib/builder/builder-prompt";
 
 const CREDITS_PER_WEEK = 5;
 const TTL_SECONDS = 604800; // 7 days
@@ -74,8 +74,8 @@ export async function POST(req: Request) {
   try {
     const result = streamText({
       model: anthropic("claude-opus-4-6"),
-      system: SOLANAUI_SYSTEM_PROMPT,
-      prompt: `Build a Solana app UI for: ${prompt}`,
+      system: BUILDER_SYSTEM_PROMPT,
+      prompt: `Create a beautiful, production-quality Solana app interface for: ${prompt}`,
       maxOutputTokens: 16384,
     });
 

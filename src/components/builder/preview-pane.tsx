@@ -12,42 +12,14 @@ import { PREVIEW_FILES } from "@/lib/builder/preview-files";
 import { cn } from "@/lib/utils";
 
 /**
- * Token icon URL mapping. The LLM generates short paths like "/sol.png"
- * which we rewrite to real CDN URLs for the Sandpack preview.
- */
-const TOKEN_ICON_URLS: Record<string, string> = {
-  "/sol.png":
-    "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
-  "/usdc.png":
-    "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
-  "/bonk.png":
-    "https://arweave.net/hQiPZOsRZXGXBJd_82PhVdlM_hACsT_q6wqwf5cSY7I",
-  "/jitosol.png":
-    "https://storage.googleapis.com/token-metadata/JitoSOL-256.png",
-  "/msol.png":
-    "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So/logo.png",
-  "/nft.png":
-    "https://ybqkchja2noth7nabnjwtcd5wpepkmirgqqptgfupzqk32uwygpa.arweave.net/wGChHSDTXTP9oAtTaYh9s8j1MRE0IPmYtH5greqWwZ4",
-};
-
-/**
  * Rewrite @/ import aliases to / so Sandpack can resolve them
  * from the virtual file system. Strip "use client" directives.
- * Replace token icon paths with real CDN URLs.
  */
 function transformForSandpack(code: string): string {
-  let result = code
+  return code
     .replace(/["']use client["'];?\s*\n?/g, "")
     .replace(/from\s+["']@\//g, 'from "/')
     .replace(/import\s+["']@\//g, 'import "/');
-
-  // Replace token icon paths with CDN URLs
-  for (const [path, url] of Object.entries(TOKEN_ICON_URLS)) {
-    result = result.replaceAll(`"${path}"`, `"${url}"`);
-    result = result.replaceAll(`'${path}'`, `'${url}'`);
-  }
-
-  return result;
 }
 
 /**

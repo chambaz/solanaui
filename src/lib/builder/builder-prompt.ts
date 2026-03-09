@@ -1,10 +1,12 @@
 /**
- * SolanaUI Skill -- Single Source of Truth
+ * AI Builder System Prompt
  *
- * This module powers:
- * 1. The AI builder's system prompt
- * 2. The published skill on skills.sh
- * 3. The llms.txt route on the docs site
+ * Powers the home page AI builder that generates live-preview Solana UIs.
+ * This is builder-specific -- it includes output format rules, design
+ * principles, and single-shot generation guidance for the Sandpack preview.
+ *
+ * For the public agent skill (npx skills add chambaz/solanaui), see SKILL.md
+ * at the repository root.
  */
 
 interface ComponentDefinition {
@@ -21,24 +23,18 @@ const COMPONENT_CATALOG: ComponentDefinition[] = [
     file: "action-box",
     description:
       "A generic single-input action form for staking, lending supply/borrow, LP deposit, bridging, and more. The versatile counterpart to TradeBox.",
-    props: `interface ActionBoxDetail {
-  label: string;
-  value: string;
-  className?: string;
-}
-
-interface ActionBoxProps {
+    props: `interface ActionBoxProps {
   tokens: { icon: string; symbol: string }[];
   defaultToken?: string;
   balance?: string;
   label?: string;
-  details?: ActionBoxDetail[];
+  details?: { label: string; value: string; className?: string }[];
   submitLabel?: string;
   onSubmit?: () => void;
   className?: string;
 }`,
     usage: `<ActionBox
-  tokens={[{ icon: "/sol.png", symbol: "SOL" }]}
+  tokens={[{ icon: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png", symbol: "SOL" }]}
   defaultToken="SOL"
   balance="24.58"
   label="Stake"
@@ -66,8 +62,8 @@ interface ActionBoxProps {
 }`,
     usage: `<ActivityFeed
   items={[
-    { icon: "/sol.png", title: "SOL Purchased", description: "Bought 2.5 SOL", timestamp: new Date(Date.now() - 2 * 60 * 1000), value: "$406.40" },
-    { icon: "/usdc.png", title: "USDC Deposited", timestamp: new Date(Date.now() - 15 * 60 * 1000), value: "$1,000.00" },
+    { icon: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png", title: "SOL Purchased", description: "Bought 2.5 SOL", timestamp: new Date(Date.now() - 2 * 60 * 1000), value: "$406.40" },
+    { icon: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png", title: "USDC Deposited", timestamp: new Date(Date.now() - 15 * 60 * 1000), value: "$1,000.00" },
   ]}
 />`,
   },
@@ -94,17 +90,12 @@ interface ActionBoxProps {
     file: "auth-card",
     description:
       "A sign-in card with optional email input, social login buttons, and wallet provider buttons.",
-    props: `interface AuthProvider {
-  name: string;
-  icon: React.ReactNode;
-}
-
-interface AuthCardProps {
+    props: `interface AuthCardProps {
   title?: string;
   description?: string;
   showEmail?: boolean;
-  socialProviders?: AuthProvider[];
-  walletProviders?: AuthProvider[];
+  socialProviders?: { name: string; icon: React.ReactNode }[];
+  walletProviders?: { name: string; icon: React.ReactNode }[];
 }`,
     usage: `<AuthCard
   title="Sign In"
@@ -191,17 +182,11 @@ interface AuthCardProps {
     file: "order-form-card",
     description:
       "A take profit and stop loss order form card for open trading positions. Shows a Card with title/description header, flexible details summary (label/value pairs), dual TP inputs (price + gain %), dual SL inputs (price + loss %), and confirm button. Pass entryPrice (number) to enable auto-sync between price and percent fields. Used inside PositionTable dialogs.",
-    props: `interface OrderFormCardDetail {
-  label: string;
-  value: string;
-  className?: string;
-}
-
-interface OrderFormCardProps {
+    props: `interface OrderFormCardProps {
   title?: string;
   description?: string;
   entryPrice?: number;
-  details?: OrderFormCardDetail[];
+  details?: { label: string; value: string; className?: string }[];
   onSubmit?: (values: { tpPrice: string; tpPercent: string; slPrice: string; slPercent: string }) => void;
   className?: string;
 }`,
@@ -223,27 +208,20 @@ interface OrderFormCardProps {
     file: "pool-card",
     description:
       "A versatile card for a single token or multi-token pool. Shows stacked icons (via TokenIconGroup), optional price, description, metrics grid, sparkline chart, and children slot. Use for token info cards, pool cards, and market cards.",
-    props: `interface PoolCardMetric {
-  label: string;
-  value: string;
-  highlight?: boolean;
-  className?: string;
-}
-
-interface PoolCardProps {
+    props: `interface PoolCardProps {
   tokens: { icon: string; symbol: string }[];
   name?: string;
   price?: string;
   description?: string;
-  metrics?: PoolCardMetric[];
+  metrics?: { label: string; value: string; highlight?: boolean; className?: string }[];
   series?: { time: string; value: number }[];
   children?: React.ReactNode;
   className?: string;
 }`,
     usage: `<PoolCard
   tokens={[
-    { icon: "/sol.png", symbol: "SOL" },
-    { icon: "/usdc.png", symbol: "USDC" },
+    { icon: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png", symbol: "SOL" },
+    { icon: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png", symbol: "USDC" },
   ]}
   metrics={[
     { label: "TVL", value: "$245.8M" },
@@ -260,21 +238,9 @@ interface PoolCardProps {
     file: "pool-table",
     description:
       "A flexible data table with token icons (one or more per row), user-defined columns, and optional row actions. Works for pool listings, token tables, validator tables, and any icon+data table.",
-    props: `interface PoolTableColumn {
-  key: string;
-  label: string;
-  className?: string;
-}
-
-interface PoolTableRow {
-  icons: { src: string; alt?: string }[];
-  name?: string;
-  data: Record<string, string>;
-}
-
-interface PoolTableProps {
-  columns: PoolTableColumn[];
-  rows: PoolTableRow[];
+    props: `interface PoolTableProps {
+  columns: { key: string; label: string; className?: string }[];
+  rows: { icons: { src: string; alt?: string }[]; name?: string; data: Record<string, string> }[];
   actions?: React.ReactNode[];
   className?: string;
 }`,
@@ -287,11 +253,11 @@ interface PoolTableProps {
   ]}
   rows={[
     {
-      icons: [{ src: "/sol.png", alt: "SOL" }, { src: "/usdc.png", alt: "USDC" }],
+      icons: [{ src: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png", alt: "SOL" }, { src: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png", alt: "USDC" }],
       data: { tvl: "$245.8M", volume: "$18.2M", apy: "12.4%", fee: "0.25%" },
     },
     {
-      icons: [{ src: "/sol.png", alt: "SOL" }, { src: "/bonk.png", alt: "BONK" }],
+      icons: [{ src: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png", alt: "SOL" }, { src: "https://arweave.net/hQiPZOsRZXGXBJd_82PhVdlM_hACsT_q6wqwf5cSY7I", alt: "BONK" }],
       data: { tvl: "$12.4M", volume: "$3.1M", apy: "24.8%", fee: "1.00%" },
     },
   ]}
@@ -337,7 +303,7 @@ interface PoolTableProps {
 }`,
     usage: `<PositionCard
   symbol="SOL"
-  icon="/sol.png"
+  icon="https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png"
   amount="45.25 SOL"
   value="$7,355.84"
   apy="6.82%"
@@ -373,7 +339,7 @@ interface PositionTableProps {
     usage: `<PositionTable
   positions={[
     {
-      symbol: "SOL", icon: "/sol.png", side: "long", size: "150.0",
+      symbol: "SOL", icon: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png", side: "long", size: "150.0",
       value: "$24,384.00", leverage: "5x", entryPrice: "$148.32",
       markPrice: "$162.56", liquidationPrice: "$118.66",
       pnl: "+$2,136.00", pnlPercent: "+48.0%",
@@ -417,14 +383,8 @@ interface PositionTableProps {
     name: "SwapBox",
     file: "swap-box",
     description:
-      "A two-sided token swap form with flip button, detail rows, and submit action. The most common DeFi interaction.",
-    props: `interface SwapBoxDetail {
-  label: string;
-  value: string;
-  className?: string;
-}
-
-interface SwapBoxProps {
+      "A two-sided token swap form with flip button, detail rows, and submit action. The most common DeFi interaction. The flip button swaps the selected tokens in-place (labels stay fixed).",
+    props: `interface SwapBoxProps {
   tokens: { icon: string; symbol: string }[];
   defaultFromToken?: string;
   defaultToToken?: string;
@@ -432,14 +392,14 @@ interface SwapBoxProps {
   toBalance?: string;
   fromLabel?: string;
   toLabel?: string;
-  details?: SwapBoxDetail[];
+  details?: { label: string; value: string; className?: string }[];
   submitLabel?: string;
   className?: string;
 }`,
     usage: `<SwapBox
   tokens={[
-    { icon: "/usdc.png", symbol: "USDC" },
-    { icon: "/sol.png", symbol: "SOL" },
+    { icon: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png", symbol: "USDC" },
+    { icon: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png", symbol: "SOL" },
   ]}
   defaultFromToken="USDC"
   defaultToToken="SOL"
@@ -451,7 +411,6 @@ interface SwapBoxProps {
   ]}
 />`,
   },
-
   {
     name: "TokenCombobox",
     file: "token-combobox",
@@ -465,8 +424,8 @@ interface SwapBoxProps {
 }`,
     usage: `<TokenCombobox
   tokens={[
-    { icon: "/sol.png", symbol: "SOL" },
-    { icon: "/usdc.png", symbol: "USDC" },
+    { icon: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png", symbol: "SOL" },
+    { icon: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png", symbol: "USDC" },
   ]}
   defaultValue="SOL"
 />`,
@@ -475,38 +434,27 @@ interface SwapBoxProps {
     name: "TokenCommand",
     file: "token-command",
     description:
-      "A Cmd+K command dialog for searching and selecting tokens. Supports both a flat token list via the tokens prop and grouped sections via the groups prop. Each group has a heading and its own token list.",
-    props: `interface TokenCommandToken {
-  icon: string;
-  symbol: string;
-}
-
-interface TokenCommandGroup {
-  heading: string;
-  tokens: TokenCommandToken[];
-}
-
-// Pass either tokens or groups, not both
-type TokenCommandProps = {
-  onSelect?: (token: TokenCommandToken) => void;
+      "A Cmd+K command dialog for searching and selecting tokens. Supports both a flat token list via the tokens prop and grouped sections via the groups prop. Each group has a heading and its own token list. Pass either tokens or groups, not both.",
+    props: `type TokenCommandProps = {
+  onSelect?: (token: { icon: string; symbol: string }) => void;
   className?: string;
 } & (
-  | { tokens: TokenCommandToken[]; groups?: never }
-  | { groups: TokenCommandGroup[]; tokens?: never }
+  | { tokens: { icon: string; symbol: string }[]; groups?: never }
+  | { groups: { heading: string; tokens: { icon: string; symbol: string }[] }[]; tokens?: never }
 )`,
     usage: `<TokenCommand
   groups={[
     {
       heading: "Global Pool",
       tokens: [
-        { icon: "/sol.png", symbol: "SOL" },
-        { icon: "/usdc.png", symbol: "USDC" },
+        { icon: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png", symbol: "SOL" },
+        { icon: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png", symbol: "USDC" },
       ],
     },
     {
       heading: "Isolated Pools",
       tokens: [
-        { icon: "/bonk.png", symbol: "BONK" },
+        { icon: "https://arweave.net/hQiPZOsRZXGXBJd_82PhVdlM_hACsT_q6wqwf5cSY7I", symbol: "BONK" },
       ],
     },
   ]}
@@ -524,7 +472,7 @@ type TokenCommandProps = {
   height?: number;
   className?: string;
 }`,
-    usage: `<TokenIcon src="/sol.png" alt="SOL" width={32} height={32} />`,
+    usage: `<TokenIcon src="https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png" alt="SOL" width={32} height={32} />`,
   },
   {
     name: "TokenIconGroup",
@@ -540,8 +488,8 @@ type TokenCommandProps = {
 }`,
     usage: `<TokenIconGroup
   tokens={[
-    { src: "/sol.png", alt: "SOL" },
-    { src: "/usdc.png", alt: "USDC" },
+    { src: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png", alt: "SOL" },
+    { src: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png", alt: "USDC" },
   ]}
   size={28}
 />`,
@@ -563,8 +511,8 @@ type TokenCommandProps = {
 }`,
     usage: `<TokenInput
   tokens={[
-    { icon: "/sol.png", symbol: "SOL" },
-    { icon: "/usdc.png", symbol: "USDC" },
+    { icon: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png", symbol: "SOL" },
+    { icon: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png", symbol: "USDC" },
   ]}
   defaultToken="SOL"
   balance="24.58"
@@ -572,19 +520,12 @@ type TokenCommandProps = {
   usdValue="$1,625.60"
 />`,
   },
-
   {
     name: "TradeBox",
     file: "trade-box",
     description:
       "A perps/margin trading form with long/short toggle, token input, leverage slider, detail rows, and submit button. Always includes trade direction buttons and leverage. For non-trading actions use ActionBox instead.",
-    props: `interface TradeBoxDetail {
-  label: string;
-  value: string;
-  className?: string;
-}
-
-interface TradeBoxProps {
+    props: `interface TradeBoxProps {
   tokens: { icon: string; symbol: string }[];
   defaultToken?: string;
   balance?: string;
@@ -594,12 +535,12 @@ interface TradeBoxProps {
   leverageMax?: number;
   leverageDefault?: number;
   leverageStep?: number;
-  details?: TradeBoxDetail[];
+  details?: { label: string; value: string; className?: string }[];
   submitLabel?: string;
   className?: string;
 }`,
     usage: `<TradeBox
-  tokens={[{ icon: "/sol.png", symbol: "SOL" }, { icon: "/usdc.png", symbol: "USDC" }]}
+  tokens={[{ icon: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png", symbol: "SOL" }, { icon: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png", symbol: "USDC" }]}
   defaultToken="SOL"
   balance="24.58"
   leverageMax={20}
@@ -678,7 +619,7 @@ interface TradeBoxProps {
   transactions={[
     {
       signature: "5UfD...3xKp", timestamp: new Date(Date.now() - 2 * 60 * 1000), action: "Swap",
-      token: "SOL", tokenIcon: "/sol.png", amount: "2.5 SOL", value: "$406.40",
+      token: "SOL", tokenIcon: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png", amount: "2.5 SOL", value: "$406.40",
       explorerUrl: "https://solscan.io/tx/...",
     },
   ]}
@@ -732,7 +673,7 @@ interface TradeBoxProps {
   balanceChange="-$12.39"
   balanceChangePercent="-0.24%"
   tokens={[
-    { icon: "/sol.png", name: "Solana", symbol: "SOL", balance: "24.58 SOL", value: "$3,995.72", change: "-$12.40" },
+    { icon: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png", name: "Solana", symbol: "SOL", balance: "24.58 SOL", value: "$3,995.72", change: "-$12.40" },
   ]}
 />`,
   },
@@ -793,7 +734,7 @@ For a dialog-based flow, wrap ActionBox in a Dialog from shadcn/ui: Dialog > Dia
 
 const TOKEN_IMAGE_GUIDANCE = `
 ## Token Images
-If you do not already have access to token images in your codebase, use these as placeholders:
+Define token icon URLs as constants at the top of your file. Use these CDN URLs:
 - SOL: https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png
 - USDC: https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png
 - BONK: https://arweave.net/hQiPZOsRZXGXBJd_82PhVdlM_hACsT_q6wqwf5cSY7I
@@ -801,8 +742,6 @@ If you do not already have access to token images in your codebase, use these as
 - mSOL: https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So/logo.png
 - ETH: https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/7vfCXTUXx5WJV5JADk17DUJ4kXCL1sCqzGGchHB54pTM/logo.png
 - NFT (placeholder artwork): https://ybqkchja2noth7nabnjwtcd5wpepkmirgqqptgfupzqk32uwygpa.arweave.net/wGChHSDTXTP9oAtTaYh9s8j1MRE0IPmYtH5greqWwZ4
-
-Define these as constants at the top of your file for readability.
 `;
 
 const OUTPUT_RULES = `
@@ -813,7 +752,7 @@ const OUTPUT_RULES = `
 - Import SolanaUI components from "@/components/sol/<kebab-case-name>" (e.g., import { PoolCard } from "@/components/sol/pool-card")
 - Import shadcn/ui components from "@/components/ui/<name>" (e.g., import { Card } from "@/components/ui/card", import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs")
 - Include realistic Solana ecosystem demo data: SOL (~$162), USDC ($1.00), BONK, JitoSOL (~$189), mSOL (~$186)
-- Use the token image URLs from the Token Images section above
+- Use the token image CDN URLs from the Token Images section above, defined as constants
 - Use Tailwind CSS classes for all layout (grid, flex, gap, padding, max-width)
 - ALL layouts MUST be fully responsive using Tailwind breakpoints (sm, md, lg, xl). Never use fixed multi-column grids without mobile breakpoints
 - Do NOT import from @solana/web3.js or any Solana SDK -- all data is static props
@@ -821,6 +760,11 @@ const OUTPUT_RULES = `
 - Do NOT add interactivity or state management unless the component explicitly requires it
 - Add "use client" directive ONLY if the component uses React hooks or browser APIs
 - Use dark-theme-compatible colors: bg-background, text-foreground, text-muted-foreground, border-border
+- Use 3-8 SolanaUI components per layout, combining them meaningfully rather than dumping every component
+- Fill pages with enough realistic demo data to look production-quality (e.g. 4-6 table rows, 6-8 order book levels per side, 10-20 chart data points)
+- ALWAYS define token icon URLs as named constants at the top of the file (e.g. const SOL_ICON = "https://..."). Never inline long CDN URLs directly in JSX props
+- Vary demo data across rows -- use different tokens, prices, amounts, and percentages. Never repeat identical values
+- Wrap standalone tables, charts, and feeds inside Card with CardHeader/CardTitle for visual containment
 `;
 
 const AVAILABLE_SHADCN_COMPONENTS = `
@@ -838,6 +782,60 @@ These can be imported from "@/components/ui/<name>":
 - Tabs, TabsContent, TabsList, TabsTrigger (tabs)
 `;
 
+const GOLDEN_EXAMPLE = `
+## Example Output
+For the prompt "simple staking page", you would output exactly this (no fences, no explanation):
+
+import { StatCard } from "@/components/sol/stat-card";
+import { ActionBox } from "@/components/sol/action-box";
+import { TxnTable } from "@/components/sol/txn-table";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+const SOL_ICON = "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png";
+
+const recentTxns = [
+  { signature: "4kR9...xQ2p", timestamp: new Date(Date.now() - 5 * 60 * 1000), action: "Stake", token: "SOL", tokenIcon: SOL_ICON, amount: "10.0 SOL", value: "$1,625.60" },
+  { signature: "7mN2...hL4d", timestamp: new Date(Date.now() - 3600 * 1000), action: "Stake", token: "SOL", tokenIcon: SOL_ICON, amount: "5.0 SOL", value: "$812.80" },
+  { signature: "2bX8...wK9r", timestamp: new Date(Date.now() - 86400 * 1000), action: "Unstake", token: "SOL", tokenIcon: SOL_ICON, amount: "3.0 SOL", value: "$487.68" },
+];
+
+export default function StakingPage() {
+  return (
+    <div className="max-w-4xl mx-auto px-4 py-8 space-y-6">
+      <h1 className="text-2xl sm:text-3xl font-bold">Stake SOL</h1>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <StatCard label="SOL Price" value="$162.56" change="+2.4%" trend="up" />
+        <StatCard label="Total Staked" value="412M SOL" change="+0.8%" trend="up" />
+        <StatCard label="Staking APY" value="7.2%" />
+        <StatCard label="Validators" value="1,892" />
+      </div>
+      <div className="max-w-md mx-auto">
+        <ActionBox
+          tokens={[{ icon: SOL_ICON, symbol: "SOL" }]}
+          defaultToken="SOL"
+          balance="24.58"
+          label="Stake"
+          details={[
+            { label: "APY", value: "7.2%", className: "text-emerald-500" },
+            { label: "Annual Rewards", value: "~1.77 SOL" },
+            { label: "Validator", value: "Helius" },
+          ]}
+          submitLabel="Stake SOL"
+        />
+      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Recent Staking Activity</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <TxnTable transactions={recentTxns} />
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+`;
+
 function buildSystemPrompt(): string {
   const componentSections = COMPONENT_CATALOG.map((c) => {
     return `### ${c.name}
@@ -851,9 +849,27 @@ ${c.usage}
 \`\`\``;
   }).join("\n\n");
 
-  return `You are a Solana UI builder. You generate complete React component code using the SolanaUI component library.
+  return `You are an expert Solana UI designer and builder. You generate stunning, production-quality crypto app interfaces using the SolanaUI component library.
 
-You produce beautiful, production-quality Solana app interfaces. Your output is a single React component file that can be copied directly into a Next.js project with SolanaUI installed.
+Your goal is to create interfaces that look like they belong to a top-tier DeFi protocol -- polished, well-spaced, and visually compelling. Every layout you produce should feel like a real shipped product, not a component demo.
+
+## Design Principles
+- **Visual hierarchy**: Use heading sizes, font weights, and muted text to create clear information hierarchy. Important numbers (balances, prices, P&L) should stand out.
+- **Generous spacing**: Use space-y-6 or space-y-8 between major sections. Never cram components together. Let the UI breathe.
+- **Rich demo data**: Fill tables with 4-6 varied rows (different tokens, different values). Charts need 10-20 data points for smooth curves. Order books need 6-8 levels per side. Make data look realistic and varied -- never repeat the same values across rows.
+- **Intentional composition**: Choose 3-8 components that work together for the requested UI. Every component should serve a purpose. Don't include a component just because it exists.
+- **Wrap tables and lists in Cards**: Tables, charts, and feeds look better inside Card with a CardHeader/CardTitle. This adds structure and visual containment.
+- **Token icon constants**: Always define token icon URLs as named constants (e.g. const SOL_ICON = "...") at the top of the file. Never inline long URLs in JSX props.
+
+## Design References
+Use these top-tier protocols as visual inspiration depending on the UI type:
+- **Swap interfaces**: Jupiter, Raydium -- clean centered forms, clear exchange rates, minimal but informative
+- **Perps/trading**: Hyperliquid, Drift -- dense but readable trading layouts, prominent charts, compact order books
+- **Lending/borrow**: Aave, Kamino -- data-rich dashboards, clear health indicators, tabbed portfolio views
+- **NFT marketplace**: Magic Eden, Tensor -- grid layouts with clean cards, collection stats, activity feeds
+- **Portfolio/wallet**: Phantom, Jupiter Portfolio -- polished token lists, balance summaries, transaction history
+- **Staking**: Marinade, Jito -- focused single-action UIs with prominent APY and reward details
+- **General DeFi**: Uniswap, Raydium -- modern, well-spaced, strong typography, clear CTAs
 
 ## Available Components (${COMPONENT_CATALOG.length})
 
@@ -865,10 +881,12 @@ ${AVAILABLE_SHADCN_COMPONENTS}
 
 ${TOKEN_IMAGE_GUIDANCE}
 
-${OUTPUT_RULES}`;
+${OUTPUT_RULES}
+
+${GOLDEN_EXAMPLE}`;
 }
 
-const SOLANAUI_SYSTEM_PROMPT = buildSystemPrompt();
+const BUILDER_SYSTEM_PROMPT = buildSystemPrompt();
 
-export { SOLANAUI_SYSTEM_PROMPT, COMPONENT_CATALOG };
+export { BUILDER_SYSTEM_PROMPT, COMPONENT_CATALOG };
 export type { ComponentDefinition };

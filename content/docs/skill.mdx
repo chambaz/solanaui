@@ -3,22 +3,22 @@ title: AI Skill
 description: Give your AI coding agent full knowledge of the SolanaUI component library
 ---
 
-The SolanaUI skill gives AI coding agents (Claude Code, Cursor, Windsurf, etc.) complete knowledge of the component library -- all 30 components with full TypeScript prop interfaces, usage examples, composition patterns for common Solana app layouts, and token image CDN URLs.
+The SolanaUI skill gives AI coding agents (Claude Code, Cursor, Windsurf, Codex, and 37+ others) complete knowledge of the component library -- all 30 components with full TypeScript prop interfaces, composition patterns for common Solana app layouts, and token image CDN URLs.
 
 Once installed, your agent can generate production-quality Solana app UIs using the SolanaUI component library without any additional context or prompting.
 
-## Install via npx (Recommended)
+## Install
 
-<Tabs items={["npx", "Manual"]}>
-  <Tab value="npx">
+<Tabs items={["npx (Recommended)", "Manual"]}>
+  <Tab value="npx (Recommended)">
     ```bash
     npx skills add chambaz/solanaui
     ```
 
-    This installs the skill into your project's `.claude/skills/` directory where Claude Code and other compatible agents will automatically pick it up.
+    This auto-detects your installed agents (Claude Code, Cursor, Codex, etc.) and installs the skill into the correct location for each one. For Claude Code, it goes into `.claude/skills/`.
   </Tab>
   <Tab value="Manual">
-    Create a file at `.claude/skills/solanaui.md` in your project root and copy the full skill content from the [published skill on skills.sh](https://skills.sh/chambaz/solanaui).
+    Copy the `SKILL.md` file from the [SolanaUI repository root](https://github.com/chambaz/solanaui/blob/main/SKILL.md) into your project's `.claude/skills/solanaui/SKILL.md` directory.
 
     The skill file should be committed to your repository so all team members and CI environments have access to it.
   </Tab>
@@ -28,10 +28,20 @@ Once installed, your agent can generate production-quality Solana app UIs using 
 
 The skill provides your agent with:
 
-- **30 component definitions** with full TypeScript prop interfaces and usage examples
+- **30 component definitions** with full TypeScript prop interfaces
 - **Composition patterns** for building common Solana app layouts (swap interfaces, perps trading pages, lending dashboards, liquidity pools, NFT marketplaces, token portfolios, DeFi stats dashboards, staking pages)
-- **shadcn/ui primitives** list so the agent knows which base components are available
-- **Output rules** ensuring generated code follows SolanaUI conventions (Tailwind CSS, dark theme compatible, no SDK dependencies, static demo data)
+- **Available shadcn/ui primitives** so the agent knows which base components are installed
+- **Token image CDN URLs** for SOL, USDC, BONK, JitoSOL, mSOL, ETH, and NFT placeholders
+- **Styling guidelines** for theme-compatible colors and responsive layouts
+
+## Spec Compliance
+
+The skill follows the [Agent Skills specification](https://agentskills.io) (originally developed by Anthropic):
+
+- YAML frontmatter with `name` and `description` fields
+- Under 500 lines for optimal context efficiency
+- Third-person description with trigger keywords
+- Progressive disclosure structure
 
 ## Try It Live
 

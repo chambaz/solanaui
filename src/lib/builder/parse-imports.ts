@@ -1,4 +1,4 @@
-import { COMPONENT_CATALOG } from "@/lib/skill";
+import { COMPONENT_CATALOG } from "@/lib/builder/builder-prompt";
 
 interface ParsedImports {
   solComponents: string[];

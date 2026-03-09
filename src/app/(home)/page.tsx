@@ -1,4 +1,13 @@
+import type { Metadata } from "next";
 import { AIBuilder } from "@/components/builder/ai-builder";
+
+export const metadata: Metadata = {
+  title: {
+    absolute: "SolanaUI",
+  },
+  description:
+    "Beautifully designed UI components and AI Agent tooling for Solana builders",
+};
 
 export default function HomePage() {
   return (

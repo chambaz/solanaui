@@ -61,6 +61,8 @@ async function checkCredits(ip: string): Promise<{
   }
 }
 
+export const maxDuration = 300;
+
 export async function POST(req: Request) {
   // 1. Validate request body before consuming a credit
   let body: { prompt?: string };

@@ -1,0 +1,74 @@
+---
+title: Address Display
+description: A truncated address display with copy-to-clipboard and optional explorer link
+---
+
+<ComponentDemo>
+  <div className="flex flex-col gap-4 items-start">
+    <AddressDisplay
+      address="MFv2hWf31Z9kbCa1snEPYctwafyhdvnV7FZnsebVacA"
+    />
+    <AddressDisplay
+      address="MFv2hWf31Z9kbCa1snEPYctwafyhdvnV7FZnsebVacA"
+      explorerUrl="https://solscan.io/account"
+    />
+    <AddressDisplay
+      address="MFv2hWf31Z9kbCa1snEPYctwafyhdvnV7FZnsebVacA"
+      truncateChars={[6, 6]}
+      explorerUrl="https://solscan.io/account"
+    />
+  </div>
+</ComponentDemo>
+
+```tsx
+import { AddressDisplay } from "@/components/sol/address-display";
+
+export function AddressDisplayDemo() {
+  return (
+    <AddressDisplay
+      address="MFv2hWf31Z9kbCa1snEPYctwafyhdvnV7FZnsebVacA"
+      explorerUrl="https://solscan.io/account"
+    />
+  );
+}
+```
+
+## Installation
+
+<Tabs items={["pnpm", "npm", "yarn"]}>
+  <Tab value="pnpm">pnpm dlx shadcn@latest add @solanaui/address-display</Tab>
+  <Tab value="npm">npx shadcn@latest add @solanaui/address-display</Tab>
+  <Tab value="yarn">yarn dlx shadcn@latest add @solanaui/address-display</Tab>
+</Tabs>
+
+## Usage
+
+### Basic
+
+```tsx
+<AddressDisplay address="MFv2hWf31Z9kbCa1snEPYctwafyhdvnV7FZnsebVacA" />
+```
+
+### With Explorer Link
+
+Pass a base URL for the explorer. The address is appended automatically (e.g. `https://solscan.io/account/MFv2...`).
+
+```tsx
+<AddressDisplay
+  address="MFv2hWf31Z9kbCa1snEPYctwafyhdvnV7FZnsebVacA"
+  explorerUrl="https://solscan.io/account"
+/>
+```
+
+### Custom Truncation
+
+```tsx
+<AddressDisplay
+  address="MFv2hWf31Z9kbCa1snEPYctwafyhdvnV7FZnsebVacA"
+  truncateChars={[8, 8]}
+/>
+```
+
+## Source Code
+
+<ComponentCode name="address-display" />

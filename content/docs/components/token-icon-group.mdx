@@ -1,0 +1,99 @@
+---
+title: Token Icon Group
+description: Stacked, overlapping token icons for displaying LP pairs, multi-token groups, or collateral baskets
+---
+
+<ComponentDemo>
+  <div className="flex flex-col gap-6 items-start">
+    <TokenIconGroup
+      tokens={[
+        { src: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png", alt: "SOL" },
+        { src: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png", alt: "USDC" },
+      ]}
+      size={36}
+    />
+    <TokenIconGroup
+      tokens={[
+        { src: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png", alt: "SOL" },
+        { src: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png", alt: "USDC" },
+        { src: "https://arweave.net/hQiPZOsRZXGXBJd_82PhVdlM_hACsT_q6wqwf5cSY7I", alt: "BONK" },
+      ]}
+      size={36}
+    />
+    <TokenIconGroup
+      tokens={[
+        { src: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png", alt: "SOL" },
+        { src: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png", alt: "USDC" },
+        { src: "https://arweave.net/hQiPZOsRZXGXBJd_82PhVdlM_hACsT_q6wqwf5cSY7I", alt: "BONK" },
+        { src: "https://storage.googleapis.com/token-metadata/JitoSOL-256.png", alt: "JitoSOL" },
+        { src: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So/logo.png", alt: "mSOL" },
+        { src: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/7vfCXTUXx5WJV5JADk17DUJ4kXCL1sCqzGGchHB54pTM/logo.png", alt: "ETH" },
+      ]}
+      size={36}
+      max={4}
+    />
+  </div>
+</ComponentDemo>
+
+```tsx
+import { TokenIconGroup } from "@/components/sol/token-icon-group";
+
+const SOL_ICON =
+  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png";
+const USDC_ICON =
+  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png";
+
+export function TokenIconGroupDemo() {
+  return (
+    <TokenIconGroup
+      tokens={[
+        { src: SOL_ICON, alt: "SOL" },
+        { src: USDC_ICON, alt: "USDC" },
+      ]}
+      size={36}
+    />
+  );
+}
+```
+
+## Installation
+
+<Tabs items={["pnpm", "npm", "yarn"]}>
+  <Tab value="pnpm">pnpm dlx shadcn@latest add @solanaui/token-icon-group</Tab>
+  <Tab value="npm">npx shadcn@latest add @solanaui/token-icon-group</Tab>
+  <Tab value="yarn">yarn dlx shadcn@latest add @solanaui/token-icon-group</Tab>
+</Tabs>
+
+## Usage
+
+### LP Pair
+
+```tsx
+<TokenIconGroup
+  tokens={[
+    { src: SOL_ICON, alt: "SOL" },
+    { src: USDC_ICON, alt: "USDC" },
+  ]}
+/>
+```
+
+### With Overflow Badge
+
+When there are more tokens than `max` (defaults to 4), a `+N` badge is shown at the end.
+
+```tsx
+<TokenIconGroup
+  tokens={[
+    { src: SOL_ICON, alt: "SOL" },
+    { src: USDC_ICON, alt: "USDC" },
+    { src: BONK_ICON, alt: "BONK" },
+    { src: JITOSOL_ICON, alt: "JitoSOL" },
+    { src: MSOL_ICON, alt: "mSOL" },
+  ]}
+  max={3}
+/>
+```
+
+## Source Code
+
+<ComponentCode name="token-icon-group" />

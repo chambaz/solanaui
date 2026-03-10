@@ -1,0 +1,18 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "token-icon",
+  "title": "Token Icon",
+  "description": "Renders a circular token icon with loading skeleton fallback.",
+  "registryDependencies": [
+    "skeleton"
+  ],
+  "files": [
+    {
+      "path": "src/registry/sol/token-icon.tsx",
+      "content": "\"use client\";\n\nimport React from \"react\";\nimport { Skeleton } from \"@/components/ui/skeleton\";\nimport { cn } from \"@/lib/utils\";\n\ntype TokenIconProps = {\n  src: string;\n  alt?: string;\n  width?: number;\n  height?: number;\n  className?: string;\n};\n\nconst TokenIcon = ({\n  alt = \"Token\",\n  className = \"\",\n  width,\n  height,\n  ...props\n}: TokenIconProps) => {\n  const [status, setStatus] = React.useState<\"loading\" | \"loaded\" | \"error\">(\n    \"loading\",\n  );\n\n  if (status === \"error\") {\n    const fontSize = typeof width === \"number\" ? width * 0.35 : \"1rem\";\n    return (\n      <div\n        className={cn(\n          \"rounded-full bg-muted inline-flex items-center justify-center font-medium text-muted-foreground\",\n          className,\n        )}\n        style={{ width, height, fontSize }}\n      >\n        {alt.charAt(0).toUpperCase()}\n      </div>\n    );\n  }\n\n  return (\n    <div className=\"relative inline-block\" style={{ width, height }}>\n      {status === \"loading\" && (\n        <Skeleton\n          className={cn(\"rounded-full absolute inset-0\", className)}\n          style={{ width, height }}\n        />\n      )}\n      <img\n        alt={alt}\n        className={cn(\n          \"rounded-full block\",\n          status === \"loading\" && \"opacity-0\",\n          className,\n        )}\n        onLoad={() => setStatus(\"loaded\")}\n        onError={() => setStatus(\"error\")}\n        width={width}\n        height={height}\n        {...props}\n      />\n    </div>\n  );\n};\n\nexport type { TokenIconProps };\nexport { TokenIcon };\n",
+      "type": "registry:component",
+      "target": "components/sol/token-icon.tsx"
+    }
+  ],
+  "type": "registry:component"
+}

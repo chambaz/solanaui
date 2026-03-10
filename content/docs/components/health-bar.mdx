@@ -1,0 +1,38 @@
+---
+title: Health Bar
+description: A gradient gauge bar for displaying liquidation risk or health factor with a colored percentage
+---
+
+<ComponentDemo>
+  <div className="max-w-lg mx-auto w-full flex flex-col gap-6">
+    <HealthBar value={90} />
+    <HealthBar value={45} />
+    <HealthBar value={18} />
+  </div>
+</ComponentDemo>
+
+```tsx
+import { HealthBar } from "@/components/sol/health-bar";
+
+export function HealthBarDemo() {
+  return <HealthBar value={72} />;
+}
+```
+
+## Installation
+
+<Tabs items={["pnpm", "npm", "yarn"]}>
+  <Tab value="pnpm">pnpm dlx shadcn@latest add @solanaui/health-bar</Tab>
+  <Tab value="npm">npx shadcn@latest add @solanaui/health-bar</Tab>
+  <Tab value="yarn">yarn dlx shadcn@latest add @solanaui/health-bar</Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+<HealthBar value={72} />
+```
+
+## Source Code
+
+<ComponentCode name="health-bar" />

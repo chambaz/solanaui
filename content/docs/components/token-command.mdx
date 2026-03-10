@@ -1,0 +1,138 @@
+---
+title: Token Command
+description: A command palette component for token selection with optional grouping
+---
+
+<ComponentDemo>
+  <TokenCommand
+    groups={[
+      {
+        heading: "Global Pool",
+        tokens: [
+          {
+            icon: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+            symbol: "SOL",
+          },
+          {
+            icon: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+            symbol: "USDC",
+          },
+          {
+            icon: "https://arweave.net/hQiPZOsRZXGXBJd_82PhVdlM_hACsT_q6wqwf5cSY7I",
+            symbol: "BONK",
+          },
+        ],
+      },
+      {
+        heading: "Isolated Pools",
+        tokens: [
+          {
+            icon: "https://storage.googleapis.com/token-metadata/JitoSOL-256.png",
+            symbol: "JitoSOL",
+          },
+          {
+            icon: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So/logo.png",
+            symbol: "mSOL",
+          },
+        ],
+      },
+    ]}
+  />
+</ComponentDemo>
+
+```tsx
+import { TokenCommand } from "@/components/sol/token-command";
+
+const SOL_ICON =
+  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png";
+const USDC_ICON =
+  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png";
+const BONK_ICON =
+  "https://arweave.net/hQiPZOsRZXGXBJd_82PhVdlM_hACsT_q6wqwf5cSY7I";
+const JITOSOL_ICON =
+  "https://storage.googleapis.com/token-metadata/JitoSOL-256.png";
+
+export function TokenCommandDemo() {
+  return (
+    <TokenCommand
+      groups={[
+        {
+          heading: "Global Pool",
+          tokens: [
+            { icon: SOL_ICON, symbol: "SOL" },
+            { icon: USDC_ICON, symbol: "USDC" },
+            { icon: BONK_ICON, symbol: "BONK" },
+          ],
+        },
+        {
+          heading: "Isolated Pools",
+          tokens: [
+            { icon: JITOSOL_ICON, symbol: "JitoSOL" },
+          ],
+        },
+      ]}
+    />
+  );
+}
+```
+
+## Installation
+
+<Tabs items={["pnpm", "npm", "yarn"]}>
+  <Tab value="pnpm">pnpm dlx shadcn@latest add @solanaui/token-command</Tab>
+  <Tab value="npm">npx shadcn@latest add @solanaui/token-command</Tab>
+  <Tab value="yarn">yarn dlx shadcn@latest add @solanaui/token-command</Tab>
+</Tabs>
+
+## Usage
+
+### Flat Token List
+
+```tsx
+<TokenCommand
+  tokens={[
+    { icon: SOL_ICON, symbol: "SOL" },
+    { icon: USDC_ICON, symbol: "USDC" },
+  ]}
+/>
+```
+
+### Grouped Tokens
+
+Use the `groups` prop to organize tokens into labeled sections. Pass either `tokens` or `groups`, not both.
+
+```tsx
+<TokenCommand
+  groups={[
+    {
+      heading: "Global Pool",
+      tokens: [
+        { icon: SOL_ICON, symbol: "SOL" },
+        { icon: USDC_ICON, symbol: "USDC" },
+      ],
+    },
+    {
+      heading: "Isolated Pools",
+      tokens: [
+        { icon: JITOSOL_ICON, symbol: "JitoSOL" },
+      ],
+    },
+  ]}
+/>
+```
+
+### With Selection Callback
+
+```tsx
+<TokenCommand
+  tokens={[
+    { icon: SOL_ICON, symbol: "SOL" },
+    { icon: USDC_ICON, symbol: "USDC" },
+  ]}
+  onSelect={(token) => console.log("Selected:", token.symbol)}
+/>
+```
+
+## Source Code
+
+<ComponentCode name="token-command" />

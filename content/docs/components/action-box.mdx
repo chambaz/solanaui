@@ -1,0 +1,116 @@
+---
+title: Action Box
+description: A generic single-input action form for staking, lending, depositing, bridging, and more
+---
+
+<ComponentDemo>
+  <div className="max-w-sm mx-auto w-full">
+    <ActionBox
+      tokens={[
+        { icon: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png", symbol: "SOL" },
+        { icon: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png", symbol: "USDC" },
+      ]}
+      defaultToken="SOL"
+      balance="24.58"
+      label="Stake"
+      details={[
+        { label: "APY", value: "7.2%", className: "text-emerald-500" },
+        { label: "Annual Rewards", value: "~1.77 SOL" },
+        { label: "Validator", value: "Helius" },
+      ]}
+      submitLabel="Stake SOL"
+    />
+  </div>
+</ComponentDemo>
+
+```tsx
+import { ActionBox } from "@/components/sol/action-box";
+
+const SOL_ICON =
+  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png";
+const USDC_ICON =
+  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png";
+
+export function ActionBoxDemo() {
+  return (
+    <ActionBox
+      tokens={[
+        { icon: SOL_ICON, symbol: "SOL" },
+        { icon: USDC_ICON, symbol: "USDC" },
+      ]}
+      defaultToken="SOL"
+      balance="24.58"
+      label="Stake"
+      details={[
+        { label: "APY", value: "7.2%", className: "text-emerald-500" },
+        { label: "Annual Rewards", value: "~1.77 SOL" },
+        { label: "Validator", value: "Helius" },
+      ]}
+      submitLabel="Stake SOL"
+    />
+  );
+}
+```
+
+## Installation
+
+<Tabs items={["pnpm", "npm", "yarn"]}>
+  <Tab value="pnpm">pnpm dlx shadcn@latest add @solanaui/action-box</Tab>
+  <Tab value="npm">npx shadcn@latest add @solanaui/action-box</Tab>
+  <Tab value="yarn">yarn dlx shadcn@latest add @solanaui/action-box</Tab>
+</Tabs>
+
+## Usage
+
+### Staking
+
+```tsx
+<ActionBox
+  tokens={[{ icon: SOL_ICON, symbol: "SOL" }]}
+  defaultToken="SOL"
+  balance="24.58"
+  label="Stake"
+  details={[
+    { label: "APY", value: "7.2%", className: "text-emerald-500" },
+    { label: "Annual Rewards", value: "~1.77 SOL" },
+  ]}
+  submitLabel="Stake SOL"
+/>
+```
+
+### Lending Supply
+
+```tsx
+<ActionBox
+  tokens={[{ icon: USDC_ICON, symbol: "USDC" }]}
+  defaultToken="USDC"
+  balance="1,250.00"
+  label="Supply"
+  details={[
+    { label: "Supply APY", value: "8.45%" },
+    { label: "Utilization", value: "78.4%" },
+  ]}
+  submitLabel="Supply USDC"
+/>
+```
+
+### Bridge
+
+```tsx
+<ActionBox
+  tokens={[{ icon: SOL_ICON, symbol: "SOL" }]}
+  defaultToken="SOL"
+  balance="24.58"
+  label="Bridge"
+  details={[
+    { label: "Destination", value: "Ethereum" },
+    { label: "Fee", value: "0.001 SOL" },
+    { label: "Est. Time", value: "~15 min" },
+  ]}
+  submitLabel="Bridge SOL"
+/>
+```
+
+## Source Code
+
+<ComponentCode name="action-box" />

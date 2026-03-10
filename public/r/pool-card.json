@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "pool-card",
+  "title": "Pool Card",
+  "description": "A card for displaying liquidity pool information with token icons, metrics grid, and optional sparkline chart.",
+  "registryDependencies": [
+    "card",
+    "https://solanaui.dev/r/sparkline-chart.json",
+    "https://solanaui.dev/r/token-icon-group.json"
+  ],
+  "files": [
+    {
+      "path": "src/registry/sol/pool-card.tsx",
+      "content": "import type React from \"react\";\nimport { SparklineChart } from \"@/registry/sol/sparkline-chart\";\nimport { TokenIconGroup } from \"@/registry/sol/token-icon-group\";\nimport {\n  Card,\n  CardContent,\n  CardDescription,\n  CardFooter,\n  CardHeader,\n  CardTitle,\n} from \"@/components/ui/card\";\nimport { cn } from \"@/lib/utils\";\n\ninterface PoolCardMetric {\n  label: string;\n  value: string;\n  highlight?: boolean;\n  className?: string;\n}\n\ninterface PoolCardProps extends React.ComponentProps<typeof Card> {\n  tokens: { icon: string; symbol: string }[];\n  name?: string;\n  price?: string;\n  description?: string;\n  metrics?: PoolCardMetric[];\n  series?: { time: string; value: number }[];\n  children?: React.ReactNode;\n}\n\nconst PoolCard = ({\n  tokens,\n  name,\n  price,\n  description,\n  metrics,\n  series,\n  children,\n  className,\n  ...props\n}: PoolCardProps) => {\n  const displayName = name ?? tokens.map((t) => t.symbol).join(\"/\");\n  const iconTokens = tokens.map((t) => ({ src: t.icon, alt: t.symbol }));\n  const iconSize = tokens.length > 1 ? 28 : 36;\n  const iconOverlap = tokens.length > 1 ? -10 : 0;\n\n  const highlightMetric = metrics?.find((m) => m.highlight);\n  const regularMetrics = metrics?.filter((m) => !m.highlight);\n\n  return (\n    <Card className={cn(\"p-4 w-full\", className)} {...props}>\n      <CardHeader className=\"p-0\">\n        <CardTitle className=\"flex items-center justify-between gap-2\">\n          <div className=\"flex items-center gap-2 text-xl\">\n            <TokenIconGroup\n              tokens={iconTokens}\n              size={iconSize}\n              overlap={iconOverlap}\n            />\n            {displayName}\n          </div>\n          {price && <span>{price}</span>}\n        </CardTitle>\n        {description && (\n          <CardDescription className=\"text-left\">{description}</CardDescription>\n        )}\n      </CardHeader>\n\n      {highlightMetric && (\n        <CardContent className=\"p-0\">\n          <div className=\"flex flex-col\">\n            <span className=\"text-muted-foreground text-xs\">\n              {highlightMetric.label}\n            </span>\n            <span\n              className={cn(\n                \"text-2xl font-bold tracking-tight\",\n                highlightMetric.className,\n              )}\n            >\n              {highlightMetric.value}\n            </span>\n          </div>\n        </CardContent>\n      )}\n\n      {regularMetrics && regularMetrics.length > 0 && (\n        <CardContent className=\"p-0\">\n          <div className=\"grid grid-cols-2 gap-x-6 gap-y-2 text-sm\">\n            {regularMetrics.map((metric) => (\n              <div key={metric.label} className=\"flex flex-col\">\n                <span className=\"text-muted-foreground text-xs\">\n                  {metric.label}\n                </span>\n                <span className={cn(\"font-medium\", metric.className)}>\n                  {metric.value}\n                </span>\n              </div>\n            ))}\n          </div>\n        </CardContent>\n      )}\n\n      {series && series.length > 0 && (\n        <CardContent className=\"p-0\">\n          <SparklineChart series={series} />\n        </CardContent>\n      )}\n\n      {children && <CardFooter className=\"p-0\">{children}</CardFooter>}\n    </Card>\n  );\n};\n\nexport type { PoolCardProps, PoolCardMetric };\nexport { PoolCard };\n",
+      "type": "registry:component",
+      "target": "components/sol/pool-card.tsx"
+    }
+  ],
+  "type": "registry:component"
+}

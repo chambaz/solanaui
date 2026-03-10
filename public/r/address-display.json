@@ -1,0 +1,18 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "address-display",
+  "title": "Address Display",
+  "description": "Displays a truncated Solana wallet address with a copy-to-clipboard button.",
+  "dependencies": [
+    "lucide-react"
+  ],
+  "files": [
+    {
+      "path": "src/registry/sol/address-display.tsx",
+      "content": "\"use client\";\n\nimport { CheckIcon, CopyIcon, ExternalLinkIcon } from \"lucide-react\";\nimport React from \"react\";\nimport { cn } from \"@/lib/utils\";\n\ninterface AddressDisplayProps {\n  address: string;\n  truncate?: boolean;\n  truncateChars?: [number, number];\n  copyable?: boolean;\n  explorerUrl?: string;\n  className?: string;\n}\n\nconst formatAddress = (\n  address: string,\n  truncate: boolean,\n  chars: [number, number],\n) => {\n  if (!truncate || address.length <= chars[0] + chars[1] + 3) return address;\n  return `${address.slice(0, chars[0])}...${address.slice(-chars[1])}`;\n};\n\nconst AddressDisplay = ({\n  address,\n  truncate = true,\n  truncateChars = [4, 4],\n  copyable = true,\n  explorerUrl,\n  className,\n}: AddressDisplayProps) => {\n  const [copied, setCopied] = React.useState(false);\n\n  const handleCopy = async () => {\n    try {\n      await navigator.clipboard.writeText(address);\n      setCopied(true);\n      setTimeout(() => setCopied(false), 2000);\n    } catch {\n      console.error(\"Failed to copy address to clipboard\");\n    }\n  };\n\n  const displayed = formatAddress(address, truncate, truncateChars);\n  const fullUrl = explorerUrl\n    ? `${explorerUrl.replace(/\\/+$/, \"\")}/${address}`\n    : undefined;\n\n  return (\n    <span className={cn(\"inline-flex items-center gap-1.5\", className)}>\n      <span className=\"font-mono text-sm text-muted-foreground\">\n        {displayed}\n      </span>\n      {copyable && (\n        <button\n          type=\"button\"\n          onClick={handleCopy}\n          className=\"text-muted-foreground hover:text-foreground transition-colors cursor-pointer\"\n          aria-label=\"Copy address\"\n        >\n          {copied ? (\n            <CheckIcon className=\"size-3.5 text-emerald-500\" />\n          ) : (\n            <CopyIcon className=\"size-3.5\" />\n          )}\n        </button>\n      )}\n      {fullUrl && (\n        <a\n          href={fullUrl}\n          target=\"_blank\"\n          rel=\"noopener noreferrer\"\n          className=\"text-muted-foreground hover:text-foreground transition-colors\"\n          aria-label=\"View in explorer\"\n        >\n          <ExternalLinkIcon className=\"size-3.5\" />\n        </a>\n      )}\n    </span>\n  );\n};\n\nexport type { AddressDisplayProps };\nexport { AddressDisplay };\n",
+      "type": "registry:component",
+      "target": "components/sol/address-display.tsx"
+    }
+  ],
+  "type": "registry:component"
+}

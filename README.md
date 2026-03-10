@@ -1,40 +1,60 @@
 # SolanaUI
 
-SolanaUI is a collection of beautifully designed UI components and utility functions, built for Solana. It extends the powerful [shadcn/ui](https://ui.shadcn.com/) library with Solana-specific components along with asset / price fetching utilites, making it easier to get started with Solana UI development.
+Beautifully designed UI components and AI Agent tooling for Solana builders.
 
-## Getting Started
+Documentation and examples: [solanaui.dev](https://solanaui.dev)
 
-To get started read the [docs](https://www.solanaui.dev/) or install the docs locally.
+## Installation
 
-### Installation
+SolanaUI uses the shadcn registry. Add the registry to your `components.json`:
+
+```json
+{
+  "registries": {
+    "@solanaui": "https://solanaui.dev/r/{name}.json"
+  }
+}
+```
+
+Then install components individually:
 
 ```bash
-# install dependencies
+pnpm dlx shadcn@latest add @solanaui/swap-box
+```
+
+This copies the component source into your project at `components/sol/`. The components are intended to be modified and customized to your project needs. You own the code.
+
+### Prerequisites
+
+- React 19
+- Tailwind CSS v4
+- shadcn/ui initialized (`pnpm dlx shadcn@latest init`)
+
+## Agent Integration
+
+SolanaUI ships a `SKILL.md` for coding agents (Claude Code, OpenCode, Cursor, Windsurf, and others). Install it with:
+
+```bash
+npx skills add chambaz/solanaui
+```
+
+Or copy `SKILL.md` from the repo root into your project's `.claude/skills/` directory.
+
+## Development
+
+```bash
 pnpm install
-```
-
-### Set your RPC url in your .env.local
-```
-NEXT_PUBLIC_RPC_URL="https://your-rpc-url.com"
-```
-
-### Development
-
-```bash
-# start development server
 pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser to see the result. All SolanaUI components are stored in `src/components/sol` and utility functions can all be found in `src/lib`.
+The docs site runs at `http://localhost:3000`
 
-## Documentation
-
-Visit the [docs](https://www.solanaui.dev/docs) to get started.
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
+```bash
+pnpm build     # Production build (includes type checking)
+pnpm lint      # Biome lint
+pnpm format    # Biome format
+```
 
 ## License
 
-This project is licensed under the MIT License - see license for details.
+MIT

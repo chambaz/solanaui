@@ -1,0 +1,21 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "sparkline-chart",
+  "title": "Sparkline Chart",
+  "description": "A compact inline sparkline chart for showing price trends in cards and table cells.",
+  "dependencies": [
+    "recharts"
+  ],
+  "registryDependencies": [
+    "chart"
+  ],
+  "files": [
+    {
+      "path": "src/registry/sol/sparkline-chart.tsx",
+      "content": "\"use client\";\n\nimport { Line, LineChart, YAxis } from \"recharts\";\nimport { type ChartConfig, ChartContainer } from \"@/components/ui/chart\";\nimport { cn } from \"@/lib/utils\";\n\ninterface SparklineChartProps {\n  series: {\n    time: string;\n    value: number;\n  }[];\n  className?: string;\n}\n\nconst chartConfig = {\n  value: {\n    label: \"Value\",\n  },\n} satisfies ChartConfig;\n\nconst POSITIVE_COLOR = \"hsl(160 84% 39%)\";\nconst NEGATIVE_COLOR = \"hsl(0 84% 67%)\";\n\nconst SparklineChart = ({ series, className }: SparklineChartProps) => {\n  if (!series.length) return null;\n\n  const minValue = Math.min(...series.map((s) => s.value));\n  const maxValue = Math.max(...series.map((s) => s.value));\n\n  const firstValue = series[0].value;\n  const lastValue = series[series.length - 1].value;\n  const percentChange =\n    firstValue !== 0 ? ((lastValue - firstValue) / firstValue) * 100 : 0;\n  const isPositive = percentChange >= 0;\n  const chartColor = isPositive ? POSITIVE_COLOR : NEGATIVE_COLOR;\n\n  return (\n    <div className={cn(\"relative w-full h-[60px]\", className)}>\n      <ChartContainer\n        config={chartConfig}\n        className=\"w-full h-[60px] shrink-0 pr-12\"\n      >\n        <LineChart accessibilityLayer data={series}>\n          <YAxis domain={[minValue, maxValue]} hide />\n          <Line\n            dataKey=\"value\"\n            type=\"natural\"\n            dot={false}\n            stroke={chartColor}\n          />\n        </LineChart>\n      </ChartContainer>\n      <div\n        className={cn(\n          \"absolute right-0 z-10\",\n          isPositive ? \"top-0\" : \"bottom-0\",\n        )}\n      >\n        <span\n          className={cn(\n            \"text-xs font-medium\",\n            isPositive ? \"text-emerald-500\" : \"text-red-400\",\n          )}\n        >\n          {isPositive ? \"+\" : \"\"}\n          {percentChange.toFixed(2)}%\n        </span>\n      </div>\n    </div>\n  );\n};\n\nexport type { SparklineChartProps };\nexport { SparklineChart };\n",
+      "type": "registry:component",
+      "target": "components/sol/sparkline-chart.tsx"
+    }
+  ],
+  "type": "registry:component"
+}

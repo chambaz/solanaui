@@ -1,0 +1,56 @@
+---
+title: Trade Buttons
+description: A toggle button group for selecting trade direction (long/short)
+---
+
+<ComponentDemo>
+  <div className="w-full max-w-lg">
+    <TradeButtons />
+  </div>
+</ComponentDemo>
+
+```tsx
+import { TradeButtons } from "@/components/sol/trade-buttons";
+
+export function TradeButtonsDemo() {
+  return <TradeButtons />;
+}
+```
+
+## Installation
+
+<Tabs items={["pnpm", "npm", "yarn"]}>
+  <Tab value="pnpm">pnpm dlx shadcn@latest add @solanaui/trade-buttons</Tab>
+  <Tab value="npm">npx shadcn@latest add @solanaui/trade-buttons</Tab>
+  <Tab value="yarn">yarn dlx shadcn@latest add @solanaui/trade-buttons</Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+<TradeButtons />
+```
+
+### Controlled
+
+Use `value` and `onValueChange` to control the selected side from a parent component.
+
+```tsx
+const [side, setSide] = React.useState("long");
+
+<TradeButtons value={side} onValueChange={setSide} />
+
+{side === "long" ? <LongOrderForm /> : <ShortOrderForm />}
+```
+
+### Custom Labels
+
+The `defaultValue` always uses `"long"` or `"short"` regardless of the label text.
+
+```tsx
+<TradeButtons labels={["Buy", "Sell"]} defaultValue="long" />
+```
+
+## Source Code
+
+<ComponentCode name="trade-buttons" />

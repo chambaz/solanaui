@@ -1,0 +1,15 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "sol-lib-types",
+  "title": "SolanaUI Types",
+  "description": "Shared type definitions used by SolanaUI components.",
+  "files": [
+    {
+      "path": "src/registry/lib/types.ts",
+      "content": "interface DetailRow {\n  label: string;\n  value: string;\n  className?: string;\n}\n\nexport type { DetailRow };\n",
+      "type": "registry:lib",
+      "target": "lib/types.ts"
+    }
+  ],
+  "type": "registry:lib"
+}

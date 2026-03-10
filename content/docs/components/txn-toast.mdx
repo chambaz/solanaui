@@ -1,0 +1,102 @@
+---
+title: Txn Toast
+description: A toast notification function for displaying transaction status updates with explorer links
+---
+
+<ComponentDemo>
+  <TxnToastDemo />
+</ComponentDemo>
+
+```tsx
+import { txnToast } from "@/components/sol/txn-toast";
+
+// Show a confirmed transaction toast
+txnToast({
+  signature: "5UfDq3kPmE8yR4vN7bXjT2wZcA9fGhL6nKpQrS1dM8xY",
+  status: "confirmed",
+});
+
+// Show a pending transaction toast
+const toastId = txnToast({
+  title: "Swapping SOL for USDC",
+  status: "pending",
+});
+
+// Update the pending toast to confirmed
+txnToast.update(toastId, {
+  signature: "5UfDq3kPmE8yR4vN7bXjT2wZcA9fGhL6nKpQrS1dM8xY",
+  status: "confirmed",
+});
+```
+
+## Installation
+
+<Tabs items={["pnpm", "npm", "yarn"]}>
+  <Tab value="pnpm">pnpm dlx shadcn@latest add @solanaui/txn-toast</Tab>
+  <Tab value="npm">npx shadcn@latest add @solanaui/txn-toast</Tab>
+  <Tab value="yarn">yarn dlx shadcn@latest add @solanaui/txn-toast</Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+import { txnToast } from "@/components/sol/txn-toast";
+
+// Confirmed - auto-generates explorer link from signature
+txnToast({
+  signature: "5UfDq3kPm...",
+  status: "confirmed",
+});
+
+// Pending - shows a spinner, stays visible until dismissed or updated
+const toastId = txnToast({
+  title: "Swapping SOL for USDC",
+  status: "pending",
+});
+
+// Error - red icon, auto-dismisses after 5s
+txnToast({
+  title: "Swap failed",
+  description: "Insufficient balance",
+  status: "error",
+});
+
+// Custom title + explorer URL
+txnToast({
+  title: "Staked 100 SOL",
+  signature: "5UfDq3kPm...",
+  explorerUrl: "https://solscan.io/tx/5UfDq3kPm...",
+  status: "confirmed",
+});
+```
+
+### Updating a Pending Toast
+
+Use `txnToast.update()` to transition a pending toast to confirmed or error in-place, without dismissing and re-creating it.
+
+```tsx
+// Fire a pending toast and store the ID
+const toastId = txnToast({
+  title: "Swapping SOL for USDC",
+  status: "pending",
+});
+
+// Later, update the same toast with the result
+txnToast.update(toastId, {
+  signature: "5UfDq3kPm...",
+  status: "confirmed",
+});
+
+// Or update to error
+txnToast.update(toastId, {
+  title: "Swap failed",
+  description: "Slippage tolerance exceeded",
+  status: "error",
+});
+```
+
+Each toast includes a close button so users can dismiss it manually at any time.
+
+## Source Code
+
+<ComponentCode name="txn-toast" />

@@ -1,0 +1,71 @@
+---
+title: Token Icon
+description: An icon component for displaying token logos
+---
+
+<ComponentDemo>
+  <div className="flex items-center gap-4">
+    <TokenIcon
+      src="https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png"
+      alt="SOL"
+      width={48}
+      height={48}
+    />
+    <TokenIcon
+      src="https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/LSTxxxnJzKDFSLr4dUkPcmCf5VyryEqzPLz5j4bpxFp/logo.png"
+      alt="LST"
+      width={48}
+      height={48}
+    />
+    <TokenIcon
+      src="https://storage.googleapis.com/token-metadata/JitoSOL-256.png"
+      alt="JitoSOL"
+      width={48}
+      height={48}
+    />
+    <TokenIcon
+      src="https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png"
+      alt="USDC"
+      width={48}
+      height={48}
+    />
+    <TokenIcon
+      src="https://arweave.net/hQiPZOsRZXGXBJd_82PhVdlM_hACsT_q6wqwf5cSY7I"
+      alt="BONK"
+      width={48}
+      height={48}
+    />
+  </div>
+</ComponentDemo>
+
+```tsx
+import { TokenIcon } from "@/components/sol/token-icon";
+
+const SOL_ICON =
+  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png";
+
+export function TokenIconDemo() {
+  return <TokenIcon src={SOL_ICON} alt="SOL" width={48} height={48} />;
+}
+```
+
+## Installation
+
+<Tabs items={["pnpm", "npm", "yarn"]}>
+  <Tab value="pnpm">pnpm dlx shadcn@latest add @solanaui/token-icon</Tab>
+  <Tab value="npm">npx shadcn@latest add @solanaui/token-icon</Tab>
+  <Tab value="yarn">yarn dlx shadcn@latest add @solanaui/token-icon</Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+const SOL_ICON =
+  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png";
+
+<TokenIcon src={SOL_ICON} alt="SOL" width={48} height={48} />
+```
+
+## Source Code
+
+<ComponentCode name="token-icon" />

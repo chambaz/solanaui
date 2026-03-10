@@ -1,0 +1,128 @@
+---
+title: Price Chart
+description: An area chart for displaying token price history with axes, grid lines, and tooltips
+---
+
+<ComponentDemo>
+  <PriceChart
+    title="SOL Price"
+    description="January 2026"
+    series={[
+      { time: "2026-01-01", value: 148.32 },
+      { time: "2026-01-02", value: 149.10 },
+      { time: "2026-01-03", value: 147.85 },
+      { time: "2026-01-04", value: 148.90 },
+      { time: "2026-01-05", value: 150.20 },
+      { time: "2026-01-06", value: 151.45 },
+      { time: "2026-01-07", value: 150.80 },
+      { time: "2026-01-08", value: 152.30 },
+      { time: "2026-01-09", value: 151.60 },
+      { time: "2026-01-10", value: 153.15 },
+      { time: "2026-01-11", value: 152.40 },
+      { time: "2026-01-12", value: 154.20 },
+      { time: "2026-01-13", value: 153.80 },
+      { time: "2026-01-14", value: 155.10 },
+      { time: "2026-01-15", value: 154.60 },
+      { time: "2026-01-16", value: 156.30 },
+      { time: "2026-01-17", value: 155.80 },
+      { time: "2026-01-18", value: 157.20 },
+      { time: "2026-01-19", value: 156.50 },
+      { time: "2026-01-20", value: 158.10 },
+      { time: "2026-01-21", value: 157.40 },
+      { time: "2026-01-22", value: 158.90 },
+      { time: "2026-01-23", value: 159.30 },
+      { time: "2026-01-24", value: 158.60 },
+      { time: "2026-01-25", value: 160.10 },
+      { time: "2026-01-26", value: 159.80 },
+      { time: "2026-01-27", value: 161.20 },
+      { time: "2026-01-28", value: 160.50 },
+      { time: "2026-01-29", value: 161.80 },
+      { time: "2026-01-30", value: 163.10 },
+      { time: "2026-01-31", value: 162.56 },
+    ]}
+  />
+</ComponentDemo>
+
+```tsx
+import { PriceChart } from "@/components/sol/price-chart";
+
+export function PriceChartDemo() {
+  return (
+    <PriceChart
+      title="SOL Price"
+      description="January 2026"
+      series={[
+        { time: "2026-01-01", value: 148.32 },
+        { time: "2026-01-02", value: 149.10 },
+        { time: "2026-01-03", value: 147.85 },
+        { time: "2026-01-04", value: 148.90 },
+        { time: "2026-01-05", value: 150.20 },
+        { time: "2026-01-06", value: 151.45 },
+        { time: "2026-01-07", value: 150.80 },
+        { time: "2026-01-08", value: 152.30 },
+        { time: "2026-01-09", value: 151.60 },
+        { time: "2026-01-10", value: 153.15 },
+        { time: "2026-01-11", value: 152.40 },
+        { time: "2026-01-12", value: 154.20 },
+        { time: "2026-01-13", value: 153.80 },
+        { time: "2026-01-14", value: 155.10 },
+        { time: "2026-01-15", value: 154.60 },
+        { time: "2026-01-16", value: 156.30 },
+        { time: "2026-01-17", value: 155.80 },
+        { time: "2026-01-18", value: 157.20 },
+        { time: "2026-01-19", value: 156.50 },
+        { time: "2026-01-20", value: 158.10 },
+        { time: "2026-01-21", value: 157.40 },
+        { time: "2026-01-22", value: 158.90 },
+        { time: "2026-01-23", value: 159.30 },
+        { time: "2026-01-24", value: 158.60 },
+        { time: "2026-01-25", value: 160.10 },
+        { time: "2026-01-26", value: 159.80 },
+        { time: "2026-01-27", value: 161.20 },
+        { time: "2026-01-28", value: 160.50 },
+        { time: "2026-01-29", value: 161.80 },
+        { time: "2026-01-30", value: 163.10 },
+        { time: "2026-01-31", value: 162.56 },
+      ]}
+    />
+  );
+}
+```
+
+## Installation
+
+<Tabs items={["pnpm", "npm", "yarn"]}>
+  <Tab value="pnpm">pnpm dlx shadcn@latest add @solanaui/price-chart</Tab>
+  <Tab value="npm">npx shadcn@latest add @solanaui/price-chart</Tab>
+  <Tab value="yarn">yarn dlx shadcn@latest add @solanaui/price-chart</Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+<PriceChart
+  title="SOL Price"
+  description="January 2026"
+  series={[
+    { time: "2026-01-01", value: 148.32 },
+    { time: "2026-01-15", value: 155.40 },
+    { time: "2026-01-31", value: 162.56 },
+  ]}
+/>
+```
+
+### Without Title
+
+```tsx
+<PriceChart
+  series={[
+    { time: "2026-01-01", value: 148.32 },
+    { time: "2026-01-15", value: 155.40 },
+    { time: "2026-01-31", value: 162.56 },
+  ]}
+/>
+```
+
+## Source Code
+
+<ComponentCode name="price-chart" />

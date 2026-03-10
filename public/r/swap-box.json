@@ -1,0 +1,23 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "swap-box",
+  "title": "Swap Box",
+  "description": "A two-sided token swap form with flip button, balance display, detail rows, and submit action.",
+  "dependencies": [
+    "lucide-react"
+  ],
+  "registryDependencies": [
+    "button",
+    "https://solanaui.dev/r/token-input.json",
+    "https://solanaui.dev/r/sol-lib-types.json"
+  ],
+  "files": [
+    {
+      "path": "src/registry/sol/swap-box.tsx",
+      "content": "\"use client\";\n\nimport { ArrowDownUpIcon } from \"lucide-react\";\nimport React from \"react\";\nimport { TokenInput } from \"@/registry/sol/token-input\";\nimport { Button } from \"@/components/ui/button\";\nimport type { DetailRow } from \"@/registry/lib/types\";\nimport { cn } from \"@/lib/utils\";\n\ntype SwapBoxDetail = DetailRow;\n\ninterface SwapBoxProps {\n  tokens: { icon: string; symbol: string }[];\n  defaultFromToken?: string;\n  defaultToToken?: string;\n  fromBalance?: string;\n  toBalance?: string;\n  fromLabel?: string;\n  toLabel?: string;\n  details?: SwapBoxDetail[];\n  submitLabel?: string;\n  onSubmit?: () => void;\n  className?: string;\n}\n\nconst SwapBox = ({\n  tokens,\n  defaultFromToken,\n  defaultToToken,\n  fromBalance,\n  toBalance,\n  fromLabel = \"Sell\",\n  toLabel = \"Buy\",\n  details,\n  submitLabel = \"Swap\",\n  onSubmit,\n  className,\n}: SwapBoxProps) => {\n  const [fromToken, setFromToken] = React.useState(defaultFromToken);\n  const [toToken, setToToken] = React.useState(defaultToToken);\n  const [fromBal, setFromBal] = React.useState(fromBalance);\n  const [toBal, setToBal] = React.useState(toBalance);\n\n  const handleFlip = () => {\n    const prevFrom = fromToken;\n    const prevTo = toToken;\n    const prevFromBal = fromBal;\n    const prevToBal = toBal;\n    setFromToken(prevTo);\n    setToToken(prevFrom);\n    setFromBal(prevToBal);\n    setToBal(prevFromBal);\n  };\n\n  return (\n    <div className={cn(\"flex flex-col border rounded-lg p-5\", className)}>\n      <div className=\"w-full flex flex-col gap-1.5\">\n        <span className=\"text-xs font-medium text-muted-foreground\">\n          {fromLabel}\n        </span>\n        <TokenInput\n          key={`from-${fromToken}`}\n          tokens={tokens}\n          defaultToken={fromToken}\n          balance={fromBal}\n          onTokenSelect={(token) => setFromToken(token.symbol)}\n        />\n      </div>\n      <div className=\"flex items-center justify-center pt-4\">\n        <Button\n          variant=\"outline\"\n          size=\"icon\"\n          className=\"rounded-full size-9 bg-background border-2\"\n          onClick={handleFlip}\n        >\n          <ArrowDownUpIcon className=\"size-4\" />\n        </Button>\n      </div>\n      <div className=\"w-full flex flex-col gap-1.5\">\n        <span className=\"text-xs font-medium text-muted-foreground\">\n          {toLabel}\n        </span>\n        <TokenInput\n          key={`to-${toToken}`}\n          tokens={tokens}\n          defaultToken={toToken}\n          balance={toBal}\n          onTokenSelect={(token) => setToToken(token.symbol)}\n        />\n      </div>\n      <div className=\"flex flex-col gap-4 pt-4\">\n        {details && details.length > 0 && (\n          <div className=\"flex flex-col gap-1.5 text-sm\">\n            {details.map((detail) => (\n              <div key={detail.label} className=\"flex justify-between\">\n                <span className=\"text-muted-foreground\">{detail.label}</span>\n                <span className={detail.className}>{detail.value}</span>\n              </div>\n            ))}\n          </div>\n        )}\n        <Button className=\"w-full\" size=\"lg\" onClick={onSubmit}>\n          {submitLabel}\n        </Button>\n      </div>\n    </div>\n  );\n};\n\nexport type { SwapBoxProps, SwapBoxDetail };\nexport { SwapBox };\n",
+      "type": "registry:component",
+      "target": "components/sol/swap-box.tsx"
+    }
+  ],
+  "type": "registry:component"
+}

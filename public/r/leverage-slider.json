@@ -1,0 +1,19 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "leverage-slider",
+  "title": "Leverage Slider",
+  "description": "A slider for selecting trading leverage with configurable min/max range and step increments.",
+  "registryDependencies": [
+    "label",
+    "slider"
+  ],
+  "files": [
+    {
+      "path": "src/registry/sol/leverage-slider.tsx",
+      "content": "\"use client\";\n\nimport React from \"react\";\nimport { Label } from \"@/components/ui/label\";\nimport { Slider } from \"@/components/ui/slider\";\nimport { cn } from \"@/lib/utils\";\n\ninterface LeverageSliderProps {\n  min?: number;\n  max?: number;\n  step?: number;\n  value?: number[];\n  defaultValue?: number[];\n  onValueChange?: (value: number[]) => void;\n  className?: string;\n}\n\nconst LeverageSlider = ({\n  min,\n  max,\n  step,\n  value,\n  defaultValue,\n  onValueChange,\n  className,\n}: LeverageSliderProps) => {\n  const [displayValue, setDisplayValue] = React.useState(\n    defaultValue?.[0] ?? min ?? 0,\n  );\n\n  const currentValue = value?.[0] ?? displayValue;\n\n  const handleValueChange = (newValue: number[]) => {\n    setDisplayValue(newValue[0]);\n    onValueChange?.(newValue);\n  };\n\n  const handleMinClick = () => {\n    if (min !== undefined) {\n      handleValueChange([min]);\n    }\n  };\n\n  const handleMaxClick = () => {\n    if (max !== undefined) {\n      handleValueChange([max]);\n    }\n  };\n\n  return (\n    <div className={cn(\"w-full space-y-2\", className)}>\n      <div className=\"flex items-center justify-between text-sm\">\n        <Label className=\"text-muted-foreground\">Leverage</Label>\n        <span className=\"font-medium\">{currentValue}x</span>\n      </div>\n      <Slider\n        min={min}\n        max={max}\n        step={step}\n        value={value ?? [displayValue]}\n        onValueChange={handleValueChange}\n      />\n      {(min !== undefined || max !== undefined) && (\n        <div className=\"flex mt-2 text-xs text-muted-foreground\">\n          {min !== undefined && (\n            <button\n              type=\"button\"\n              onClick={handleMinClick}\n              className=\"hover:text-foreground transition-colors cursor-pointer\"\n            >\n              {min}x\n            </button>\n          )}\n          {max !== undefined && (\n            <button\n              type=\"button\"\n              onClick={handleMaxClick}\n              className=\"ml-auto hover:text-foreground transition-colors cursor-pointer\"\n            >\n              {max}x\n            </button>\n          )}\n        </div>\n      )}\n    </div>\n  );\n};\n\nexport type { LeverageSliderProps };\nexport { LeverageSlider };\n",
+      "type": "registry:component",
+      "target": "components/sol/leverage-slider.tsx"
+    }
+  ],
+  "type": "registry:component"
+}

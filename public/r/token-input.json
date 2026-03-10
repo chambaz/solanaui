@@ -1,0 +1,24 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "token-input",
+  "title": "Token Input",
+  "description": "A numeric input with integrated token selector dropdown, balance display, and half/max buttons.",
+  "dependencies": [
+    "lucide-react",
+    "react-number-format"
+  ],
+  "registryDependencies": [
+    "button",
+    "input",
+    "https://solanaui.dev/r/token-combobox.json"
+  ],
+  "files": [
+    {
+      "path": "src/registry/sol/token-input.tsx",
+      "content": "\"use client\";\n\nimport { WalletIcon } from \"lucide-react\";\nimport React from \"react\";\nimport { NumericFormat } from \"react-number-format\";\nimport { TokenCombobox } from \"@/registry/sol/token-combobox\";\nimport { Button } from \"@/components/ui/button\";\nimport { Input } from \"@/components/ui/input\";\nimport { cn } from \"@/lib/utils\";\n\ninterface TokenInputProps {\n  tokens: { icon: string; symbol: string }[];\n  defaultToken?: string;\n  balance?: string;\n  value?: string;\n  usdValue?: string;\n  onValueChange?: (value: string) => void;\n  onTokenSelect?: (token: { icon: string; symbol: string }) => void;\n  className?: string;\n}\n\nconst TokenInput = ({\n  tokens,\n  defaultToken,\n  balance,\n  value,\n  usdValue,\n  onValueChange,\n  onTokenSelect,\n  className,\n}: TokenInputProps) => {\n  const [internalValue, setInternalValue] = React.useState(value ?? \"\");\n  const currentValue = value ?? internalValue;\n\n  const handleValueChange = (values: { value: string }) => {\n    setInternalValue(values.value);\n    onValueChange?.(values.value);\n  };\n\n  const handleQuickAmount = (fraction: number) => {\n    if (!balance) return;\n    const numericBalance = Number.parseFloat(balance.replace(/,/g, \"\"));\n    if (Number.isNaN(numericBalance)) return;\n    const newValue = (numericBalance * fraction).toString();\n    setInternalValue(newValue);\n    onValueChange?.(newValue);\n  };\n\n  return (\n    <div\n      className={cn(\n        \"flex flex-col gap-3 border p-4 rounded-lg w-full\",\n        className,\n      )}\n    >\n      {balance && (\n        <div className=\"flex items-center justify-between\">\n          <span className=\"inline-flex items-center gap-1.5 text-xs text-muted-foreground\">\n            <WalletIcon className=\"size-3.5\" />\n            {balance}\n          </span>\n          <div className=\"flex items-center gap-2\">\n            <Button\n              variant=\"outline\"\n              size=\"sm\"\n              className=\"text-xs h-6 px-2 rounded-sm\"\n              onClick={() => handleQuickAmount(0.5)}\n            >\n              Half\n            </Button>\n            <Button\n              variant=\"outline\"\n              size=\"sm\"\n              className=\"text-xs h-6 px-2 rounded-sm\"\n              onClick={() => handleQuickAmount(1)}\n            >\n              Max\n            </Button>\n          </div>\n        </div>\n      )}\n      <div className=\"flex items-center gap-2 w-full\">\n        <TokenCombobox\n          tokens={tokens}\n          defaultValue={defaultToken}\n          onSelect={onTokenSelect}\n        />\n        <div className=\"flex flex-col flex-1 min-w-0 items-end\">\n          <NumericFormat\n            value={currentValue}\n            onValueChange={handleValueChange}\n            thousandSeparator=\",\"\n            decimalSeparator=\".\"\n            allowNegative={false}\n            placeholder=\"0\"\n            inputMode=\"decimal\"\n            customInput={Input}\n            className=\"text-right bg-transparent pr-1 dark:bg-transparent shadow-none border-none focus:ring-0 focus-visible:ring-0 w-full md:text-xl\"\n          />\n          {usdValue && (\n            <span className=\"text-xs text-muted-foreground pr-1\">\n              {usdValue}\n            </span>\n          )}\n        </div>\n      </div>\n    </div>\n  );\n};\n\nexport type { TokenInputProps };\nexport { TokenInput };\n",
+      "type": "registry:component",
+      "target": "components/sol/token-input.tsx"
+    }
+  ],
+  "type": "registry:component"
+}

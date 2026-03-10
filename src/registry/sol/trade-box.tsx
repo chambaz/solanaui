@@ -1,0 +1,82 @@
+"use client";
+
+import { LeverageSlider } from "@/registry/sol/leverage-slider";
+import { TokenInput } from "@/registry/sol/token-input";
+import { TradeButtons } from "@/registry/sol/trade-buttons";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import type { DetailRow } from "@/registry/lib/types";
+import { cn } from "@/lib/utils";
+
+type TradeBoxDetail = DetailRow;
+
+interface TradeBoxProps {
+  tokens: { icon: string; symbol: string }[];
+  defaultToken?: string;
+  balance?: string;
+  labels?: [string, string];
+  defaultSide?: string;
+  leverageMin?: number;
+  leverageMax?: number;
+  leverageDefault?: number;
+  leverageStep?: number;
+  details?: TradeBoxDetail[];
+  submitLabel?: string;
+  onSubmit?: () => void;
+  className?: string;
+}
+
+const TradeBox = ({
+  tokens,
+  defaultToken,
+  balance,
+  labels = ["Long", "Short"],
+  defaultSide = "long",
+  leverageMin = 1,
+  leverageMax = 50,
+  leverageDefault = 5,
+  leverageStep = 1,
+  details,
+  submitLabel = "Open Long",
+  onSubmit,
+  className,
+}: TradeBoxProps) => {
+  return (
+    <div className={cn("flex flex-col gap-4 border rounded-lg p-4", className)}>
+      <TradeButtons defaultValue={defaultSide} labels={labels} />
+      <Separator />
+      <div className="flex flex-col gap-2">
+        <TokenInput
+          tokens={tokens}
+          defaultToken={defaultToken}
+          balance={balance}
+        />
+      </div>
+      <LeverageSlider
+        min={leverageMin}
+        max={leverageMax}
+        defaultValue={[leverageDefault]}
+        step={leverageStep}
+      />
+      {details && details.length > 0 && (
+        <>
+          <Separator />
+          <div className="flex flex-col gap-1.5 text-sm">
+            {details.map((detail) => (
+              <div key={detail.label} className="flex justify-between">
+                <span className="text-muted-foreground">{detail.label}</span>
+                <span className={detail.className}>{detail.value}</span>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+      <Button className="w-full" size="lg" onClick={onSubmit}>
+        {submitLabel}
+      </Button>
+    </div>
+  );
+};
+
+export type { TradeBoxProps, TradeBoxDetail };
+export { TradeBox };

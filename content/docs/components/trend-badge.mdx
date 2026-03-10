@@ -1,0 +1,43 @@
+---
+title: Trend Badge
+description: A badge component for displaying trend indicators
+---
+
+<ComponentDemo>
+  <div className="flex items-center gap-3">
+    <TrendBadge>+9.69%</TrendBadge>
+    <TrendBadge trend="down">-4.36%</TrendBadge>
+  </div>
+</ComponentDemo>
+
+```tsx
+import { TrendBadge } from "@/components/sol/trend-badge";
+
+export function TrendBadgeDemo() {
+  return (
+    <div className="flex items-center gap-3">
+      <TrendBadge>+9.69%</TrendBadge>
+      <TrendBadge trend="down">-4.36%</TrendBadge>
+    </div>
+  );
+}
+```
+
+## Installation
+
+<Tabs items={["pnpm", "npm", "yarn"]}>
+  <Tab value="pnpm">pnpm dlx shadcn@latest add @solanaui/trend-badge</Tab>
+  <Tab value="npm">npx shadcn@latest add @solanaui/trend-badge</Tab>
+  <Tab value="yarn">yarn dlx shadcn@latest add @solanaui/trend-badge</Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+<TrendBadge>+9.69%</TrendBadge>
+<TrendBadge trend="down">-4.36%</TrendBadge>
+```
+
+## Source Code
+
+<ComponentCode name="trend-badge" />

@@ -1,33 +1,33 @@
+import { createMDX } from "fumadocs-mdx/next";
+
+const withMDX = createMDX();
+
 /** @type {import('next').NextConfig} */
-const nextConfig = {
+const config = {
+  reactStrictMode: true,
   images: {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "*.ipfs.nftstorage.link",
+        hostname:
+          "ybqkchja2noth7nabnjwtcd5wpepkmirgqqptgfupzqk32uwygpa.arweave.net",
       },
       {
         protocol: "https",
-        hostname: "nftstorage.link",
-        pathname: "/**/*",
+        hostname: "raw.githubusercontent.com",
+        pathname: "/solana-labs/token-list/**",
       },
       {
         protocol: "https",
         hostname: "arweave.net",
-        pathname: "/*",
       },
       {
         protocol: "https",
-        hostname: "shdw-drive.genesysgo.net",
-        pathname: "/**/*",
-      },
-      {
-        protocol: "https",
-        hostname: "ipfs.io",
-        pathname: "/ipfs/*",
+        hostname: "storage.googleapis.com",
+        pathname: "/token-metadata/**",
       },
     ],
   },
 };
 
-export default nextConfig;
+export default withMDX(config);

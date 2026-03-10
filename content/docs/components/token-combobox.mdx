@@ -1,0 +1,73 @@
+---
+title: Token Combobox
+description: A combobox component for selecting tokens with search functionality
+---
+
+<ComponentDemo>
+  <TokenCombobox
+    tokens={[
+      {
+        icon: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+        symbol: "SOL",
+      },
+      {
+        icon: "https://storage.googleapis.com/token-metadata/JitoSOL-256.png",
+        symbol: "JitoSOL",
+      },
+      {
+        icon: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+        symbol: "USDC",
+      },
+      {
+        icon: "https://arweave.net/hQiPZOsRZXGXBJd_82PhVdlM_hACsT_q6wqwf5cSY7I",
+        symbol: "BONK",
+      },
+    ]}
+  />
+</ComponentDemo>
+
+```tsx
+import { TokenCombobox } from "@/components/sol/token-combobox";
+
+const SOL_ICON =
+  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png";
+const USDC_ICON =
+  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png";
+
+const tokens = [
+  { icon: SOL_ICON, symbol: "SOL" },
+  { icon: USDC_ICON, symbol: "USDC" },
+];
+
+export function TokenComboboxDemo() {
+  return <TokenCombobox tokens={tokens} />;
+}
+```
+
+## Installation
+
+<Tabs items={["pnpm", "npm", "yarn"]}>
+  <Tab value="pnpm">pnpm dlx shadcn@latest add @solanaui/token-combobox</Tab>
+  <Tab value="npm">npx shadcn@latest add @solanaui/token-combobox</Tab>
+  <Tab value="yarn">yarn dlx shadcn@latest add @solanaui/token-combobox</Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+const SOL_ICON =
+  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png";
+const USDC_ICON =
+  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png";
+
+<TokenCombobox
+  tokens={[
+    { icon: SOL_ICON, symbol: "SOL" },
+    { icon: USDC_ICON, symbol: "USDC" },
+  ]}
+/>
+```
+
+## Source Code
+
+<ComponentCode name="token-combobox" />

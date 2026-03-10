@@ -1,0 +1,53 @@
+---
+title: NFT Card
+description: A card component for displaying NFT artwork with collection info and price
+---
+
+<ComponentDemo>
+  <div className="w-[200px] mx-auto">
+    <NFTCard
+      name="Mad Lad #4281"
+      image="https://ybqkchja2noth7nabnjwtcd5wpepkmirgqqptgfupzqk32uwygpa.arweave.net/wGChHSDTXTP9oAtTaYh9s8j1MRE0IPmYtH5greqWwZ4"
+      collection="Mad Lads"
+      price="142.5"
+    />
+  </div>
+</ComponentDemo>
+
+```tsx
+import { NFTCard } from "@/components/sol/nft-card";
+
+export function NFTCardDemo() {
+  return (
+    <NFTCard
+      name="Mad Lad #4281"
+      image="https://ybqkchja2noth7nabnjwtcd5wpepkmirgqqptgfupzqk32uwygpa.arweave.net/wGChHSDTXTP9oAtTaYh9s8j1MRE0IPmYtH5greqWwZ4"
+      collection="Mad Lads"
+      price="142.5"
+    />
+  );
+}
+```
+
+## Installation
+
+<Tabs items={["pnpm", "npm", "yarn"]}>
+  <Tab value="pnpm">pnpm dlx shadcn@latest add @solanaui/nft-card</Tab>
+  <Tab value="npm">npx shadcn@latest add @solanaui/nft-card</Tab>
+  <Tab value="yarn">yarn dlx shadcn@latest add @solanaui/nft-card</Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+<NFTCard
+  name="Mad Lad #4281"
+  image="https://ybqkchja2noth7nabnjwtcd5wpepkmirgqqptgfupzqk32uwygpa.arweave.net/wGChHSDTXTP9oAtTaYh9s8j1MRE0IPmYtH5greqWwZ4"
+  collection="Mad Lads"
+  price="142.5"
+/>
+```
+
+## Source Code
+
+<ComponentCode name="nft-card" />

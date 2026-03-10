@@ -1,0 +1,93 @@
+---
+title: Txn Table
+description: A table for displaying blockchain transactions with signature links, action badges, and token info
+---
+
+<ComponentDemo>
+  <TxnTable
+    transactions={[
+      {
+        signature: "5UfD...3kPm",
+        timestamp: new Date(Date.now() - 2 * 60 * 1000),
+        action: "Swap",
+        token: "SOL",
+        tokenIcon: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+        amount: "24.5 SOL",
+        value: "$3,982.72",
+      },
+      {
+        signature: "8mRx...7jKn",
+        timestamp: new Date(Date.now() - 15 * 60 * 1000),
+        action: "Transfer",
+        token: "USDC",
+        tokenIcon: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+        amount: "1,000 USDC",
+        value: "$1,000.00",
+      },
+      {
+        signature: "3vPq...9hLr",
+        timestamp: new Date(Date.now() - 60 * 60 * 1000),
+        action: "Stake",
+        token: "JitoSOL",
+        tokenIcon: "https://storage.googleapis.com/token-metadata/JitoSOL-256.png",
+        amount: "100 SOL",
+        value: "$16,256.00",
+      },
+    ]}
+  />
+</ComponentDemo>
+
+```tsx
+import { TxnTable } from "@/components/sol/txn-table";
+
+const SOL_ICON =
+  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png";
+
+export function TxnTableDemo() {
+  return (
+    <TxnTable
+      transactions={[
+        {
+          signature: "5UfD...3kPm",
+          timestamp: new Date(Date.now() - 2 * 60 * 1000),
+          action: "Swap",
+          token: "SOL",
+          tokenIcon: SOL_ICON,
+          amount: "24.5 SOL",
+          value: "$3,982.72",
+        },
+      ]}
+    />
+  );
+}
+```
+
+## Installation
+
+<Tabs items={["pnpm", "npm", "yarn"]}>
+  <Tab value="pnpm">pnpm dlx shadcn@latest add @solanaui/txn-table</Tab>
+  <Tab value="npm">npx shadcn@latest add @solanaui/txn-table</Tab>
+  <Tab value="yarn">yarn dlx shadcn@latest add @solanaui/txn-table</Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+<TxnTable
+  transactions={[
+    {
+      signature: "5UfD...3kPm",
+      timestamp: new Date(Date.now() - 2 * 60 * 1000),
+      action: "Swap",
+      token: "SOL",
+      tokenIcon: SOL_ICON,
+      amount: "24.5 SOL",
+      value: "$3,982.72",
+    },
+  ]}
+/>
+```
+
+## Source Code
+
+<ComponentCode name="txn-table" />

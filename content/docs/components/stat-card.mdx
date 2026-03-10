@@ -1,0 +1,48 @@
+---
+title: Stat Card
+description: A compact KPI card for displaying a single metric with optional trend indicator and icon
+---
+
+<ComponentDemo>
+  <div className="grid grid-cols-2 gap-3 max-w-lg mx-auto w-full">
+    <StatCard label="Total Value Locked" value="$124.5M" change="+8.2%" />
+    <StatCard label="24h Volume" value="$2.1B" change="-3.2%" trend="down" />
+  </div>
+</ComponentDemo>
+
+```tsx
+import { StatCard } from "@/components/sol/stat-card";
+
+export function StatCardDemo() {
+  return (
+    <StatCard
+      label="Total Value Locked"
+      value="$124.5M"
+      change="+8.2%"
+    />
+  );
+}
+```
+
+## Installation
+
+<Tabs items={["pnpm", "npm", "yarn"]}>
+  <Tab value="pnpm">pnpm dlx shadcn@latest add @solanaui/stat-card</Tab>
+  <Tab value="npm">npx shadcn@latest add @solanaui/stat-card</Tab>
+  <Tab value="yarn">yarn dlx shadcn@latest add @solanaui/stat-card</Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+<StatCard
+  label="Total Value Locked"
+  value="$124.5M"
+  change="+8.2%"
+  trend="up"
+/>
+```
+
+## Source Code
+
+<ComponentCode name="stat-card" />

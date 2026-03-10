@@ -1,0 +1,15 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "sol-lib-sort-utils",
+  "title": "SolanaUI Sort Utilities",
+  "description": "Shared sorting utilities for sortable table components.",
+  "files": [
+    {
+      "path": "src/registry/lib/sort-utils.ts",
+      "content": "type SortDirection = \"asc\" | \"desc\" | null;\n\nconst parseNumericValue = (value: string): number => {\n  const cleaned = value.replace(/[$,%x,+]/g, \"\");\n  const num = Number.parseFloat(cleaned);\n  return Number.isNaN(num) ? 0 : num;\n};\n\nconst isNumericString = (value: string): boolean => {\n  const cleaned = value.replace(/[$,%x,+\\s-]/g, \"\");\n  return /\\d/.test(cleaned);\n};\n\nconst compareValues = (a: string, b: string): number => {\n  if (isNumericString(a) || isNumericString(b)) {\n    return parseNumericValue(a) - parseNumericValue(b);\n  }\n  return a.localeCompare(b);\n};\n\nexport type { SortDirection };\nexport { parseNumericValue, isNumericString, compareValues };\n",
+      "type": "registry:lib",
+      "target": "lib/sort-utils.ts"
+    }
+  ],
+  "type": "registry:lib"
+}

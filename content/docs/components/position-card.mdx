@@ -1,0 +1,72 @@
+---
+title: Position Card
+description: A card component for displaying an active lending or staking position with token info and APY
+---
+
+<ComponentDemo>
+  <div className="max-w-md mx-auto w-full">
+  <PositionCard
+    symbol="SOL"
+    icon="https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png"
+    amount="45.25 SOL"
+    value="$7,355.82"
+    apy="6.82%"
+  >
+    <div className="grid grid-cols-2 gap-2 w-full">
+      <Button variant="secondary" size="sm">Withdraw</Button>
+      <Button variant="secondary" size="sm">Supply More</Button>
+    </div>
+  </PositionCard>
+  </div>
+</ComponentDemo>
+
+```tsx
+import { PositionCard } from "@/components/sol/position-card";
+import { Button } from "@/components/ui/button";
+
+const SOL_ICON =
+  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png";
+
+export function PositionCardDemo() {
+  return (
+    <PositionCard
+      symbol="SOL"
+      icon={SOL_ICON}
+      amount="45.25 SOL"
+      value="$7,355.82"
+      apy="6.82%"
+    >
+      <div className="grid grid-cols-2 gap-2 w-full">
+        <Button variant="secondary" size="sm">Withdraw</Button>
+        <Button variant="secondary" size="sm">Supply More</Button>
+      </div>
+    </PositionCard>
+  );
+}
+```
+
+## Installation
+
+<Tabs items={["pnpm", "npm", "yarn"]}>
+  <Tab value="pnpm">pnpm dlx shadcn@latest add @solanaui/position-card</Tab>
+  <Tab value="npm">npx shadcn@latest add @solanaui/position-card</Tab>
+  <Tab value="yarn">yarn dlx shadcn@latest add @solanaui/position-card</Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+const SOL_ICON =
+  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png";
+
+<PositionCard
+  symbol="SOL"
+  icon={SOL_ICON}
+  amount="45.25 SOL"
+  value="$7,355.82"
+/>
+```
+
+## Source Code
+
+<ComponentCode name="position-card" />

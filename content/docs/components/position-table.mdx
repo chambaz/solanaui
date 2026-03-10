@@ -1,0 +1,121 @@
+---
+title: Position Table
+description: A table for displaying open perpetual trading positions with P&L, leverage, entry/mark prices, and self-contained TP/SL and close dialogs
+---
+
+<ComponentDemo>
+  <PositionTable
+    positions={[
+      {
+        symbol: "SOL",
+        icon: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+        side: "long",
+        size: "4.2",
+        value: "$682.75",
+        leverage: "5x",
+        entryPrice: "$148.32",
+        markPrice: "$162.56",
+        liquidationPrice: "$118.66",
+        pnl: "+$59.81",
+        pnlPercent: "+9.6%",
+      },
+      {
+        symbol: "JitoSOL",
+        icon: "https://storage.googleapis.com/token-metadata/JitoSOL-256.png",
+        side: "short",
+        size: "2.8",
+        value: "$530.10",
+        leverage: "3x",
+        entryPrice: "$195.20",
+        markPrice: "$189.32",
+        liquidationPrice: "$260.27",
+        pnl: "+$16.46",
+        pnlPercent: "+3.2%",
+      },
+    ]}
+  />
+</ComponentDemo>
+
+```tsx
+import { PositionTable } from "@/components/sol/position-table";
+
+const SOL_ICON =
+  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png";
+
+export function PositionTableDemo() {
+  return (
+    <PositionTable
+      positions={[
+        {
+          symbol: "SOL",
+          icon: SOL_ICON,
+          side: "long",
+          size: "4.2",
+          value: "$682.75",
+          leverage: "5x",
+          entryPrice: "$148.32",
+          markPrice: "$162.56",
+          liquidationPrice: "$118.66",
+          pnl: "+$59.81",
+          pnlPercent: "+9.6%",
+        },
+      ]}
+    />
+  );
+}
+```
+
+## Installation
+
+<Tabs items={["pnpm", "npm", "yarn"]}>
+  <Tab value="pnpm">pnpm dlx shadcn@latest add @solanaui/position-table</Tab>
+  <Tab value="npm">npx shadcn@latest add @solanaui/position-table</Tab>
+  <Tab value="yarn">yarn dlx shadcn@latest add @solanaui/position-table</Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+const SOL_ICON =
+  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png";
+
+<PositionTable
+  positions={[
+    {
+      symbol: "SOL",
+      icon: SOL_ICON,
+      side: "long",
+      size: "4.2",
+      value: "$682.75",
+      leverage: "5x",
+      entryPrice: "$148.32",
+      markPrice: "$162.56",
+      liquidationPrice: "$118.66",
+      pnl: "+$59.81",
+      pnlPercent: "+9.6%",
+    },
+  ]}
+/>
+```
+
+Each row includes a pencil icon to open a TP/SL editor dialog (OrderForm) and an X icon to open a close position dialog (ActionBox), both self-contained within the table.
+
+### With Callbacks
+
+Wire up `onEditTpSl` and `onClosePosition` to handle user actions from the built-in dialogs.
+
+```tsx
+<PositionTable
+  positions={positions}
+  onEditTpSl={(position, values) => {
+    console.log("TP/SL for", position.symbol, values);
+  }}
+  onClosePosition={(position) => {
+    console.log("Close", position.symbol, position.side);
+  }}
+/>
+```
+
+## Source Code
+
+<ComponentCode name="position-table" />

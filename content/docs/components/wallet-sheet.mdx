@@ -1,0 +1,106 @@
+---
+title: Wallet Sheet
+description: A Phantom-style slide-out wallet panel with balance, action buttons, and token list
+---
+
+<ComponentDemo>
+  <WalletSheet
+    address="MFv2hWf31Z9kbCa1snEPYctwafyhdvnV7FZnsebVacA"
+    balance="$8,241.50"
+    balanceChange="+$342.18"
+    balanceChangePercent="+4.33%"
+    tokens={[
+      {
+        icon: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+        name: "Solana",
+        symbol: "SOL",
+        balance: "24.58",
+        value: "$5,996.73",
+        change: "+$248.30",
+      },
+      {
+        icon: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
+        name: "USD Coin",
+        symbol: "USDC",
+        balance: "1,250.00",
+        value: "$1,250.00",
+        change: "+$0.01",
+      },
+      {
+        icon: "https://arweave.net/hQiPZOsRZXGXBJd_82PhVdlM_hACsT_q6wqwf5cSY7I",
+        name: "Bonk",
+        symbol: "BONK",
+        balance: "15,420,000",
+        value: "$994.77",
+        change: "-$102.09",
+      },
+    ]}
+  />
+</ComponentDemo>
+
+```tsx
+import { WalletSheet } from "@/components/sol/wallet-sheet";
+
+const SOL_ICON =
+  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png";
+
+export function WalletSheetDemo() {
+  return (
+    <WalletSheet
+      address="MFv2hWf31Z9kbCa1snEPYctwafyhdvnV7FZnsebVacA"
+      balance="$8,241.50"
+      balanceChange="+$342.18"
+      balanceChangePercent="+4.33%"
+      tokens={[
+        {
+          icon: SOL_ICON,
+          name: "Solana",
+          symbol: "SOL",
+          balance: "24.58",
+          value: "$5,996.73",
+          change: "+$248.30",
+        },
+      ]}
+    />
+  );
+}
+```
+
+## Installation
+
+<Tabs items={["pnpm", "npm", "yarn"]}>
+  <Tab value="pnpm">pnpm dlx shadcn@latest add @solanaui/wallet-sheet</Tab>
+  <Tab value="npm">npx shadcn@latest add @solanaui/wallet-sheet</Tab>
+  <Tab value="yarn">yarn dlx shadcn@latest add @solanaui/wallet-sheet</Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+const SOL_ICON =
+  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png";
+
+<WalletSheet
+  address="MFv2hWf31Z9kbCa1snEPYctwafyhdvnV7FZnsebVacA"
+  balance="$8,241.50"
+  balanceChange="+$342.18"
+  balanceChangePercent="+4.33%"
+  tokens={[
+    {
+      icon: SOL_ICON,
+      name: "Solana",
+      symbol: "SOL",
+      balance: "24.58",
+      value: "$5,996.73",
+      change: "+$248.30",
+    },
+  ]}
+>
+  {/* Optional footer content (import Button from @/components/ui/button) */}
+  <Button variant="outline" className="w-full">Disconnect</Button>
+</WalletSheet>
+```
+
+## Source Code
+
+<ComponentCode name="wallet-sheet" />

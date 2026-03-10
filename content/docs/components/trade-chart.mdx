@@ -1,0 +1,114 @@
+---
+title: Trade Chart
+description: A theme-aware candlestick chart built on TradingView Lightweight Charts
+---
+
+<ComponentDemo>
+  <TradeChart
+    visibleBars={30}
+    data={[
+      { time: "2025-12-01", open: 132.50, high: 134.80, low: 131.20, close: 134.10 },
+      { time: "2025-12-02", open: 134.10, high: 136.20, low: 133.40, close: 135.80 },
+      { time: "2025-12-03", open: 135.80, high: 136.50, low: 133.10, close: 133.60 },
+      { time: "2025-12-04", open: 133.60, high: 135.90, low: 132.80, close: 135.40 },
+      { time: "2025-12-05", open: 135.40, high: 138.10, low: 135.00, close: 137.60 },
+      { time: "2025-12-06", open: 137.60, high: 139.20, low: 136.80, close: 136.90 },
+      { time: "2025-12-07", open: 136.90, high: 138.40, low: 135.50, close: 138.10 },
+      { time: "2025-12-08", open: 138.10, high: 140.50, low: 137.60, close: 140.20 },
+      { time: "2025-12-09", open: 140.20, high: 141.80, low: 138.90, close: 139.30 },
+      { time: "2025-12-10", open: 139.30, high: 140.60, low: 137.20, close: 137.80 },
+      { time: "2025-12-11", open: 137.80, high: 139.50, low: 136.40, close: 139.10 },
+      { time: "2025-12-12", open: 139.10, high: 141.30, low: 138.50, close: 140.80 },
+      { time: "2025-12-13", open: 140.80, high: 143.20, low: 140.10, close: 142.50 },
+      { time: "2025-12-14", open: 142.50, high: 143.80, low: 141.00, close: 141.40 },
+      { time: "2025-12-15", open: 141.40, high: 142.90, low: 139.80, close: 142.60 },
+      { time: "2025-12-16", open: 142.60, high: 145.10, low: 142.20, close: 144.80 },
+      { time: "2025-12-17", open: 144.80, high: 146.50, low: 143.60, close: 143.90 },
+      { time: "2025-12-18", open: 143.90, high: 145.20, low: 142.10, close: 144.70 },
+      { time: "2025-12-19", open: 144.70, high: 147.30, low: 144.20, close: 146.80 },
+      { time: "2025-12-20", open: 146.80, high: 148.40, low: 145.50, close: 145.90 },
+      { time: "2025-12-21", open: 145.90, high: 147.10, low: 144.30, close: 146.50 },
+      { time: "2025-12-22", open: 146.50, high: 148.80, low: 146.00, close: 148.30 },
+      { time: "2025-12-23", open: 148.30, high: 149.60, low: 146.80, close: 147.10 },
+      { time: "2025-12-24", open: 147.10, high: 148.50, low: 145.40, close: 148.00 },
+      { time: "2025-12-25", open: 148.00, high: 149.80, low: 147.30, close: 149.50 },
+      { time: "2025-12-26", open: 149.50, high: 151.20, low: 148.80, close: 148.90 },
+      { time: "2025-12-27", open: 148.90, high: 150.40, low: 147.60, close: 150.10 },
+      { time: "2025-12-28", open: 150.10, high: 152.30, low: 149.50, close: 151.80 },
+      { time: "2025-12-29", open: 151.80, high: 153.10, low: 150.20, close: 150.60 },
+      { time: "2025-12-30", open: 150.60, high: 151.90, low: 149.10, close: 151.40 },
+      { time: "2026-01-01", open: 148.32, high: 150.10, low: 145.60, close: 145.81 },
+      { time: "2026-01-02", open: 145.81, high: 148.50, low: 144.90, close: 147.22 },
+      { time: "2026-01-03", open: 147.22, high: 152.00, low: 146.80, close: 151.45 },
+      { time: "2026-01-04", open: 151.45, high: 151.90, low: 148.30, close: 149.73 },
+      { time: "2026-01-05", open: 149.73, high: 153.80, low: 149.20, close: 153.18 },
+      { time: "2026-01-06", open: 153.18, high: 156.20, low: 152.50, close: 155.62 },
+      { time: "2026-01-07", open: 155.62, high: 156.10, low: 151.80, close: 152.94 },
+      { time: "2026-01-08", open: 152.94, high: 155.40, low: 152.10, close: 154.87 },
+      { time: "2026-01-09", open: 154.87, high: 158.00, low: 154.30, close: 157.31 },
+      { time: "2026-01-10", open: 157.31, high: 157.80, low: 155.20, close: 156.12 },
+      { time: "2026-01-11", open: 156.12, high: 159.40, low: 155.80, close: 158.79 },
+      { time: "2026-01-12", open: 158.79, high: 161.00, low: 158.10, close: 160.44 },
+      { time: "2026-01-13", open: 160.44, high: 163.20, low: 159.80, close: 162.56 },
+      { time: "2026-01-14", open: 162.56, high: 164.10, low: 161.30, close: 163.85 },
+      { time: "2026-01-15", open: 163.85, high: 165.20, low: 162.40, close: 162.70 },
+      { time: "2026-01-16", open: 162.70, high: 163.80, low: 160.90, close: 161.30 },
+      { time: "2026-01-17", open: 161.30, high: 164.50, low: 161.00, close: 164.10 },
+      { time: "2026-01-18", open: 164.10, high: 166.30, low: 163.50, close: 165.80 },
+      { time: "2026-01-19", open: 165.80, high: 166.90, low: 163.20, close: 163.50 },
+      { time: "2026-01-20", open: 163.50, high: 164.80, low: 161.70, close: 164.20 },
+      { time: "2026-01-21", open: 164.20, high: 167.40, low: 163.90, close: 166.90 },
+      { time: "2026-01-22", open: 166.90, high: 168.50, low: 165.80, close: 165.90 },
+      { time: "2026-01-23", open: 165.90, high: 167.20, low: 164.30, close: 166.80 },
+      { time: "2026-01-24", open: 166.80, high: 169.10, low: 166.20, close: 168.50 },
+      { time: "2026-01-25", open: 168.50, high: 170.30, low: 167.10, close: 167.40 },
+      { time: "2026-01-26", open: 167.40, high: 168.80, low: 165.50, close: 168.20 },
+      { time: "2026-01-27", open: 168.20, high: 171.00, low: 167.80, close: 170.50 },
+      { time: "2026-01-28", open: 170.50, high: 172.40, low: 169.20, close: 169.80 },
+      { time: "2026-01-29", open: 169.80, high: 171.60, low: 168.90, close: 171.20 },
+      { time: "2026-01-30", open: 171.20, high: 173.00, low: 170.40, close: 172.60 },
+    ]}
+  />
+</ComponentDemo>
+
+```tsx
+import { TradeChart } from "@/components/sol/trade-chart";
+
+export function TradeChartDemo() {
+  return (
+    <TradeChart
+      data={[
+        { time: "2026-01-01", open: 148.32, high: 150.10, low: 145.60, close: 145.81 },
+        { time: "2026-01-02", open: 145.81, high: 148.50, low: 144.90, close: 147.22 },
+        { time: "2026-01-03", open: 147.22, high: 152.00, low: 146.80, close: 151.45 },
+      ]}
+      visibleBars={30}
+    />
+  );
+}
+```
+
+## Installation
+
+<Tabs items={["pnpm", "npm", "yarn"]}>
+  <Tab value="pnpm">pnpm dlx shadcn@latest add @solanaui/trade-chart</Tab>
+  <Tab value="npm">npx shadcn@latest add @solanaui/trade-chart</Tab>
+  <Tab value="yarn">yarn dlx shadcn@latest add @solanaui/trade-chart</Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+<TradeChart
+  data={[
+    { time: "2026-01-01", open: 148.32, high: 150.10, low: 145.60, close: 145.81 },
+    { time: "2026-01-02", open: 145.81, high: 148.50, low: 144.90, close: 147.22 },
+    { time: "2026-01-03", open: 147.22, high: 152.00, low: 146.80, close: 151.45 },
+  ]}
+  visibleBars={30}
+/>
+```
+
+## Source Code
+
+<ComponentCode name="trade-chart" />

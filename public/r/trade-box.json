@@ -1,0 +1,23 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "trade-box",
+  "title": "Trade Box",
+  "description": "A perpetual trading form with long/short toggle, token input, leverage slider, detail rows, and submit action.",
+  "registryDependencies": [
+    "button",
+    "separator",
+    "https://solanaui.dev/r/leverage-slider.json",
+    "https://solanaui.dev/r/token-input.json",
+    "https://solanaui.dev/r/trade-buttons.json",
+    "https://solanaui.dev/r/sol-lib-types.json"
+  ],
+  "files": [
+    {
+      "path": "src/registry/sol/trade-box.tsx",
+      "content": "\"use client\";\n\nimport { LeverageSlider } from \"@/registry/sol/leverage-slider\";\nimport { TokenInput } from \"@/registry/sol/token-input\";\nimport { TradeButtons } from \"@/registry/sol/trade-buttons\";\nimport { Button } from \"@/components/ui/button\";\nimport { Separator } from \"@/components/ui/separator\";\nimport type { DetailRow } from \"@/registry/lib/types\";\nimport { cn } from \"@/lib/utils\";\n\ntype TradeBoxDetail = DetailRow;\n\ninterface TradeBoxProps {\n  tokens: { icon: string; symbol: string }[];\n  defaultToken?: string;\n  balance?: string;\n  labels?: [string, string];\n  defaultSide?: string;\n  leverageMin?: number;\n  leverageMax?: number;\n  leverageDefault?: number;\n  leverageStep?: number;\n  details?: TradeBoxDetail[];\n  submitLabel?: string;\n  onSubmit?: () => void;\n  className?: string;\n}\n\nconst TradeBox = ({\n  tokens,\n  defaultToken,\n  balance,\n  labels = [\"Long\", \"Short\"],\n  defaultSide = \"long\",\n  leverageMin = 1,\n  leverageMax = 50,\n  leverageDefault = 5,\n  leverageStep = 1,\n  details,\n  submitLabel = \"Open Long\",\n  onSubmit,\n  className,\n}: TradeBoxProps) => {\n  return (\n    <div className={cn(\"flex flex-col gap-4 border rounded-lg p-4\", className)}>\n      <TradeButtons defaultValue={defaultSide} labels={labels} />\n      <Separator />\n      <div className=\"flex flex-col gap-2\">\n        <TokenInput\n          tokens={tokens}\n          defaultToken={defaultToken}\n          balance={balance}\n        />\n      </div>\n      <LeverageSlider\n        min={leverageMin}\n        max={leverageMax}\n        defaultValue={[leverageDefault]}\n        step={leverageStep}\n      />\n      {details && details.length > 0 && (\n        <>\n          <Separator />\n          <div className=\"flex flex-col gap-1.5 text-sm\">\n            {details.map((detail) => (\n              <div key={detail.label} className=\"flex justify-between\">\n                <span className=\"text-muted-foreground\">{detail.label}</span>\n                <span className={detail.className}>{detail.value}</span>\n              </div>\n            ))}\n          </div>\n        </>\n      )}\n      <Button className=\"w-full\" size=\"lg\" onClick={onSubmit}>\n        {submitLabel}\n      </Button>\n    </div>\n  );\n};\n\nexport type { TradeBoxProps, TradeBoxDetail };\nexport { TradeBox };\n",
+      "type": "registry:component",
+      "target": "components/sol/trade-box.tsx"
+    }
+  ],
+  "type": "registry:component"
+}

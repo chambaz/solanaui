@@ -1,0 +1,71 @@
+---
+title: Token Input
+description: An input field for entering token amounts with a token selector, balance display, and automatic number formatting
+---
+
+<ComponentDemo>
+  <div className="max-w-lg mx-auto w-full">
+    <TokenInput
+      tokens={[
+        { icon: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png", symbol: "SOL" },
+        { icon: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png", symbol: "USDC" },
+      ]}
+      defaultToken="SOL"
+      balance="24.58"
+      usdValue="$3,996.73"
+    />
+  </div>
+</ComponentDemo>
+
+```tsx
+import { TokenInput } from "@/components/sol/token-input";
+
+const SOL_ICON =
+  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png";
+const USDC_ICON =
+  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png";
+
+export function TokenInputDemo() {
+  return (
+    <TokenInput
+      tokens={[
+        { icon: SOL_ICON, symbol: "SOL" },
+        { icon: USDC_ICON, symbol: "USDC" },
+      ]}
+      defaultToken="SOL"
+      balance="24.58"
+      usdValue="$3,996.73"
+    />
+  );
+}
+```
+
+## Installation
+
+<Tabs items={["pnpm", "npm", "yarn"]}>
+  <Tab value="pnpm">pnpm dlx shadcn@latest add @solanaui/token-input</Tab>
+  <Tab value="npm">npx shadcn@latest add @solanaui/token-input</Tab>
+  <Tab value="yarn">yarn dlx shadcn@latest add @solanaui/token-input</Tab>
+</Tabs>
+
+## Usage
+
+```tsx
+const SOL_ICON =
+  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png";
+const USDC_ICON =
+  "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png";
+
+<TokenInput
+  tokens={[
+    { icon: SOL_ICON, symbol: "SOL" },
+    { icon: USDC_ICON, symbol: "USDC" },
+  ]}
+  defaultToken="SOL"
+  balance="24.58"
+/>
+```
+
+## Source Code
+
+<ComponentCode name="token-input" />

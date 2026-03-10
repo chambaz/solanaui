@@ -18,8 +18,9 @@ SolanaUI uses the shadcn registry. Add the registry to your `components.json`:
 
 Then install components individually:
 
-````bash
-`pnpm dlx shadcn@latest add @solanaui/swap-box`
+```bash
+pnpm dlx shadcn@latest add @solanaui/swap-box
+```
 
 This copies the component source into your project at `components/sol/`. The components are intended to be modified and customized to your project needs. You own the code.
 
@@ -35,7 +36,7 @@ SolanaUI ships a `SKILL.md` for coding agents (Claude Code, OpenCode, Cursor, Wi
 
 ```bash
 npx skills add chambaz/solanaui
-````
+```
 
 Or copy `SKILL.md` from the repo root into your project's `.claude/skills/` directory.
 

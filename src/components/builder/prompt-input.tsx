@@ -81,7 +81,7 @@ const PromptInput = ({
       </div>
       <div className="mt-4 space-y-3 flex flex-col items-center">
         <p className="text-muted-foreground text-sm">Or try one of these...</p>
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap justify-center gap-2">
           {SUGGESTED_PROMPTS.map((prompt) => (
             <button
               key={prompt}

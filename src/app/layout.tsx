@@ -1,12 +1,18 @@
 import { Analytics } from "@vercel/analytics/next";
 import { RootProvider } from "fumadocs-ui/provider/next";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./global.css";
 import { Inter } from "next/font/google";
 
 const inter = Inter({
   subsets: ["latin"],
 });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+};
 
 export const metadata: Metadata = {
   title: {
@@ -20,7 +26,7 @@ export const metadata: Metadata = {
 export default function Layout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={inter.className} suppressHydrationWarning>
-      <body className="flex flex-col min-h-screen">
+      <body className="flex flex-col min-h-screen overflow-x-hidden">
         <RootProvider>
           {children}
           <footer className="mt-auto border-t py-6 text-center text-sm text-muted-foreground">

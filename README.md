@@ -1,14 +1,8 @@
 # SolanaUI
 
-A component library for building Solana dApps. 29 copy-paste components built on shadcn/ui, Radix, and Tailwind CSS.
+Beautifully designed UI components and AI Agent tooling for Solana builders.
 
-Docs and live preview: [solanaui.dev](https://solanaui.dev)
-
-## Components
-
-Swap boxes, trade forms, token inputs, order books, position tables, wallet sheets, transaction toasts, charts, and more. Each component is a single file you own and can modify.
-
-See the full list at [solanaui.dev/docs](https://solanaui.dev/docs).
+Documentation and examples: [solanaui.dev](https://solanaui.dev)
 
 ## Installation
 
@@ -24,11 +18,10 @@ SolanaUI uses the shadcn registry. Add the registry to your `components.json`:
 
 Then install components individually:
 
-```bash
-pnpm dlx shadcn@latest add @solanaui/swap-box
-```
+````bash
+`pnpm dlx shadcn@latest add @solanaui/swap-box`
 
-This copies the component source into your project at `components/sol/`. You own the code.
+This copies the component source into your project at `components/sol/`. The components are intended to be modified and customized to your project needs. You own the code.
 
 ### Prerequisites
 
@@ -36,15 +29,13 @@ This copies the component source into your project at `components/sol/`. You own
 - Tailwind CSS v4
 - shadcn/ui initialized (`pnpm dlx shadcn@latest init`)
 
-shadcn/ui primitives are resolved automatically when you install a SolanaUI component.
-
 ## Agent Integration
 
-SolanaUI ships a `SKILL.md` for coding agents (Claude Code, Cursor, Windsurf, and others). Install it with:
+SolanaUI ships a `SKILL.md` for coding agents (Claude Code, OpenCode, Cursor, Windsurf, and others). Install it with:
 
 ```bash
 npx skills add chambaz/solanaui
-```
+````
 
 Or copy `SKILL.md` from the repo root into your project's `.claude/skills/` directory.
 
@@ -55,7 +46,7 @@ pnpm install
 pnpm dev
 ```
 
-The docs site runs at `http://localhost:3000`. Built with Next.js 16, Fumadocs, and React 19.
+The docs site runs at `http://localhost:3000`
 
 ```bash
 pnpm build     # Production build (includes type checking)
